@@ -4,6 +4,7 @@
 1. 直接打开 index.html，可进入统一入口页。
 2. 需要单独查看 PRD 时，打开 prd.html。
 3. 需要单独查看高保真原型时，打开 prototype.html。
+4. 需要 PRD 与原型并排对照查看时，打开 review.html。
 
 适用场景：
 - 本机查看
