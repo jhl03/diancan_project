@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>点餐系统 — C端开票 交付包</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background:#f0f2f5; color:#333; line-height:1.8; }
+.container { max-width:900px; margin:0 auto; padding:40px 24px 60px; }
+.card { background:#fff; border-radius:10px; padding:32px; margin-bottom:24px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+h1 { font-size:24px; color:#1a1a1a; margin-bottom:8px; }
+h1 span { font-size:14px; color:#999; font-weight:400; margin-left:12px; }
+h2 { font-size:18px; color:#1a1a1a; margin-bottom:16px; padding-bottom:12px; border-bottom:2px solid #1890ff; }
+h3 { font-size:15px; color:#333; margin:16px 0 8px; }
+.meta { color:#999; font-size:13px; margin-bottom:20px; }
+table { width:100%; border-collapse:collapse; margin:16px 0; }
+th, td { border:1px solid #e8e8e8; padding:10px 14px; text-align:left; font-size:13px; }
+th { background:#fafafa; font-weight:600; color:#555; }
+td { color:#333; }
+a { color:#1890ff; text-decoration:none; }
+a:hover { text-decoration:underline; }
+.tag { display:inline-block; padding:2px 10px; border-radius:4px; font-size:12px; margin-right:4px; }
+.tag-p0 { background:#ff4d4f; color:#fff; }
+.tag-p1 { background:#faad14; color:#fff; }
+.tag-prd { background:#1890ff; color:#fff; }
+.tag-proto { background:#52c41a; color:#fff; }
+.badge { display:inline-block; padding:2px 8px; border-radius:3px; font-size:11px; background:#f0f0f0; color:#666; margin-left:8px; vertical-align:middle; }
+ul { padding-left:20px; margin:8px 0; }
+li { font-size:13px; margin:4px 0; }
+.footer { text-align:center; color:#999; font-size:12px; margin-top:40px; padding:20px 0; }
+.quick-link { display:block; padding:12px 16px; background:#e6f7ff; border-left:3px solid #1890ff; margin:8px 0; border-radius:0 6px 6px 0; }
+.quick-link:hover { background:#bae7ff; text-decoration:none; }
+.quick-link span { font-weight:600; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="card">
+  <h1>📦 点餐系统 — C端开票 交付包 <span>v1.0</span></h1>
+  <div class="meta">
+    📅 交付日期：2026-06-29  |  👤 交付方式：离线HTML包  |  📁 共5个文件
+  </div>
+  <table>
+    <tr><th style="width:120px;">项目名称</th><td>点餐系统 — C端开票</td></tr>
+    <tr><th>系统类型</th><td>撮合交易平台（B端管理后台 + C端用户小程序）</td></tr>
+    <tr><th>涉及模块</th><td>开票管理、开票出餐列表、销售订单、结算记录、资金账户记录、供应商管理</td></tr>
+    <tr><th>三方对接</th><td>抖店API（商家开票列表 / 上传开票结果）</td></tr>
+    <tr><th>文档版本</th><td>v1.0 — 2026-06-29</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>📄 PRD 产品需求文档</h2>
+  <a class="quick-link" href="点餐-C端开票-PRD.html" target="_blank">
+    <span>点餐 — C端开票 PRD</span>
+    <span class="badge tag-prd">PRD</span>
+    <span class="badge">预览模式（只读）</span>
+  </a>
+  <p style="font-size:13px;color:#666;margin-top:8px;">
+    包含：文档概述、点餐管理后台（开票列表/开票出餐列表/销售订单等）、财务管理模块、本地生活客服工作台、通用规则、附录。
+    <br>抖店API文档链接已内嵌，可点击跳转。
+  </p>
+</div>
+
+<div class="card">
+  <h2>🎨 原型设计（HTML 交互原型）</h2>
+  <p style="font-size:13px;color:#666;margin-bottom:12px;">以下三个原型均可在浏览器中独立打开，支持点击交互、Tab切换、弹窗、筛选等基本操作。</p>
+
+  <a class="quick-link" href="invoice-system-prototype.html" target="_blank">
+    <span>📋 点餐管理后台</span>
+    <span class="badge tag-p0">P0</span>
+    <span class="badge tag-proto">原型</span>
+  </a>
+  <p style="font-size:12px;color:#999;margin:4px 0 16px 20px;">
+    开票列表（待开票/已开票/已作废/全部） · 开票出餐列表(24列) · 销售订单 · 结算记录 · 资金账户记录 · 供应商列表 · 额度监控面板 · 作废/上传发票弹窗
+  </p>
+
+  <a class="quick-link" href="supplier-system.html" target="_blank">
+    <span>📦 供应商管理系统</span>
+    <span class="badge tag-p1">P1</span>
+    <span class="badge tag-proto">原型</span>
+  </a>
+  <p style="font-size:12px;color:#999;margin:4px 0 16px 20px;">
+    首页 · 出价管理 · 账户管理 · 系统配置 · 订单管理（订单列表/退款订单） · 品牌账号管理
+  </p>
+
+  <a class="quick-link" href="customer-service-workbench.html" target="_blank">
+    <span>🎫 本地生活客服工作台</span>
+    <span class="badge tag-p1">P1</span>
+    <span class="badge tag-proto">原型</span>
+  </a>
+  <p style="font-size:12px;color:#999;margin:4px 0 16px 20px;">
+    发票详情抽屉 · 点餐视图 · 订单详情
+  </p>
+</div>
+
+<div class="card">
+  <h2>📐 使用说明</h2>
+  <h3>评审使用</h3>
+  <ul>
+    <li>打开 <b>index.html</b>（本文件），点击各卡片快速跳转</li>
+    <li>或直接双击「点餐-C端开票-PRD.html」阅读需求文档</li>
+    <li>PRD 默认 <b>预览模式（只读）</b>，无编辑工具栏，适合评审阅读</li>
+  </ul>
+  <h3>开发使用</h3>
+  <ul>
+    <li>每个原型文件均为独立 HTML，<b>无需任何依赖</b>，双击即可打开</li>
+    <li>原型中的表格字段名与 PRD 字段明细完全一致，开发可直接参考</li>
+    <li>原型中的弹窗、筛选、Tab切换等交互均已实现，可供前后端联调参考</li>
+  </ul>
+  <h3>PRD 预览与编辑</h3>
+  <ul>
+    <li>交付包内 PRD 为 <b>只读预览模式</b>，无编辑工具栏，适合评审阅读</li>
+    <li><b>✏️ 如需编辑</b>：使用项目源文件 <code>点餐-C端开票-PRD.html</code>，点击右下角 ✏️ 按钮进入编辑模式</li>
+    <li>如果页面内容显示异常，点击「🗑️ 清除缓存」刷新</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>📁 交付包文件清单</h2>
+  <table>
+    <tr><th>#</th><th>文件名</th><th>大小</th><th>类型</th><th>说明</th></tr>
+    <tr><td>1</td><td>index.html</td><td>-</td><td>导航页</td><td>交付包入口，本项目文件</td></tr>
+    <tr><td>2</td><td>点餐-C端开票-PRD.html</td><td>45KB</td><td>PRD</td><td>产品需求文档，双角色可协作编辑</td></tr>
+    <tr><td>3</td><td>invoice-system-prototype.html</td><td>216KB</td><td>原型</td><td>点餐管理后台 — 开票/财务/供应商/订单</td></tr>
+    <tr><td>4</td><td>supplier-system.html</td><td>58KB</td><td>原型</td><td>供应商管理系统 — 订单/出价/配置</td></tr>
+    <tr><td>5</td><td>customer-service-workbench.html</td><td>52KB</td><td>原型</td><td>客服工作台 — 发票详情/订单详情</td></tr>
+  </table>
+</div>
+
+<div class="footer">
+  点餐系统 — C端开票 交付包 v1.0  |  2026-06-29  |  所有文件均可离线使用，无需网络依赖
+</div>
+
+</div>
+</body>
+</html>

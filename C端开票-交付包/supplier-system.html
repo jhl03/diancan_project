@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>点餐供应商管理系统 - 订单管理</title>
+<style>
+/* ========== 全局重置 ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px; color: #333; background: #f0f2f5;
+  display: flex; height: 100vh; overflow: hidden;
+}
+/* ========== 左侧导航栏 ========== */
+.sidebar { width: 220px; min-width: 220px; height: 100vh; background: #001529; color: #fff; display: flex; flex-direction: column; overflow-y: auto; }
+.sidebar-logo { height: 60px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; background: #002140; letter-spacing: 2px; border-bottom: 1px solid #002a5c; }
+.sidebar-logo span { color: #52c41a; margin-right: 6px; font-size: 20px; }
+.nav-group { border-bottom: 1px solid rgba(255,255,255,0.06); }
+.nav-group-title { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; cursor: pointer; font-size: 13px; color: rgba(255,255,255,0.65); transition: all 0.2s; user-select: none; }
+.nav-group-title:hover { color: #fff; }
+.nav-group-title .arrow { font-size: 10px; transition: transform 0.2s; }
+.nav-group.collapsed .arrow { transform: rotate(-90deg); }
+.nav-group-title .icon { margin-right: 8px; font-size: 14px; }
+.nav-sub { background: #000c17; }
+.nav-group.collapsed .nav-sub { display: none; }
+.nav-item { display: flex; align-items: center; padding: 10px 20px 10px 48px; cursor: pointer; color: rgba(255,255,255,0.55); font-size: 13px; transition: all 0.2s; white-space: nowrap; }
+.nav-item:hover { color: #fff; background: rgba(255,255,255,0.04); }
+.nav-item.active { color: #fff; background: #1890ff; }
+/* ========== 主内容区 ========== */
+.main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.header { height: 60px; background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); z-index: 10; }
+.header-left { display: flex; align-items: center; }
+.breadcrumb { font-size: 13px; color: #999; }
+.breadcrumb span { color: #333; font-weight: 500; }
+.header-right { display: flex; align-items: center; gap: 16px; }
+.user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #1890ff; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; cursor: pointer; }
+.page-container { flex: 1; overflow-y: auto; padding: 20px 24px; position: relative; }
+/* ========== 页面内 Tab 切换 ========== */
+.invoice-tabs { display: flex; gap: 0; border-bottom: 2px solid #f0f0f0; margin-bottom: 16px; }
+.invoice-tab { padding: 10px 24px; font-size: 14px; cursor: pointer; color: #666; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; background: none; border-top: none; border-left: none; border-right: none; }
+.invoice-tab:hover { color: #1890ff; }
+.invoice-tab.active { color: #1890ff; border-bottom-color: #1890ff; font-weight: 500; }
+/* ========== 筛选区 ========== */
+.filter-card { background: #fff; border-radius: 8px; padding: 16px 20px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.filter-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+.filter-row:last-child { margin-bottom: 0; }
+.filter-item { display: flex; align-items: center; gap: 6px; position: relative; }
+.filter-item label { font-size: 13px; color: #666; white-space: nowrap; }
+.filter-input, .filter-select { height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; padding: 0 10px; font-size: 13px; outline: none; transition: border-color 0.2s; background: #fff; }
+.filter-input:focus, .filter-select:focus { border-color: #1890ff; box-shadow: 0 0 0 2px rgba(24,144,255,0.1); }
+.filter-input { width: 170px; }
+.filter-select { width: 140px; }
+.filter-btn { height: 32px; padding: 0 18px; border-radius: 6px; font-size: 13px; cursor: pointer; border: 1px solid #d9d9d9; transition: all 0.2s; white-space: nowrap; }
+.btn-primary { background: #1890ff; color: #fff; border-color: #1890ff; }
+.btn-primary:hover { background: #40a9ff; }
+.btn-default { background: #fff; color: #333; }
+.btn-default:hover { color: #1890ff; border-color: #1890ff; }
+.btn-warning { background: #faad14; color: #fff; border-color: #faad14; }
+.btn-warning:hover { background: #ffc53d; }
+.filter-divider { flex: 1; }
+
+/* ========== Element UI 风格日期范围选择器 ========== */
+.el-date-range {
+  display: inline-flex; align-items: center;
+  border: 1px solid #dcdfe6; border-radius: 4px;
+  background: #fff; padding: 0 8px; height: 32px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box; cursor: pointer; position: relative; z-index: 50;
+}
+.el-date-range:hover { border-color: #c0c4cc; }
+.el-date-range.is-focus { border-color: #409eff; box-shadow: 0 0 0 2px rgba(64,158,255,0.1); }
+.el-date-range .el-dr-input {
+  width: 115px; height: 22px; border: none; outline: none;
+  font-size: 13px; color: #606266; background: transparent;
+  padding: 0 4px; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+}
+.el-date-range .el-sep { color: #c0c4cc; margin: 0 6px; font-size: 13px; pointer-events: none; }
+.el-date-range .el-icon-cal { color: #c0c4cc; font-size: 14px; margin-left: 2px; flex-shrink: 0; }
+
+/* ========== Element UI 日历弹窗 ========== */
+.el-picker-panel {
+  position: absolute; top: 100%; left: 0; z-index: 2000;
+  width: 640px; background: #fff; border: 1px solid #e4e7ed;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+  border-radius: 4px; margin-top: 6px;
+  animation: elDrop 0.15s ease;
+  display: none;
+  /* 关键：阻止点击事件冒泡到 el-date-range */
+  pointer-events: auto;
+}
+@keyframes elDrop { from{opacity:0;transform:scaleY(0.95);} to{opacity:1;transform:scaleY(1);} }
+.el-picker-panel.show { display: block; }
+.el-p-header {
+  display: flex; align-items: center; padding: 12px 20px;
+  border-bottom: 1px solid #e4e7ed; gap: 12px;
+}
+.el-ph-input {
+  flex: 1; height: 30px; border: 1px solid #dcdfe6; border-radius: 4px;
+  padding: 0 8px; font-size: 13px; color: #606266; outline: none;
+  transition: border-color 0.2s;
+}
+.el-ph-input:focus { border-color: #409eff; }
+.el-ph-arrow { color: #c0c4cc; font-size: 14px; }
+.el-body { display: flex; padding: 8px 12px 12px; }
+.el-month-panel { flex: 1; min-width: 280px; }
+.el-mh-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 8px 12px; }
+.el-mh-label { font-size: 14px; font-weight: 600; color: #303133; }
+.el-mh-btn { width: 28px; height: 28px; border: none; background: none; cursor: pointer;
+  font-size: 14px; color: #606266; border-radius: 4px; line-height: 28px; text-align: center;
+  transition: all 0.2s; }
+.el-mh-btn:hover { color: #409eff; }
+.el-wk-row { display: flex; padding: 0 4px 4px; }
+.el-wk-cell { flex: 1; text-align: center; font-size: 12px; color: #606266; line-height: 28px; }
+.el-d-row { display: flex; padding: 0 4px; }
+.el-d-cell {
+  flex: 1; text-align: center; height: 30px; line-height: 30px; font-size: 13px;
+  color: #606266; cursor: pointer; border-radius: 4px; margin: 1px 0; transition: all 0.15s;
+}
+.el-d-cell:hover:not(.disabled):not(.empty) { color: #409eff; }
+.el-d-cell.today { color: #409eff; font-weight: 700; }
+.el-d-cell.in-range { background: #ecf5ff; color: #303133; }
+.el-d-cell.start-date, .el-d-cell.end-date { background: #409eff !important; color: #fff; font-weight: 700; border-radius: 4px; }
+.el-d-cell.disabled { color: #c0c4cc; cursor: not-allowed; background: transparent; }
+.el-d-cell.empty { cursor: default; background: transparent; }
+.el-d-cell.other-month { color: #c0c4cc; }
+.el-footer { text-align: right; padding: 8px 16px 12px; border-top: 1px solid #e4e7ed; }
+.el-btn-ok {
+  height: 28px; padding: 0 16px; border: 1px solid #dcdfe6; border-radius: 4px;
+  background: #409eff; color: #fff; cursor: pointer; font-size: 13px; outline: none; transition: opacity 0.2s;
+}
+.el-btn-ok:hover { background: #66b1ff; }
+
+/* ========== 操作栏 ========== */
+.action-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+/* ========== 警告横幅 ========== */
+.warn-banner { background: #fff7e6; border: 1px solid #ffd591; border-radius: 6px; padding: 10px 16px; margin-bottom: 12px; font-size: 13px; color: #d46b08; display: flex; align-items: center; gap: 8px; }
+.warn-banner::before { content: '⚠'; font-size: 15px; }
+/* ========== 原生 Table 表格（table-layout:fixed + colgroup 像素宽度） ========== */
+.table-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); overflow: hidden; }
+.table-wrap { overflow: auto; max-height: calc(100vh - 340px); }
+/* 订单列表 — 26列表格 */
+.order-table { width: 2840px; table-layout: fixed; border-collapse: collapse; font-size: 12px; }
+.order-table thead { position: sticky; top: 0; z-index: 2; }
+.order-table th {
+  background: #fafafa; font-weight: 600; color: #666;
+  padding: 13px 10px; border-bottom: 2px solid #f0f0f0;
+  text-align: left; white-space: nowrap;
+  font-size: 12px; line-height: 20px; height: 46px;
+}
+.order-table td {
+  padding: 12px 10px; color: #333; border-bottom: 1px solid #f0f0f0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  line-height: 20px; vertical-align: middle;
+}
+.order-table tbody tr:hover td { background: #fafafa; }
+
+/* 结算记录 — 6列表格 */
+.sr-table { width: 1000px; table-layout: fixed; border-collapse: collapse; font-size: 12px; min-width: 1000px; }
+.sr-table thead { position: sticky; top: 0; z-index: 2; }
+.sr-table th {
+  background: #fafafa; font-weight: 600; color: #666;
+  padding: 13px 14px; border-bottom: 2px solid #f0f0f0;
+  text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-size: 12px; height: 46px;
+}
+.sr-table td {
+  padding: 12px 14px; color: #333; border-bottom: 1px solid #f0f0f0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  vertical-align: middle;
+}
+.sr-table tbody tr:hover td { background: #fafafa; }
+.col-amount { text-align: right; }
+.col-check { text-align: center; }
+.col-center { text-align: center; }
+/* 标签 */
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; line-height: 20px; }
+.tag-pending { background: #e6f7ff; color: #1890ff; border: 1px solid #91d5ff; }
+.tag-success { background: #f6ffed; color: #52c41a; border: 1px solid #b7eb8f; }
+.tag-cancel { background: #fff1f0; color: #ff4d4f; border: 1px solid #ffa39e; }
+.tag-void { background: #f5f5f5; color: #8c8c8c; border: 1px solid #d9d9d9; }
+.tag-warn { background: #fff7e6; color: #fa8c16; border: 1px solid #ffd591; }
+/* 操作按钮 */
+.btn-link { background: none; border: none; color: #1890ff; cursor: pointer; font-size: 12px; padding: 0 6px; text-decoration: none; }
+.btn-link:hover { color: #40a9ff; text-decoration: underline; }
+.btn-link.danger { color: #ff4d4f; }
+/* 取餐二维码 */
+.qr-thumb { width: 28px; height: 28px; border: 1px solid #e8e8e8; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; background: #fafafa; font-size: 14px; transition: all 0.2s; }
+.qr-thumb:hover { border-color: #1890ff; color: #1890ff; transform: scale(1.1); }
+/* 分页 */
+.pagination { display: flex; align-items: center; justify-content: flex-end; padding: 14px 20px; gap: 8px; font-size: 13px; }
+.pagination .page-info { color: #999; margin-right: 8px; }
+.pagination button { width: 32px; height: 32px; border: 1px solid #d9d9d9; background: #fff; border-radius: 6px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+.pagination button:hover { color: #1890ff; border-color: #1890ff; }
+.pagination button.active { background: #1890ff; color: #fff; border-color: #1890ff; }
+.pagination button:disabled { color: #d9d9d9; cursor: not-allowed; }
+.pagination select { height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; padding: 0 8px; font-size: 13px; }
+/* ========== 弹窗 ========== */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.45); z-index: 3000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal { background: #fff; border-radius: 8px; box-shadow: 0 8px 40px rgba(0,0,0,0.15); animation: modalIn 0.25s; max-height: 85vh; display: flex; flex-direction: column; }
+@keyframes modalIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-header { padding: 16px 24px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; font-size: 16px; font-weight: 600; }
+.modal-close { width: 28px; height: 28px; border: none; background: none; font-size: 18px; color: #999; cursor: pointer; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { background: #f5f5f5; color: #333; }
+.modal-body { padding: 24px; overflow-y: auto; flex: 1; }
+.modal-footer { padding: 12px 24px; border-top: 1px solid #f0f0f0; display: flex; justify-content: flex-end; gap: 10px; }
+/* Toast */
+#toastContainer { position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 4000; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; max-width: 600px; }
+.toast { padding: 10px 24px; border-radius: 6px; font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); animation: toastIn 0.3s; white-space: nowrap; pointer-events: auto; }
+.toast-success { background: #f6ffed; color: #52c41a; border: 1px solid #b7eb8f; }
+.toast-error { background: #fff1f0; color: #ff4d4f; border: 1px solid #ffa39e; }
+.toast-info { background: #e6f7ff; color: #1890ff; border: 1px solid #91d5ff; }
+.toast.fade-out { opacity: 0; transition: opacity 0.3s; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+/* 页面内容切换 */
+.page-content { display: none; }
+.page-content.active { display: block; }
+</style>
+</head>
+<body>
+
+<!-- ==================== 左侧导航栏 ==================== -->
+<div class="sidebar">
+  <div class="sidebar-logo"><span>🌿</span> 点餐供应商管理系统</div>
+
+  <div class="nav-group collapsed"><div class="nav-group-title"><span class="icon">🏠</span> 首页</div></div>
+
+  <div class="nav-group collapsed">
+    <div class="nav-group-title" onclick="this.parentElement.classList.toggle('collapsed')"><span><span class="icon">📝</span> 出价管理</span><span class="arrow">▼</span></div>
+    <div class="nav-sub"><div class="nav-item">商品报价</div></div>
+  </div>
+
+  <div class="nav-group collapsed">
+    <div class="nav-group-title" onclick="this.parentElement.classList.toggle('collapsed')"><span><span class="icon">¥</span> 账户管理</span><span class="arrow">▼</span></div>
+    <div class="nav-sub"><div class="nav-item">提现记录</div><div class="nav-item">提现账户</div><div class="nav-item" id="navSettleRecord" onclick="switchPage('settlement-record')">结算记录</div><div class="nav-item">结算主体</div></div>
+  </div>
+
+  <div class="nav-group collapsed">
+    <div class="nav-group-title" onclick="this.parentElement.classList.toggle('collapsed')"><span><span class="icon">⚙️</span> 系统配置</span><span class="arrow">▼</span></div>
+    <div class="nav-sub"><div class="nav-item">API配置</div><div class="nav-item">运营配置</div></div>
+  </div>
+
+  <div class="nav-group" id="orderNavGroup">
+    <div class="nav-group-title" onclick="this.parentElement.classList.toggle('collapsed')"><span><span class="icon">📋</span> 订单管理</span><span class="arrow">▼</span></div>
+      <div class="nav-sub" id="orderSub">
+      <div class="nav-item active" id="navOrderList" onclick="switchPage('order-list')">订单列表</div>
+    </div>
+  </div>
+
+  <div class="nav-group collapsed">
+    <div class="nav-group-title" onclick="this.parentElement.classList.toggle('collapsed')"><span><span class="icon">👤</span> 品牌账号管理</span><span class="arrow">▼</span></div>
+    <div class="nav-sub"><div class="nav-item">瑞幸品牌账号</div><div class="nav-item">瑞幸兑换券列表</div></div>
+  </div>
+</div>
+
+<!-- ==================== 主内容区 ==================== -->
+<div class="main-content">
+  <div class="header">
+    <div class="header-left"><div class="breadcrumb">首页 / <span id="breadcrumbTitle">订单管理</span> / <span id="breadcrumbSub">订单列表</span></div></div>
+    <div class="header-right"><span style="font-size:13px;color:#666;">供应商管理员</span><div class="user-avatar" title="管理员">管</div></div>
+  </div>
+
+  <div class="page-container">
+
+    <!-- ======== 订单列表页 ======== -->
+    <div class="page-content active" id="page-order-list">
+
+      <!-- 筛选区 -->
+      <div class="filter-card">
+        <div class="filter-row">
+          <div class="filter-item"><label>出餐订单</label><input class="filter-input" placeholder="请输入出餐订单" id="olMealOrderNo"></div>
+          <div class="filter-item"><label>接单记录编号</label><input class="filter-input" placeholder="请输入接单记录编号" id="olRecordNo"></div>
+          <div class="filter-item"><label>出餐账号</label><input class="filter-input" placeholder="请输入出餐账号" id="olAccountNo"></div>
+          <div class="filter-item"><label>兑换码</label><input class="filter-input" placeholder="请输入兑换码" id="olExchangeCode"></div>
+          <div class="filter-item"><label>商品名称</label><input class="filter-input" placeholder="请输入商品名称" id="olProductName"></div>
+          <div class="filter-item"><label>出餐方式</label><select class="filter-select" id="olMealType"><option value="">全部</option><option>人工</option><option>自动</option><option>到店</option></select></div>
+          <div class="filter-item"><label>结算状态</label><select class="filter-select" id="olStatus"><option value="">全部</option><option>未结算</option><option>待结算</option><option>已结算</option></select></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item" id="acceptDateWrap">
+            <label>接单时间</label>
+            <div class="el-date-range" id="elAcceptRange" onclick="openDatePicker(event,'accept')">
+              <input class="el-dr-input" id="drAcceptStartText" placeholder="开始日期" readonly>
+              <span class="el-sep">至</span>
+              <input class="el-dr-input" id="drAcceptEndText" placeholder="结束日期" readonly>
+              <span class="el-icon-cal">📅</span>
+            </div>
+            <!-- 日历弹窗（独立于输入框容器，避免事件冒泡） -->
+            <div class="el-picker-panel" id="pickerAccept"></div>
+          </div>
+          <div class="filter-item" id="settleDateWrap">
+            <label>结算时间</label>
+            <div class="el-date-range" id="elSettleRange" onclick="openDatePicker(event,'settle')">
+              <input class="el-dr-input" id="drSettleStartText" placeholder="开始日期" readonly>
+              <span class="el-sep">至</span>
+              <input class="el-dr-input" id="drSettleEndText" placeholder="结束日期" readonly>
+              <span class="el-icon-cal">📅</span>
+            </div>
+            <div class="el-picker-panel" id="pickerSettle"></div>
+          </div>
+          <div class="filter-divider"></div>
+          <button class="filter-btn btn-primary" onclick="doFilterOrderList()">搜索</button>
+          <button class="filter-btn btn-default" onclick="resetFilterOrderList()">重置</button>
+        </div>
+      </div>
+
+      <!-- Tab导航（筛选项下方） -->
+      <div class="invoice-tabs">
+        <button class="invoice-tab active" data-tab="processing" onclick="switchOrderTab('processing')">进行中</button>
+        <button class="invoice-tab" data-tab="completed" onclick="switchOrderTab('completed')">已完成</button>
+        <button class="invoice-tab" data-tab="all" onclick="switchOrderTab('all')">全部</button>
+      </div>
+
+      <!-- 超时警告横幅（筛选与导出之间） -->
+      <div class="warn-banner">超时未出餐，将取消分配的订单，请关注出餐情况</div>
+
+      <!-- 操作栏 -->
+      <div class="action-bar">
+        <button class="filter-btn btn-warning" onclick="showToast('导出成功，文件下载中...','success')">导出</button>
+      </div>
+
+      <!-- 表格 -->
+      <div class="table-card">
+        <div class="table-wrap">
+          <table class="order-table" id="orderTable">
+            <colgroup>
+              <col style="width:40px"><col style="width:140px"><col style="width:160px"><col style="width:160px">
+              <col style="width:150px"><col style="width:100px"><col style="width:150px"><col style="width:150px">
+              <col style="width:80px"><col style="width:80px"><col style="width:150px"><col style="width:85px">
+              <col style="width:85px"><col style="width:85px"><col style="width:85px"><col style="width:120px">
+              <col style="width:85px"><col style="width:85px"><col style="width:160px"><col style="width:120px">
+              <col style="width:85px"><col style="width:120px"><col style="width:110px"><col style="width:85px">
+              <col style="width:110px"><col style="width:60px">
+            </colgroup>
+            <thead>
+              <tr>
+                <th style="text-align:center;"><input type="checkbox" id="orderCheckAll" onchange="toggleOrderCheckAll(this.checked)"></th>
+                <th>三方订单编号</th><th>出餐订单</th><th>接单记录编号</th><th>接单时间</th>
+                <th>剩余出餐时间</th><th>出餐时间</th><th>结算时间</th><th>出餐状态</th><th>出餐方式</th>
+                <th>商品名称</th><th>下单平台</th><th>出餐帐号</th><th>兑换链接</th><th>兑换码</th>
+                <th>取餐备注</th><th style="text-align:right;">结算金额</th><th>结算状态</th><th>门店名称</th>
+                <th>商品品牌</th><th style="text-align:right;">订单市场价</th><th>供应商名称</th><th>取餐码</th>
+                <th style="text-align:center;">取餐二维码</th><th>二级供应商</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="orderTableBody"></tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <span class="page-info">共 <b id="olTotalCount">0</b> 条</span>
+          <select id="olPageSize" onchange="renderOrderTable()"><option value="20">20条/页</option><option value="50">50条/页</option></select>
+          <button id="olBtnPrev" onclick="olPrevPage()" disabled>◀</button>
+          <span id="olPageNumbers"></span>
+          <button id="olBtnNext" onclick="olNextPage()" disabled>▶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== 结算记录页 ======== -->
+    <div class="page-content" id="page-settlement-record">
+
+      <!-- 筛选区 -->
+      <div class="filter-card">
+        <div class="filter-row">
+          <div class="filter-item"><input class="filter-input" placeholder="请输入结算流水单号" id="srFlowNo"></div>
+          <div class="filter-item"><input class="filter-input" placeholder="请输入关联单据号" id="srRelateNo"></div>
+          <div class="filter-item" id="srTradeDateWrap">
+            <label>交易时间</label>
+            <div class="el-date-range" id="elSrTradeRange" onclick="openDatePicker(event,'srTrade')">
+              <input class="el-dr-input" id="drSrTradeStartText" placeholder="开始日期" readonly>
+              <span class="el-sep">至</span>
+              <input class="el-dr-input" id="drSrTradeEndText" placeholder="结束日期" readonly>
+              <span class="el-icon-cal">📅</span>
+            </div>
+            <div class="el-picker-panel" id="pickerSrTrade"></div>
+          </div>
+          <div class="filter-divider"></div>
+          <button class="filter-btn btn-primary" onclick="doFilterSrList()">搜索</button>
+          <button class="filter-btn btn-default" onclick="resetFilterSrList()">重置</button>
+        </div>
+      </div>
+
+      <!-- 操作栏 -->
+      <div class="action-bar">
+        <button class="filter-btn btn-warning" onclick="showToast('导出成功，文件下载中...','success')">导出</button>
+      </div>
+
+      <!-- 表格 -->
+      <div class="table-card">
+        <div class="table-wrap">
+          <table class="sr-table" id="srTable">
+            <colgroup>
+              <col style="width:200px"><col style="width:180px"><col style="width:120px">
+              <col style="width:100px"><col style="width:220px"><col style="width:180px">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>结算流水单号</th><th>交易时间</th><th>交易类型</th>
+                <th style="text-align:right;">变动金额</th><th>关联单据号</th><th>所属供应商</th>
+              </tr>
+            </thead>
+            <tbody id="srTableBody"></tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <span class="page-info">共 <b id="srTotalCount">0</b> 条</span>
+          <select id="srPageSize" onchange="renderSrTable()"><option value="20">20条/页</option><option value="50">50条/页</option></select>
+          <button id="srBtnPrev" onclick="srPrevPage()" disabled>◀</button>
+          <span id="srPageNumbers"></span>
+          <button id="srBtnNext" onclick="srNextPage()" disabled>▶</button>
+          前往 <input type="number" id="srJumpInput" style="width:48px;height:32px;border:1px solid #d9d9d9;border-radius:6px;text-align:center;font-size:13px;" min="1"> 页
+          <button class="filter-btn btn-default" style="height:32px;padding:0 12px;" onclick="goSrJump()">跳转</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== 弹窗：取餐二维码 ==================== -->
+<div class="modal-overlay" id="modalQR" style="display:none" onclick="if(event.target===this) closeModal('modalQR')">
+  <div class="modal" style="width:400px;">
+    <div class="modal-header"><span>取餐二维码</span><button class="modal-close" onclick="closeModal('modalQR')">✕</button></div>
+    <div class="modal-body" style="text-align:center;padding:32px;">
+      <div id="qrCodeContainer" style="display:inline-block;padding:16px;background:#fff;border:1px solid #e8e8e8;border-radius:8px;">
+        <div style="width:200px;height:200px;display:flex;align-items:center;justify-content:center;color:#999;font-size:13px;">二维码加载中...</div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:#999;">请使用取餐终端扫码</div>
+    </div>
+    <div class="modal-footer"><button class="filter-btn btn-default" onclick="closeModal('modalQR')">关闭</button></div>
+  </div>
+</div>
+
+<!-- ==================== Toast容器 ==================== -->
+<div id="toastContainer"></div>
+
+<script>
+// ================================================================
+//  Mock Data — 订单列表
+// ================================================================
+const mockOrderData = [];
+const olMealTypes = ['人工','自动','到店'];
+const olSettleStatuses = ['未结算','待结算','已结算'];
+const olBrands = ['耶加雪菲·澳瑞白','经典牛肉饭','酸菜鱼双人餐','宫保鸡丁+米饭','黄焖鸡米饭','麻辣香锅套餐','番茄鸡蛋面'];
+const olStores = ['跳季-厦门·集美瑶路店','望京SOHO店','中关村店','国贸店','三里屯店','朝阳大悦城店','西单店'];
+const olSuppliers = ['井井井','XX科技有限公司','YY网络技术有限公司'];
+
+// 状态按Tab分布：待出餐(进行中)、出餐成功(已完成)、超时未处理/人工处理/出餐失败(全部)
+const statusPool = {
+  processing: ['待出餐'],           // 进行中tab
+  completed: ['出餐成功'],          // 已完成tab
+  all: ['超时未处理','人工处理','出餐失败']  // 全部tab
+};
+
+let statusIdx = 0;
+const allStatuses = [...statusPool.processing, ...statusPool.completed, ...statusPool.all];
+
+for (let i = 1; i <= 80; i++) {
+  const mealType = olMealTypes[Math.floor(Math.random()*olMealTypes.length)];
+  let status;
+
+  // 按比例分配：35% 待出餐，30% 出餐成功，其余均分给全部tab的三个状态
+  if (i <= 28) status = '待出餐';
+  else if (i <= 52) status = '出餐成功';
+  else {
+    const allIdx = Math.floor(Math.random()*3);
+    status = statusPool.all[allIdx];
+  }
+
+  const isCompleted = status === '出餐成功';
+  const settleAmt = parseFloat((Math.random()*200 + 15).toFixed(2));
+  const marketPrice = parseFloat((settleAmt * (1 + Math.random()*0.3)).toFixed(2));
+  const day = String(Math.floor(Math.random()*12+1)).padStart(2,'0');
+  const hour = String(Math.floor(Math.random()*24)).padStart(2,'0');
+  const min = String(Math.floor(Math.random()*60)).padStart(2,'0');
+  const sec = String(Math.floor(Math.random()*60)).padStart(2,'0');
+  const acceptTime = '2026-05-'+day+' '+hour+':'+min+':'+sec;
+
+  let mealTimeStr = '';
+  let settleTimeStr = '';
+  let remainTime = '';
+  if (isCompleted || statusPool.all.indexOf(status) >= 0) {
+    const mHour = String(parseInt(hour)+Math.floor(Math.random()*3)+1).padStart(2,'0');
+    mealTimeStr = '2026-05-'+day+' '+mHour+':'+String(Math.floor(Math.random()*60)).padStart(2,'0')+':'+String(Math.floor(Math.random()*60)).padStart(2,'0');
+    const sHour = String(parseInt(mHour)+Math.floor(Math.random()*2)).padStart(2,'0');
+    settleTimeStr = '2026-05-'+day+' '+sHour+':'+String(Math.floor(Math.random()*60)).padStart(2,'0')+':'+String(Math.floor(Math.random()*60)).padStart(2,'0');
+    remainTime = '--';
+  } else {
+    remainTime = Math.floor(Math.random()*120)+'分钟';
+  }
+
+  mockOrderData.push({
+    id:i,
+    checked:false,
+    tripartiteNo:'TP'+String(Math.floor(Math.random()*90000000000+10000000000)),
+    mealOrderNo:'20566436014294'+String(Math.floor(Math.random()*90000+10000)),
+    recordNo:'20566436014671'+String(Math.floor(Math.random()*90000+10000)),
+    acceptTime:acceptTime,
+    remainTime:remainTime,
+    mealTime:mealTimeStr,
+    settleTime:settleTimeStr,
+    mealStatus:status,
+    mealType:mealType,
+    productName:olBrands[Math.floor(Math.random()*olBrands.length)],
+    platform:'',  // 下单平台为空
+    accountNo:String(Math.floor(Math.random()*9000+1000)),
+    exchangeLink:'#',
+    exchangeCode:'EC'+String(Math.floor(Math.random()*900000+100000)).slice(0,6).toUpperCase(),
+    pickRemark:(status==='出餐失败'?'用户取消':Math.random()>0.7?'测试单':''),
+    settleAmount:settleAmt,
+    settleStatus:olSettleStatuses[Math.floor(Math.random()*olSettleStatuses.length)],
+    storeName:olStores[Math.floor(Math.random()*olStores.length)],
+    brandName:olBrands[Math.floor(Math.random()*olBrands.length)],
+    marketPrice:marketPrice,
+    supplierName:olSuppliers[Math.floor(Math.random()*olSuppliers.length)],
+    pickCode:'PC'+String(Math.floor(Math.random()*900000+100000)).slice(0,6),
+    qrUrl:'QR_'+i,
+    subSupplier:olSuppliers[Math.floor(Math.random()*olSuppliers.length)],
+  });
+}
+
+// 按接单时间倒序
+mockOrderData.sort((a,b)=>new Date(b.acceptTime.replace(' ','T'))-new Date(a.acceptTime.replace(' ','T')));
+
+// ================================================================
+//  全局状态
+// ================================================================
+let olFiltered = [...mockOrderData];
+let olPage = 1;
+let currentOrderTab = 'processing';
+
+// ================================================================
+//  Tab切换
+// ================================================================
+function switchOrderTab(tab) {
+  currentOrderTab = tab;
+  document.querySelectorAll('.invoice-tab').forEach(el => el.classList.remove('active'));
+  document.querySelector('.invoice-tab[data-tab="'+tab+'"]').classList.add('active');
+  doFilterOrderList();
+}
+
+// ================================================================
+//  筛选
+// ================================================================
+function doFilterOrderList() {
+  const mealOrderNo = (document.getElementById('olMealOrderNo')||{}).value||'';
+  const recordNo = (document.getElementById('olRecordNo')||{}).value||'';
+  const accountNo = (document.getElementById('olAccountNo')||{}).value||'';
+  const exchangeCode = (document.getElementById('olExchangeCode')||{}).value||'';
+  const productName = (document.getElementById('olProductName')||{}).value||'';
+  const mealType = (document.getElementById('olMealType')||{}).value||'';
+  const status = (document.getElementById('olStatus')||{}).value||'';
+  const acceptStart = _dpValues.accept.start || '';
+  const acceptEnd = _dpValues.accept.end || '';
+  const settleStart = _dpValues.settle.start || '';
+  const settleEnd = _dpValues.settle.end || '';
+
+  let data = [...mockOrderData];
+
+  // Tab过滤：每个tab只显示对应的状态
+  if (currentOrderTab === 'processing') {
+    data = data.filter(r => r.mealStatus === '待出餐');
+  } else if (currentOrderTab === 'completed') {
+    data = data.filter(r => r.mealStatus === '出餐成功');
+  }
+  // 全部tab不额外过滤，显示所有状态（含超时未处理/人工处理/出餐失败）
+
+  if (mealOrderNo) data = data.filter(r => r.mealOrderNo.indexOf(mealOrderNo) >= 0);
+  if (recordNo) data = data.filter(r => r.recordNo.indexOf(recordNo) >= 0);
+  if (accountNo) data = data.filter(r => r.accountNo.indexOf(accountNo) >= 0);
+  if (exchangeCode) data = data.filter(r => r.exchangeCode.indexOf(exchangeCode) >= 0);
+  if (productName) data = data.filter(r => r.productName.indexOf(productName) >= 0);
+  if (mealType) data = data.filter(r => r.mealType === mealType);
+  if (status) data = data.filter(r => r.settleStatus === status);
+  if (acceptStart) data = data.filter(r => r.acceptTime >= acceptStart);
+  if (acceptEnd) data = data.filter(r => r.acceptTime <= acceptEnd+' 23:59:59');
+  if (settleStart) data = data.filter(r => r.settleTime && r.settleTime >= settleStart);
+  if (settleEnd) data = data.filter(r => r.settleTime && r.settleTime <= settleEnd+' 23:59:59');
+
+  olFiltered = data;
+  olPage = 1;
+  renderOrderTable();
+}
+
+function resetFilterOrderList() {
+  const ids = ['olMealOrderNo','olRecordNo','olAccountNo','olExchangeCode','olProductName','olMealType','olStatus'];
+  ids.forEach(id => { const el = document.getElementById(id); if (el) { if (el.tagName==='SELECT') el.selectedIndex=0; else el.value=''; } });
+  // 重置日期选择器
+  _dpValues.accept = {start:'',end:''};
+  _dpValues.settle = {start:'',end:''};
+  document.getElementById('drAcceptStartText').value = '';
+  document.getElementById('drAcceptEndText').value = '';
+  document.getElementById('drSettleStartText').value = '';
+  document.getElementById('drSettleEndText').value = '';
+  olFiltered = [...mockOrderData];
+  olPage = 1;
+  renderOrderTable();
+}
+
+// ================================================================
+//  全选/反选
+// ================================================================
+function toggleOrderCheckAll(checked) {
+  mockOrderData.forEach(r => r.checked = checked);
+  document.querySelectorAll('#orderTableBody input[type=checkbox]').forEach(cb => cb.checked = checked);
+}
+
+// ================================================================
+//  表格渲染
+// ================================================================
+function renderOrderTable() {
+  const ps = parseInt(document.getElementById('olPageSize').value);
+  const start = (olPage - 1) * ps;
+  const pageData = olFiltered.slice(start, start + ps);
+  const totalPages = Math.ceil(olFiltered.length / ps);
+
+  document.getElementById('olTotalCount').textContent = olFiltered.length;
+  const tbody = document.getElementById('orderTableBody');
+  tbody.innerHTML = '';
+
+  if (pageData.length === 0) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td colspan="26" style="text-align:center;padding:60px;color:#999;">暂无数据</td>';
+    tbody.appendChild(tr);
+    document.getElementById('olPageNumbers').innerHTML = '';
+    document.getElementById('olBtnPrev').disabled = true;
+    document.getElementById('olBtnNext').disabled = true;
+    return;
+  }
+
+  pageData.forEach((r) => {
+    // 出餐状态tag
+    let statusTag;
+    if (r.mealStatus === '出餐成功') statusTag = '<span class="tag tag-success">出餐成功</span>';
+    else if (r.mealStatus === '待出餐') statusTag = '<span class="tag tag-pending">待出餐</span>';
+    else if (r.mealStatus === '超时未处理') statusTag = '<span class="tag tag-warn">超时未处理</span>';
+    else if (r.mealStatus === '人工处理') statusTag = '<span class="tag tag-cancel">人工处理</span>';
+    else if (r.mealStatus === '出餐失败') statusTag = '<span class="tag tag-void">出餐失败</span>';
+    else statusTag = '<span class="tag">'+r.mealStatus+'</span>';
+
+    // 结算状态tag
+    let settleTag;
+    if (r.settleStatus === '已结算') settleTag = '<span class="tag tag-success">已结算</span>';
+    else if (r.settleStatus === '待结算') settleTag = '<span class="tag tag-pending">待结算</span>';
+    else settleTag = '<span class="tag tag-void">未结算</span>';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      /* 1 */ '<td style="text-align:center;"><input type="checkbox" '+((r.checked)?' checked':'')+' onchange="mockOrderData['+r.id+'].checked=this.checked"></td>'
+      /* 2 */ + '<td>'+r.tripartiteNo+'</td>'
+      /* 3 */ + '<td>'+r.mealOrderNo+'</td>'
+      /* 4 */ + '<td>'+r.recordNo+'</td>'
+      /* 5 */ + '<td>'+r.acceptTime+'</td>'
+      /* 6 */ + '<td>'+r.remainTime+'</td>'
+      /* 7 */ + '<td>'+(r.mealTime||'--')+'</td>'
+      /* 8 */ + '<td>'+(r.settleTime||'--')+'</td>'
+      /* 9 */ + '<td>'+statusTag+'</td>'
+      /* 10 */ + '<td>'+r.mealType+'</td>'
+      /* 11 */ + '<td>'+r.productName+'</td>'
+      /* 12 */ + '<td>'+(r.platform||'-')+'</td>'
+      /* 13 */ + '<td>'+r.accountNo+'</td>'
+      /* 14 */ + '<td style="color:#1890ff;cursor:pointer;" title="点击查看">'+(r.exchangeLink==='#'? '--': r.exchangeLink)+'</td>'
+      /* 15 */ + '<td style="font-family:monospace;font-size:11px;">'+r.exchangeCode+'</td>'
+      /* 16 */ + '<td style="color:#666;">'+(r.pickRemark||'')+'</td>'
+      /* 17 */ + '<td style="text-align:right;">'+r.settleAmount.toFixed(2)+'</td>'
+      /* 18 */ + '<td>'+settleTag+'</td>'
+      /* 19 */ + '<td>'+r.storeName+'</td>'
+      /* 20 */ + '<td>'+r.brandName+'</td>'
+      /* 21 */ + '<td style="text-align:right;">'+r.marketPrice.toFixed(2)+'</td>'
+      /* 22 */ + '<td>'+r.supplierName+'</td>'
+      /* 23 */ + '<td style="font-family:monospace;font-size:11px;">'+r.pickCode+'</td>'
+      /* 24 */ + '<td style="text-align:center;"><a href="javascript:void(0)" class="btn-link" onclick="showQRModal(\''+r.qrUrl+'\')">查看</a></td>'
+      /* 25 */ + '<td>'+r.subSupplier+'</td>'
+      /* 26 */ + '<td></td>';
+    tbody.appendChild(tr);
+  });
+
+  renderOlPageButtons(olPage, totalPages);
+}
+
+function renderOlPageButtons(current, totalPages) {
+  document.getElementById('olBtnPrev').disabled = current <= 1;
+  document.getElementById('olBtnNext').disabled = current >= totalPages;
+  let html = '';
+  const maxShow = 7;
+  let start = Math.max(1, current - Math.floor(maxShow/2));
+  let end = Math.min(totalPages, start + maxShow - 1);
+  if (end - start < maxShow - 1) { start = Math.max(1, end - maxShow + 1); }
+  if (start > 1) { html += '<button onclick="goOlPage(1)">1</button>'; if (start > 2) html += '<span style="color:#ccc;">...</span>'; }
+  for (let i = start; i <= end; i++) { html += '<button class="'+(i===current?'active':'')+'" onclick="goOlPage('+i+')">'+i+'</button>'; }
+  if (end < totalPages) { if (end < totalPages - 1) html += '<span style="color:#ccc;">...</span>'; html += '<button onclick="goOlPage('+totalPages+')">'+totalPages+'</button>'; }
+  document.getElementById('olPageNumbers').innerHTML = html;
+}
+function goOlPage(n) { olPage = n; renderOrderTable(); }
+function olPrevPage() { if(olPage>1){olPage--;renderOrderTable();} }
+function olNextPage() { const ps=parseInt(document.getElementById('olPageSize').value); if(olPage<Math.ceil(olFiltered.length/ps)){olPage++;renderOrderTable();} }
+
+// ================================================================
+//  页面切换（预留）
+// ================================================================
+function switchPage(page) {
+  document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  if (page === 'order-list') {
+    document.getElementById('page-order-list').classList.add('active');
+    document.getElementById('navOrderList').classList.add('active');
+    document.getElementById('breadcrumbTitle').textContent = '订单管理';
+    document.getElementById('breadcrumbSub').textContent = '订单列表';
+    olFiltered = [...mockOrderData];
+    olPage = 1;
+    renderOrderTable();
+  }
+  if (page === 'settlement-record') {
+    document.getElementById('page-settlement-record').classList.add('active');
+    document.getElementById('navSettleRecord').classList.add('active');
+    document.getElementById('breadcrumbTitle').textContent = '账户管理';
+    document.getElementById('breadcrumbSub').textContent = '结算记录';
+    srFiltered = [...mockSettleData];
+    srPage = 1;
+    renderSrTable();
+  }
+}
+
+// ================================================================
+//  取餐二维码弹窗
+// ================================================================
+function showQRModal(qrUrl) {
+  document.getElementById('modalQR').style.display = 'flex';
+  document.getElementById('qrCodeContainer').innerHTML = '<div style="width:200px;height:200px;display:flex;align-items:center;justify-content:center;background:#f5f5f5;border-radius:4px;"><img src="data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180"><rect width="180" height="180" fill="#fff"/><rect x="20" y="20" width="140" height="140" rx="8" fill="none" stroke="#333" stroke-width="2"/><rect x="60" y="60" width="15" height="15" fill="#333"/><rect x="105" y="60" width="15" height="15" fill="#333"/><rect x="60" y="105" width="15" height="15" fill="#333"/><rect x="105" y="105" width="15" height="15" fill="#333"/><circle cx="90" cy="90" r="12" fill="none" stroke="#333" stroke-width="2"/></svg>')+'" alt="取餐二维码" style="width:180px;height:180px;"></div>';
+}
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+// ================================================================
+//  Toast
+// ================================================================
+function showToast(msg,type) {
+  type = type || 'normal';
+  const cls = type==='success'?'toast-success':type==='error'?'toast-error':'toast-info';
+  const t = document.createElement('div');
+  t.className = 'toast '+cls;
+  t.textContent = msg;
+  document.getElementById('toastContainer').appendChild(t);
+  setTimeout(()=>{t.classList.add('fade-out');setTimeout(()=>t.removeChild(t),300)},2500);
+}
+
+// ================================================================
+//  导航折叠辅助函数
+// ================================================================
+function toggleNavGroup(el) { el.parentElement.classList.toggle('collapsed'); }
+
+
+// ================================================================
+//  Element UI 风格日期范围选择器 — 双月历弹窗
+// ================================================================
+
+// 日期值存储（YYYY-MM-DD格式），供筛选使用
+const _dpValues = {
+  accept: {start:'', end:''},
+  settle: {start:'', end:''},
+  srTrade: {start:'', end:''}
+};
+// 当前打开的选择器和临时选中
+let _dpActive = null;       // 'accept' | 'settle' | null
+let _dpTempStart = null;    // Date | null
+let _dpTempEnd = null;      // Date | null
+let _dpMonthOffset = 0;     // 当前左面板月份偏移（0=当前月）
+
+// 星期标题
+const WEEK_DAYS = ['日','一','二','三','四','五','六'];
+
+// 打开日期选择器
+function openDatePicker(e, type) {
+  e.stopPropagation();
+  // 关闭其他选择器
+  closeAllPickers();
+
+  _dpActive = type;
+  _dpMonthOffset = 0;
+
+  // 如果已有值则恢复
+  const v = _dpValues[type];
+  _dpTempStart = v.start ? new Date(v.start+'T00:00:00') : null;
+  _dpTempEnd = v.end ? new Date(v.end+'T00:00:00') : null;
+
+  const panelId = type === 'accept' ? 'pickerAccept' : 'pickerSettle';
+
+  // 显示弹窗
+  document.querySelectorAll('.el-picker-panel').forEach(p => p.classList.remove('show'));
+  document.getElementById(panelId).classList.add('show');
+  document.querySelector('#el'+(type.charAt(0).toUpperCase()+type.slice(1))+'Range').classList.add('is-focus');
+
+  // 渲染日历
+  renderDatePicker(type);
+
+  e.preventDefault();
+}
+
+// 关闭所有选择器
+function closeAllPickers() {
+  document.querySelectorAll('.el-picker-panel').forEach(p => p.classList.remove('show'));
+  document.querySelectorAll('.el-date-range').forEach(r => r.classList.remove('is-focus'));
+  _dpActive = null;
+}
+
+// 点击外部关闭
+document.addEventListener('click', function(e) {
+  if (_dpActive && !e.target.closest('.el-picker-panel') && !e.target.closest('.el-date-range')) {
+    closeAllPickers();
+  }
+});
+
+// 渲染双月日历
+function renderDatePicker(type) {
+  const panelId = type === 'accept' ? 'pickerAccept' : 'pickerSettle';
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+
+  const now = new Date();
+  const leftYear = now.getFullYear(), leftMonth = now.getMonth() + _dpMonthOffset;
+  const rightM = new Date(leftYear, leftMonth + 1, 1);
+  const rightYear = rightM.getFullYear(), rightMonth = rightM.getMonth();
+
+  // 顶部输入区回显
+  const startVal = _dpTempStart ? fmtDate(_dpTempStart) : '';
+  const endVal = _dpTempEnd ? fmtDate(_dpTempEnd) : '';
+  const startInputId = type === 'accept' ? 'drAcceptStartText' : type === 'settle' ? 'drSettleStartText' : 'drSrTradeStartText';
+  const endInputId = type === 'accept' ? 'drAcceptEndText' : type === 'settle' ? 'drSettleEndText' : 'drSrTradeEndText';
+  document.getElementById(startInputId).value = startVal;
+  document.getElementById(endInputId).value = endVal;
+
+  // 构建HTML
+  let h = '<div class="el-p-header">';
+  h += '<input class="el-ph-input" placeholder="开始日期" value="'+startVal+'" onfocus="_dpActive=\''+type+'\'" onclick="event.stopPropagation();">';
+  h += '<span class="el-ph-arrow">~</span>';
+  h += '<input class="el-ph-input" placeholder="结束日期" value="'+endVal+'" onfocus="_dpActive=\''+type+'\'" onclick="event.stopPropagation();">';
+  h += '</div>';
+
+  h += '<div class="el-body">';
+  h += buildMonthPanel(leftYear, leftMonth, type, 'left');
+  h += buildMonthPanel(rightYear, rightMonth, type, 'right');
+  h += '</div>';
+
+  h += '<div class="el-footer"><button class="el-btn-ok" onclick="confirmDatePicker(\''+type+'\')">确定</button></div>';
+
+  panel.innerHTML = h;
+}
+
+// 构建单月面板
+function buildMonthPanel(year, month, type, side) {
+  const today = new Date();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const startWeekDay = firstDay.getDay(); // 0=周日
+
+  const monthNames = [year+'年 '+(month+1)+'月'];
+
+  let h = '<div class="el-month-panel">';
+  h += '<div class="el-mh-row">';
+  h += '<button class="el-mh-btn" onclick="dpChangeMonth(-1)" title="上一月">&lt;&lt;</button>';
+  if(side==='left'){
+    h += '<button class="el-mh-btn" onclick="dpChangeMonth(-1)" title="上个月">&lt;</button>';
+  }
+  h += '<span class="el-mh-label">'+monthNames[0]+'</span>';
+  if(side==='right'){
+    h += '<button class="el-mh-btn" onclick="dpChangeMonth(1)" title="下个月">&gt;</button>';
+  }
+  h += '<button class="el-mh-btn" onclick="dpChangeMonth(1)" title="下一月">&gt;&gt;</button>';
+  h += '</div>';
+
+  // 星期头
+  h += '<div class="el-wk-row">';
+  for(let d=0;d<7;d++) h+='<span class="el-wk-cell">'+WEEK_DAYS[d]+'</span>';
+  h += '</div>';
+
+  // 日期格子：从上月补齐到本月+下月补齐共42格（6行x7列）
+  const prevLast = new Date(year, month, 0).getDate();
+  const thisMonthDays = lastDay.getDate();
+  let cells = [];
+
+  // 上月填充 — 真实月份是 year, month-1
+  for(let i=startWeekDay-1;i>=0;i--){
+    cells.push({d:prevLast-i, y:year, m:month-1, other:true});
+  }
+  // 本月 — 真实年份是 year, month
+  for(let d=1;d<=thisMonthDays;d++){
+    cells.push({d:d, y:year, m:month, other:false});
+  }
+  // 下月填充 — 真实月份是 year, month+1
+  while(cells.length<42){
+    const nextD = cells.length - thisMonthDays + 1;
+    cells.push({d:nextD, y:year, m:month+1, other:true});
+  }
+
+  // 渲染行
+  for(let row=0;row<6;row++){
+    h += '<div class="el-d-row">';
+    for(let col=0;col<7;col++){
+      const cell = cells[row*7+col];
+      // 关键修复：用每个cell自己的(y,m)计算真实日期，而非面板的(month)
+      const cellDate = new Date(cell.y, cell.m, cell.d);
+      const dateStr = fmtDate(cellDate);
+      const isToday = isSameDay(cellDate, today);
+      const isStart = _dpTempStart && isSameDay(cellDate, _dpTempStart);
+      const isEnd = _dpTempEnd && isSameDay(cellDate, _dpTempEnd);
+      const isInRange = _dpTempStart && _dpTempEnd && cellDate>_dpTempStart && cellDate<_dpTempEnd;
+      const isDisabled = false; // 不限制
+
+      let cls = 'el-d-cell';
+      if(cell.other) cls += ' other-month';
+      if(isToday) cls += ' today';
+      if(isStart) cls += ' start-date';
+      if(isEnd) cls += ' end-date';
+      if(isInRange) cls += ' in-range';
+      if(isDisabled) cls += ' disabled';
+      if(cell.other) cls += ' empty';
+
+      h += '<span class="'+cls+'" data-date="'+dateStr+'" '
+         + (cell.other || isDisabled ? '' : 'onclick="event.stopPropagation();dpSelectDate(\''+dateStr+'\',\''+type+'\')" ')
+         + '>'+cell.d+'</span>';
+    }
+    h += '</div>';
+  }
+
+  h += '</div>';
+  return h;
+}
+
+// 切换月份
+function dpChangeMonth(delta) {
+  _dpMonthOffset += delta;
+  if(_dpActive) renderDatePicker(_dpActive);
+}
+
+// 选择日期
+function dpSelectDate(dateStr, type) {
+  const sel = new Date(dateStr+'T00:00:00');
+
+  if (!_dpTempStart || (_dpTempStart && _dpTempEnd)) {
+    // 新选或重新开始：设为起始
+    _dpTempStart = sel;
+    _dpTempEnd = null;
+  } else if (!_dpTempEnd) {
+    // 已有起始，设为结束
+    if (sel >= _dpTempStart) {
+      _dpTempEnd = sel;
+    } else {
+      _dpTempEnd = _dpTempStart;
+      _dpTempStart = sel;
+    }
+  }
+
+  renderDatePicker(type);
+}
+
+// 确认选择
+function confirmDatePicker(type) {
+  let startInputId, endInputId;
+  if (type === 'accept') { startInputId='drAcceptStartText'; endInputId='drAcceptEndText'; }
+  else if (type === 'settle') { startInputId='drSettleStartText'; endInputId='drSettleEndText'; }
+  else if (type === 'srTrade') { startInputId='drSrTradeStartText'; endInputId='drSrTradeEndText'; }
+
+  if(_dpTempStart){
+    _dpValues[type].start = fmtDate(_dpTempStart);
+    document.getElementById(startInputId).value = _dpValues[type].start;
+  }else{
+    _dpValues[type].start = '';
+    document.getElementById(startInputId).value = '';
+  }
+  if(_dpTempEnd){
+    _dpValues[type].end = fmtDate(_dpTempEnd);
+    document.getElementById(endInputId).value = _dpValues[type].end;
+  }else{
+    _dpValues[type].end = '';
+    document.getElementById(endInputId).value = '';
+  }
+
+  closeAllPickers();
+  // 根据类型触发对应的筛选
+  if (type === 'srTrade') doFilterSrList();
+  else doFilterOrderList();
+}
+
+// 工具函数
+function fmtDate(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function isSameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
+
+
+// ================================================================
+//  Mock Data — 结算记录
+// ================================================================
+const mockSettleData = [];
+const srTradeTypes = ['未出餐扣减','订单完成结算'];
+const srSuppliers = ['井井井'];
+
+for (let i = 1; i <= 7; i++) {
+  const tradeType = srTradeTypes[Math.floor(Math.random()*srTradeTypes.length)];
+  // 变动金额：扣减为负(-1~-5)，结算为正(+1~+5)
+  let changeAmt;
+  if (tradeType === '未出餐扣减') {
+    changeAmt = -Math.floor(Math.random()*5 + 1);
+  } else {
+    changeAmt = Math.floor(Math.random()*5 + 1);
+  }
+
+  const day = String(Math.floor(Math.random()*12+1)).padStart(2,'0');
+  const hour = String(Math.floor(Math.random()*24)).padStart(2,'0');
+  const min = String(Math.floor(Math.random()*60)).padStart(2,'0');
+  const sec = String(Math.floor(Math.random()*60)).padStart(2,'0');
+  const tradeTime = '2026-06-'+day+' '+hour+':'+min+':'+sec;
+
+  mockSettleData.push({
+    id: i,
+    flowNo: '20620875967967580' + String(i).padStart(3,'0'),
+    tradeTime: tradeTime,
+    tradeType: tradeType,
+    changeAmount: changeAmt,
+    relateNo: (tradeType === '未出餐扣减'
+      ? '20566470' + String(Math.floor(Math.random()*900000000+100000000))
+      : '20620872' + String(Math.floor(Math.random()*900000000+100000000))
+    ),
+    supplierName: '井井井'
+  });
+}
+
+mockSettleData.sort((a,b)=>new Date(b.tradeTime.replace(' ','T'))-new Date(a.tradeTime.replace(' ','T')));
+
+let srFiltered = [...mockSettleData];
+let srPage = 1;
+
+// ================================================================
+//  结算记录 — 筛选
+// ================================================================
+function doFilterSrList() {
+  const flowNo = (document.getElementById('srFlowNo')||{}).value||'';
+  const relateNo = (document.getElementById('srRelateNo')||{}).value||'';
+  const tradeStart = _dpValues.srTrade ? _dpValues.srTrade.start : '';
+  const tradeEnd = _dpValues.srTrade ? _dpValues.srTrade.end : '';
+
+  let data = [...mockSettleData];
+
+  if (flowNo) data = data.filter(r => r.flowNo.indexOf(flowNo) >= 0);
+  if (relateNo) data = data.filter(r => r.relateNo.indexOf(relateNo) >= 0);
+  if (tradeStart) data = data.filter(r => r.tradeTime >= tradeStart);
+  if (tradeEnd) data = data.filter(r => r.tradeTime <= tradeEnd+' 23:59:59');
+
+  srFiltered = data;
+  srPage = 1;
+  renderSrTable();
+}
+
+function resetFilterSrList() {
+  ['srFlowNo','srRelateNo'].forEach(id => { const el=document.getElementById(id);if(el)el.value=''; });
+  if (_dpValues.srTrade) _dpValues.srTrade = {start:'',end:''};
+  const startEl = document.getElementById('drSrTradeStartText');
+  const endEl = document.getElementById('drSrTradeEndText');
+  if(startEl) startEl.value='';
+  if(endEl) endEl.value='';
+  srFiltered = [...mockSettleData];
+  srPage = 1;
+  renderSrTable();
+}
+
+// ================================================================
+//  结算记录 — 表格渲染
+// ================================================================
+function renderSrTable() {
+  const ps = parseInt(document.getElementById('srPageSize').value);
+  const start = (srPage - 1) * ps;
+  const pageData = srFiltered.slice(start, start + ps);
+  const totalPages = Math.ceil(srFiltered.length / ps);
+
+  document.getElementById('srTotalCount').textContent = srFiltered.length;
+  const tbody = document.getElementById('srTableBody');
+  tbody.innerHTML = '';
+
+  if (pageData.length === 0) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td colspan="6" style="text-align:center;padding:60px;color:#999;">暂无数据</td>';
+    tbody.appendChild(tr);
+    document.getElementById('srPageNumbers').innerHTML = '';
+    document.getElementById('srBtnPrev').disabled = true;
+    document.getElementById('srBtnNext').disabled = true;
+    return;
+  }
+
+  pageData.forEach((r) => {
+    const amtColor = r.changeAmount > 0 ? '#52c41a' : '#ff4d4f';
+    const amtPrefix = r.changeAmount > 0 ? '+' : '';
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td>'+r.flowNo+'</td>'
+      + '<td>'+r.tradeTime+'</td>'
+      + '<td>'+r.tradeType+'</td>'
+      + '<td style="text-align:right;color:'+amtColor+';font-weight:600;">'+amtPrefix+r.changeAmount+'</td>'
+      + '<td>'+r.relateNo+'</td>'
+      + '<td>'+r.supplierName+'</td>';
+    tbody.appendChild(tr);
+  });
+
+  renderSrPageButtons(srPage, totalPages);
+}
+
+function renderSrPageButtons(current, totalPages) {
+  document.getElementById('srBtnPrev').disabled = current <= 1;
+  document.getElementById('srBtnNext').disabled = current >= totalPages;
+  let html = '';
+  const maxShow = 7;
+  let start = Math.max(1, current - Math.floor(maxShow/2));
+  let end = Math.min(totalPages, start + maxShow - 1);
+  if (end - start < maxShow - 1) { start = Math.max(1, end - maxShow + 1); }
+  if (start > 1) { html += '<button onclick="goSrPage(1)">1</button>'; if (start > 2) html += '<span style="color:#ccc;">...</span>'; }
+  for (let i = start; i <= end; i++) { html += '<button class="'+(i===current?'active':'')+'" onclick="goSrPage('+i+')">'+i+'</button>'; }
+  if (end < totalPages) { if (end < totalPages - 1) html += '<span style="color:#ccc;">...</span>'; html += '<button onclick="goSrPage('+totalPages+')">'+totalPages+'</button>'; }
+  document.getElementById('srPageNumbers').innerHTML = html;
+}
+function goSrPage(n) { srPage = n; renderSrTable(); }
+function srPrevPage() { if(srPage>1){srPage--;renderSrTable();} }
+function srNextPage() { const ps=parseInt(document.getElementById('srPageSize').value); if(srPage<Math.ceil(srFiltered.length/ps)){srPage++;renderSrTable();} }
+function goSrJump() { const n=parseInt(document.getElementById('srJumpInput').value); if(n>0){srPage=n;renderSrTable();} }
+
+
+// ================================================================
+//  初始化
+// ================================================================
+(function init() {
+  doFilterOrderList();
+})();
+</script>
+
+</body>
+</html>

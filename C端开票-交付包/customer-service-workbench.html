@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本地生活客服工作台 - 开票列表</title>
+<style>
+/* ===== Reset & Base ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  font-size: 13px;
+  color: #333;
+  background: #f0f2f5;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===== Left Sidebar ===== */
+.sidebar {
+  width: 220px;
+  background: #fff;
+  border-right: 1px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 14px 16px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.sidebar-logo {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, #1890ff, #36cfc9);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.sidebar-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+  line-height: 1.3;
+}
+
+/* Menu */
+.menu-section-title {
+  padding: 10px 20px 4px;
+  font-size: 12px;
+  color: #999;
+  font-weight: 500;
+}
+.menu-group {
+  list-style: none;
+}
+.menu-item {
+  position: relative;
+}
+.menu-item > .menu-label {
+  display: flex;
+  align-items: center;
+  padding: 9px 16px 9px 24px;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.2s;
+  user-select: none;
+}
+.menu-item > .menu-label:hover {
+  color: #1890ff;
+  background: #e6f7ff;
+}
+.menu-item.active > .menu-label {
+  color: #1890ff;
+  background: #e6f7ff;
+  font-weight: 500;
+  border-right: 3px solid #1890ff;
+}
+.menu-icon {
+  width: 18px; margin-right: 8px; text-align: center; font-size: 14px; flex-shrink: 0;
+}
+.menu-text { font-size: 13px; }
+.menu-arrow {
+  margin-left: auto;
+  font-size: 10px;
+  color: #bbb;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.menu-item.expanded > .menu-label .menu-arrow {
+  transform: rotate(90deg);
+}
+.menu-badge {
+  min-width: 18px; height: 18px;
+  background: #ff4d4f;
+  color: #fff;
+  border-radius: 9px;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  padding: 0 5px;
+  margin-left: 6px;
+  line-height: 1;
+}
+
+/* Sub-menu */
+.submenu {
+  list-style: none;
+  display: none;
+  background: #fafbfc;
+}
+.menu-item.expanded > .submenu {
+  display: block;
+}
+.submenu-item > .menu-label {
+  padding-left: 48px;
+  font-size: 12px;
+}
+.submenu-item.active > .menu-label {
+  color: #1890ff;
+  background: #e6f7ff;
+  border-right: 3px solid #1890ff;
+}
+.submenu-lv3 > .menu-label {
+  padding-left: 64px;
+  font-size: 12px;
+}
+
+/* User section at bottom */
+.sidebar-user {
+  margin-top: auto;
+  padding: 12px 16px;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.user-avatar {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #faad14, #fa8c16);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.user-info { flex: 1; }
+.user-name { font-size: 13px; font-weight: 600; color: #333; }
+.user-role { font-size: 11px; color: #999; margin-top: 1px; }
+.user-expand-btn {
+  width: 22px; height: 22px;
+  border-radius: 4px;
+  background: #f0f2f5;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: #999;
+  font-size: 12px;
+}
+
+/* ===== Main Content ===== */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Top Header Bar */
+.topbar {
+  height: 52px;
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.topbar-hamburger {
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: #666;
+  font-size: 16px;
+  border-radius: 4px;
+}
+.topbar-hamburger:hover { background: #f5f5f5; }
+.topbar-tab {
+  padding: 6px 18px;
+  background: #1890ff;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.topbar-spacer { flex: 1; }
+.topbar-refresh {
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: #666;
+  font-size: 15px;
+  border-radius: 4px;
+}
+.topbar-refresh:hover { background: #f5f5f5; }
+.topbar-select {
+  padding: 4px 10px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+  background: #fff;
+  outline: none;
+}
+.topbar-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #faad14, #fa8c16);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* Page content area */
+.page-area {
+  flex: 1;
+  padding: 20px 24px;
+  overflow-y: auto;
+}
+
+/* Page title */
+.page-header { margin-bottom: 16px; }
+.page-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+}
+.page-subtitle {
+  font-size: 12px;
+  color: #999;
+}
+
+/* Search/Filter bar */
+.filter-bar {
+  background: #fff;
+  border-radius: 6px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  border: 1px solid #eee;
+}
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.filter-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.filter-input {
+  height: 32px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 0 10px;
+  font-size: 12px;
+  color: #333;
+  outline: none;
+  width: 260px;
+}
+.filter-input:focus { border-color: #1890ff; box-shadow: 0 0 0 2px rgba(24,144,255,0.1); }
+.filter-select {
+  height: 32px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 0 8px;
+  font-size: 12px;
+  color: #666;
+  outline: none;
+  background: #fff;
+  min-width: 100px;
+}
+.filter-btn-query {
+  height: 32px;
+  padding: 0 16px;
+  background: #1890ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.filter-btn-query:hover { background: #40a9ff; }
+.filter-link-reset {
+  font-size: 12px;
+  color: #1890ff;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.filter-link-reset:hover { text-decoration: underline; }
+.filter-btn-outline {
+  height: 32px;
+  padding: 0 14px;
+  background: #fff;
+  color: #1890ff;
+  border: 1px solid #1890ff;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.filter-btn-outline:hover { color: #40a9ff; border-color: #40a9ff; }
+
+/* Tab bar + actions */
+.tab-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 14px;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  padding: 4px 6px 4px 4px;
+  overflow-x: auto;
+}
+.tab-item {
+  padding: 7px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  color: #666;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  user-select: none;
+}
+.tab-item:hover { color: #1890ff; background: #f0f7ff; }
+.tab-item.active {
+  background: #1890ff;
+  color: #fff;
+  font-weight: 500;
+}
+.tab-count { font-weight: normal; opacity: 0.85; }
+.tab-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 4px;
+  flex-shrink: 0;
+}
+.tab-action-link {
+  font-size: 12px;
+  color: #1890ff;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.tab-action-link:hover { text-decoration: underline; }
+.tab-action-btn {
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex; align-items: center; gap: 4px;
+}
+.tab-action-btn-primary {
+  background: #1890ff;
+  color: #fff;
+  border: 1px solid #1890ff;
+}
+.tab-action-btn-primary:hover { background: #40a9ff; }
+.tab-action-btn-danger {
+  background: #fff;
+  color: #ff4d4f;
+  border: 1px solid #ffccc7;
+}
+.tab-action-btn-danger:hover { color: #ff7875; border-color: #ff7875; background: #fff1f0; }
+
+/* Data Table */
+.table-container {
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  overflow: hidden;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 12px;
+}
+.data-table thead th {
+  background: #fafafa;
+  color: #666;
+  font-weight: 500;
+  padding: 11px 10px;
+  text-align: left;
+  border-bottom: 1px solid #e8e8e8;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.data-table tbody td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: top;
+  color: #444;
+  word-break: break-all;
+}
+.data-table tbody tr:hover td { background: #fafafa; }
+
+/* Column widths */
+.col-status { width: 110px; }
+.col-type { width: 80px; }
+.col-amount { width: 90px; }
+.col-order { width: 180px; }
+.col-invoice { width: 200px; }
+-col-resp { width: 130px; }
+.col-time { width: 130px; }
+.col-remark { width: 110px; }
+.col-action { width: 100px; }
+
+/* Status tags */
+.status-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.status-pending-vendor {
+  color: #fa8c16;
+  background: #fff7e6;
+  border: 1px solid #ffd591;
+}
+.status-done {
+  color: #52c41a;
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+}
+.status-pending-platform {
+  color: #1890ff;
+  background: #e6f7ff;
+  border: 1px solid #91d5ff;
+}
+
+/* Product type tag */
+.type-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  white-space: nowrap;
+  background: #f5f5f5;
+  color: #666;
+  border: 1px solid #e8e8e8;
+}
+.type-tag-movie { background: #e6f7ff; color: #1890ff; border-color: #91d5ff; }
+.type-tag-meal { background: #f0f5ff; color: #2f54eb; border-color: #adc6ff; }
+.type-tag-show { background: #fff7e6; color: #fa8c16; border-color: #ffd591; }
+
+/* Amount display */
+.amount-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.amount-line { display: flex; justify-content: space-between; align-items: baseline; gap: 4px; }
+.amount-label { color: #888; font-size: 11px; white-space: nowrap; }
+.amount-value { font-size: 12px; font-weight: 500; }
+.amount-value-main { color: #fa8c16; }
+.amount-value-extra { color: #ff4d4f; }
+.amount-value-normal { color: #333; }
+
+/* Order info cell */
+.order-id {
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 2px;
+}
+.order-meta { font-size: 11px; color: #999; }
+.order-meta a { color: #1890ff; text-decoration: none; }
+.order-meta a:hover { text-decoration: underline; }
+
+/* Invoice info cell */
+.invoice-info { font-size: 11px; line-height: 1.75; color: #555; }
+.invoice-info div { margin-bottom: 1px; }
+.info-label { color: #999; }
+
+/* Responsibility info cell */
+.resp-info { font-size: 11px; line-height: 1.75; color: #555; }
+.resp-info div { margin-bottom: 1px; }
+
+/* Time/cell */
+.time-cell { font-size: 11px; line-height: 1.75; }
+.time-deadline { color: #666; }
+.time-remain { color: #ff4d4f; font-weight: 600; }
+.time-duration { color: #999; }
+.time-duration-red { color: #ff4d4f; font-weight: 600; }
+
+/* Remark cell */
+.remark-cell { font-size: 11px; color: #999; }
+
+/* Action buttons */
+.action-cell { display: flex; flex-direction: row; align-items: center; gap: 6px; flex-wrap: wrap; }
+.btn-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #1890ff;
+  cursor: pointer;
+  font-size: 12px;
+  text-decoration: none;
+  padding: 2px 0;
+  white-space: nowrap;
+}
+.btn-view:hover { text-decoration: underline; }
+.btn-upload {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 10px;
+  background: #1890ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-upload:hover { background: #40a9ff; }
+.btn-more { color: #999; cursor: pointer; font-size: 16px; padding: 2px 4px; border-radius: 4px; user-select: none; }
+.btn-more:hover { color: #1890ff; background: #e6f7ff; }
+.btn-new-invoice {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 10px;
+  background: #1890ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Checkbox */
+.cb-wrap { display: flex; align-items: center; gap: 4px; }
+input[type="checkbox"] {
+  width: 14px; height: 14px;
+  cursor: pointer;
+  accent-color: #18900ff;
+}
+
+/* Order number prefix */
+.order-prefix { font-size: 11px; color: #999; }
+
+/* Table wrapper (horizontal scroll) */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  background: #fff;
+  margin-bottom: 14px;
+}
+.table-container {
+  min-width: 1260px;
+}
+.data-table {
+  min-width: 1260px;
+  table-layout: fixed;
+}
+  padding: 12px 16px;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fafafa;
+}
+.pagination { display: flex; align-items: center; gap: 6px; }
+.page-btn {
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #666;
+  background: #fff;
+}
+.page-btn:hover { color: #1890ff; border-color: #1890ff; }
+.page-btn.disabled { color: #ccc; cursor: not-allowed; }
+.page-num {
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #666;
+}
+.page-num.active { background: #1890ff; color: #fff; }
+
+/* Floating help button */
+.fab-help {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 44px; height: 44px;
+  background: #1890ff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(24,144,255,0.35);
+  z-index: 100;
+}
+.fab-help:hover { background: #40a9ff; transform: scale(1.05); }
+
+/* ===== Right Side Drawer ===== */
+.drawer-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+}
+.drawer-overlay.active { display: block; }
+.drawer-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 65vw;
+  max-width: 960px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  overflow: hidden;
+}
+.drawer-overlay.active .drawer-panel {
+  transform: translateX(0);
+}
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+.drawer-header-left { display: flex; align-items: center; gap: 10px; }
+.drawer-title { font-size: 16px; font-weight: 600; color: #1a1a2e; }
+.drawer-subtitle { font-size: 12px; color: #999; }
+.drawer-header-actions { display: flex; align-items: center; gap: 8px; }
+.drawer-close {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border: none; background: none; cursor: pointer;
+  font-size: 18px; color: #999; border-radius: 4px;
+}
+.drawer-close:hover { background: #f5f5f5; color: #333; }
+.btn-drawer-action {
+  padding: 5px 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid #d9d9d9;
+  background: #fff;
+  color: #333;
+}
+.btn-drawer-action-primary {
+  background: #1890ff;
+  color: #fff;
+  border-color: #1890ff;
+}
+.btn-drawer-action-primary:hover { background: #40a9ff; }
+
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* Section blocks in drawer */
+.modal-section {
+  margin-bottom: 20px;
+  border: 1px solid #f0f0f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.modal-section-title {
+  background: #fafafa;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-section-body {
+  padding: 16px;
+}
+.modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+}
+.modal-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.modal-field-label {
+  color: #999;
+  white-space: nowrap;
+  min-width: 70px;
+}
+.modal-field-value {
+  color: #333;
+  word-break: break-all;
+}
+.modal-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.modal-tag-orange { background: #fff7e6; color: #fa8c16; border: 1px solid #ffd591; }
+.modal-tag-blue { background: #e6f7ff; color: #1890ff; border: 1px solid #91d5ff; }
+.modal-tag-gray { background: #f5f5f5; color: #999; border: 1px solid #e8e8e8; }
+.modal-copy-btn {
+  cursor: pointer;
+  color: #1890ff;
+  font-size: 12px;
+  margin-left: 4px;
+  text-decoration: none;
+}
+.modal-copy-btn:hover { text-decoration: underline; }
+
+/* Amount display in modal */
+.modal-amount { font-weight: 600; }
+.modal-amount-main { color: #fa8c16; }
+.modal-amount-normal { color: #333; }
+.modal-amount-extra { color: #ff4d4f; }
+
+/* Compensation section */
+/* Small table in modal */
+.modal-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-top: 10px;
+}
+.modal-table th {
+  background: #fafafa;
+  padding: 8px 10px;
+  text-align: left;
+  font-weight: 500;
+  color: #666;
+  border: 1px solid #f0f0f0;
+}
+.modal-table td {
+  padding: 8px 10px;
+  border: 1px solid #f0f0f0;
+  color: #333;
+}
+.modal-table tbody tr:hover { background: #fafafa; }
+
+/* Scrollbar styling */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: #ddd; border-radius: 2px; }
+.page-area::-webkit-scrollbar { width: 6px; }
+.page-area::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ===== Left Sidebar ===== -->
+<div class="sidebar">
+
+  <!-- Logo -->
+  <div class="sidebar-header">
+    <div class="sidebar-logo">🎯</div>
+    <div class="sidebar-title">本地生活客服工作台</div>
+  </div>
+
+  <!-- Menu -->
+  <div class="menu-section-title">个人中心</div>
+
+  <ul class="menu-group">
+    <!-- 工单管理 -->
+    <li class="menu-item expanded">
+      <div class="menu-label" onclick="toggleMenu(this)">
+        <span class="menu-icon">📋</span>
+        <span class="menu-text">工单管理</span>
+        <span class="menu-arrow">▶</span>
+      </div>
+      <ul class="submenu" style="display:block;">
+        <li class="submenu-item"><div class="menu-label"><span class="menu-icon"></span><span class="menu-text">电影票商家</span></div></li>
+        <li class="submenu-item"><div class="menu-label"><span class="menu-icon"></span><span class="menu-text">电影票订单列表</span></div></li>
+        <li class="submenu-item expanded">
+          <div class="menu-label" onclick="toggleMenu(this)">
+            <span class="menu-icon"></span><span class="menu-text">抖音工单</span>
+            <span class="menu-arrow">▶</span>
+          </div>
+          <ul class="submenu" style="display:block;">
+            <li class="submenu-item lv3">
+              <div class="menu-label">
+                <span class="menu-icon">◦</span>
+                <span class="menu-text">待处理</span>
+                <span class="menu-badge">1</span>
+              </div>
+            </li>
+            <li class="submenu-item lv3">
+              <div class="menu-label">
+                <span class="menu-icon">◦</span>
+                <span class="menu-text">其他工单</span>
+                <span class="menu-badge">1</span>
+              </div>
+            </li>
+            <li class="submenu-item lv3">
+              <div class="menu-label">
+                <span class="menu-icon">◦</span>
+                <span class="menu-text">待确订订单</span>
+                <span class="menu-badge">1</span>
+              </div>
+            </li>
+            <li class="submenu-item lv3"><div class="menu-label"><span class="menu-icon">◦</span><span class="menu-text">改写</span></div></li>
+          </ul>
+        </li>
+        <li class="submenu-item"><div class="menu-label"><span class="menu-icon"></span><span class="menu-text">打包列表</span></div></li>
+        <li class="submenu-item"><div class="menu-label"><span class="menu-icon"></span><span class="menu-text">催单列表</span></div></li>
+        <li class="submenu-item"><div class="menu-label"><span class="menu-icon"></span><span class="menu-text">退款列表</span></div></li>
+        <li class="submenu-item"><div class="menu-label"><span class="menu-icon"></span><span class="menu-text">追责管理</span></div></li>
+      </ul>
+    </li>
+    <li class="submenu-item"><div class="menu-label"><span class="menu-icon"></span><span class="menu-text">电量管理小程序投诉</span></div></li>
+
+    <!-- 发票工单 (active) -->
+    <li class="submenu-item active">
+      <div class="menu-label">
+        <span class="menu-icon">📝</span>
+        <span class="menu-text">发票工单</span>
+      </div>
+    </li>
+    <li class="submenu-item"><div class="menu-label"><span class="menu-icon"></span><span class="menu-text">账户问题工单</span></div></li>
+    <li class="submenu-item"><div class="menu-label"><span class="menu-icon"></span><span class="menu-text">OCR编辑工单</span></div></li>
+  </ul>
+
+  <div class="menu-section-title">收发管理</div>
+  <ul class="menu-group">
+    <li class="submenu-item expanded">
+      <div class="menu-label" onclick="toggleMenu(this)">
+        <span class="menu-icon"></span><span class="menu-text">订单管理-点餐</span>
+        <span class="menu-arrow">▶</span>
+      </div>
+      <ul class="submenu" style="display:block;">
+        <li class="submenu-item expanded">
+          <div class="menu-label" onclick="toggleMenu(this)">
+            <span class="menu-icon"></span><span class="menu-text">订单管理-出账单</span>
+            <span class="menu-arrow">▶</span>
+          </div>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <!-- User -->
+  <div class="sidebar-user">
+    <div class="user-avatar">r</div>
+    <div class="user-info">
+      <div class="user-name">root</div>
+      <div class="user-role">超级管理员</div>
+    </div>
+    <div class="user-expand-btn">^</div>
+  </div>
+</div>
+
+
+<!-- ===== Main Content ===== -->
+<div class="main-content">
+
+  <!-- Top Header -->
+  <div class="topbar">
+    <div class="topbar-hamburger">☰</div>
+    <div class="topbar-tab">发票工单</div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-refresh">↻</div>
+    <select class="topbar-select"><option>桌端</option></select>
+    <div class="topbar-avatar">👤</div>
+  </div>
+
+  <!-- Page Area -->
+  <div class="page-area">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div class="page-title">开票列表</div>
+      <div class="page-subtitle">按状态筛选，批量进行并处理开票工单。</div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <div class="filter-row">
+        <div class="filter-input-wrap">
+          <input type="text" class="filter-input" placeholder="搜索开票编号/开票渠道/门店号/抖音号/手机号/店铺名">
+        </div>
+        <select class="filter-select"><option>产品类型</option><option>电影票</option><option>点餐</option><option>演出</option></select>
+        <select class="filter-select"><option>全部状态</option><option>待商家开票</option><option>已开票</option></select>
+        <input type="text" class="filter-input" placeholder="订单来源/时间" style="width:160px;" readonly>
+        <button class="filter-btn-query">查询</button>
+        <a class="filter-link-reset">重置</a>
+        <button class="filter-btn-outline" style="background:#1890ff;color:#fff;border-color:#1890ff;">+ 新建开票</button>
+        <button class="filter-btn-outline">批量创建</button>
+        <button class="filter-btn-outline" style="color:#ff4d4f;border-color:#ffccc7;">批量删除</button>
+        <button class="filter-btn-outline">更多筛选</button>
+        <button class="filter-btn-outline">导出</button>
+        <a class="filter-link-reset" style="margin-left:4px;">刷新</a>
+      </div>
+    </div>
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+      <div class="tab-item active">全部<span class="tab-count">(5763)</span></div>
+      <div class="tab-item">待商家开票<span class="tab-count">(19)</span></div>
+      <div class="tab-item">待平台开票<span class="tab-count">(12)</span></div>
+      <div class="tab-item">已开票<span class="tab-count">(0)</span></div>
+      <div class="tab-item">待协<span class="tab-count">(1)</span></div>
+      <div class="tab-item">已退回<span class="tab-count">(979)</span></div>
+      <div class="tab-item">未回填<span class="tab-count">(4014)</span></div>
+      <div class="tab-item">已取消<span class="tab-count">(734)</span></div>
+
+    </div>
+
+    <!-- Data Table (horizontally scrollable) -->
+    <div class="table-wrapper">
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:140px;">处理状态</th>
+            <th style="width:120px;">产品类型</th>
+            <th style="width:130px;">金额(元)</th>
+            <th style="width:175px;">订单信息</th>
+            <th style="width:195px;">开票信息</th>
+            <th style="width:125px;">责任信息</th>
+            <th style="width:135px;">时间&时长</th>
+            <th style="width:110px;">客服备注</th>
+            <th style="width:100px;">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Row 1 -->
+          <tr>
+            <td>
+              <div class="cb-wrap">
+                <input type="checkbox">
+                <span class="status-tag status-pending-vendor">待商家开票</span>
+              </div>
+              <div class="order-prefix">#583H</div>
+            </td>
+            <td>
+              <span class="type-tag type-tag-movie">电影票</span>
+              <div style="font-size:10px;color:#bbb;margin-top:2px;">【商家】239%利</div>
+            </td>
+            <td>
+              <div class="amount-row">
+                <div class="amount-line"><span class="amount-label">开票:</span><span class="amount-value amount-value-main">¥208.00</span></div>
+                <div class="amount-line"><span class="amount-label">补票:</span><span class="amount-value amount-value-normal">¥0.00</span></div>
+                <div class="amount-line"><span class="amount-label">加价:</span><span class="amount-value amount-value-extra">¥0.00</span></div>
+              </div>
+            </td>
+            <td>
+              <div class="order-id">202603122299115989162150</div>
+              <div class="order-meta">渠道：抖音Dou店</div>
+              <div class="order-meta"><a href="#">复制订单号</a></div>
+            </td>
+            <td>
+              <div class="invoice-info">
+                <div>抬头：<span style="color:#333;">孙佳辉</span></div>
+                <div>税号：</div>
+                <div>邮箱：</div>
+                <div>手机：1781502094@qq.com</div>
+              </div>
+            </td>
+            <td>
+              <div class="resp-info">
+                <div>创建：<span style="color:#333;">陈薇薇</span></div>
+                <div>社编：</div>
+                <div>完结：</div>
+              </div>
+            </td>
+            <td>
+              <div class="time-cell">
+                <div class="time-deadline">截止: 2026/6/15 23:01:14</div>
+                <div class="time-remain">时长: <strong>10小时33分钟</strong></div>
+              </div>
+            </td>
+            <td>
+              <div style="font-size:11px;color:#999;">—</div>
+            </td>
+            <td>
+              <div class="action-cell">
+                <a class="btn-view">👁 查看详情 →</a>
+                <button class="btn-upload">⬆ 上传发票</button>
+                <span class="btn-more">⋯</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Row 2 -->
+          <tr>
+            <td>
+              <div class="cb-wrap">
+                <input type="checkbox">
+                <span class="status-tag status-pending-vendor">待商家开票</span>
+              </div>
+              <div class="order-prefix">#5300</div>
+            </td>
+            <td>
+              <span class="type-tag type-tag-meal">点餐</span>
+              <div style="font-size:10px;color:#bbb;margin-top:2px;">【商家】theRicky</div>
+            </td>
+            <td>
+              <div class="amount-row">
+                <div class="amount-line"><span class="amount-label">开票:</span><span class="amount-value amount-value-main">¥166.00</span></div>
+                <div class="amount-line"><span class="amount-label">补票:</span><span class="amount-value amount-value-normal">¥0.00</span></div>
+                <div class="amount-line"><span class="amount-label">加价:</span><span class="amount-value amount-value-extra">¥0.00</span></div>
+              </div>
+            </td>
+            <td>
+              <div class="order-id">2026032213137264655621130</div>
+              <div class="order-meta">渠道：api_汇通国旅</div>
+              <div class="order-meta">ID：</div>
+              <div class="order-meta"><a href="#">复制订单号</a></div>
+            </td>
+            <td>
+              <div class="invoice-info">
+                <div>抬头：<span style="color:#333;">陈维雄</span></div>
+                <div>税号：</div>
+                <div>邮箱：</div>
+                <div>手机：475752467@qq.com</div>
+              </div>
+            </td>
+            <td>
+              <div class="resp-info">
+                <div>创建：<span style="color:#333;">陈薇薇</span></div>
+                <div>社编：</div>
+                <div>完结：</div>
+              </div>
+            </td>
+            <td>
+              <div class="time-cell">
+                <div class="time-deadline">截止: 2026/6/15 22:54:19</div>
+                <div class="time-remain">时长: <strong>10小时40分钟</strong></div>
+              </div>
+            </td>
+            <td>
+              <div style="font-size:11px;color:#999;">—</div>
+            </td>
+            <td>
+              <div class="action-cell">
+                <a class="btn-view">👁 查看详情 →</a>
+                <button class="btn-upload">⬆ 上传发票</button>
+                <span class="btn-more">⋯</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Row 3 -->
+          <tr>
+            <td>
+              <div class="cb-wrap">
+                <input type="checkbox">
+                <span class="status-tag status-pending-vendor">待商家开票</span>
+              </div>
+              <div class="order-prefix">#5798</div>
+            </td>
+            <td>
+              <span class="type-tag type-tag-meal">点餐</span>
+              <div style="font-size:10px;color:#bbb;margin-top:2px;">【商家】theRicky</div>
+            </td>
+            <td>
+              <div class="amount-row">
+                <div class="amount-line"><span class="amount-label">开票:</span><span class="amount-value amount-value-main">¥76.48</span></div>
+                <div class="amount-line"><span class="amount-label">补票:</span><span class="amount-value amount-value-normal">¥0.00</span></div>
+                <div class="amount-line"><span class="amount-label">加价:</span><span class="amount-value amount-value-extra">¥0.00</span></div>
+              </div>
+            </td>
+            <td>
+              <div class="order-id">20260509126846715982951882775914...</div>
+              <div class="order-meta">渠道：电票团购C店</div>
+              <div class="order-meta">昵称：丁丁的数字</div>
+              <div class="order-meta"><a href="#">复制订单号</a></div>
+            </td>
+            <td>
+              <div class="invoice-info">
+                <div>抬头：<span style="color:#333;">宏巴德鑫科技（广州）有限公司</span></div>
+                <div>税号：91440101MACS1EJ3HTC</div>
+                <div>邮箱：</div>
+                <div>手机：mt34315108912@163.lz.com</div>
+              </div>
+            </td>
+            <td>
+              <div class="resp-info">
+                <div>创建：<span style="color:#333;">陈薇薇</span></div>
+                <div>社编：</div>
+                <div>完结：</div>
+              </div>
+            </td>
+            <td>
+              <div class="time-cell">
+                <div class="time-deadline">截止: 2026/6/15 21:15:54</div>
+                <div class="time-remain duration-red">时长: <strong>12小时15分钟</strong></div>
+              </div>
+            </td>
+            <td>
+              <div style="font-size:11px;color:#999;">—</div>
+            </td>
+            <td>
+              <div class="action-cell">
+                <a class="btn-view">👁 查看详情 →</a>
+                <button class="btn-upload">⬆ 上传发票</button>
+                <span class="btn-more">⋯</span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Row 4 -->
+          <tr>
+            <td>
+              <div class="cb-wrap">
+                <input type="checkbox">
+                <span class="status-tag status-done">已取消</span>
+              </div>
+              <div class="order-prefix">#5798</div>
+            </td>
+            <td>
+              <span class="type-tag type-tag-meal">点餐</span>
+              <div style="font-size:10px;color:#bbb;margin-top:2px;">【商家】theRicky</div>
+            </td>
+            <td>
+              <div class="amount-row">
+                <div class="amount-line"><span class="amount-label">开票:</span><span class="amount-value amount-value-main">¥146.00</span></div>
+                <div class="amount-line"><span class="amount-label">补票:</span><span class="amount-value amount-value-normal">¥10.00</span></div>
+                <div class="amount-line"><span class="amount-label">加价:</span><span class="amount-value amount-value-extra">¥0.00</span></div>
+              </div>
+            </td>
+            <td>
+              <div class="order-id">2026031229543174778938866</div>
+              <div class="order-meta">渠道：api_天辰国旅</div>
+              <div class="order-meta">ID：</div>
+              <div class="order-meta"><a href="#">📋 &lt;&gt;</a></div>
+            </td>
+            <td>
+              <div class="invoice-info">
+                <div>抬头：<span style="color:#333;">龙超能</span></div>
+                <div>税号：</div>
+                <div>邮箱：</div>
+                <div>手机：1392254332@qq.com</div>
+              </div>
+            </td>
+            <td>
+              <div class="resp-info">
+                <div>创建：<span style="color:#333;">冯婷</span></div>
+                <div>社编：<span style="color:#333;">李敏薇</span></div>
+                <div>完结：<span style="color:#333;">李敏薇</span></div>
+              </div>
+            </td>
+            <td>
+              <div class="time-cell">
+                <div class="time-deadline">截止: 2026/6/15 20:26:37</div>
+                <div class="time-remain">时长: 2026/6/15 15:56:49</div>
+                <div class="time-remain duration-red">时长: <strong>1小时36分钟</strong></div>
+              </div>
+            </td>
+            <td>
+              <div style="font-size:11px;color:#999;">—</div>
+            </td>
+            <td>
+              <div class="action-cell">
+                <a class="btn-view">👁 查看详情</a>
+                <button class="btn-new-invoice">重新协票</button>
+                <span class="btn-more">⋯</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- Pagination -->
+      <div class="table-footer">
+        <div class="pagination">
+          <div class="page-btn disabled">&lt;</div>
+          <div class="page-num active">1</div>
+          <div class="page-num">2</div>
+          <div class="page-num">3</div>
+          <div class="page-num">4</div>
+          <div class="page-num">5</div>
+          <div style="padding:0 4px;color:#999;font-size:12px;">...</div>
+          <div class="page-btn">&gt;</div>
+        </div>
+        <div style="font-size:12px;color:#999;">
+          共 5763 条
+        </div>
+      </div><!-- /table-footer -->
+    </div><!-- /table-container -->
+    </div><!-- /table-wrapper -->
+
+  </div><!-- /page-area -->
+
+</div><!-- /main-content -->
+
+<!-- Floating Help Button -->
+<div class="fab-help">?</div>
+
+<script>
+function toggleMenu(el) {
+  var item = el.closest('.menu-item');
+  if (!item) return;
+  // Toggle current
+  if (item.classList.contains('expanded')) {
+    item.classList.remove('expanded');
+  } else {
+    item.classList.add('expanded');
+  }
+}
+
+// Tab switching
+document.querySelectorAll('.tab-item').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.tab-item').forEach(function(t) { t.classList.remove('active'); });
+    this.classList.add('active');
+  });
+});
+
+/* ===== Invoice Detail Drawer ===== */
+function openInvoiceDrawer() {
+  var overlay = document.getElementById('invoiceDrawer');
+  if (overlay) {
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+function closeInvoiceDrawer() {
+  var overlay = document.getElementById('invoiceDrawer');
+  if (overlay) {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+/* Switch order detail view between movie ticket, point meal, and show */
+function switchOrderView(type) {
+  var movieFields = ['影片', '影院', '场次', '座位', '卖家名称', '用户支付金额', '访客ID'];
+  var grid = document.getElementById('orderDetailGrid');
+  var emptyMsg = document.getElementById('orderDetailEmpty');
+  if (!grid) return;
+  
+  if (emptyMsg) emptyMsg.style.display = 'none';
+  
+  var fields = grid.querySelectorAll('.modal-field');
+  if (type === 'movie') {
+    fields.forEach(function(f) {
+      var label = f.querySelector('.modal-field-label');
+      if (!label) return;
+      var txt = label.textContent.trim();
+      if (movieFields.indexOf(txt) !== -1 || txt === '订单号' || txt === '买家手机号' || txt === '订单状态') {
+        f.style.display = '';
+      } else if (f.classList.contains('point-meal-field')) {
+        f.style.display = 'none';
+      } else {
+        f.style.display = 'none';
+      }
+    });
+  } else if (type === 'meal') {
+    fields.forEach(function(f) {
+      var label = f.querySelector('.modal-field-label');
+      if (!label) return;
+      var txt = label.textContent.trim();
+      if (movieFields.indexOf(txt) !== -1) {
+        f.style.display = 'none';
+      } else if (txt === '订单号' || txt === '买家手机号' || txt === '订单状态') {
+        f.style.display = '';
+      } else if (f.classList.contains('point-meal-field')) {
+        f.style.display = '';
+      } else {
+        f.style.display = 'none';
+      }
+    });
+  } else if (type === 'show') {
+    fields.forEach(function(f) { f.style.display = 'none'; });
+    if (emptyMsg) emptyMsg.style.display = 'block';
+  }
+}
+// Wire up drawer
+(function() {
+  var overlay = document.getElementById('invoiceDrawer');
+  if (overlay) {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closeInvoiceDrawer();
+    });
+  }
+  // Row click to open drawer (except copy buttons)
+  document.querySelectorAll('.data-table tbody tr').forEach(function(row) {
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', function(e) {
+      // Don't open if clicking copy buttons, action buttons, or more menu
+      if (e.target.closest('.modal-copy-btn')
+       || e.target.closest('.btn-upload')
+       || e.target.closest('.btn-more')
+       || (e.target.closest('a') && !e.target.closest('.btn-view'))
+       || (e.target.closest('button') && !e.target.closest('.btn-view'))) return;
+      
+      // Detect product type from the clicked row
+      var typeTag = row.querySelector('.type-tag');
+      var productType = 'movie'; // default
+      if (typeTag) {
+        var tagText = typeTag.textContent.trim();
+        if (tagText === '点餐') productType = 'meal';
+        else if (tagText === '演出') productType = 'show';
+        else productType = 'movie';
+      }
+      
+      // Switch order detail view based on product type
+      switchOrderView(productType);
+      
+      // Open drawer
+      openInvoiceDrawer();
+    });
+  });
+})();
+</script>
+
+<!-- ===== Invoice Detail Modal ===== -->
+<div class="drawer-overlay" id="invoiceDrawer">
+  <div class="drawer-panel">
+    <!-- Header -->
+    <div class="drawer-header">
+      <div class="drawer-header-left">
+        <span class="drawer-title">发票详情 #5801</span>
+        <span class="drawer-subtitle">ID: 363103ed-4b99-4758-b8c1-7b94c78dba74</span>
+      </div>
+      <div class="drawer-header-actions">
+        <button class="btn-drawer-action btn-drawer-action-primary">⬆ 上传凭证</button>
+        <button class="drawer-close" onclick="closeInvoiceDrawer()">✕</button>
+        <button class="btn-drawer-action">🔄 刷新</button>
+        <button class="btn-drawer-action btn-drawer-action-primary">✏️ 编辑工单</button>
+      </div>
+    </div>
+
+    <div class="drawer-body">
+
+      <!-- Section 1: 基础信息 -->
+      <div class="modal-section">
+        <div class="modal-section-title">基础信息</div>
+        <div class="modal-section-body">
+          <div class="modal-grid">
+            <!-- Left column -->
+            <div class="modal-field">
+              <span class="modal-field-label">状态</span>
+              <span class="modal-field-value"><span class="modal-tag modal-tag-orange">待商家开票</span></span>
+            </div>
+            <!-- Right column -->
+            <div class="modal-field">
+              <span class="modal-field-label">抬头类型</span>
+              <span class="modal-field-value">个人</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">店铺</span>
+              <span class="modal-field-value">【商家】2折特价电影票</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">产品类型</span>
+              <span class="modal-field-value"><span class="modal-tag modal-tag-blue">电影票</span></span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">公司名称</span>
+              <span class="modal-field-value">孙佳辉</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">订单号</span>
+              <span class="modal-field-value">2026022122591118509162150 <a class="modal-copy-btn">📋</a></span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">券订单号</span>
+              <span class="modal-field-value">—</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">税号</span>
+              <span class="modal-field-value">—</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">邮箱</span>
+              <span class="modal-field-value">1781502094@qq.com</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">手机号</span>
+              <span class="modal-field-value">—</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">用户备注</span>
+              <span class="modal-field-value">—</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">身份证</span>
+              <span class="modal-field-value">—</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">发票附件</span>
+              <span class="modal-field-value" style="color:#999;">暂无附件</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">开票金额</span>
+              <span class="modal-field-value modal-amount modal-amount-main">¥208.00 元</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: 订单详情（实时）-->
+      <div class="modal-section">
+        <div class="modal-section-title">订单详情（实时）</div>
+        <div class="modal-section-body">
+          <!-- Movie/Point meal fields -->
+          <div class="modal-grid" id="orderDetailGrid">
+            <!-- Movie ticket fields (default) -->
+            <div class="modal-field">
+              <span class="modal-field-label">订单号</span>
+              <span class="modal-field-value">2026022122591118509162150 <a class="modal-copy-btn">📋</a></span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">买家手机号</span>
+              <span class="modal-field-value">— <a class="modal-copy-btn">📋</a></span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">访客ID</span>
+              <span class="modal-field-value">— <a class="modal-copy-btn">📋</a></span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">订单状态</span>
+              <span class="modal-field-value">已结</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">影片</span>
+              <span class="modal-field-value">飞驰人生3</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">影院</span>
+              <span class="modal-field-value">南昌博纳国际影城嘉豪城...</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">场次</span>
+              <span class="modal-field-value">2026/02/21 23:30:00</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">座位</span>
+              <span class="modal-field-value">【"5排4座","5排5座"】</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">用户支付金额</span>
+              <span class="modal-field-value modal-amount modal-amount-main">¥208.00</span>
+            </div>
+            <div class="modal-field">
+              <span class="modal-field-label">卖家名称</span>
+              <span class="modal-field-value">【商家】2折特价电影票</span>
+            </div>
+            <!-- Point meal fields (hidden by default, shown when product type = 点餐) -->
+            <div class="modal-field point-meal-field" style="display:none;">
+              <span class="modal-field-label">规格/券名称</span>
+              <span class="modal-field-value">—</span>
+            </div>
+            <div class="modal-field point-meal-field" style="display:none;">
+              <span class="modal-field-label">店铺名称</span>
+              <span class="modal-field-value">—</span>
+            </div>
+            <div class="modal-field point-meal-field" style="display:none;">
+              <span class="modal-field-label">商品名称</span>
+              <span class="modal-field-value">—</span>
+            </div>
+            <div class="modal-field point-meal-field" style="display:none;">
+              <span class="modal-field-label">供应商名称</span>
+              <span class="modal-field-value">—</span>
+            </div>
+            <div class="modal-field point-meal-field" style="display:none;">
+              <span class="modal-field-label">支付金额</span>
+              <span class="modal-field-value modal-amount modal-amount-main">—</span>
+            </div>
+          </div>
+          <!-- Empty state for 演出 view -->
+          <div id="orderDetailEmpty" style="display:none;padding:40px 0;text-align:center;color:#999;font-size:13px;">
+            暂无订单详情
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: 赔付记录 -->
+      <div class="modal-section">
+        <div class="modal-section-title" style="display:flex;align-items:center;justify-content:space-between;">
+          赔付记录
+          <button class="btn-drawer-action btn-drawer-action-primary" style="font-size:12px;">+ 登记店铺罚款金额</button>
+        </div>
+        <div class="modal-section-body">
+          <!-- Top bar: 赔付金额 + 店铺罚款金额 -->
+          <div style="display:flex;align-items:center;gap:32px;padding:10px 0 14px 0;border-bottom:1px solid #f0f0f0;margin-bottom:14px;">
+            <div style="font-size:13px;">
+              <span style="color:#999;">赔付金额：</span>
+              <span style="color:#333;font-weight:600;">¥0.00 元</span>
+            </div>
+            <div style="font-size:13px;">
+              <span style="color:#999;">店铺罚款金额：</span>
+              <span style="color:#ff4d4f;font-weight:600;">¥0.00 元</span>
+            </div>
+          </div>
+          <!-- Table -->
+          <table class="modal-table">
+            <thead>
+              <tr>
+                <th style="width:80px;">类型</th>
+                <th style="width:90px;">金额(元)</th>
+                <th style="width:90px;">记录人</th>
+                <th style="width:140px;">记录时间</th>
+                <th style="width:90px;">审核状态</th>
+                <th style="width:90px;">打款结果</th>
+                <th style="width:70px;">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="7" style="text-align:center;color:#999;padding:24px 0;">暂无赔付记录</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 4: 客服备注 -->
+      <div class="modal-section">
+        <div class="modal-section-title">客服备注</div>
+        <div class="modal-section-body">
+          <!-- 备注内容 -->
+          <div style="margin-bottom:12px;">
+            <div style="font-size:12px;color:#999;margin-bottom:6px;">备注内容</div>
+            <textarea style="width:100%;min-height:72px;padding:8px 10px;border:1px solid #d9d9d9;border-radius:4px;font-size:13px;color:#333;resize:vertical;outline:none;font-family:inherit;" placeholder="输入备注内容（可选，可直接粘贴图片/文件上传）"></textarea>
+          </div>
+          <!-- 按钮行 -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+            <button class="btn-drawer-action" style="font-size:12px;">⬆ 上传附件</button>
+            <button class="btn-drawer-action btn-drawer-action-primary" style="font-size:12px;">+ 添加备注</button>
+          </div>
+          <!-- 备注列表 -->
+          <div>
+            <div style="font-size:12px;color:#999;margin-bottom:6px;">备注列表</div>
+            <div style="text-align:center;color:#999;padding:20px 0;font-size:13px;">暂无备注</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /drawer-body -->
+  </div><!-- /drawer-panel -->
+</div><!-- /drawer-overlay -->
+
+</body>
+</html>
