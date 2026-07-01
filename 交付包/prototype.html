@@ -1,0 +1,2288 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>供应商报价权限 - 高保真原型</title>
+  <style>
+    :root {
+      --bg: #edf3fb;
+      --bg-glow: radial-gradient(circle at top left, rgba(59, 130, 246, 0.14), transparent 28%), radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.12), transparent 26%);
+      --panel: #ffffff;
+      --panel-soft: #f8fbff;
+      --ink: #142033;
+      --muted: #6a768a;
+      --line: #d7e2ef;
+      --accent: #2f80ff;
+      --accent-deep: #1f5fd1;
+      --accent-soft: #ebf3ff;
+      --disabled: #eef3f9;
+      --success: #14b36f;
+      --danger: #ef4444;
+      --shadow: 0 20px 50px rgba(20, 42, 74, 0.12);
+      --shadow-soft: 0 10px 24px rgba(20, 42, 74, 0.08);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg-glow), var(--bg);
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+      min-width: 1440px;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      min-height: 100vh;
+      width: 100vw;
+      min-width: 100vw;
+      margin: 0;
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, #243852 0%, #1d3047 100%);
+      color: #f5f7fb;
+      padding: 24px 18px 30px;
+      position: sticky;
+      top: 0;
+      align-self: start;
+      height: 100vh;
+      overflow: auto;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .brand {
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 22px;
+    }
+
+    .side-note {
+      font-size: 13px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.78);
+      margin-bottom: 22px;
+    }
+
+    .nav-group {
+      margin-bottom: 20px;
+      padding: 14px 12px 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .nav-title {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.68);
+      text-transform: uppercase;
+    }
+
+    .nav-link {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: rgba(255,255,255,0.04);
+      color: #f5f7fb;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      padding: 6px 8px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease;
+    }
+
+    .nav-link.active {
+      background: rgba(59,130,246,0.2);
+      color: #ffffff;
+      font-weight: 700;
+      border-color: rgba(147,197,253,0.28);
+    }
+
+    .nav-link:hover {
+      background: rgba(255,255,255,0.08);
+      transform: translateX(2px);
+    }
+
+    .nav-link.disabled {
+      cursor: not-allowed;
+      color: rgba(255,255,255,0.42);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .nav-subtree {
+      margin: 6px 0 4px 14px;
+      padding-left: 12px;
+      border-left: 2px solid rgba(255,255,255,0.12);
+    }
+
+    .nav-sub-link {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      color: rgba(255,255,255,0.9);
+      border: 0;
+      border-radius: 10px;
+      padding: 9px 10px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: transform 0.16s ease, background 0.16s ease;
+    }
+
+    .nav-sub-link:hover {
+      background: rgba(255,255,255,0.08);
+      transform: translateX(2px);
+    }
+
+    .nav-sub-link.active {
+      background: rgba(59,130,246,0.24);
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .nav-sub-link.disabled {
+      cursor: not-allowed;
+      color: rgba(255,255,255,0.42);
+      background: transparent;
+    }
+
+    .main {
+      padding: 14px 16px 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .page {
+      display: none;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 12px;
+      gap: 8px;
+    }
+
+    .page.active {
+      display: grid;
+    }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      border-bottom: 1px solid #e8eef7;
+      padding-bottom: 8px;
+    }
+
+    .page-head h2 {
+      margin: 0 0 2px;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .page-head p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .terminal-tag {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+      white-space: nowrap;
+      border: 1px solid #d7e6ff;
+    }
+
+    .wireframe-box {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: linear-gradient(180deg, #ffffff, #fbfdff);
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .annotation {
+      font-size: 13px;
+      color: #475569;
+      line-height: 1.4; 
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: #f8fbff;
+      border: 1px solid #e5edf8;
+    }
+
+    .pc-shell {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      min-height: 420px;
+      border: 1px solid #d9e3f1;
+      border-radius: 22px;
+      overflow: hidden;
+    }
+
+    .pc-nav {
+      background: linear-gradient(180deg, #2a3f5b 0%, #233751 100%);
+      color: #fff;
+      padding: 14px 10px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .pc-nav-item {
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      font-size: 13px;
+    }
+
+    .pc-nav-item.active {
+      background: rgba(37, 99, 235, 0.22);
+      border: 1px solid rgba(147, 197, 253, 0.35);
+    }
+
+    .pc-nav-item.disabled {
+      opacity: 0.45;
+    }
+
+    .pc-content {
+      background: linear-gradient(180deg, #f8fbff, #f3f7fc);
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+      position: relative;
+      align-content: start;
+    }
+
+    .crumbs,
+    .tabs,
+    .toolbar-row,
+    .filters,
+    .mini-tabs,
+    .actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .crumb,
+    .tab,
+    .mini-tab,
+    .btn,
+    .chip,
+    .field,
+    .select,
+    .status-chip {
+      border: 1px solid #d4deea;
+      border-radius: 12px;
+      background: #fff;
+      padding: 7px 10px;
+      font-size: 12px;
+      color: #334155;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    .tab.active,
+    .mini-tab.active,
+    .btn.primary,
+    .chip.active {
+      background: linear-gradient(180deg, #f0f6ff, #e6f0ff);
+      color: #1d4ed8;
+      border-color: #9fc4ff;
+      font-weight: 700;
+    }
+
+    .btn {
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(47, 128, 255, 0.14);
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, #4a97ff, #2f80ff);
+      color: #fff;
+      border-color: #2f80ff;
+      box-shadow: 0 12px 24px rgba(47, 128, 255, 0.24);
+    }
+
+    .field,
+    .select {
+      min-width: 130px;
+      color: #94a3b8;
+      background: #fbfdff;
+    }
+
+    .field.wide {
+      min-width: 190px;
+    }
+
+    .table {
+      border: 1px solid #dce6f2;
+      border-radius: 18px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      background: #fff;
+    }
+
+    .table table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      min-width: 1600px;
+    }
+
+    .table th,
+    .table td {
+      border-bottom: 1px solid #e6ebf2;
+      border-right: 1px solid #edf2f7;
+      padding: 8px 8px;
+      vertical-align: top;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .table th:last-child,
+    .table td:last-child {
+      border-right: 0;
+    }
+
+    .table th {
+      background: linear-gradient(180deg, #fafcff, #f4f8fc);
+      color: #526274;
+      font-weight: 700;
+    }
+
+    .table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      align-items: center;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .modal-mask {
+      position: relative;
+      min-height: 420px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 14px;
+      background: #f8fafc;
+      overflow: hidden;
+    }
+
+    .modal-mask::before {
+      content: "背景页面";
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .modal {
+      width: min(920px, calc(100% - 60px));
+      margin: 44px auto;
+      background: #fff;
+      border: 1px solid #d6dee8;
+      border-radius: 18px;
+      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
+      padding: 20px;
+      display: grid;
+      gap: 14px;
+      max-height: calc(100vh - 120px);
+      overflow: auto;
+    }
+
+    .modal.small {
+      width: 420px;
+      text-align: center;
+    }
+
+      .modal-title {
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .tooltip-badge {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        background: #eef2f7;
+        color: #94a3b8;
+        font-size: 12px;
+        cursor: help;
+        flex: 0 0 auto;
+      }
+
+      .tooltip-badge::after {
+        content: attr(data-tip);
+        position: absolute;
+        left: 50%;
+        bottom: calc(100% + 10px);
+        transform: translateX(-50%);
+        min-width: 220px;
+        max-width: 340px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: rgba(15, 23, 42, 0.94);
+        color: #fff;
+        font-size: 12px;
+        line-height: 1.5;
+        white-space: normal;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s ease;
+        z-index: 50;
+      }
+
+      .tooltip-badge::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: calc(100% + 4px);
+        transform: translateX(-50%);
+        border: 6px solid transparent;
+        border-top-color: rgba(15, 23, 42, 0.94);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s ease;
+        z-index: 51;
+      }
+
+      .tooltip-badge:hover::after,
+      .tooltip-badge:hover::before {
+        opacity: 1;
+      }
+
+      .config-edit-block {
+        display: grid;
+        gap: 14px;
+        min-height: 160px;
+      }
+
+      .config-edit-block.editing .config-display-actions {
+        display: none !important;
+      }
+
+      .config-edit-block.editing .config-edit-actions {
+        display: flex !important;
+      }
+
+      .config-edit-input {
+        min-width: 180px;
+        padding: 10px 12px;
+        border: 1px solid #cfd7e2;
+        border-radius: 10px;
+        font-size: 14px;
+        color: #1f2937;
+        background: #fff;
+      }
+
+      .config-edit-input[readonly] {
+        color: #64748b;
+      }
+
+      .config-spacer {
+        min-height: 14px;
+      }
+
+      .config-toast {
+        display: none;
+        margin-left: auto;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: #ecfdf3;
+        border: 1px solid #86efac;
+        color: #15803d;
+        font-size: 13px;
+      }
+
+      .config-toast.show {
+        display: inline-flex;
+      }
+
+      .status-toggle-chip {
+        display: inline-flex;
+        align-items: center;
+        width: 40px;
+        height: 22px;
+        border-radius: 999px;
+        background: #f87171;
+        position: relative;
+        box-shadow: inset 0 0 0 1px rgba(248,113,113,0.18);
+        cursor: pointer;
+      }
+
+      .status-toggle-chip::after {
+        content: "";
+        position: absolute;
+        left: 2px;
+        top: 2px;
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        background: #fff;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 18px;
+    }
+
+    .form-item {
+      display: grid;
+      gap: 8px;
+      font-size: 13px;
+      color: #475569;
+    }
+
+    .form-item.full {
+      grid-column: 1 / -1;
+    }
+
+    .mobile-shell {
+      width: 470px;
+      margin: 0 auto;
+      border: 1px solid #d9e3f0;
+      border-radius: 28px;
+      background: linear-gradient(180deg, #f7faff, #f3f7fc);
+      overflow: hidden;
+      min-height: 760px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      position: relative;
+      box-shadow: 0 24px 50px rgba(18, 43, 75, 0.14);
+    }
+
+    .mobile-top {
+      background: linear-gradient(180deg, #ffffff, #fbfdff);
+      padding: 12px 12px 8px;
+      border-bottom: 1px solid #e8eef7;
+      display: grid;
+      gap: 8px;
+    }
+
+    .mobile-title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .mobile-search {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .mobile-content {
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .mobile-brand-tabs,
+    .mobile-order-tabs,
+    .toggle-row,
+    .mobile-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .mobile-card {
+      border: 1px solid #dce7f3;
+      border-radius: 20px;
+      background: #fff;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+      box-shadow: 0 10px 24px rgba(32, 58, 95, 0.06);
+    }
+
+    .mobile-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .mobile-status {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .mobile-status.danger {
+      color: #dc2626;
+    }
+
+    .mobile-status.success {
+      color: #16a34a;
+    }
+
+    .mobile-main-btn {
+      border-radius: 999px;
+      padding: 14px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(90deg, #3e7cff, #35b7f5);
+      box-shadow: 0 16px 30px rgba(54, 139, 245, 0.28);
+    }
+
+    .mobile-bottom-nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid #dbe4ee;
+      background: #fff;
+    }
+
+    .mobile-bottom-nav div {
+      padding: 8px 8px 7px;
+      text-align: center;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .mobile-bottom-nav .active {
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    .empty-state {
+      min-height: 180px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 16px;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    .disabled-tip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: var(--disabled);
+      color: #94a3b8;
+      font-size: 12px;
+    }
+
+    @media (max-width: 1100px) {
+      .shell {
+          grid-template-columns: 1fr;
+          width: 100vw;
+          min-width: 100vw;
+          margin: 0;
+        }
+
+      .sidebar {
+        position: static;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand">供应商报价权限<br>HTML原型图</div>
+
+          <div class="nav-group">
+            <div class="nav-title">点餐后台</div>
+            <button class="nav-link disabled">首页</button>
+            <button class="nav-link disabled">H5商品配置</button>
+            <button class="nav-link disabled">订单管理</button>
+            <button class="nav-link disabled">商品管理</button>
+            <button class="nav-link active">供应商管理</button>
+            <div class="nav-subtree">
+              <button class="nav-sub-link active" data-target="admin-supplier-list">供应商列表</button>
+              <button class="nav-sub-link disabled">兜底供应商</button>
+              <button class="nav-sub-link disabled">失败原因转义</button>
+              <button class="nav-sub-link disabled">供应商推荐人</button>
+              <button class="nav-sub-link disabled">API供应商</button>
+              <button class="nav-sub-link" data-target="admin-dashboard">供应商出餐数据看板</button>
+            </div>
+            <button class="nav-link disabled">券管理</button>
+            <button class="nav-link disabled">用户管理</button>
+            <button class="nav-link disabled">财务管理</button>
+            <button class="nav-link">运营管理</button>
+            <div class="nav-subtree">
+              <button class="nav-sub-link" data-target="admin-config">系统配置项</button>
+              <button class="nav-sub-link disabled">自动发货方案</button>
+            </div>
+            <button class="nav-link disabled">系统管理</button>
+          </div>
+
+            <div class="nav-group">
+              <div class="nav-title">供应商管理系统 PC 端</div>
+              <button class="nav-link disabled">首页</button>
+              <button class="nav-link">出价管理</button>
+              <div class="nav-subtree">
+              <button class="nav-sub-link" data-target="pc-quote-list">商品报价</button>
+              </div>
+            <button class="nav-link disabled">账户管理</button>
+            <button class="nav-link disabled">系统配置</button>
+            <button class="nav-link">订单管理</button>
+            <div class="nav-subtree">
+              <button class="nav-sub-link" data-target="pc-order-list">订单列表</button>
+            </div>
+          <button class="nav-link disabled">品牌账号管理</button>
+            </div>
+
+          <div class="nav-group">
+            <div class="nav-title">供应商小程序端</div>
+            <button class="nav-link" data-target="mini-home">首页</button>
+            <button class="nav-link" data-target="mini-workbench">工作台</button>
+            <button class="nav-link" data-target="mini-order">订单</button>
+            <button class="nav-link" data-target="mini-mine">我的</button>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section class="page active" id="admin-supplier-list">
+              <div class="page-head" style="padding-bottom:4px;">
+            <div>
+              <h2>点餐后台 - 供应商管理 - 供应商列表</h2>
+            </div>
+            <div class="terminal-tag">后台 / PC</div>
+          </div>
+              <div class="annotation" style="color:#b42318; border-color:#f3d2cf; background:#fff7f5; padding:4px 6px; line-height:1.3;">
+                <div><strong>本页新增内容：</strong>供应商列表新增字段“报价权限”。</div>
+                <div><strong>主要交互：</strong></div>
+                <div>1. 点击“已开启 / 已关闭”弹出报价详情弹窗；</div>
+                <div>2. 非系统自动关闭的全部人工报价，仅显示状态，不显示限制的具体时间。</div>
+              </div>
+            <div class="wireframe-box">
+              <div class="pc-shell">
+              <div class="pc-nav">
+                <div class="pc-nav-item">首页</div>
+                <div class="pc-nav-item">H5商品配置</div>
+                <div class="pc-nav-item">订单管理</div>
+                <div class="pc-nav-item">商品管理</div>
+                <div class="pc-nav-item active">供应商管理</div>
+                  <div style="margin:2px 0 8px 22px; border-left:2px solid rgba(255,255,255,0.14); padding-left:10px;">
+                  <div class="pc-nav-item" style="margin:0 0 8px; background:transparent; border:none; padding:10px 12px;">兜底供应商</div>
+                    <div class="pc-nav-item" style="margin:0 0 8px; background:rgba(59,130,246,0.2); border-color:rgba(96,165,250,0.55);">供应商列表</div>
+                    <div class="pc-nav-item" style="margin:0 0 8px; background:transparent; border:none; padding:10px 12px;">失败原因转义</div>
+                    <div class="pc-nav-item" style="margin:0 0 8px; background:transparent; border:none; padding:10px 12px;">供应商推荐人</div>
+                    <div class="pc-nav-item" style="margin:0 0 8px; background:transparent; border:none; padding:10px 12px;">API供应商</div>
+                    <div class="pc-nav-item" style="margin:0; background:transparent; border:none; padding:10px 12px;">供应商出餐数据看板</div>
+                </div>
+                <div class="pc-nav-item">券管理</div>
+                <div class="pc-nav-item">用户管理</div>
+                <div class="pc-nav-item">财务管理</div>
+                <div class="pc-nav-item">运营管理</div>
+                <div class="pc-nav-item">系统管理</div>
+              </div>
+              <div class="pc-content" style="background:#f7f9fc; position:relative;">
+                  <div style="display:flex; align-items:center; padding:2px 0 8px;">
+                  <div class="crumbs" style="margin:0;">
+                    <div class="crumb">首页</div>
+                    <div class="crumb">供应商管理</div>
+                    <div class="crumb active">供应商列表</div>
+                  </div>
+                </div>
+
+                      <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:2px; align-items:center;">
+                      <div class="field" style="min-width:140px; padding:6px 10px; min-height:32px; display:flex; align-items:center;">请输入供应商编号</div>
+                        <div class="field" style="min-width:140px; padding:6px 10px; min-height:32px; display:flex; align-items:center;">请输入供应商名称</div>
+                        <div class="select" style="min-width:120px; padding:6px 10px; min-height:32px; display:flex; align-items:center;">选择品牌</div>
+                        <div class="select" style="min-width:120px; padding:6px 10px; min-height:32px; display:flex; align-items:center;">选择状态</div>
+                        <div class="field wide" style="min-width:198px; padding:6px 10px; min-height:32px; display:flex; align-items:center;">注册开始时间 - 注册结束时间</div>
+                        <div class="btn primary" style="padding:6px 14px; min-height:32px; display:flex; align-items:center;">搜索</div>
+                        <div class="btn" style="padding:6px 14px; min-height:32px; display:flex; align-items:center;">重置</div>
+                        <div class="btn" style="min-width:62px; padding:6px 12px; min-height:32px; display:flex; align-items:center;">导出</div>
+                      </div>
+
+                      <div class="mini-tabs" id="supplier-status-tabs" style="margin-bottom:2px;">
+                  <div class="mini-tab active" data-status="待审核">待审核(2)</div>
+                  <div class="mini-tab" data-status="合作中">合作中(48)</div>
+                  <div class="mini-tab" data-status="停止合作">停止合作(11)</div>
+                  <div class="mini-tab" data-status="全部">全部(61)</div>
+                </div>
+
+                <div class="table" style="overflow-x:auto; overflow-y:hidden;">
+                  <table style="min-width:1640px; table-layout:auto;">
+                    <thead>
+                      <tr>
+                        <th style="min-width:170px;">供应商编号</th>
+                        <th style="min-width:180px;">供应商名称</th>
+                        <th style="min-width:90px;">tenantId</th>
+                        <th style="min-width:120px;">H5链接平台</th>
+                        <th style="min-width:90px;">合作品牌</th>
+                        <th style="min-width:120px;">联系电话</th>
+                        <th style="min-width:90px;">合作状态</th>
+                        <th style="min-width:90px;">合作方式</th>
+                        <th style="min-width:150px;">注册时间</th>
+                        <th style="min-width:100px;">注册方式</th>
+                        <th style="min-width:90px;">推荐人</th>
+                        <th style="min-width:150px;">更新时间</th>
+                        <th style="min-width:170px;"><span style="color:#b42318;">报价权限</span></th>
+                        <th style="min-width:220px;">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody id="supplier-list-body">
+                      <tr data-status="待审核">
+                        <td>2003014875294900225</td>
+                        <td>叶富婆-个体户</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>瑞幸</td>
+                        <td>17812121212</td>
+                        <td>待审核</td>
+                        <td>平台出餐</td>
+                        <td>2025-12-22 16:08:55</td>
+                        <td>平台注册</td>
+                        <td>-</td>
+                        <td>2025-12-29 15:11:00</td>
+                        <td>
+                          <span>人工报价：</span><button type="button" class="supplier-link-btn" data-open-quote-detail data-supplier-name="叶富婆-个体户" data-current-action="关闭">已关闭</button>
+                          <div style="font-size:12px; color:#6b7280; margin-top:4px;">至 2027-01-31 23:59:59</div>
+                        </td>
+                        <td>详情 / H5链接平台分配 / 修改推荐人</td>
+                      </tr>
+                      <tr data-status="合作中">
+                        <td>2001575047353262081</td>
+                        <td>叶富婆6367-企业名称-公司</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>瑞幸</td>
+                        <td>17812787889</td>
+                        <td>合作中</td>
+                        <td>平台出餐</td>
+                        <td>2025-12-18 16:47:33</td>
+                        <td>平台注册</td>
+                        <td>-</td>
+                        <td>2025-12-29 16:40:00</td>
+                        <td>
+                          <span>人工报价：</span><button type="button" class="supplier-link-btn" data-open-quote-detail data-supplier-name="叶富婆6367-企业名称-公司" data-current-action="关闭">已关闭</button>
+                        </td>
+                        <td>详情 / H5链接平台分配 / 修改推荐人</td>
+                      </tr>
+                      <tr data-status="合作中">
+                        <td>2003014875294900888</td>
+                        <td>示例供应商-开启中</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>麦当劳</td>
+                        <td>17800000000</td>
+                        <td>合作中</td>
+                        <td>平台出餐</td>
+                        <td>2025-12-20 11:00:00</td>
+                        <td>平台注册</td>
+                        <td>张三</td>
+                        <td>2025-12-30 09:20:00</td>
+                        <td>
+                          <span>人工报价：</span><button type="button" class="supplier-link-btn supplier-link-btn-open" data-open-quote-detail data-supplier-name="示例供应商-开启中" data-current-action="开启">已开启</button>
+                        </td>
+                        <td>详情 / H5链接平台分配 / 修改推荐人</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="pagination">
+                  <span>共 61 条</span>
+                  <span>20条/页</span>
+                  <span>上一页 / 1 / 下一页 / 前往</span>
+                </div>
+
+                <div id="supplier-inline-detail-mask" style="display:none; position:absolute; inset:0; background:rgba(15,23,42,0.18); padding:24px; align-items:flex-start; justify-content:center;">
+                  <div class="modal" style="margin:32px auto 0; width:min(920px, calc(100% - 40px));">
+                    <div class="modal-title">报价详情</div>
+                    <div style="font-size:13px; color:#475569; margin-bottom:2px;">
+                      供应商名称：<span id="supplier-inline-name" style="font-weight:700; color:#111827;">供应商列表回显</span>
+                    </div>
+                    <div class="table" style="overflow-x:auto;">
+                      <table style="min-width:100%; table-layout:auto;">
+                        <thead>
+                          <tr>
+                            <th>操作</th>
+                            <th>关闭时长</th>
+                            <th>理由</th>
+                            <th>操作人</th>
+                            <th>操作时间</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td id="supplier-inline-action">开启 / 关闭</td>
+                            <td>具体天数 + 关闭到时间</td>
+                            <td>系统原因 / 人工原因</td>
+                            <td>系统 / 后台账号</td>
+                            <td>实际操作时间</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="pagination" style="justify-content:space-between;">
+                      <span>共 12 条</span>
+                      <div style="display:flex; gap:10px; align-items:center;">
+                        <span>上一页</span>
+                        <span style="padding:4px 10px; border:1px solid #93c5fd; color:#1d4ed8; border-radius:8px; background:#e8f1ff;">1</span>
+                        <span>2</span>
+                        <span>3</span>
+                        <span>下一页</span>
+                      </div>
+                    </div>
+                    <div class="actions-row" style="justify-content:flex-end;">
+                      <div class="btn" id="supplier-inline-detail-close">关闭</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="admin-quote-detail-modal">
+          <div class="page-head" style="padding-bottom:2px;">
+            <div>
+              <h2>点餐后台 - 供应商管理 - 报价详情弹窗</h2>
+            </div>
+            <div class="terminal-tag">后台 / PC / 新增弹窗</div>
+          </div>
+          <div class="wireframe-box">
+            <div class="modal-mask">
+              <div class="modal">
+                <div class="modal-title">报价详情</div>
+                <div style="font-size:13px; color:#475569; margin-bottom:2px;">
+                  供应商名称：<span style="font-weight:700; color:#111827;">供应商列表回显</span>
+                </div>
+                <div class="table">
+                  <table style="min-width:100%; table-layout:auto;">
+                    <thead>
+                      <tr>
+                        <th>操作</th>
+                      <th>关闭时长</th>
+                      <th>理由</th>
+                      <th>操作人</th>
+                      <th>操作时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>开启 / 关闭</td>
+                        <td>具体天数 + 关闭到时间</td>
+                      <td>系统原因 / 人工原因</td>
+                      <td>系统 / 后台账号</td>
+                      <td>实际操作时间</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="pagination" style="justify-content:space-between;">
+                  <span>共 12 条</span>
+                  <div style="display:flex; gap:10px; align-items:center;">
+                    <span>上一页</span>
+                    <span style="padding:4px 10px; border:1px solid #93c5fd; color:#1d4ed8; border-radius:8px; background:#e8f1ff;">1</span>
+                    <span>2</span>
+                    <span>3</span>
+                    <span>下一页</span>
+                  </div>
+                </div>
+                <div class="actions-row" style="justify-content:flex-end;">
+                  <div class="btn">关闭</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="admin-dashboard">
+          <div class="page-head">
+            <div>
+              <h2>点餐后台 - 供应商管理 - 供应商出餐数据看板</h2>
+            </div>
+            <div class="terminal-tag">后台 / PC</div>
+          </div>
+              <div class="annotation" style="color:#b42318; border-color:#f3d2cf; background:#fff7f5; padding:6px 8px; line-height:1.35;">
+                <div><strong>本页新增内容：</strong>新增供应商出餐数据看板页面。</div>
+              <div><strong>主要内容：</strong></div>
+              <div>1. 默认展示近 30 天数据；</div>
+            <div>2. 支持按时间范围、供应商名称、供应商编号筛选查询；</div>
+            <div>3. 导出字段与列表字段一致；</div>
+            <div>4. 最后报价时间按倒序排序；</div>
+            <div>5. 列表右上角显示更新时间，且每次整点更新后更新时间会变化；</div>
+            <div>6. 列表分页呈现。</div>
+            </div>
+          <div class="wireframe-box">
+            <div class="pc-shell">
+            <div class="pc-nav">
+              <div class="pc-nav-item">首页</div>
+              <div class="pc-nav-item disabled">H5商品配置</div>
+              <div class="pc-nav-item disabled">订单管理</div>
+              <div class="pc-nav-item disabled">商品管理</div>
+                <div class="pc-nav-item active">供应商管理</div>
+                  <div style="margin:2px 0 8px 22px; border-left:2px solid rgba(255,255,255,0.14); padding-left:10px;">
+                  <div class="pc-nav-item" style="margin:0 0 8px; background:transparent; border:none; padding:10px 12px;">兜底供应商</div>
+                  <div class="pc-nav-item" style="margin:0 0 8px; background:transparent; border:none; padding:10px 12px;">供应商列表</div>
+                  <div class="pc-nav-item" style="margin:0 0 8px; background:transparent; border:none; padding:10px 12px;">失败原因转义</div>
+                  <div class="pc-nav-item" style="margin:0 0 8px; background:transparent; border:none; padding:10px 12px;">供应商推荐人</div>
+                  <div class="pc-nav-item" style="margin:0 0 8px; background:transparent; border:none; padding:10px 12px;">API供应商</div>
+                  <div class="pc-nav-item" style="margin:0; background:rgba(59,130,246,0.2); border-color:rgba(96,165,250,0.55);">供应商出餐数据看板</div>
+                </div>
+                <div class="pc-nav-item disabled">券管理</div>
+                <div class="pc-nav-item disabled">用户管理</div>
+                <div class="pc-nav-item disabled">财务管理</div>
+                <div class="pc-nav-item">运营管理</div>
+                <div class="pc-nav-item disabled">系统管理</div>
+            </div>
+                    <div class="pc-content" style="gap:8px;">
+                  <div class="crumbs">
+                    <div class="crumb">首页</div>
+                    <div class="crumb">供应商管理</div>
+                    <div class="crumb active">供应商出餐数据</div>
+                  </div>
+                        <div class="filters" style="gap:8px;">
+                    <div class="field wide" style="min-width:190px; padding:6px 10px; min-height:32px; display:flex; align-items:center;">2026-05-25 - 2026-06-24</div>
+                    <div class="field" style="min-width:130px; padding:6px 10px; min-height:32px; display:flex; align-items:center;">供应商名称</div>
+                    <div class="field" style="min-width:130px; padding:6px 10px; min-height:32px; display:flex; align-items:center;">供应商编号</div>
+                    <div class="btn primary" style="padding:6px 14px; min-height:32px; display:flex; align-items:center;">搜索</div>
+                    <div class="btn" style="padding:6px 14px; min-height:32px; display:flex; align-items:center;">重置</div>
+                    <div class="btn" style="padding:6px 14px; min-height:32px; display:flex; align-items:center;">导出</div>
+                  </div>
+                        <div class="actions-row" style="justify-content:flex-end;">
+                    <div class="disabled-tip" style="padding:6px 10px;">更新时间：2026-06-24 11:00:00</div>
+                  </div>
+                        <div class="table">
+                  <table style="min-width:1400px; table-layout:auto;">
+                    <thead>
+                      <tr>
+                        <th>供应商编号</th>
+                      <th>供应商名称</th>
+                      <th>接单数量</th>
+                      <th>出餐数量</th>
+                      <th>超时未处理</th>
+                      <th>出餐失败</th>
+                      <th>出餐成功率</th>
+                      <th>平均出餐时长</th>
+                      <th>最后报价时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>编号</td>
+                        <td>名称</td>
+                      <td>N</td>
+                      <td>N</td>
+                      <td>N</td>
+                      <td>N</td>
+                      <td>%</td>
+                      <td>时长</td>
+                        <td>自动/人工最后报价时间</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="pagination" style="justify-content:space-between; margin-top:2px;">
+                  <span>共 128 条</span>
+                  <div style="display:flex; gap:10px; align-items:center;">
+                    <span>20条/页</span>
+                    <span>上一页</span>
+                    <span style="padding:4px 10px; border:1px solid #93c5fd; color:#1d4ed8; border-radius:8px; background:#e8f1ff;">1</span>
+                    <span>2</span>
+                    <span>3</span>
+                    <span>下一页</span>
+                    <span>前往 1 页</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="admin-config">
+          <div class="page-head">
+            <div>
+              <h2>点餐后台 - 运营管理 - 系统配置项 - 人工报价权限配置</h2>
+            </div>
+            <div class="terminal-tag">后台 / PC</div>
+          </div>
+                <div class="annotation" style="color:#b42318; border-color:#f3d2cf; background:#fff7f5; padding:6px 8px; line-height:1.35; margin-top:-4px;">
+              <div><strong>本页新增内容：</strong>系统配置项新增“人工报价权限配置”。</div>
+            <div><strong>主要内容：</strong></div>
+            <div>1. 配置连续失败单数阈值；</div>
+            <div>2. 配置暂停人工报价权限时长（小时）；</div>
+            <div>3. 新配置保存后对后续新增统计和后续新触发的自动停报规则立即生效；</div>
+            <div>4. 已进入暂停中的供应商按触发当时的配置执行。</div>
+            </div>
+            <div class="wireframe-box" style="margin-top:-4px;">
+              <div class="pc-shell">
+              <div class="pc-nav">
+                <div class="pc-nav-item">首页</div>
+                <div class="pc-nav-item disabled">H5商品配置</div>
+                <div class="pc-nav-item disabled">订单管理</div>
+                <div class="pc-nav-item disabled">商品管理</div>
+                <div class="pc-nav-item disabled">供应商管理</div>
+                <div class="pc-nav-item disabled">券管理</div>
+                <div class="pc-nav-item disabled">用户管理</div>
+                <div class="pc-nav-item disabled">财务管理</div>
+                  <div class="pc-nav-item">供应商管理</div>
+                    <div style="margin:2px 0 8px 22px; border-left:2px solid rgba(255,255,255,0.14); padding-left:10px;">
+                    <div class="pc-nav-item" style="margin:0 0 8px; background:transparent; border:none; padding:10px 12px;">兜底供应商</div>
+                    <div class="pc-nav-item" style="margin:0 0 8px; background:transparent; border:none; padding:10px 12px;">供应商列表</div>
+                    <div class="pc-nav-item" style="margin:0 0 8px; background:transparent; border:none; padding:10px 12px;">失败原因转义</div>
+                    <div class="pc-nav-item" style="margin:0 0 8px; background:transparent; border:none; padding:10px 12px;">供应商推荐人</div>
+                    <div class="pc-nav-item" style="margin:0; background:transparent; border:none; padding:10px 12px;">API供应商</div>
+                  </div>
+                  <div class="pc-nav-item disabled">券管理</div>
+                  <div class="pc-nav-item disabled">用户管理</div>
+                  <div class="pc-nav-item disabled">财务管理</div>
+                  <div class="pc-nav-item active">运营管理</div>
+                  <div style="margin:6px 0 14px 22px; border-left:2px solid rgba(255,255,255,0.14); padding-left:12px;">
+                    <div class="pc-nav-item" style="margin:0 0 8px; background:rgba(59,130,246,0.2); border-color:rgba(96,165,250,0.55);">系统配置项</div>
+                    <div class="pc-nav-item" style="margin:0; background:transparent; border:none; padding:10px 12px;">自动发货方案</div>
+                  </div>
+                <div class="pc-nav-item disabled">系统管理</div>
+              </div>
+              <div class="pc-content" style="overflow:auto;">
+                <div class="crumbs">
+                  <div class="crumb">首页</div>
+                  <div class="crumb">运营管理</div>
+                  <div class="crumb active">系统配置项</div>
+                </div>
+                <div class="config-toast" id="admin-config-toast">保存成功</div>
+                  <div style="display:grid; gap:10px;">
+                  <div>
+                    <div style="font-size:16px; font-weight:700; margin-bottom:4px;">【瑞幸】订单相关配置</div>
+                      <div style="display:grid; grid-template-columns:repeat(4, minmax(220px, 1fr)); gap:10px;">
+                        <div style="background:#fff; border:1px solid #d8e0ea; border-radius:12px; min-height:170px; padding:12px; display:grid; align-content:start; gap:10px;">
+                        <div style="display:flex; justify-content:space-between; gap:12px;">
+                          <div>未支付订单取消时间</div>
+                          <div class="disabled-tip" style="padding:2px 7px;">?</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                          <div class="field" style="min-width:120px;">1</div>
+                          <div>分钟</div>
+                        </div>
+                        <div class="actions-row" style="justify-content:flex-end;">
+                          <div class="btn primary">编辑</div>
+                        </div>
+                      </div>
+                        <div style="background:#fff; border:1px solid #d8e0ea; border-radius:12px; min-height:170px; padding:12px; display:grid; align-content:start; gap:10px;">
+                        <div style="display:flex; justify-content:space-between; gap:12px;">
+                          <div>供应商待取餐上限订单数量(人工出餐)</div>
+                          <div class="disabled-tip" style="padding:2px 7px;">?</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                          <div class="field" style="min-width:180px;">10000</div>
+                          <div>单</div>
+                        </div>
+                        <div class="actions-row" style="justify-content:flex-end;">
+                          <div class="btn primary">编辑</div>
+                        </div>
+                      </div>
+                        <div style="background:#fff; border:1px solid #d8e0ea; border-radius:12px; min-height:170px; padding:12px; display:grid; align-content:start; gap:10px;">
+                        <div style="display:flex; justify-content:space-between; gap:12px;">
+                          <div>手工订单未出餐取消时间</div>
+                          <div class="disabled-tip" style="padding:2px 7px;">?</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                          <div class="field" style="min-width:120px;">1</div>
+                          <div>分钟</div>
+                        </div>
+                        <div class="actions-row" style="justify-content:flex-end;">
+                          <div class="btn primary">编辑</div>
+                        </div>
+                      </div>
+                        <div style="background:#fff; border:1px solid #d8e0ea; border-radius:12px; min-height:170px; padding:12px; display:grid; align-content:start; gap:10px;">
+                        <div style="display:flex; justify-content:space-between; gap:12px;">
+                          <div>供应商订单结算时间</div>
+                          <div class="disabled-tip" style="padding:2px 7px;">?</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                          <div class="field" style="min-width:120px;">1</div>
+                          <div>分钟</div>
+                        </div>
+                        <div class="actions-row" style="justify-content:flex-end;">
+                          <div class="btn primary">编辑</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style="font-size:16px; font-weight:700; margin-bottom:4px;">雪碧API熔断配置</div>
+                      <div style="display:grid; grid-template-columns:repeat(2, minmax(220px, 1fr)); gap:10px; max-width:660px;">
+                        <div style="background:#fff; border:1px solid #d8e0ea; border-radius:12px; min-height:156px; padding:12px; display:grid; align-content:start; gap:10px;">
+                        <div style="display:flex; justify-content:space-between; gap:12px;">
+                          <div>雪碧API状态</div>
+                          <div class="disabled-tip" style="padding:2px 7px;">?</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                          <div>禁用</div>
+                          <div class="field" style="min-width:48px; text-align:center;">开关</div>
+                          <div style="color:#60a5fa;">启用</div>
+                        </div>
+                        <div class="actions-row" style="justify-content:flex-end;">
+                          <div class="btn primary">编辑</div>
+                        </div>
+                      </div>
+                        <div style="background:#fff; border:1px solid #d8e0ea; border-radius:12px; min-height:156px; padding:12px; display:grid; align-content:start; gap:10px;">
+                        <div style="display:flex; justify-content:space-between; gap:12px;">
+                          <div>雪碧API超时关闭数量</div>
+                          <div class="disabled-tip" style="padding:2px 7px;">?</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                          <div class="field" style="min-width:180px;">30</div>
+                          <div>次</div>
+                        </div>
+                        <div class="actions-row" style="justify-content:flex-end;">
+                          <div class="btn primary">编辑</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style="font-size:16px; font-weight:700; margin-bottom:4px; color:#b42318; display:flex; align-items:center; gap:8px;">
+                      <span>人工报价权限配置</span>
+                      <span class="tooltip-badge" data-tip="保存成功后，对后续新增统计和后续新触发的自动停报规则立即生效；已进入暂停中的供应商，按触发当时的配置执行。">?</span>
+                    </div>
+                    <div style="display:grid; grid-template-columns:repeat(2, minmax(220px, 1fr)); gap:10px; max-width:660px;">
+                        <div class="config-edit-block" data-config-block style="background:#fff; border:1px solid #d8e0ea; border-radius:12px; padding:18px;">
+                        <div style="display:flex; justify-content:space-between; gap:12px;">
+                          <div>连续失败单数阈值</div>
+                          <span class="tooltip-badge" data-tip="供应商连续失败达到多少单时，系统自动暂停人工报价权限">?</span>
+                        </div>
+                        <div>
+                          <input class="config-edit-input" data-config-input type="text" value="5" readonly>
+                        </div>
+                        <div class="config-spacer"></div>
+                        <div class="actions-row config-display-actions" style="justify-content:flex-end;">
+                          <div class="btn primary" data-config-edit>编辑</div>
+                        </div>
+                        <div class="actions-row config-edit-actions" style="justify-content:flex-end; display:none;">
+                          <div class="btn primary" data-config-save>保存</div>
+                          <div class="btn" data-config-cancel>取消</div>
+                        </div>
+                      </div>
+                        <div class="config-edit-block" data-config-block style="background:#fff; border:1px solid #d8e0ea; border-radius:12px; padding:18px;">
+                        <div style="display:flex; justify-content:space-between; gap:12px;">
+                          <div>暂停人工报价权限时长</div>
+                          <span class="tooltip-badge" data-tip="系统自动暂停人工报价权限的时长">?</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                          <input class="config-edit-input" data-config-input type="text" value="1" readonly>
+                          <div>小时</div>
+                        </div>
+                        <div class="config-spacer"></div>
+                        <div class="actions-row config-display-actions" style="justify-content:flex-end;">
+                          <div class="btn primary" data-config-edit>编辑</div>
+                        </div>
+                        <div class="actions-row config-edit-actions" style="justify-content:flex-end; display:none;">
+                          <div class="btn primary" data-config-save>保存</div>
+                          <div class="btn" data-config-cancel>取消</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="pc-quote-list">
+              <div class="page-head" style="padding-bottom:4px;">
+            <div>
+              <h2>供应商管理系统 PC 端 - 出价管理 - 商品报价</h2>
+            </div>
+              <div class="terminal-tag">供应商管理系统 / PC</div>
+          </div>
+              <div class="annotation" style="color:#b42318; border-color:#f3d2cf; background:#fff7f5; padding:4px 6px; line-height:-1.3;">
+                <div><strong>本页新增逻辑：</strong></div>
+            <div><strong>主要内容：</strong></div>
+            <div>1. 系统自动关闭人工报价权限后，所有人工出餐的规则状态变为关闭；</div>
+            <div>2. 系统自动恢复报价权限时，所有人工出餐的规则状态变为跟系统未限制报价权限时一样；</div>
+            <div>3. 系统自动关闭后，供应商点击状态按钮显示轻提示文案"系统自动关闭人工报价权限，具体查看公众号提醒"。</div>
+              </div>
+            <div class="wireframe-box">
+            <div class="pc-shell">
+              <div class="pc-nav">
+                <div class="pc-nav-item">首页</div>
+                <div class="pc-nav-item active">出价管理</div>
+                <div style="margin:6px 0 14px 22px; border-left:2px solid rgba(255,255,255,0.14); padding-left:12px;">
+                  <div class="pc-nav-item" style="margin:0 0 8px; background:rgba(59,130,246,0.2); border-color:rgba(96,165,250,0.55);">商品报价</div>
+                </div>
+                <div class="pc-nav-item disabled">账户管理</div>
+                <div class="pc-nav-item disabled">系统配置</div>
+                <div class="pc-nav-item disabled">订单管理</div>
+                <div class="pc-nav-item disabled">品牌账号管理</div>
+              </div>
+              <div class="pc-content">
+                <div class="crumbs">
+                  <div class="crumb">首页</div>
+                  <div class="crumb">出价管理</div>
+                  <div class="crumb active">商品报价</div>
+                </div>
+                  <div class="filters" style="align-items:flex-start; gap:8px; margin-top:2px;">
+                  <div class="select">选择品牌</div>
+                  <div class="field">请输入报价规则</div>
+                  <div class="field">请输入商品名称</div>
+                  <div class="select">选择出餐方式</div>
+                  <div class="select">选择状态</div>
+                  <div class="btn primary">搜索</div>
+                  <div class="btn">重置</div>
+                </div>
+                    <div class="actions-row" style="margin-top:0;">
+                    <button type="button" class="btn primary" id="pc-open-create-rule" onclick="openPcCreateRule()">新增报价规则</button>
+                  </div>
+                <div class="table" style="overflow-x:auto;">
+                  <table style="min-width:1550px; table-layout:auto;">
+                    <thead>
+                      <tr>
+                        <th>商品品牌</th>
+                      <th>报价规则</th>
+                      <th>报价商品</th>
+                      <th>可出餐城市</th>
+                      <th>报价时间</th>
+                      <th>更新时间</th>
+                      <th>报价金额</th>
+                      <th>出餐方式</th>
+                      <th>供应商名称</th>
+                      <th>状态</th>
+                        <th>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>肯德基</td>
+                        <td>KFC自动报价</td>
+                        <td>超值OK三件套、自选十翅一桶、人气汉堡随心配BBN四件套</td>
+                        <td>厦门</td>
+                        <td>2026-06-09 10:09:46</td>
+                        <td>2026-06-22 18:38:10</td>
+                        <td>1</td>
+                        <td>人工</td>
+                        <td>井井井</td>
+                          <td><span class="status-toggle-chip" data-pc-status-tip onclick="showPcStatusTip()"></span></td>
+                            <td><button type="button" class="btn" id="pc-open-edit-rule-1" style="padding:6px 14px;" onclick="openPcEditRule()">修改</button> / 删除</td>
+                      </tr>
+                      <tr>
+                        <td>麦当劳</td>
+                        <td>麦当劳</td>
+                        <td>安格斯厚牛堡四件套随机选、鱼牛汉堡四件套随机选</td>
+                        <td>厦门</td>
+                        <td>2026-06-08 16:03:52</td>
+                        <td>2026-06-09 10:07:50</td>
+                        <td>1</td>
+                        <td>人工</td>
+                        <td>井井井</td>
+                          <td><span class="status-toggle-chip" data-pc-status-tip onclick="showPcStatusTip()"></span></td>
+                            <td><button type="button" class="btn" id="pc-open-edit-rule-2" style="padding:6px 14px;" onclick="openPcEditRule()">修改</button> / 删除</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                  <div class="pagination" style="justify-content:space-between; margin-top:0;">
+                    <span>共 4 条</span>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                      <span>20条/页</span>
+                      <span>上一页</span>
+                    <span style="padding:4px 10px; border:1px solid #93c5fd; color:#1d4ed8; border-radius:8px; background:#e8f1ff;">1</span>
+                    <span>下一页</span>
+                      <span>前往 1 页</span>
+                    </div>
+                  </div>
+                    <div id="pc-status-tip-toast" style="display:none; position:absolute; top:20px; left:50%; transform:translateX(-50%); padding:10px 14px; border-radius:10px; background:#ecfdf3; border:1px solid #86efac; color:#15803d; font-size:13px; box-shadow:0 10px 24px rgba(15,23,42,0.12); z-index:20;">系统自动关闭人工报价权限，具体查看公众号提醒</div>
+                    <div id="pc-create-rule-inline-mask" style="display:none; position:absolute; inset:0; background:rgba(15,23,42,0.18); padding:24px; align-items:flex-start; justify-content:center; z-index:30; overflow:auto;">
+                      <div class="modal" style="margin:32px auto 0; width:min(1080px, calc(100% - 40px));">
+                        <div class="modal-title">新增报价规则</div>
+                        <div class="form-grid">
+                          <div class="form-item">
+                            <div>* 报价规则</div>
+                            <div class="field">输入报价规则名称</div>
+                          </div>
+                          <div class="form-item">
+                            <div>套餐模式</div>
+                            <div class="field">开关</div>
+                          </div>
+                          <div class="form-item">
+                            <div>套餐编号</div>
+                            <div class="field">输入套餐编号</div>
+                          </div>
+                          <div class="form-item">
+                            <div>* 商品品牌</div>
+                            <div class="select">选择商品品牌</div>
+                          </div>
+                        </div>
+                        <div class="actions-row">
+                          <div class="btn primary">添加报价商品</div>
+                        </div>
+                        <div class="table">
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>序号</th>
+                                <th>商品名称</th>
+                                <th>市场价</th>
+                                <th>报价最高限价</th>
+                                <th>操作</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td colspan="5" style="text-align:center;color:#94a3b8;">暂无数据</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="form-grid">
+                          <div class="form-item full">
+                            <div>* 出餐方式</div>
+                            <div class="toggle-row">
+                              <div class="chip active">手动</div>
+                              <div class="chip">自动</div>
+                              <div class="chip">链接平台</div>
+                            </div>
+                          </div>
+                          <div class="form-item">
+                            <div>可出餐城市</div>
+                            <div class="field">多选</div>
+                          </div>
+                          <div class="form-item">
+                            <div>* 报价金额</div>
+                            <div class="field">输入金额</div>
+                          </div>
+                        </div>
+                        <div class="annotation">说明：平台订单将优先分配给最低报价供应商。</div>
+                        <div class="actions-row" style="justify-content:flex-end;">
+                          <div class="btn primary">确定</div>
+                          <div class="btn" id="pc-close-create-rule-inline">取消</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="pc-edit-rule-inline-mask" style="display:none; position:absolute; inset:0; background:rgba(15,23,42,0.18); padding:24px; align-items:flex-start; justify-content:center; z-index:30; overflow:auto;">
+                      <div class="modal" style="margin:32px auto 0; width:min(1080px, calc(100% - 40px));">
+                        <div class="modal-title">编辑报价规则</div>
+                        <div class="form-grid">
+                          <div class="form-item">
+                            <div>* 报价规则</div>
+                            <div class="field">规则名称</div>
+                          </div>
+                          <div class="form-item">
+                            <div>套餐模式</div>
+                            <div class="field">开关</div>
+                          </div>
+                          <div class="form-item">
+                            <div>套餐编号</div>
+                            <div class="field">输入套餐编号</div>
+                          </div>
+                          <div class="form-item">
+                            <div>* 商品品牌</div>
+                            <div class="select">品牌下拉</div>
+                          </div>
+                        </div>
+                        <div class="actions-row">
+                          <div class="btn primary">添加报价商品</div>
+                        </div>
+                        <div class="table">
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>序号</th>
+                                <th>商品名称</th>
+                                <th>市场价</th>
+                                <th>报价最高限价</th>
+                                <th>操作</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>1</td>
+                                <td>商品名</td>
+                                <td>市场价</td>
+                                <td>最高限价</td>
+                                <td>删除</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="form-grid">
+                          <div class="form-item full">
+                            <div>* 出餐方式</div>
+                            <div class="toggle-row">
+                              <div class="chip active">手动</div>
+                              <div class="chip">自动</div>
+                              <div class="chip">链接平台</div>
+                            </div>
+                          </div>
+                          <div class="form-item">
+                            <div>可出餐城市</div>
+                            <div class="field">多选城市标签</div>
+                          </div>
+                          <div class="form-item">
+                            <div>* 报价金额</div>
+                            <div class="field">输入金额</div>
+                          </div>
+                        </div>
+                        <div class="annotation">说明：平台订单将优先分配给最低报价供应商。</div>
+                        <div class="actions-row" style="justify-content:flex-end;">
+                          <div class="btn primary">确定</div>
+                          <div class="btn" id="pc-close-edit-rule-inline">取消</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </section>
+
+        <section class="page" id="pc-order-list">
+              <div class="page-head" style="padding-bottom:4px;">
+            <div>
+              <h2>供应商管理系统 PC 端 - 订单管理 - 订单列表</h2>
+            </div>
+            <div class="terminal-tag">供应商管理系统 / PC</div>
+          </div>
+                <div class="annotation" style="color:#b42318; border-color:#f3d2cf; background:#fff7f5; padding:4px 6px; line-height:1.3;">
+            <div><strong>本页新增逻辑：</strong></div>
+            <div><strong>主要内容：</strong></div>
+            <div>1. 统计供应商连续超时未处理的订单，若达到后台配置的阈值，则进行公众号提醒，且暂停后台配置时长的人工出餐方式的报价规则。</div>
+            </div>
+            <div class="wireframe-box">
+            <div class="pc-shell">
+              <div class="pc-nav">
+                <div class="pc-nav-item">首页</div>
+                <div class="pc-nav-item">出价管理</div>
+                <div style="margin:2px 0 8px 22px; border-left:2px solid rgba(255,255,255,0.14); padding-left:10px;">
+                  <div class="pc-nav-item" style="margin:0; background:transparent; border:none; padding:10px 12px;">商品报价</div>
+                </div>
+                <div class="pc-nav-item disabled">账户管理</div>
+                <div class="pc-nav-item disabled">系统配置</div>
+                <div class="pc-nav-item active">订单管理</div>
+                <div style="margin:2px 0 8px 22px; border-left:2px solid rgba(255,255,255,0.14); padding-left:10px;">
+                  <div class="pc-nav-item" style="margin:0; background:rgba(59,130,246,0.2); border-color:rgba(96,165,250,0.55);">订单列表</div>
+                </div>
+                <div class="pc-nav-item disabled">品牌账号管理</div>
+              </div>
+              <div class="pc-content">
+                <div class="crumbs">
+                  <div class="crumb">首页</div>
+                  <div class="crumb">订单管理</div>
+                  <div class="crumb active">订单列表</div>
+                </div>
+                  <div class="filters" style="align-items:flex-start; gap:10px;">
+                  <div class="field">请输入出餐订单</div>
+                  <div class="field">请输入接单记录编号</div>
+                  <div class="field">请输入出餐账号</div>
+                  <div class="field">请输入兑换码</div>
+                  <div class="field">请输入商品名称</div>
+                  <div class="select">请选择出餐方式</div>
+                  <div class="select">请选择结算状态</div>
+                  <div class="field wide">接单开始时间 - 接单结束时间</div>
+                  <div class="field wide">结算开始时间 - 结算结束时间</div>
+                  <div class="btn primary">搜索</div>
+                  <div class="btn">重置</div>
+                </div>
+                  <div class="annotation" style="color:#f59e0b; background:#fff7ed; border-color:#fed7aa; margin-top:-2px;">超时未出餐，将取消分配的订单，请关注出餐情况</div>
+                <div class="actions-row">
+                  <div class="btn">导出</div>
+                </div>
+                <div class="mini-tabs">
+                  <div class="mini-tab active">进行中</div>
+                  <div class="mini-tab">已完成</div>
+                  <div class="mini-tab">全部</div>
+                </div>
+                <div class="table" style="overflow-x:auto;">
+                  <table style="min-width:2600px; table-layout:auto;">
+                    <thead>
+                      <tr>
+                        <th>三方订单编号</th>
+                        <th>出餐订单</th>
+                        <th>接单记录编号</th>
+                        <th>接单时间</th>
+                        <th>剩余出餐时间</th>
+                        <th>出餐时间</th>
+                        <th>结算时间</th>
+                        <th>出餐状态</th>
+                        <th>出餐方式</th>
+                        <th>商品名称</th>
+                        <th>下单平台</th>
+                        <th>出餐账号</th>
+                        <th>兑换链接</th>
+                        <th>兑换码</th>
+                        <th>取餐备注</th>
+                        <th>结算金额</th>
+                        <th>结算状态</th>
+                        <th>门店名称</th>
+                        <th>商品品牌</th>
+                        <th>订单市价</th>
+                        <th>供应商名称</th>
+                        <th>取餐码</th>
+                        <th>取餐二维码</th>
+                        <th>二级供应商</th>
+                        <th>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td></td>
+                        <td>2056643601429417984</td>
+                        <td>2056643601467133954</td>
+                        <td>2026-05-19 15:50:21</td>
+                        <td>--</td>
+                        <td>2026-05-19 15:51:04</td>
+                        <td>2026-05-19 15:52:05</td>
+                        <td><span class="chip active" style="padding:4px 10px;">出餐成功</span></td>
+                        <td>人工</td>
+                        <td>耶加雪菲·澳瑞白</td>
+                        <td></td>
+                        <td>2847</td>
+                        <td></td>
+                        <td></td>
+                        <td>测试单</td>
+                        <td>3</td>
+                        <td>已结算</td>
+                        <td>瑞幸-厦门·集美英瑶路店</td>
+                        <td>瑞幸</td>
+                        <td>35</td>
+                        <td>井井井</td>
+                        <td>5623,7546,78965</td>
+                        <td><a href="#" style="color:#2f80ff; text-decoration:none;">查看</a></td>
+                        <td></td>
+                        <td>详情</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="pagination" style="justify-content:space-between;">
+                  <span>共 1 条</span>
+                  <div style="display:flex; gap:10px; align-items:center;">
+                    <span>20条/页</span>
+                    <span>上一页</span>
+                    <span style="padding:4px 10px; border:1px solid #93c5fd; color:#1d4ed8; border-radius:8px; background:#e8f1ff;">1</span>
+                    <span>下一页</span>
+                    <span>前往 1 页</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="mini-home">
+          <div class="page-head">
+            <div>
+              <h2>供应商小程序端 - 首页</h2>
+            </div>
+            <div class="terminal-tag">小程序</div>
+          </div>
+          <div class="annotation" style="color:#b42318; border-color:#f3d2cf; background:#fff7f5;">
+            <div><strong>本页新增逻辑：</strong></div>
+            <div><strong>主要内容：</strong></div>
+            <div>1. 系统自动关闭人工报价权限后，所有人工出餐的规则状态变为关闭；</div>
+            <div>2. 系统自动恢复报价权限时，所有人工出餐的规则状态变为跟系统未限制报价权限时一样；</div>
+            <div>3. 系统自动关闭后，供应商点击状态按钮显示提示文案“系统自动关闭人工报价权限，具体查看公众号提醒”；</div>
+          </div>
+          <div class="wireframe-box">
+            <div class="mobile-shell">
+              <div id="mini-status-tip-toast" style="display:none; position:absolute; top:16px; left:50%; transform:translateX(-50%); padding:10px 14px; border-radius:10px; background:#ecfdf3; border:1px solid #86efac; color:#15803d; font-size:13px; box-shadow:0 10px 24px rgba(15,23,42,0.12); z-index:20;">系统自动关闭人工报价权限，具体查看公众号提醒</div>
+              <div class="mobile-top">
+                <div class="mobile-title">首页</div>
+                <div class="mobile-search">
+                  <div class="field wide">搜索商品名称</div>
+                  <div class="btn primary">搜索</div>
+              </div>
+            </div>
+            <div class="mobile-content">
+              <div class="mobile-brand-tabs">
+                <div class="chip active">瑞幸</div>
+                <div class="chip">麦当劳</div>
+              </div>
+              <div class="mobile-card">
+                <div class="mobile-card-head">
+                  <div>规则：规则名称</div>
+                  <div class="mobile-status danger">禁用</div>
+                </div>
+                <div>商品品牌：品牌名</div>
+                <div>报价时间：时间</div>
+                  <div>报价金额：金额</div>
+                  <div>出餐方式：人工 / 自动</div>
+                  <div>出餐城市：城市</div>
+                  <div>商品名称：商品名</div>
+                    <div class="mobile-actions">
+                      <button type="button" class="btn" onclick="showMiniStatusTip()">启用</button>
+                      <button type="button" class="btn" id="mini-open-edit-rule" onclick="showPage('mini-edit-rule')">编辑</button>
+                    </div>
+                  </div>
+                      <div style="color:#9ca3af; text-align:center; padding:10px 0 12px; font-size:14px;">没有更多了</div>
+                      <div style="height:16px;"></div>
+                  <button type="button" class="mobile-main-btn" id="mini-open-create-rule" style="border:none; cursor:pointer; margin-bottom:15px;" onclick="showPage('mini-create-rule')">+ 新增报价规则</button>
+              </div>
+              <div class="mobile-bottom-nav">
+                <div class="active">首页</div>
+                <div>工作台</div>
+                <div>订单</div>
+              <div>我的</div>
+            </div>
+          </div>
+          </div>
+        </section>
+
+        <section class="page" id="mini-home-enable-modal">
+          <div class="page-head">
+            <div>
+              <h2>供应商小程序端 - 首页内启用报价规则二次确认弹窗</h2>
+            </div>
+            <div class="terminal-tag">小程序 / 已有弹窗</div>
+          </div>
+        <div class="wireframe-box">
+          <div class="mobile-shell">
+            <div class="mobile-top">
+              <div class="mobile-title">首页</div>
+            </div>
+            <div class="mobile-content">
+              <div class="mobile-card">
+                <div class="mobile-card-head">
+                  <div>规则：规则名</div>
+                  <div class="mobile-status danger">禁用</div>
+                </div>
+              </div>
+              <div class="modal small">
+                <div class="modal-title">确认操作</div>
+                <div>是否启用【规则名】报价规则？</div>
+                <div class="actions-row" style="justify-content:center;">
+                  <div class="btn">取消</div>
+                  <div class="btn primary">确定</div>
+                </div>
+              </div>
+            </div>
+            <div class="mobile-bottom-nav">
+              <div class="active">首页</div>
+              <div>工作台</div>
+              <div>订单</div>
+              <div>我的</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+        <section class="page" id="mini-home-disable-modal">
+          <div class="page-head">
+            <div>
+              <h2>供应商小程序端 - 首页内禁用报价规则二次确认弹窗</h2>
+            </div>
+            <div class="terminal-tag">小程序 / 已有弹窗</div>
+          </div>
+        <div class="wireframe-box">
+          <div class="mobile-shell">
+            <div class="mobile-top">
+              <div class="mobile-title">首页</div>
+            </div>
+            <div class="mobile-content">
+              <div class="mobile-card">
+                <div class="mobile-card-head">
+                  <div>规则：规则名</div>
+                  <div class="mobile-status success">启用</div>
+                </div>
+              </div>
+              <div class="modal small">
+                <div class="modal-title">确认操作</div>
+                <div>是否禁用【规则名】报价规则？</div>
+                <div class="actions-row" style="justify-content:center;">
+                  <div class="btn">取消</div>
+                  <div class="btn primary">确定</div>
+                </div>
+              </div>
+            </div>
+            <div class="mobile-bottom-nav">
+              <div class="active">首页</div>
+              <div>工作台</div>
+              <div>订单</div>
+              <div>我的</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+        <section class="page" id="mini-create-rule">
+          <div class="page-head">
+            <div>
+              <h2>供应商小程序端 - 新增报价规则页面</h2>
+            </div>
+            <div class="terminal-tag">小程序 / 已有页面</div>
+          </div>
+        <div class="wireframe-box">
+          <div class="mobile-shell">
+              <div class="mobile-top">
+                <div class="mobile-title"><button type="button" class="btn" style="padding:4px 10px; margin-right:10px;" onclick="showPage('mini-home')">返回</button>新增报价规则</div>
+            </div>
+            <div class="mobile-content">
+              <div class="mobile-card">
+                <div>商品品牌：品牌名</div>
+                <div>商品数量：N个</div>
+                <div class="table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>商品名称</th>
+                        <th>市场价</th>
+                        <th>报价限价</th>
+                        <th>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="4" style="text-align:center;color:#94a3b8;">暂无数据</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="mobile-card">
+                <div>规则名称</div>
+                <div class="field">输入规则名称</div>
+                <div>报价金额</div>
+                <div class="field">输入金额</div>
+                <div>出餐方式</div>
+                <div class="toggle-row">
+                  <div class="chip active">手动</div>
+                  <div class="chip">自动</div>
+                </div>
+                <div>出餐城市</div>
+                <div class="field">城市选择</div>
+                <div>套餐模式</div>
+                <div class="field">开关</div>
+                <div>套餐编号</div>
+                <div class="field">输入套餐编号</div>
+                <div class="actions-row">
+                  <div class="btn">新增商品</div>
+                  <div class="btn primary">确定</div>
+                </div>
+              </div>
+            </div>
+            <div class="mobile-bottom-nav">
+              <div class="active">首页</div>
+              <div>工作台</div>
+              <div>订单</div>
+              <div>我的</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+        <section class="page" id="mini-edit-rule">
+          <div class="page-head">
+            <div>
+              <h2>供应商小程序端 - 编辑报价规则页面</h2>
+            </div>
+            <div class="terminal-tag">小程序 / 已有页面</div>
+          </div>
+        <div class="wireframe-box">
+          <div class="mobile-shell">
+              <div class="mobile-top">
+                <div class="mobile-title"><button type="button" class="btn" style="padding:4px 10px; margin-right:10px;" onclick="showPage('mini-home')">返回</button>编辑报价规则</div>
+            </div>
+            <div class="mobile-content">
+              <div class="mobile-card">
+                <div>商品品牌：品牌名</div>
+                <div>商品数量：N个</div>
+                <div class="table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>商品名称</th>
+                        <th>市场价</th>
+                        <th>报价限价</th>
+                        <th>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>商品名</td>
+                        <td>市场价</td>
+                        <td>报价限价</td>
+                        <td>删除</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="mobile-card">
+                <div>规则名称</div>
+                <div class="field">规则名</div>
+                <div>报价金额</div>
+                <div class="field">金额</div>
+                <div>出餐方式</div>
+                <div class="toggle-row">
+                  <div class="chip active">手动</div>
+                  <div class="chip">自动</div>
+                </div>
+                <div>出餐城市</div>
+                <div class="field">已选城市</div>
+                <div>套餐模式</div>
+                <div class="field">开关</div>
+                <div>套餐编号</div>
+                <div class="field">输入套餐编号</div>
+                <div class="actions-row">
+                  <div class="btn">新增商品</div>
+                  <div class="btn primary">确定</div>
+                </div>
+              </div>
+            </div>
+            <div class="mobile-bottom-nav">
+              <div class="active">首页</div>
+              <div>工作台</div>
+              <div>订单</div>
+              <div>我的</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+        <section class="page" id="mini-workbench">
+          <div class="page-head">
+            <div>
+              <h2>供应商小程序端 - 工作台</h2>
+            </div>
+            <div class="terminal-tag">小程序 / 已有页面</div>
+          </div>
+        <div class="wireframe-box">
+          <div class="mobile-shell">
+            <div class="mobile-top">
+              <div class="mobile-title">工作台</div>
+            </div>
+            <div class="mobile-content">
+              <div class="actions-row">
+                <div class="btn">瑞幸账号</div>
+                <div class="btn">瑞幸兑换券</div>
+              </div>
+            </div>
+            <div class="mobile-bottom-nav">
+              <div>首页</div>
+              <div class="active">工作台</div>
+              <div>订单</div>
+              <div>我的</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+        <section class="page" id="mini-order">
+          <div class="page-head">
+            <div>
+              <h2>供应商小程序端 - 订单</h2>
+            </div>
+            <div class="terminal-tag">小程序 / 已有页面</div>
+          </div>
+        <div class="wireframe-box">
+          <div class="mobile-shell">
+            <div class="mobile-top">
+              <div class="mobile-title">订单列表</div>
+              <div class="mobile-search">
+                <div class="field wide">请输入订单号</div>
+                <div class="btn primary">搜索</div>
+              </div>
+            </div>
+            <div class="mobile-content">
+              <div class="mobile-order-tabs">
+                <div class="chip active">进行中</div>
+                <div class="chip">已完成</div>
+                <div class="chip">全部</div>
+              </div>
+              <div class="empty-state">暂无相关数据</div>
+            </div>
+            <div class="mobile-bottom-nav">
+              <div>首页</div>
+              <div>工作台</div>
+              <div class="active">订单</div>
+              <div>我的</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+        <section class="page" id="mini-mine">
+          <div class="page-head">
+            <div>
+              <h2>供应商小程序端 - 我的</h2>
+            </div>
+            <div class="terminal-tag">小程序 / 已有页面</div>
+          </div>
+        <div class="wireframe-box">
+          <div class="mobile-shell">
+            <div class="mobile-top">
+              <div class="mobile-title">我的</div>
+            </div>
+            <div class="mobile-content">
+              <div class="mobile-card">
+                <div class="mobile-card-head">
+                  <div>账户余额</div>
+                </div>
+                <div style="font-size:36px;font-weight:700;">0</div>
+                <div class="actions-row" style="justify-content:space-between;">
+                  <div>可提现金额（元）<br>0</div>
+                  <div>冻结金额（元）<br>0</div>
+                </div>
+                <div class="mobile-actions">
+                  <div class="btn primary">立即提现</div>
+                  <div class="btn">提现记录</div>
+                </div>
+              </div>
+              <div class="mobile-card">
+                <div>退出登录</div>
+              </div>
+            </div>
+            <div class="mobile-bottom-nav">
+              <div>首页</div>
+              <div>工作台</div>
+              <div>订单</div>
+              <div class="active">我的</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function showPage(pageId) {
+      document.querySelectorAll(".page").forEach((page) => {
+        page.classList.toggle("active", page.id === pageId);
+      });
+    }
+
+    function showPcStatusTip() {
+      const tip = document.getElementById("pc-status-tip-toast");
+      if (!tip) return;
+      tip.style.display = "inline-flex";
+      clearTimeout(tip._timer);
+      tip._timer = setTimeout(() => {
+        tip.style.display = "none";
+      }, 1800);
+    }
+
+    function showMiniStatusTip() {
+      const tip = document.getElementById("mini-status-tip-toast");
+      if (!tip) return;
+      tip.style.display = "inline-flex";
+      clearTimeout(tip._timer);
+      tip._timer = setTimeout(() => {
+        tip.style.display = "none";
+      }, 1800);
+    }
+
+    function openPcCreateRule() {
+      const mask = document.getElementById("pc-create-rule-inline-mask");
+      if (mask) mask.style.display = "flex";
+    }
+
+    function openPcEditRule() {
+      const mask = document.getElementById("pc-edit-rule-inline-mask");
+      if (mask) mask.style.display = "flex";
+    }
+
+    const links = document.querySelectorAll(".nav-link[data-target], .nav-sub-link[data-target]");
+    const pages = document.querySelectorAll(".page");
+    links.forEach((link) => {
+      link.addEventListener("click", () => {
+        const target = link.getAttribute("data-target");
+        pages.forEach((page) => page.classList.toggle("active", page.id === target));
+        links.forEach((item) => item.classList.toggle("active", item === link));
+      });
+    });
+
+    const supplierTabs = document.querySelectorAll("#supplier-status-tabs .mini-tab");
+    const supplierRows = document.querySelectorAll("#supplier-list-body tr");
+    supplierTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const status = tab.getAttribute("data-status");
+        supplierTabs.forEach((item) => item.classList.remove("active"));
+        tab.classList.add("active");
+        supplierRows.forEach((row) => {
+          const rowStatus = row.getAttribute("data-status");
+          row.style.display = status === "全部" || rowStatus === status ? "" : "none";
+        });
+      });
+    });
+
+    const inlineDetailMask = document.getElementById("supplier-inline-detail-mask");
+    const inlineDetailName = document.getElementById("supplier-inline-name");
+      const inlineDetailAction = document.getElementById("supplier-inline-action");
+    const inlineDetailClose = document.getElementById("supplier-inline-detail-close");
+    document.querySelectorAll("[data-open-quote-detail]").forEach((button) => {
+        button.addEventListener("click", () => {
+          inlineDetailName.textContent = button.getAttribute("data-supplier-name") || "供应商名称";
+          inlineDetailAction.textContent = "开启 / 关闭";
+          inlineDetailMask.style.display = "flex";
+        });
+      });
+
+    if (inlineDetailClose) {
+      inlineDetailClose.addEventListener("click", () => {
+        inlineDetailMask.style.display = "none";
+      });
+    }
+
+    if (inlineDetailMask) {
+      inlineDetailMask.addEventListener("click", (event) => {
+        if (event.target === inlineDetailMask) {
+          inlineDetailMask.style.display = "none";
+        }
+      });
+    }
+
+    const adminConfigToast = document.getElementById("admin-config-toast");
+    document.querySelectorAll("[data-config-block]").forEach((block) => {
+      const input = block.querySelector("[data-config-input]");
+      const editBtn = block.querySelector("[data-config-edit]");
+      const saveBtn = block.querySelector("[data-config-save]");
+      const cancelBtn = block.querySelector("[data-config-cancel]");
+      let snapshot = input ? input.value : "";
+
+      if (editBtn && input) {
+        editBtn.addEventListener("click", () => {
+          snapshot = input.value;
+          input.removeAttribute("readonly");
+          input.focus();
+          block.classList.add("editing");
+        });
+      }
+
+      if (saveBtn && input) {
+        saveBtn.addEventListener("click", () => {
+          snapshot = input.value;
+          input.setAttribute("readonly", "readonly");
+          block.classList.remove("editing");
+          if (adminConfigToast) {
+            adminConfigToast.classList.add("show");
+            clearTimeout(adminConfigToast._timer);
+            adminConfigToast._timer = setTimeout(() => {
+              adminConfigToast.classList.remove("show");
+            }, 1800);
+          }
+        });
+      }
+
+      if (cancelBtn && input) {
+        cancelBtn.addEventListener("click", () => {
+          input.value = snapshot;
+          input.setAttribute("readonly", "readonly");
+          block.classList.remove("editing");
+        });
+      }
+    });
+
+    const pcStatusTipToast = document.getElementById("pc-status-tip-toast");
+    document.querySelectorAll("[data-pc-status-tip]").forEach((toggle) => {
+      toggle.addEventListener("click", () => {
+        if (pcStatusTipToast) {
+          pcStatusTipToast.style.display = "inline-flex";
+          clearTimeout(pcStatusTipToast._timer);
+          pcStatusTipToast._timer = setTimeout(() => {
+            pcStatusTipToast.style.display = "none";
+          }, 1800);
+        }
+      });
+    });
+
+    const pcCreateRuleInlineMask = document.getElementById("pc-create-rule-inline-mask");
+    const pcEditRuleInlineMask = document.getElementById("pc-edit-rule-inline-mask");
+    const pcOpenCreateRule = document.getElementById("pc-open-create-rule");
+    const pcOpenEditRule1 = document.getElementById("pc-open-edit-rule-1");
+    const pcOpenEditRule2 = document.getElementById("pc-open-edit-rule-2");
+    const pcCloseCreateRuleInline = document.getElementById("pc-close-create-rule-inline");
+    const pcCloseEditRuleInline = document.getElementById("pc-close-edit-rule-inline");
+
+    if (pcOpenCreateRule && pcCreateRuleInlineMask) {
+      pcOpenCreateRule.addEventListener("click", () => {
+        pcCreateRuleInlineMask.style.display = "flex";
+      });
+    }
+
+    [pcOpenEditRule1, pcOpenEditRule2].forEach((btn) => {
+      if (btn && pcEditRuleInlineMask) {
+        btn.addEventListener("click", () => {
+          pcEditRuleInlineMask.style.display = "flex";
+        });
+      }
+    });
+
+    if (pcCloseCreateRuleInline && pcCreateRuleInlineMask) {
+      pcCloseCreateRuleInline.addEventListener("click", () => {
+        pcCreateRuleInlineMask.style.display = "none";
+      });
+    }
+
+    if (pcCloseEditRuleInline && pcEditRuleInlineMask) {
+      pcCloseEditRuleInline.addEventListener("click", () => {
+        pcEditRuleInlineMask.style.display = "none";
+      });
+    }
+
+    [pcCreateRuleInlineMask, pcEditRuleInlineMask].forEach((mask) => {
+      if (mask) {
+        mask.addEventListener("click", (event) => {
+          if (event.target === mask) {
+            mask.style.display = "none";
+          }
+        });
+      }
+    });
+
+    const miniOpenCreateRule = document.getElementById("mini-open-create-rule");
+    const miniOpenEditRule = document.getElementById("mini-open-edit-rule");
+    const miniCreateRulePage = document.getElementById("mini-create-rule");
+    const miniEditRulePage = document.getElementById("mini-edit-rule");
+
+    if (miniOpenCreateRule && miniCreateRulePage) {
+      miniOpenCreateRule.addEventListener("click", () => {
+        pages.forEach((page) => page.classList.toggle("active", page.id === "mini-create-rule"));
+      });
+    }
+
+    if (miniOpenEditRule && miniEditRulePage) {
+      miniOpenEditRule.addEventListener("click", () => {
+        pages.forEach((page) => page.classList.toggle("active", page.id === "mini-edit-rule"));
+      });
+    }
+  </script>
+</body>
+</html>
