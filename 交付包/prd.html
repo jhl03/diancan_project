@@ -248,6 +248,25 @@
       font-family: "Consolas", "Courier New", monospace;
       font-size: 12px;
     }
+    .doc-content .prd-inline-image {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 14px 0;
+      border-radius: 16px;
+      border: 1px solid #dde8f5;
+      box-shadow: 0 8px 22px rgba(23, 53, 95, 0.08);
+      background: #fff;
+    }
+    .doc-content .prd-inline-image[data-size="small"] {
+      width: min(240px, 100%);
+    }
+    .doc-content .prd-inline-image[data-size="medium"] {
+      width: min(420px, 100%);
+    }
+    .doc-content .prd-inline-image[data-size="large"] {
+      width: min(680px, 100%);
+    }
     .doc-content table {
       width: 100%;
       border-collapse: collapse;
@@ -639,6 +658,8 @@ flowchart TD
       html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
       html = html.replace(/&lt;span style=&quot;([^&]+?)&quot;&gt;([\s\S]*?)&lt;\/span&gt;/g, '<span style="$1">$2</span>');
       html = html.replace(/&lt;span style=&#39;([^&]+?)&#39;&gt;([\s\S]*?)&lt;\/span&gt;/g, '<span style="$1">$2</span>');
+      html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)\{size=(small|medium|large)\}/g, (_, alt, src, size) => `<img class="prd-inline-image" data-size="${size}" src="${escapeHtml(src)}" alt="${escapeHtml(alt)}">`);
+      html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, src) => `<img class="prd-inline-image" data-size="medium" src="${escapeHtml(src)}" alt="${escapeHtml(alt)}">`);
       return html;
     }
 
