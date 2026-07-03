@@ -243,6 +243,14 @@
       overflow: hidden;
     }
 
+    .pc-shell.no-inner-nav {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pc-shell.no-inner-nav .pc-nav {
+      display: none;
+    }
+
     .pc-nav {
       background: linear-gradient(180deg, #2a3f5b 0%, #233751 100%);
       color: #fff;
@@ -798,7 +806,7 @@
                 <div>2. 非系统自动关闭的全部人工报价，仅显示状态，不显示限制的具体时间。</div>
               </div>
             <div class="wireframe-box">
-              <div class="pc-shell">
+              <div class="pc-shell no-inner-nav">
               <div class="pc-nav">
                 <div class="pc-nav-item">首页</div>
                 <div class="pc-nav-item">H5商品配置</div>
@@ -1051,7 +1059,7 @@
             <div>6. 列表分页呈现。</div>
             </div>
           <div class="wireframe-box">
-            <div class="pc-shell">
+            <div class="pc-shell no-inner-nav">
             <div class="pc-nav">
               <div class="pc-nav-item">首页</div>
               <div class="pc-nav-item disabled">H5商品配置</div>
@@ -1152,7 +1160,7 @@
             <div>4. 已进入暂停中的供应商按触发当时的配置执行。</div>
             </div>
             <div class="wireframe-box" style="margin-top:-4px;">
-              <div class="pc-shell">
+              <div class="pc-shell no-inner-nav">
               <div class="pc-nav">
                 <div class="pc-nav-item">首页</div>
                 <div class="pc-nav-item disabled">H5商品配置</div>
@@ -1343,7 +1351,7 @@
             <div>3. 系统自动开启人工报价权限后，点击状态按钮提示词消失，可以正常修改规则状态。</div>
               </div>
             <div class="wireframe-box">
-            <div class="pc-shell">
+            <div class="pc-shell no-inner-nav">
               <div class="pc-nav">
                 <div class="pc-nav-item">首页</div>
                 <div class="pc-nav-item active">出价管理</div>
@@ -1587,7 +1595,7 @@
             <div>1. 统计供应商连续超时未处理的订单，若达到后台配置的阈值，则进行公众号提醒，且暂停后台配置时长的人工出餐方式的报价规则。</div>
             </div>
             <div class="wireframe-box">
-            <div class="pc-shell">
+            <div class="pc-shell no-inner-nav">
               <div class="pc-nav">
                 <div class="pc-nav-item">首页</div>
                 <div class="pc-nav-item">出价管理</div>
