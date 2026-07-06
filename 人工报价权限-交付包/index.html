@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>供应商报价权限 交付包</title>
+  <style>
+    :root {
+      --bg: #eef4fb;
+      --panel: rgba(255,255,255,0.96);
+      --ink: #142033;
+      --muted: #66758b;
+      --line: #d7e2ef;
+      --accent: #2f80ff;
+      --accent-2: #35b7f5;
+      --shadow: 0 20px 50px rgba(20,42,74,.12);
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(47,128,255,.14), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(53,183,245,.12), transparent 26%),
+        var(--bg);
+      color: var(--ink);
+    }
+    .shell {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 36px 16px 48px;
+      display: grid;
+      gap: 20px;
+    }
+    .hero, .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .hero {
+      padding: 28px 30px;
+      display: grid;
+      gap: 10px;
+    }
+    .hero h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.15;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      padding: 22px;
+      display: grid;
+      gap: 14px;
+    }
+    .card h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 12px;
+      border: 1px solid #cfe0ff;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <h1>供应商报价权限 交付包</h1>
+      <p>这是提供给你自己、开发和评审查看的本地交付版本。可直接打开 PRD 或高保真原型，也可作为 Axure 引用文件使用。</p>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>PRD 文档</h2>
+        <p>浏览器可直接打开的可视化 PRD 文档版本，支持目录导航、流程图渲染和变更摘要折叠。</p>
+        <a class="btn" href="./prd.html" target="_self">打开 PRD</a>
+      </article>
+
+      <article class="card">
+        <h2>高保真原型</h2>
+        <p>当前最新版本的高保真 HTML 原型，可直接用于页面评审和方案对照。</p>
+        <a class="btn" href="./prototype.html" target="_self">打开原型</a>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
