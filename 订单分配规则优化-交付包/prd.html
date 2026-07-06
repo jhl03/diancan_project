@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>订单分配规则优化 PRD 预览版</title>
+  <style>
+    :root {
+      --bg: #eef4fb;
+      --panel: rgba(255, 255, 255, 0.96);
+      --ink: #142033;
+      --muted: #66758b;
+      --line: #d7e2ef;
+      --accent: #2f80ff;
+      --danger: #b42318;
+      --danger-soft: #fff4f1;
+      --shadow: 0 20px 50px rgba(20, 42, 74, 0.12);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(47, 128, 255, 0.14), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(53, 183, 245, 0.12), transparent 26%),
+        var(--bg);
+      color: var(--ink);
+    }
+    .shell {
+      max-width: 1420px;
+      margin: 0 auto;
+      padding: 28px 16px 40px;
+      display: grid;
+      gap: 18px;
+    }
+    .hero,
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .hero {
+      padding: 24px 28px;
+      display: grid;
+      gap: 10px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #ebf3ff;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid #d8e7ff;
+    }
+    .hero h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.75;
+      max-width: 960px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .meta-card {
+      grid-column: span 3;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px 18px;
+      box-shadow: 0 10px 24px rgba(20, 42, 74, 0.06);
+    }
+    .meta-card.wide { grid-column: span 6; }
+    .meta-label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+    .meta-value {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--ink);
+      word-break: break-word;
+    }
+    .meta-value code {
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: #f3f7fd;
+      border: 1px solid #dde8f5;
+      color: #27466f;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 12px;
+    }
+    .change-card {
+      grid-column: 1 / -1;
+      background: var(--danger-soft);
+      border: 1px solid #f2c5bc;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .change-card summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 16px 18px;
+      font-weight: 800;
+      color: var(--danger);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .change-card summary::-webkit-details-marker { display: none; }
+    .change-card summary::after {
+      content: "展开";
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--danger);
+      background: rgba(180, 35, 24, 0.08);
+      border: 1px solid rgba(180, 35, 24, 0.14);
+      border-radius: 999px;
+      padding: 4px 10px;
+    }
+    .change-card details[open] summary::after { content: "收起"; }
+    .change-body {
+      padding: 0 18px 18px;
+      border-top: 1px solid rgba(180, 35, 24, 0.1);
+    }
+    .change-body ul {
+      margin: 14px 0 0;
+      padding-left: 20px;
+      color: #7f2d22;
+      line-height: 1.8;
+      font-size: 13px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .toc-panel {
+      position: sticky;
+      top: 16px;
+      padding: 18px;
+    }
+    .doc-panel {
+      padding: 26px 30px;
+    }
+    .toc-panel h3 {
+      margin: 0 0 12px;
+      font-size: 15px;
+    }
+    .toc-list {
+      display: grid;
+      gap: 8px;
+    }
+    .toc-link {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #f7fbff;
+      border: 1px solid #e1eaf6;
+      color: #30507f;
+      text-decoration: none;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .doc-content h2,
+    .doc-content h3,
+    .doc-content h4 {
+      margin: 0;
+      scroll-margin-top: 18px;
+      font-family: "Noto Serif SC", "STSong", serif;
+    }
+    .doc-content h2 {
+      margin-top: 30px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e6eef8;
+      font-size: 28px;
+      font-weight: 800;
+      color: #0f2747;
+    }
+    .doc-content h3 {
+      margin-top: 22px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #123764;
+    }
+    .doc-content h4 {
+      margin-top: 18px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #1e4f83;
+    }
+    .doc-content p {
+      margin: 10px 0 0;
+      font-size: 14px;
+      line-height: 1.85;
+      color: #26384f;
+    }
+    .doc-content ul,
+    .doc-content ol {
+      margin: 12px 0;
+      padding-left: 22px;
+      color: #26384f;
+    }
+    .doc-content li {
+      margin: 8px 0;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+    .doc-content code {
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: #f3f7fd;
+      border: 1px solid #dde8f5;
+      color: #27466f;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 12px;
+    }
+    .doc-content .prd-inline-image {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 14px 0;
+      border-radius: 16px;
+      border: 1px solid #dde8f5;
+      background: #fff;
+      box-shadow: 0 8px 22px rgba(23, 53, 95, 0.08);
+    }
+    .doc-content .prd-inline-image[data-size="small"] {
+      width: min(240px, 100%);
+    }
+    .doc-content .prd-inline-image[data-size="medium"] {
+      width: min(420px, 100%);
+    }
+    .doc-content .prd-inline-image[data-size="large"] {
+      width: min(680px, 100%);
+    }
+    .doc-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 18px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #dfe8f3;
+      font-size: 13px;
+    }
+    .doc-content thead th {
+      background: #f6faff;
+      color: #17355f;
+      font-weight: 800;
+    }
+    .doc-content th,
+    .doc-content td {
+      border: 1px solid #e4edf7;
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.7;
+    }
+    .doc-content blockquote {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border-left: 4px solid #9ec5ff;
+      background: #f7fbff;
+      border-radius: 14px;
+      color: #33527b;
+    }
+    .doc-content pre.code-block {
+      margin: 14px 0 18px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: #0f172a;
+      color: #dbeafe;
+      overflow: auto;
+      line-height: 1.7;
+      font-size: 13px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .doc-content .code-title {
+      margin-bottom: 8px;
+      display: inline-flex;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #93c5fd;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .doc-content .mermaid-shell {
+      margin: 14px 0 18px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid #e3ecf8;
+      background: linear-gradient(180deg, #fbfdff, #f6faff);
+      overflow: auto;
+    }
+    .doc-content .mermaid-diagram {
+      min-height: 90px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .doc-content .mermaid-diagram svg {
+      display: block;
+      width: min(760px, 82%);
+      max-width: 100%;
+      height: auto;
+      margin: 0 auto;
+    }
+    .doc-content .mermaid-diagram .nodeLabel,
+    .doc-content .mermaid-diagram .edgeLabel {
+      line-height: 1.2 !important;
+    }
+    .doc-content .mermaid-diagram .nodeLabel p,
+    .doc-content .mermaid-diagram .edgeLabel p {
+      margin: 0 !important;
+      line-height: 1.2 !important;
+    }
+    .doc-content .mermaid-error {
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #fff4f1;
+      border: 1px solid #f2c5bc;
+      color: #8a2f22;
+      line-height: 1.8;
+      font-size: 13px;
+    }
+    .doc-content .mermaid-error strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #b42318;
+    }
+
+    @media (max-width: 1100px) {
+      .meta-card { grid-column: span 6; }
+      .layout { grid-template-columns: 1fr; }
+      .toc-panel { position: static; }
+    }
+    @media (max-width: 760px) {
+      .shell { padding: 16px 12px 28px; }
+      .hero,
+      .doc-panel { padding: 18px; }
+      .meta-card,
+      .meta-card.wide { grid-column: 1 / -1; }
+      .hero h1 { font-size: 26px; }
+      .doc-content h2 { font-size: 24px; }
+      .doc-content h3 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="badge">PRD 浏览版</div>
+      <h1 id="heroTitle">产品需求文档</h1>
+    </section>
+
+    <section class="layout">
+      <aside class="panel toc-panel">
+        <h3>目录导航</h3>
+        <div class="toc-list" id="tocList"></div>
+      </aside>
+      <article class="panel doc-panel">
+        <div class="doc-content" id="docContent"></div>
+      </article>
+    </section>
+  </main>
+
+  <script id="markdown-source" type="text/plain"># 【订单分配规则优化】产品需求文档（PRD）
+> 文档状态：已保存基线
+> 当前版本：V1.4
+> 基线文件：C:\Users\Lenovo\Documents\点餐\订单分配规则优化-PRD.md
+> 上次更新时间：2026-07-02 17:12:20
+> 本次变更摘要：补充每轮分配前的剩余出餐时间判断：剩余出餐时间大于15分钟时继续按分配规则流转，小于等于15分钟时直接进入兜底规则；同时优化预览版流程图显示尺寸。
+> 在线编辑入口：本地文件：C:\Users\Lenovo\Documents\点餐\订单分配规则优化-在线编辑器.html；本地预览地址：http://127.0.0.1:8765/订单分配规则优化-在线编辑器.html
+> 协作方式：优先使用本地预览地址进行在线编辑；在线编辑器用于查看、新增、删除、修改、保存在线编辑、导出 Markdown，并支持绑定正式基线后持续迭代；当前 md 文件为已保存基线版本，后续由 Codex 基于该基线继续更新。
+
+## 1. 需求背景
+### 1.1 需求背景
+已知：当前点餐系统订单分配遵循“价低者得”的基础原则。供应商存在 `人工出餐` 和 `自动出餐` 两种出餐方式，且同一笔订单中，同一供应商仅会对应一种出餐方式。
+
+若一笔订单连续好几轮都是人工出餐且大部分都失败了，就会造成出餐很慢的情况。
+- 为提升出餐时间，**分配订单逻辑改为**：若一笔订单中，有一个人工出餐没有成功的，接下来这笔订单就<span style="color:#b42318;">不会分配给人工出餐</span>，全部给到自动出餐
+
+### 1.2 本次需求变更点
+- 一笔订单中，若出现人工出餐“<span style="color:#b42318;">未成功</span>”的情况，继续分配该订单时，分配给自动出餐的供应商【分配时，依旧遵循“<span style="color:#b42318;">价低者得</span>”的情况】
+- 若所有自动供应商都没有出餐成功，则走原系统 `兜底规则`【原有规则】
+- 若兜底规则执行后仍没有出餐成功，则订单关闭，后台状态为 `整单退款`【原有规则】
+- 一级供应商、二级供应商均适用同一规则
+
+## 2. 需求更改
+- 修改 `人工出餐未成功` 后的后续分配规则
+- 修改后的逻辑，适用于 `一级供应商` 与 `二级供应商`
+
+## 3. 业务流程
+```mermaid
+flowchart TD
+    A[订单完成首次分配] --> B[当前供应商接单]
+    B --> C{是否出餐成功}
+    C -- 是 --> D[订单完成出餐]
+    C -- 否 --> E{当前供应商是否人工出餐}
+    E -- 是 --> F[切入自动供应商分配链路]
+    E -- 否 --> G[沿现有分配链路选择下一供应商]
+    G --> H{第二个供应商是否人工出餐}
+    H -- 是 --> F
+    H -- 否 --> I{第二个供应商是否出餐成功}
+    I -- 是 --> D
+    I -- 否 --> G
+    F --> J{剩余出餐时间是否大于15分钟}
+    J -- 是 --> K[获取剩余自动出餐候选供应商]
+    K --> L{是否还有自动出餐候选}
+    L -- 是 --> M[分配给报价第二低的自动
+出餐供应商]
+    M --> N{该自动供应商是否出餐成功}
+    N -- 是 --> D
+    N -- 否 --> J
+    L -- 否 --> O[执行原系统兜底规则]
+    J -- 否 --> O
+    O --> P{兜底后是否出餐成功}
+    P -- 是 --> D
+    P -- 否 --> Q[订单关闭，后台状态整单退款]
+```
+
+## 4. 核心业务规则
+### 4.1 首次分配规则
+1. 首次订单分配仍按原系统规则执行，遵循“价低者得”。
+2. 本次需求不修改首次竞价和首次中单逻辑。
+
+### 4.2 触发条件
+1. 当整个订单分配流程中的任意一轮承接供应商为 `人工出餐`，且其 `未出餐成功` 时，触发本次新规则。
+2. “未出餐成功”包括但不限于：`超时未处理`、`出餐失败` 等未完成成功出餐的状态。
+3. 一旦系统判定某一轮人工出餐供应商未成功，后续该订单不再继续分配给人工出餐供应商，优先进入自动出餐供应商分配逻辑。
+
+### 4.3 出餐方式规则
+1. 同一笔订单下，同一供应商只会存在一种出餐方式，不会同时既是人工又是自动。
+2. 本次规则强调：一旦人工出餐未成功，后续继续分配时不再回到人工出餐链路。
+
+### 4.4 二次分配及后续分配规则
+1. 整个订单分配流程中，当前接单供应商可能为 `人工出餐`，也可能为 `自动出餐`。
+2. 若某一轮当前接单供应商为 `人工出餐` 且未出餐成功，则从该轮开始，订单后续继续分配时<span style="color:#b42318;">不再分配给人工出餐</span>，优先进入自动出餐供应商链路。
+3. 进入自动出餐供应商链路后，系统在剩余候选供应商中优先筛选  报价低的`自动出餐供应商`。
+4. 每轮继续分配订单前，系统都需要先判断 `剩余出餐时间是否大于15分钟`。【原有逻辑】
+5. 若剩余出餐时间 `大于15分钟`，则继续执行自动出餐供应商分配逻辑。
+6. 若剩余出餐时间 `小于等于15分钟`，则不再继续分配，直接进入原系统现有的 `兜底规则`。【原有逻辑】
+7. 若<span style="color:#b42318;">多个相同报价</span>的自动出餐供应商同时符合接单条件时，随机分配。
+8. 若被分配的自动出餐供应商仍未出餐成功，则继续按同样规则顺位流转给下一个 `报价第二低的自动出餐供应商`。
+9. 自动出餐供应商顺位流转，直到有供应商 `出餐成功` 为止。
+10. 若当前轮次为 `自动出餐` 且未出餐成功，则继续沿用现有订单分配链路选择下一供应商；若后续某一轮命中人工出餐且人工未成功，则仍按本规则切入自动出餐供应商链路。
+11. 若所有自动出餐供应商都未出餐成功，则进入原系统现有的 `兜底规则`。
+12. 兜底规则本次不修改，继续沿用原系统已有逻辑。【原有逻辑】
+13. 若兜底规则执行后仍未出餐成功，则订单关闭，后台状态体现为 `整单退款`。
+
+### 4.5 一级/二级供应商规则
+1. 一级供应商与二级供应商均遵循同一套规则：  人工未成功后 分配给自动出餐供应商。
+
+## 5. 异常场景
+| 场景 | 触发条件 | 系统处理 | 兜底 |
+| --- | --- | --- | --- |
+| 人工出餐超时未处理 | 人工供应商未出餐成功 | 触发后续自动分配 | 进入自动供应商顺位流转 **[报价低->高] **|
+| 人工出餐失败 | 人工供应商未出餐成功 | 触发后续自动分配 | 进入自动供应商顺位流转 **[报价低->高]** |
+| 首轮自动出餐失败，后续分配到人工 | 自动供应商未成功后，下一轮命中人工供应商 | 若该人工供应商未出餐成功，则切入自动供应商链路 | 后续不再回到人工出餐 |
+| 剩余出餐时间不足15分钟 | 后续分配前剩余出餐时间小于等于15分钟 | 不再继续分配自动供应商 | 直接进入原系统兜底规则 |
+| 自动供应商再次未出餐成功 | 自动池顺位流转中 **[报价低->高]**  | 继续流转给下一自动供应商 | 直到没有 没报过价自动出餐供应商自动池耗尽或出餐成功 |
+| 所有自动供应商均未出餐成功 | 自动池耗尽 | 执行原系统兜底规则 | 沿用原系统已有流程 |
+| 兜底后仍未出餐成功 | 兜底未命中成功出餐 | 关闭订单 | 后台状态整单退款 |
+
+## 6. 需求边界
+### 7.1 本期范围
+- 人工出餐未成功后的后续分配规则
+- 整个订单分配流程中的人工失败切自动链路规则
+- 自动供应商顺位流转规则
+- 自动池耗尽后的兜底衔接规则
+- 一级/二级供应商统一适配
+- 兜底失败后的整单退款关闭规则
+
+## 7. 版本记录【可不看】
+| 版本 | 变更类型 | 变更说明 | 影响章节 | 状态 |
+| --- | --- | --- | --- | --- |
+| V1.0 | 新增 | 首次建立《订单分配规则优化》PRD 基线，明确超时后二次分配规则、自动优先、连续改派、供应商层级统一适配及需求边界 | 全文 | 已保存 |
+| V1.1 | 修改 | 根据最新确认的需求背景，调整后续分配规则：人工出餐未成功后，后续只分配给自动出餐供应商；自动池耗尽后走原系统兜底规则；兜底失败后订单关闭并整单退款 | 1 需求背景、2 业务目标、3 用户与角色、4 适用范围、5 核心业务规则、6 业务流程、7 功能拆解、8 异常场景、9 用户故事、10 验收标准、11 风险与遗漏项、12 需求边界、13 版本记录 | 已保存 |
+| V1.2 | 修改 | 补充整个订单分配流程中的人工失败触发逻辑：任意轮次只要人工出餐未成功，后续即切入自动供应商链路；若首轮为自动出餐失败、后续再命中人工且人工失败，仍需进入自动供应商链路 | 5 核心业务规则、6 业务流程、8 异常场景、10 验收标准、13 版本记录 | 已保存 |
+| V1.3 | 修改 | 补充每轮继续分配前的剩余出餐时间判断：剩余出餐时间大于15分钟时继续分配，小于等于15分钟时直接进入原系统兜底规则；同时优化预览版流程图显示尺寸 | 5 核心业务规则、6 业务流程、7 功能拆解、8 异常场景、10 验收标准、13 版本记录 | 已保存 |
+</script>
+  <script src="./prd-order-allocation-runtime.js"></script>
+  <script>
+    const runtime = window.OrderAllocationPrdRuntime;
+    const config = {
+      apiUrl: "http://127.0.0.1:8765/api/timeout-prd",
+      cacheKey: "prd-editor:order-allocation:last-saved-baseline",
+    };
+
+    const fallbackMarkdown = document.getElementById("markdown-source").textContent.replace(/\r/g, "");
+    const metaGrid = document.getElementById("metaGrid");
+    const tocList = document.getElementById("tocList");
+    const docContent = document.getElementById("docContent");
+    const heroTitle = document.getElementById("heroTitle");
+
+    async function fetchLatestMarkdown() {
+      try {
+        const result = await runtime.fetchJson(config.apiUrl, {
+          method: "GET",
+          headers: { "Cache-Control": "no-store" },
+        });
+        if (result && result.markdown) {
+          return result.markdown.replace(/\r/g, "");
+        }
+      } catch (error) {
+      }
+
+      const cached = localStorage.getItem(config.cacheKey);
+      if (cached) return cached.replace(/\r/g, "");
+      return fallbackMarkdown;
+    }
+
+    async function renderPage(markdown) {
+      const rendered = runtime.renderDocument(markdown);
+      document.title = rendered.title || "PRD 浏览版";
+      heroTitle.textContent = rendered.title || "产品需求文档";
+      runtime.renderMetaGrid(rendered.meta, metaGrid);
+      runtime.renderTocList(rendered.toc, tocList);
+      docContent.innerHTML = rendered.html;
+      await runtime.renderMermaid(docContent);
+    }
+
+    async function refreshPage() {
+      const markdown = await fetchLatestMarkdown();
+      await renderPage(markdown);
+    }
+
+    window.addEventListener("storage", function (event) {
+      if (event.key === config.cacheKey && event.newValue) {
+        renderPage(event.newValue).catch(function () {});
+      }
+    });
+
+    window.addEventListener("focus", function () {
+      refreshPage().catch(function () {});
+    });
+
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) {
+        refreshPage().catch(function () {});
+      }
+    });
+
+    refreshPage().catch(function () {});
+  </script>
+</body>
+</html>
