@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="codex-template-version" content="20260723.1">
+    <title>发票工单--订单详情</title>
+    <link href="proto.css?v=20260727.delivery1" rel="stylesheet">
+    <link href="codex-edit.css?v=20260727.hide-expand-button1" rel="stylesheet">
+  </head>
+  <body>
+    <div id="base" class="app-shell ">
+      
+    <aside class="sidebar ax_default">
+      <div class="sidebar-head ax_default">
+        <div class="text" spellcheck="false">点餐后台</div>
+      </div>
+      
+        <div class="menu-group ax_default">
+          <div class="menu-group-title text" spellcheck="false">工单管理</div>
+          
+            <div class="menu-item ax_default ">
+              <div class="text" spellcheck="false">发票工单</div>
+            </div>
+          
+            <div class="menu-item ax_default active">
+              <div class="text" spellcheck="false">订单详情</div>
+            </div>
+          
+        </div>
+      
+    </aside>
+  
+      <main class="main-shell">
+        
+    <header class="page-header ax_default">
+      <h1 class="text" spellcheck="false">发票工单--订单详情</h1>
+      <p class="text" spellcheck="false">纯代码重建：订单详情页，补齐“出餐单号”字段。</p>
+    </header>
+  
+        
+    <div class="field-grid cols-3">
+      
+        <div class="field-card ax_default" style="display: none;">
+          <div class="field-label text" spellcheck="false">状态</div>
+          <div class="field-value text" spellcheck="false">待财务开票</div>
+        </div>
+      
+        <div class="field-card ax_default" style="display: none;">
+          <div class="field-label text" spellcheck="false">抬头类型</div>
+          <div class="field-value text" spellcheck="false">企业</div>
+        </div>
+      
+        <div class="field-card ax_default" style="display: none;">
+          <div class="field-label text" spellcheck="false">产品类型</div>
+          <div class="field-value text" spellcheck="false">点餐</div>
+        </div>
+      
+        <div class="field-card ax_default" style="display: none;">
+          <div class="field-label text" spellcheck="false">店铺</div>
+          <div class="field-value text" spellcheck="false">瑞幸-广州</div>
+        </div>
+      
+        <div class="field-card ax_default" style="display: none;">
+          <div class="field-label text" spellcheck="false">订单号</div>
+          <div class="field-value text" spellcheck="false">6928014816062569567</div>
+        </div>
+      
+        <div class="field-card ax_default" style="display: none;">
+          <div class="field-label text" spellcheck="false">券订单号</div>
+          <div class="field-value text" spellcheck="false">6928014816062569567</div>
+        </div>
+      
+        <div class="field-card ax_default" style="display: none;">
+          <div class="field-label text" spellcheck="false">公司 / 姓名</div>
+          <div class="field-value text" spellcheck="false">井井井</div>
+        </div>
+      
+        <div class="field-card ax_default" style="display: none;">
+          <div class="field-label text" spellcheck="false">税号 / 身份证</div>
+          <div class="field-value text" spellcheck="false">-</div>
+        </div>
+      
+        <div class="field-card ax_default" style="display: none;">
+          <div class="field-label text" spellcheck="false">邮箱 / 手机号</div>
+          <div class="field-value text" spellcheck="false">-</div>
+        </div>
+      
+    </div>
+  
+    <section class="section ax_default">
+      <div class="section-title text" spellcheck="false">订单详情</div>
+      
+    <div class="field-grid cols-3">
+      
+        <div class="field-card ax_default">
+          <div class="field-label text" spellcheck="false">规格 / 券名称</div>
+          <div class="field-value text" spellcheck="false">椰青冰萃美式</div>
+        </div>
+      
+        <div class="field-card ax_default">
+          <div class="field-label text" spellcheck="false">店铺名称</div>
+          <div class="field-value text" spellcheck="false">瑞幸-广州</div>
+        </div>
+      
+        <div class="field-card ax_default">
+          <div class="field-label text" spellcheck="false">商品名称</div>
+          <div class="field-value text" spellcheck="false">椰青冰萃美式</div>
+        </div>
+      
+        <div class="field-card ax_default">
+          <div class="field-label text" spellcheck="false">供应商名称</div>
+          <div class="field-value text" spellcheck="false">黄开良</div>
+        </div>
+      
+        <div class="field-card ax_default">
+          <div class="field-label text" spellcheck="false">支付金额</div>
+          <div class="field-value text" spellcheck="false">9.99</div>
+        </div>
+      
+        <div class="field-card ax_default">
+          <div class="field-label text" spellcheck="false">买家手机号</div>
+          <div class="field-value text" spellcheck="false">-</div>
+        </div>
+      
+        <div class="field-card ax_default">
+          <div class="field-label text" spellcheck="false"><span style="color: rgb(217, 45, 32);">出餐单号</span></div>
+          <div class="field-value text" spellcheck="false" style="color: rgb(217, 45, 32);">XXXXX</div>
+        </div>
+      
+    </div>
+  
+    </section>
+  
+    <section class="section ax_default">
+      <div class="section-title text" spellcheck="false"><span style="color: rgb(217, 45, 32);">字段说明</span></div>
+      
+    <ul class="note-list text" spellcheck="false">
+      <li>订单详情  新增字段“出餐单号”</li><li>数据源：取券码对应的出餐订单的订单号</li>
+    </ul>
+  
+    </section>
+  
+      </main>
+    </div>
+    <script src="proto.js"></script>
+    <script>window.__CODEX_INITIAL_STATE = {"snapshot":"\n      \n    \u003caside class=\"sidebar ax_default\">\n      \u003cdiv class=\"sidebar-head ax_default\">\n        \u003cdiv class=\"text\" spellcheck=\"false\">点餐后台\u003c/div>\n      \u003c/div>\n      \n        \u003cdiv class=\"menu-group ax_default\">\n          \u003cdiv class=\"menu-group-title text\" spellcheck=\"false\">工单管理\u003c/div>\n          \n            \u003cdiv class=\"menu-item ax_default \">\n              \u003cdiv class=\"text\" spellcheck=\"false\">发票工单\u003c/div>\n            \u003c/div>\n          \n            \u003cdiv class=\"menu-item ax_default active\">\n              \u003cdiv class=\"text\" spellcheck=\"false\">订单详情\u003c/div>\n            \u003c/div>\n          \n        \u003c/div>\n      \n    \u003c/aside>\n  \n      \u003cmain class=\"main-shell\">\n        \n    \u003cheader class=\"page-header ax_default\">\n      \u003ch1 class=\"text\" spellcheck=\"false\">发票工单--订单详情\u003c/h1>\n      \u003cp class=\"text\" spellcheck=\"false\">纯代码重建：订单详情页，补齐“出餐单号”字段。\u003c/p>\n    \u003c/header>\n  \n        \n    \u003cdiv class=\"field-grid cols-3\">\n      \n        \u003cdiv class=\"field-card ax_default\" style=\"display: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">状态\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">待财务开票\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\" style=\"display: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">抬头类型\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">企业\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\" style=\"display: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">产品类型\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">点餐\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\" style=\"display: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">店铺\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">瑞幸-广州\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\" style=\"display: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">订单号\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">6928014816062569567\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\" style=\"display: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">券订单号\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">6928014816062569567\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\" style=\"display: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">公司 / 姓名\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">井井井\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\" style=\"display: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">税号 / 身份证\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">-\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\" style=\"display: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">邮箱 / 手机号\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">-\u003c/div>\n        \u003c/div>\n      \n    \u003c/div>\n  \n    \u003csection class=\"section ax_default\">\n      \u003cdiv class=\"section-title text\" spellcheck=\"false\">订单详情\u003c/div>\n      \n    \u003cdiv class=\"field-grid cols-3\">\n      \n        \u003cdiv class=\"field-card ax_default\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">规格 / 券名称\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">椰青冰萃美式\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">店铺名称\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">瑞幸-广州\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">商品名称\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">椰青冰萃美式\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">供应商名称\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">黄开良\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">支付金额\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">9.99\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">买家手机号\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">-\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">\u003cspan style=\"color: rgb(217, 45, 32);\">出餐单号\u003c/span>\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\" style=\"color: rgb(217, 45, 32);\">XXXXX\u003c/div>\n        \u003c/div>\n      \n    \u003c/div>\n  \n    \u003c/section>\n  \n    \u003csection class=\"section ax_default\">\n      \u003cdiv class=\"section-title text\" spellcheck=\"false\">\u003cspan style=\"color: rgb(217, 45, 32);\">字段说明\u003c/span>\u003c/div>\n      \n    \u003cul class=\"note-list text\" spellcheck=\"false\">\n      \u003cli>订单详情  新增字段“出餐单号”\u003c/li>\u003cli>数据源：取券码对应的出餐订单的订单号\u003c/li>\n    \u003c/ul>\n  \n    \u003c/section>\n  \n      \u003c/main>\n    ","addedCounter":0,"templateVersion":"20260723.1"};</script><script src="codex-edit.js?v=20260727.supplier-nav1"></script>
+    
+  
+
+</body></html>
+
+
+
+
+
+
+
+
+
+

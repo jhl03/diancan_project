@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="codex-template-version" content="20260723.1">
+    <title>发票工单</title>
+    <link href="proto.css?v=20260727.delivery1" rel="stylesheet">
+    <link href="codex-edit.css?v=20260727.hide-expand-button1" rel="stylesheet">
+  </head>
+  <body class="">
+    <div id="base" class="app-shell ">
+      
+    <aside class="sidebar ax_default">
+      <div class="sidebar-head ax_default">
+        <div class="text" spellcheck="false">点餐后台</div>
+      </div>
+      
+        <div class="menu-group ax_default">
+          <div class="menu-group-title text" spellcheck="false">工单管理</div>
+          
+            <div class="menu-item ax_default active">
+              <div class="text" spellcheck="false">发票工单</div>
+            </div>
+          
+            <div class="menu-item ax_default ">
+              <div class="text" spellcheck="false">订单详情</div>
+            </div>
+          
+        </div>
+      
+    </aside>
+  
+      <main class="main-shell">
+        
+    <header class="page-header ax_default">
+      <h1 class="text" spellcheck="false">发票工单</h1>
+      <p class="text" spellcheck="false">纯代码重建：发票工单页，补齐同步到后台按钮与同步状态字段。</p>
+    </header>
+  
+        
+    <section class="section ax_default ">
+      <div class="section-title text" spellcheck="false">同步能力说明</div>
+      
+    <ul class="note-list text" spellcheck="false">
+      <li class="">新增“<span style="color: rgb(217, 45, 32);">同步到后台</span>”按钮：</li><li>产品类型为“点餐”的。点击  创建开票 按钮后，对应创建的发票工单，新增“同步到后台”按钮</li><li>点击后，对应的发票工单同步到后台售后单列表和供应商的接单大厅里</li><li>若同步成功后，再次点击“同步到后台”按钮，提示“该工单已同步”</li><li>新增 同步状态【列表】：</li><li>在处理状态列增加同步状态【同步成功/同步失败】</li>
+    </ul>
+  
+    </section>
+  
+    <section class="section ax_default codex-visual-cleared" style="background: transparent; border: 0px; box-shadow: none;">
+      <div class="section-title text" spellcheck="false" style="display: none;">状态预览</div>
+      
+          <div class="chip-row">
+            <div class="chip active ax_default" style="display: none;"><div class="text" spellcheck="false">同步到后台</div></div><div class="chip ax_default" style="display: none;"><div class="text" spellcheck="false">同步成功</div></div><div class="chip ax_default" style="display: none;"><div class="text" spellcheck="false">同步失败</div></div>
+          </div>
+        
+    </section>
+  
+    <section class="section ax_default table-section">
+      <div class="section-title text" spellcheck="false">发票工单列表</div>
+      
+    <div class="table-wrap ax_default">
+      <table class="data-table" style="min-width:1380px">
+        <thead>
+          <tr class="">
+            <th><div class="text" spellcheck="false">处理状态</div></th><th><div class="text" spellcheck="false">产品类型</div></th><th><div class="text" spellcheck="false">开票金额</div></th><th><div class="text" spellcheck="false">订单信息</div></th><th><div class="text" spellcheck="false">开票信息</div></th><th><div class="text" spellcheck="false">操作</div></th>
+          </tr>
+          
+        </thead>
+        <tbody>
+          
+            <tr class="">
+              <td class=""><div class="text" spellcheck="false">待财务开票<div><span style="color: rgb(217, 45, 32);">同步成功 / 同步失败</span></div></div></td><td><div class="text" spellcheck="false">点餐</div></td><td><div class="text" spellcheck="false">9.99</div></td><td><div class="text" spellcheck="false">券单号：6928014816062569567 / 店铺：瑞幸-广州 / 商品：椰青冰萃美式</div></td><td><div class="text" spellcheck="false">抬头：井井井 / 税号：- / 手机：-</div></td><td class=""><div class="text" spellcheck="false">创建开票<div><span style="color: rgb(217, 45, 32);">同步到后台&nbsp;</span></div></div></td>
+            </tr>
+          
+        </tbody>
+      </table>
+    </div>
+  
+    </section>
+  
+      </main>
+    </div>
+    <script src="proto.js"></script>
+    <script>window.__CODEX_INITIAL_STATE = {"snapshot":"\n      \n    \u003caside class=\"sidebar ax_default\">\n      \u003cdiv class=\"sidebar-head ax_default\">\n        \u003cdiv class=\"text\" spellcheck=\"false\">点餐后台\u003c/div>\n      \u003c/div>\n      \n        \u003cdiv class=\"menu-group ax_default\">\n          \u003cdiv class=\"menu-group-title text\" spellcheck=\"false\">工单管理\u003c/div>\n          \n            \u003cdiv class=\"menu-item ax_default active\">\n              \u003cdiv class=\"text\" spellcheck=\"false\">发票工单\u003c/div>\n            \u003c/div>\n          \n            \u003cdiv class=\"menu-item ax_default \">\n              \u003cdiv class=\"text\" spellcheck=\"false\">订单详情\u003c/div>\n            \u003c/div>\n          \n        \u003c/div>\n      \n    \u003c/aside>\n  \n      \u003cmain class=\"main-shell\">\n        \n    \u003cheader class=\"page-header ax_default\">\n      \u003ch1 class=\"text\" spellcheck=\"false\">发票工单\u003c/h1>\n      \u003cp class=\"text\" spellcheck=\"false\">纯代码重建：发票工单页，补齐同步到后台按钮与同步状态字段。\u003c/p>\n    \u003c/header>\n  \n        \n    \u003csection class=\"section ax_default \">\n      \u003cdiv class=\"section-title text\" spellcheck=\"false\">同步能力说明\u003c/div>\n      \n    \u003cul class=\"note-list text\" spellcheck=\"false\">\n      \u003cli class=\"\">新增“\u003cspan style=\"color: rgb(217, 45, 32);\">同步到后台\u003c/span>”按钮：\u003c/li>\u003cli>产品类型为“点餐”的。点击  创建开票 按钮后，对应创建的发票工单，新增“同步到后台”按钮\u003c/li>\u003cli>点击后，对应的发票工单同步到后台售后单列表和供应商的接单大厅里\u003c/li>\u003cli>若同步成功后，再次点击“同步到后台”按钮，提示“该工单已同步”\u003c/li>\u003cli>新增 同步状态【列表】：\u003c/li>\u003cli>在处理状态列增加同步状态【同步成功/同步失败】\u003c/li>\n    \u003c/ul>\n  \n    \u003c/section>\n  \n    \u003csection class=\"section ax_default codex-visual-cleared\" style=\"background: transparent; border: 0px; box-shadow: none;\">\n      \u003cdiv class=\"section-title text\" spellcheck=\"false\" style=\"display: none;\">状态预览\u003c/div>\n      \n          \u003cdiv class=\"chip-row\">\n            \u003cdiv class=\"chip active ax_default\" style=\"display: none;\">\u003cdiv class=\"text\" spellcheck=\"false\">同步到后台\u003c/div>\u003c/div>\u003cdiv class=\"chip ax_default\" style=\"display: none;\">\u003cdiv class=\"text\" spellcheck=\"false\">同步成功\u003c/div>\u003c/div>\u003cdiv class=\"chip ax_default\" style=\"display: none;\">\u003cdiv class=\"text\" spellcheck=\"false\">同步失败\u003c/div>\u003c/div>\n          \u003c/div>\n        \n    \u003c/section>\n  \n    \u003csection class=\"section ax_default table-section\">\n      \u003cdiv class=\"section-title text\" spellcheck=\"false\">发票工单列表\u003c/div>\n      \n    \u003cdiv class=\"table-wrap ax_default\">\n      \u003ctable class=\"data-table\" style=\"min-width:1380px\">\n        \u003cthead>\n          \u003ctr class=\"\">\n            \u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">处理状态\u003c/div>\u003c/th>\u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">产品类型\u003c/div>\u003c/th>\u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">开票金额\u003c/div>\u003c/th>\u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">订单信息\u003c/div>\u003c/th>\u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">开票信息\u003c/div>\u003c/th>\u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">操作\u003c/div>\u003c/th>\n          \u003c/tr>\n          \n        \u003c/thead>\n        \u003ctbody>\n          \n            \u003ctr class=\"\">\n              \u003ctd class=\"\">\u003cdiv class=\"text\" spellcheck=\"false\">待财务开票\u003cdiv>\u003cspan style=\"color: rgb(217, 45, 32);\">同步成功 / 同步失败\u003c/span>\u003c/div>\u003c/div>\u003c/td>\u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">点餐\u003c/div>\u003c/td>\u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">9.99\u003c/div>\u003c/td>\u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">券单号：6928014816062569567 / 店铺：瑞幸-广州 / 商品：椰青冰萃美式\u003c/div>\u003c/td>\u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">抬头：井井井 / 税号：- / 手机：-\u003c/div>\u003c/td>\u003ctd class=\"\">\u003cdiv class=\"text\" spellcheck=\"false\">创建开票\u003cdiv>\u003cspan style=\"color: rgb(217, 45, 32);\">同步到后台&nbsp;\u003c/span>\u003c/div>\u003c/div>\u003c/td>\n            \u003c/tr>\n          \n        \u003c/tbody>\n      \u003c/table>\n    \u003c/div>\n  \n    \u003c/section>\n  \n      \u003c/main>\n    ","addedCounter":0,"templateVersion":"20260723.1"};</script><script src="codex-edit.js?v=20260727.supplier-nav1"></script>
+    
+  
+
+</body></html>
+
+
+
+
+
+
+
+
+
+

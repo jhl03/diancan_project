@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="codex-template-version" content="20260724.14">
+    <meta name="codex-prefer-dom" content="true">
+    <title>接单大厅</title>
+    <link href="proto.css?v=20260727.delivery1" rel="stylesheet">
+    <link href="codex-edit.css?v=20260727.hide-expand-button1" rel="stylesheet">
+  </head>
+  <body class="">
+    <div id="base" class="app-shell ">
+      
+    <aside class="sidebar ax_default">
+      <div class="sidebar-head ax_default">
+        <div class="text" spellcheck="false">供应商链路</div>
+      </div>
+      
+        <div class="menu-group ax_default">
+          <div class="menu-group-title text" spellcheck="false">供应商中心</div>
+          
+            <div class="menu-item ax_default ">
+              <div class="text" spellcheck="false">首页</div>
+            </div>
+          
+            <div class="menu-item ax_default active">
+              <div class="text" spellcheck="false">接单大厅</div>
+            </div>
+          
+            <div class="menu-item ax_default ">
+              <div class="text" spellcheck="false">待处理订单</div>
+            </div>
+          
+        </div>
+      
+    </aside>
+  
+      <main class="main-shell">
+        
+    <header class="page-header ax_default">
+      <h1 class="text" spellcheck="false">接单大厅</h1>
+      <p class="text" spellcheck="false">纯代码重建：接单大厅卡片页，保留筛选项、卡片字段、抢单规则与分页信息。</p>
+    </header>
+  
+        
+    <section class="section ax_default ">
+      <div class="section-title text" spellcheck="false">筛选项</div>
+      
+          
+    <div class="field-grid cols-4">
+      
+        <div class="field-card ax_default">
+          <div class="field-label text" spellcheck="false">出餐单号</div>
+          <div class="field-input"></div>
+        </div>
+      
+        <div class="field-card ax_default">
+          <div class="field-label text" spellcheck="false">支付价(含左区间) - 支付价(右区间)</div>
+          <div class="field-input"></div>
+        </div>
+      
+        <div class="field-card ax_default" style="display: none;">
+          <div class="field-label text" spellcheck="false">支付价(右区间)</div>
+          <div class="field-input"></div>
+        </div>
+      
+        <div class="field-card ax_default">
+          <div class="field-label text" spellcheck="false">选择品牌</div>
+          <div class="field-input"></div>
+        </div>
+      
+    </div>
+  
+          
+    <ul class="note-list text" spellcheck="false">
+      <li class="">选择品牌 筛选项：枚举值跟点餐后台--销售订单列表的选择品牌 枚举值一致</li><li>支付价区间：搜索时，按照输入的只有区间包含输入的值去寻找订单</li><li>选择品牌：枚举值跟点餐后台--销售订单页面的该选项的枚举值一致</li>
+    </ul>
+  
+        
+    </section>
+  
+    <section class="section ax_default ">
+      <div class="section-title text" spellcheck="false">订单卡片</div>
+      
+          <div class="card-grid">
+            
+              <div class="order-card ax_default">
+                <div class="text" spellcheck="false"><strong>瑞幸-广州</strong></div>
+                
+                
+                
+                
+                
+                
+                <div class="button-row"></div>
+              </div>
+            
+              <div class="order-card ax_default" style="display: none;">
+                <div class="text" spellcheck="false"><strong>瑞幸-广州</strong></div>
+                <div class="meta-line text" spellcheck="false">6天23小时59分59秒</div>
+                <div class="product-shot text" spellcheck="false">商品图</div>
+                <div class="meta-line text" spellcheck="false">椰青冰萃美式</div>
+                <div class="meta-line text" spellcheck="false">用户支付：9.99</div>
+                <div class="meta-line text" spellcheck="false">瑞幸</div>
+                <div class="meta-line accent text" spellcheck="false">赔付：1.5</div>
+                <div class="button-row"><div class="ghost-btn ax_default"><div class="text" spellcheck="false">抢单</div></div></div>
+              </div>
+            
+              <div class="order-card ax_default" style="display: none;">
+                <div class="text" spellcheck="false"><strong>瑞幸-广州</strong></div>
+                <div class="meta-line text" spellcheck="false">6天23小时59分59秒</div>
+                <div class="product-shot text" spellcheck="false">商品图</div>
+                <div class="meta-line text" spellcheck="false">椰青冰萃美式</div>
+                <div class="meta-line text" spellcheck="false">用户支付：9.99</div>
+                <div class="meta-line text" spellcheck="false">瑞幸</div>
+                <div class="meta-line accent text" spellcheck="false">赔付：1.5</div>
+                <div class="button-row"><div class="ghost-btn ax_default"><div class="text" spellcheck="false">抢单</div></div></div>
+              </div>
+            
+              <div class="order-card ax_default" style="display: none;">
+                <div class="text" spellcheck="false"><strong>瑞幸-广州</strong></div>
+                <div class="meta-line text" spellcheck="false">6天23小时59分59秒</div>
+                <div class="product-shot text" spellcheck="false">商品图</div>
+                <div class="meta-line text" spellcheck="false">椰青冰萃美式</div>
+                <div class="meta-line text" spellcheck="false">用户支付：9.99</div>
+                <div class="meta-line text" spellcheck="false">瑞幸</div>
+                <div class="meta-line accent text" spellcheck="false">赔付：1.5</div>
+                <div class="button-row"><div class="ghost-btn ax_default"><div class="text" spellcheck="false">抢单</div></div></div>
+              </div>
+            
+              <div class="order-card ax_default" style="display: none;">
+                <div class="text" spellcheck="false"><strong>瑞幸-广州</strong></div>
+                <div class="meta-line text" spellcheck="false">6天23小时59分59秒</div>
+                <div class="product-shot text" spellcheck="false">商品图</div>
+                <div class="meta-line text" spellcheck="false">椰青冰萃美式</div>
+                <div class="meta-line text" spellcheck="false">用户支付：9.99</div>
+                <div class="meta-line text" spellcheck="false">瑞幸</div>
+                <div class="meta-line accent text" spellcheck="false">赔付：1.5</div>
+                <div class="button-row"><div class="ghost-btn ax_default"><div class="text" spellcheck="false">抢单</div></div></div>
+              </div>
+            
+              <div class="order-card ax_default" style="display: none;">
+                <div class="text" spellcheck="false"><strong>瑞幸-广州</strong></div>
+                <div class="meta-line text" spellcheck="false">6天23小时59分59秒</div>
+                <div class="product-shot text" spellcheck="false">商品图</div>
+                <div class="meta-line text" spellcheck="false">椰青冰萃美式</div>
+                <div class="meta-line text" spellcheck="false">用户支付：9.99</div>
+                <div class="meta-line text" spellcheck="false">瑞幸</div>
+                <div class="meta-line accent text" spellcheck="false">赔付：1.5</div>
+                <div class="button-row"><div class="ghost-btn ax_default"><div class="text" spellcheck="false">抢单</div></div></div>
+              </div>
+            
+          </div>
+        
+    </section>
+  
+    <section class="section ax_default ">
+      <div class="section-title text" spellcheck="false">卡片规则与字段说明</div>
+      
+    <ul class="note-list text" spellcheck="false">
+      <li class="">订单卡片：<b>【一行放3-4个，放3-4列；分页展示】</b></li><li class="">注意：页面卡片排除，<span style="color: rgb(217, 45, 32);">倒计时最短的放最前面</span></li><li>门店地址</li><li class="no-bullet">&nbsp; &nbsp; 数据源：添加订单时对应的门店地址</li><li class="no-bullet">&nbsp; &nbsp; 显示逻辑：门店地址只“显示城市”+复制按钮</li><li class="no-bullet">&nbsp; &nbsp; 点击复制，提示“复制成功”</li><li class="no-bullet">&nbsp; &nbsp; 例：瑞幸-东莞-环球贸易广场店，显示“瑞幸-东莞”</li><li class="">倒计时：</li><li class="no-bullet">&nbsp; &nbsp; 进入页面后，按照点餐后台配置的时间进行倒计时<span style="color: rgb(217, 45, 32);">【实时变化】</span></li><li>商品图：</li><li class="no-bullet">&nbsp; &nbsp; 取名称对应的商品图片</li><li>品牌：</li><li class="no-bullet">&nbsp; &nbsp; 数据源：取客服添加时订单号对应的品牌</li><li>商品名称：</li><li class="no-bullet">&nbsp; &nbsp; 数据源：取客服添加时订单号对应的商品名称<span style="color: rgb(217, 45, 32);">【具体的商品名称不是券名称】</span></li><li>用户支付：</li><li class="no-bullet">&nbsp; &nbsp; 数据源：取<span style="color: rgb(217, 45, 32);">客服添加时订单号对应的申请金额</span></li><li>赔付：</li><li class="no-bullet">&nbsp; &nbsp; 数据源：取<span style="color: rgb(217, 45, 32);">后台配置的赔付金额</span></li><li>抢单 按钮：</li><li class="no-bullet">&nbsp; &nbsp; 交互逻辑：点击抢单，订单进入售后单页面的待处理列表</li><li class="no-bullet">&nbsp; &nbsp; 抢单成功，提示“抢单成功，到售后单列表查看”</li><li class="no-bullet">&nbsp; &nbsp; 抢单规则：<span style="color: rgb(217, 45, 32);">多人同时抢单时，只能分配给一个人【随机分配】</span></li><li>分配规则：</li><li class="no-bullet">&nbsp; &nbsp; 第一次多人抢单时，随机分配，若第一个人放弃后，顺位随机分配给其他几个，直到没有候选</li><li class="no-bullet">&nbsp; &nbsp; 若没有候选时，工单扔回接单大厅，继续倒计时<span style="color: rgb(217, 45, 32);">【倒计时 时间=接单时的剩余倒计时- （流转时占用的倒计时）】</span></li><li class="no-bullet">&nbsp; &nbsp; 若超时未上传状态下，点击 放弃按钮，订单会从该供应商后台消失，该订单在点餐后台会进入到点餐后台--待处理页面</li><li class="no-bullet">&nbsp; &nbsp; 若A放弃该工单后，该工单就不会再次分配给A了</li>
+    </ul>
+  
+    </section>
+  
+    <section class="section ax_default ">
+      <div class="section-title text" spellcheck="false">分页</div>
+      
+          <div class="chip-row">
+            <div class="chip active ax_default"><div class="text" spellcheck="false">1</div></div><div class="chip  ax_default"><div class="text" spellcheck="false">2</div></div><div class="chip  ax_default"><div class="text" spellcheck="false">3</div></div><div class="chip  ax_default"><div class="text" spellcheck="false">4</div></div><div class="chip  ax_default"><div class="text" spellcheck="false">5</div></div><div class="chip  ax_default"><div class="text" spellcheck="false">6</div></div><div class="chip  ax_default"><div class="text" spellcheck="false">10</div></div><div class="chip  ax_default"><div class="text" spellcheck="false">20 条/页</div></div><div class="chip  ax_default"><div class="text" spellcheck="false">5</div></div><div class="chip  ax_default"><div class="text" spellcheck="false">前往</div></div><div class="chip  ax_default"><div class="text" spellcheck="false">页</div></div><div class="chip  ax_default"><div class="text" spellcheck="false">共 200 条</div></div>
+          </div>
+        
+    </section>
+  
+      </main>
+    <div class="codex-added button" id="codex_added_1" style="position: absolute; left: 1485px; top: 262px; width: 140px; height: 40px;" spellcheck="false" data-codex-base-width="140" data-codex-base-height="40">搜索</div><div class="codex-added button" id="codex_added_2" style="position: absolute; left: 1645px; top: 263px; width: 140px; height: 40px;" spellcheck="false" data-codex-base-width="140" data-codex-base-height="40">重置</div><div class="product-shot text" spellcheck="false" style="position: absolute; left: 315px; top: 532.625px; width: 113px; height: 165px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;" data-codex-base-width="481.656" data-codex-base-height="92">商品图</div><div class="meta-line text" spellcheck="false" style="position: absolute; left: 635px; top: 499.234px; width: 153px; height: 40px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;" data-codex-base-width="481.656" data-codex-base-height="22.3906"><span style="color: rgb(217, 45, 32);">6天23小时59分59秒</span></div><div class="meta-line text" spellcheck="false" style="position: absolute; left: 440px; top: 538.625px; width: 190px; height: 45px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;" data-codex-base-width="481.656" data-codex-base-height="22.3906">椰青冰萃美式</div><div class="meta-line text" spellcheck="false" style="position: absolute; left: 440px; top: 567.016px; width: 221px; height: 40px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;" data-codex-base-width="481.656" data-codex-base-height="22.3906">用户支付：9.99</div><div class="meta-line text" spellcheck="false" style="position: absolute; left: 440px; top: 595.406px; width: 161px; height: 42px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;" data-codex-base-width="481.656" data-codex-base-height="22.3906">瑞幸</div><div class="meta-line accent text" spellcheck="false" style="position: absolute; left: 325px; top: 711.797px; width: 214px; height: 40px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;" data-codex-base-width="481.656" data-codex-base-height="22.3906">赔付：1.5</div><div class="meta-line accent text" spellcheck="false" data-codex-pinned-source="true" style="visibility: hidden; pointer-events: none; position: absolute; left: 325px; top: 711.797px; width: 481.656px; height: 22.3906px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;" data-codex-base-width="481.656" data-codex-base-height="22.3906">赔付：1.5</div><div class="ghost-btn ax_default" style="position: absolute; left: 652px; top: 764.188px; width: 58px; height: 44.3906px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;" data-codex-base-width="58" data-codex-base-height="44.3906"><div class="text" spellcheck="false">抢单</div></div></div>
+    <script src="proto.js"></script>
+    <script>window.__CODEX_INITIAL_STATE = {"snapshot":"\n      \n    \u003caside class=\"sidebar ax_default\">\n      \u003cdiv class=\"sidebar-head ax_default\">\n        \u003cdiv class=\"text\" spellcheck=\"false\">供应商链路\u003c/div>\n      \u003c/div>\n      \n        \u003cdiv class=\"menu-group ax_default\">\n          \u003cdiv class=\"menu-group-title text\" spellcheck=\"false\">供应商中心\u003c/div>\n          \n            \u003cdiv class=\"menu-item ax_default \">\n              \u003cdiv class=\"text\" spellcheck=\"false\">首页\u003c/div>\n            \u003c/div>\n          \n            \u003cdiv class=\"menu-item ax_default active\">\n              \u003cdiv class=\"text\" spellcheck=\"false\">接单大厅\u003c/div>\n            \u003c/div>\n          \n            \u003cdiv class=\"menu-item ax_default \">\n              \u003cdiv class=\"text\" spellcheck=\"false\">待处理订单\u003c/div>\n            \u003c/div>\n          \n        \u003c/div>\n      \n    \u003c/aside>\n  \n      \u003cmain class=\"main-shell\">\n        \n    \u003cheader class=\"page-header ax_default\">\n      \u003ch1 class=\"text\" spellcheck=\"false\">接单大厅\u003c/h1>\n      \u003cp class=\"text\" spellcheck=\"false\">纯代码重建：接单大厅卡片页，保留筛选项、卡片字段、抢单规则与分页信息。\u003c/p>\n    \u003c/header>\n  \n        \n    \u003csection class=\"section ax_default \">\n      \u003cdiv class=\"section-title text\" spellcheck=\"false\">筛选项\u003c/div>\n      \n          \n    \u003cdiv class=\"field-grid cols-4\">\n      \n        \u003cdiv class=\"field-card ax_default\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">出餐单号\u003c/div>\n          \u003cdiv class=\"field-input\">\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">支付价(含左区间) - 支付价(右区间)\u003c/div>\n          \u003cdiv class=\"field-input\">\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\" style=\"display: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">支付价(右区间)\u003c/div>\n          \u003cdiv class=\"field-input\">\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">选择品牌\u003c/div>\n          \u003cdiv class=\"field-input\">\u003c/div>\n        \u003c/div>\n      \n    \u003c/div>\n  \n          \n    \u003cul class=\"note-list text\" spellcheck=\"false\">\n      \u003cli class=\"\">选择品牌 筛选项：枚举值跟点餐后台--销售订单列表的选择品牌 枚举值一致\u003c/li>\u003cli>支付价区间：搜索时，按照输入的只有区间包含输入的值去寻找订单\u003c/li>\u003cli>选择品牌：枚举值跟点餐后台--销售订单页面的该选项的枚举值一致\u003c/li>\n    \u003c/ul>\n  \n        \n    \u003c/section>\n  \n    \u003csection class=\"section ax_default \">\n      \u003cdiv class=\"section-title text\" spellcheck=\"false\">订单卡片\u003c/div>\n      \n          \u003cdiv class=\"card-grid\">\n            \n              \u003cdiv class=\"order-card ax_default\">\n                \u003cdiv class=\"text\" spellcheck=\"false\">\u003cstrong>瑞幸-广州\u003c/strong>\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_4\" style=\"visibility: hidden; pointer-events: none;\">6天23小时59分59秒\u003c/div>\n                \u003cdiv class=\"product-shot text\" spellcheck=\"false\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_3\" style=\"visibility: hidden; pointer-events: none;\">商品图\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_5\" style=\"visibility: hidden; pointer-events: none;\">椰青冰萃美式\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_6\" style=\"visibility: hidden; pointer-events: none;\">用户支付：9.99\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_7\" style=\"visibility: hidden; pointer-events: none;\">瑞幸\u003c/div>\n                \u003cdiv class=\"meta-line accent text\" spellcheck=\"false\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_8\" style=\"visibility: hidden; pointer-events: none;\">赔付：1.5\u003c/div>\n                \u003cdiv class=\"button-row\">\u003cdiv class=\"ghost-btn ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_9\" style=\"visibility: hidden; pointer-events: none;\">\u003cdiv class=\"text\" spellcheck=\"false\">抢单\u003c/div>\u003c/div>\u003c/div>\n              \u003c/div>\n            \n              \u003cdiv class=\"order-card ax_default\" style=\"display: none;\">\n                \u003cdiv class=\"text\" spellcheck=\"false\">\u003cstrong>瑞幸-广州\u003c/strong>\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">6天23小时59分59秒\u003c/div>\n                \u003cdiv class=\"product-shot text\" spellcheck=\"false\">商品图\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">椰青冰萃美式\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">用户支付：9.99\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">瑞幸\u003c/div>\n                \u003cdiv class=\"meta-line accent text\" spellcheck=\"false\">赔付：1.5\u003c/div>\n                \u003cdiv class=\"button-row\">\u003cdiv class=\"ghost-btn ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">抢单\u003c/div>\u003c/div>\u003c/div>\n              \u003c/div>\n            \n              \u003cdiv class=\"order-card ax_default\" style=\"display: none;\">\n                \u003cdiv class=\"text\" spellcheck=\"false\">\u003cstrong>瑞幸-广州\u003c/strong>\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">6天23小时59分59秒\u003c/div>\n                \u003cdiv class=\"product-shot text\" spellcheck=\"false\">商品图\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">椰青冰萃美式\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">用户支付：9.99\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">瑞幸\u003c/div>\n                \u003cdiv class=\"meta-line accent text\" spellcheck=\"false\">赔付：1.5\u003c/div>\n                \u003cdiv class=\"button-row\">\u003cdiv class=\"ghost-btn ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">抢单\u003c/div>\u003c/div>\u003c/div>\n              \u003c/div>\n            \n              \u003cdiv class=\"order-card ax_default\" style=\"display: none;\">\n                \u003cdiv class=\"text\" spellcheck=\"false\">\u003cstrong>瑞幸-广州\u003c/strong>\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">6天23小时59分59秒\u003c/div>\n                \u003cdiv class=\"product-shot text\" spellcheck=\"false\">商品图\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">椰青冰萃美式\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">用户支付：9.99\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">瑞幸\u003c/div>\n                \u003cdiv class=\"meta-line accent text\" spellcheck=\"false\">赔付：1.5\u003c/div>\n                \u003cdiv class=\"button-row\">\u003cdiv class=\"ghost-btn ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">抢单\u003c/div>\u003c/div>\u003c/div>\n              \u003c/div>\n            \n              \u003cdiv class=\"order-card ax_default\" style=\"display: none;\">\n                \u003cdiv class=\"text\" spellcheck=\"false\">\u003cstrong>瑞幸-广州\u003c/strong>\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">6天23小时59分59秒\u003c/div>\n                \u003cdiv class=\"product-shot text\" spellcheck=\"false\">商品图\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">椰青冰萃美式\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">用户支付：9.99\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">瑞幸\u003c/div>\n                \u003cdiv class=\"meta-line accent text\" spellcheck=\"false\">赔付：1.5\u003c/div>\n                \u003cdiv class=\"button-row\">\u003cdiv class=\"ghost-btn ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">抢单\u003c/div>\u003c/div>\u003c/div>\n              \u003c/div>\n            \n              \u003cdiv class=\"order-card ax_default\" style=\"display: none;\">\n                \u003cdiv class=\"text\" spellcheck=\"false\">\u003cstrong>瑞幸-广州\u003c/strong>\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">6天23小时59分59秒\u003c/div>\n                \u003cdiv class=\"product-shot text\" spellcheck=\"false\">商品图\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">椰青冰萃美式\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">用户支付：9.99\u003c/div>\n                \u003cdiv class=\"meta-line text\" spellcheck=\"false\">瑞幸\u003c/div>\n                \u003cdiv class=\"meta-line accent text\" spellcheck=\"false\">赔付：1.5\u003c/div>\n                \u003cdiv class=\"button-row\">\u003cdiv class=\"ghost-btn ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">抢单\u003c/div>\u003c/div>\u003c/div>\n              \u003c/div>\n            \n          \u003c/div>\n        \n    \u003c/section>\n  \n    \u003csection class=\"section ax_default \">\n      \u003cdiv class=\"section-title text\" spellcheck=\"false\">卡片规则与字段说明\u003c/div>\n      \n    \u003cul class=\"note-list text\" spellcheck=\"false\">\n      \u003cli class=\"\">订单卡片：\u003cb>【一行放3-4个，放3-4列；分页展示】\u003c/b>\u003c/li>\u003cli class=\"\">注意：页面卡片排除，\u003cspan style=\"color: rgb(217, 45, 32);\">倒计时最短的放最前面\u003c/span>\u003c/li>\u003cli>门店地址\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 数据源：添加订单时对应的门店地址\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 显示逻辑：门店地址只“显示城市”+复制按钮\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 点击复制，提示“复制成功”\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 例：瑞幸-东莞-环球贸易广场店，显示“瑞幸-东莞”\u003c/li>\u003cli class=\"\">倒计时：\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 进入页面后，按照点餐后台配置的时间进行倒计时\u003cspan style=\"color: rgb(217, 45, 32);\">【实时变化】\u003c/span>\u003c/li>\u003cli>商品图：\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 取名称对应的商品图片\u003c/li>\u003cli>品牌：\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 数据源：取客服添加时订单号对应的品牌\u003c/li>\u003cli>商品名称：\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 数据源：取客服添加时订单号对应的商品名称\u003cspan style=\"color: rgb(217, 45, 32);\">【具体的商品名称不是券名称】\u003c/span>\u003c/li>\u003cli>用户支付：\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 数据源：取\u003cspan style=\"color: rgb(217, 45, 32);\">客服添加时订单号对应的申请金额\u003c/span>\u003c/li>\u003cli>赔付：\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 数据源：取\u003cspan style=\"color: rgb(217, 45, 32);\">后台配置的赔付金额\u003c/span>\u003c/li>\u003cli>抢单 按钮：\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 交互逻辑：点击抢单，订单进入售后单页面的待处理列表\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 抢单成功，提示“抢单成功，到售后单列表查看”\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 抢单规则：\u003cspan style=\"color: rgb(217, 45, 32);\">多人同时抢单时，只能分配给一个人【随机分配】\u003c/span>\u003c/li>\u003cli>分配规则：\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 第一次多人抢单时，随机分配，若第一个人放弃后，顺位随机分配给其他几个，直到没有候选\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 若没有候选时，工单扔回接单大厅，继续倒计时\u003cspan style=\"color: rgb(217, 45, 32);\">【倒计时 时间=接单时的剩余倒计时- （流转时占用的倒计时）】\u003c/span>\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 若超时未上传状态下，点击 放弃按钮，订单会从该供应商后台消失，该订单在点餐后台会进入到点餐后台--待处理页面\u003c/li>\u003cli class=\"no-bullet\">&nbsp; &nbsp; 若A放弃该工单后，该工单就不会再次分配给A了\u003c/li>\n    \u003c/ul>\n  \n    \u003c/section>\n  \n    \u003csection class=\"section ax_default \">\n      \u003cdiv class=\"section-title text\" spellcheck=\"false\">分页\u003c/div>\n      \n          \u003cdiv class=\"chip-row\">\n            \u003cdiv class=\"chip active ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">1\u003c/div>\u003c/div>\u003cdiv class=\"chip  ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">2\u003c/div>\u003c/div>\u003cdiv class=\"chip  ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">3\u003c/div>\u003c/div>\u003cdiv class=\"chip  ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">4\u003c/div>\u003c/div>\u003cdiv class=\"chip  ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">5\u003c/div>\u003c/div>\u003cdiv class=\"chip  ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">6\u003c/div>\u003c/div>\u003cdiv class=\"chip  ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">10\u003c/div>\u003c/div>\u003cdiv class=\"chip  ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">20 条/页\u003c/div>\u003c/div>\u003cdiv class=\"chip  ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">5\u003c/div>\u003c/div>\u003cdiv class=\"chip  ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">前往\u003c/div>\u003c/div>\u003cdiv class=\"chip  ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">页\u003c/div>\u003c/div>\u003cdiv class=\"chip  ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">共 200 条\u003c/div>\u003c/div>\n          \u003c/div>\n        \n    \u003c/section>\n  \n      \u003c/main>\n    \u003cdiv class=\"codex-added button\" id=\"codex_added_1\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 1485px; top: 262px; width: 140px; height: 40px;\" spellcheck=\"false\" data-codex-base-width=\"140\" data-codex-base-height=\"40\">搜索\u003c/div>\u003cdiv class=\"codex-added button\" id=\"codex_added_2\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 1645px; top: 263px; width: 140px; height: 40px;\" spellcheck=\"false\" data-codex-base-width=\"140\" data-codex-base-height=\"40\">重置\u003c/div>\u003cdiv class=\"product-shot text\" spellcheck=\"false\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_3\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 315px; top: 532.625px; width: 113px; height: 165px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;\" data-codex-base-width=\"481.656\" data-codex-base-height=\"92\">商品图\u003c/div>\u003cdiv class=\"meta-line text\" spellcheck=\"false\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_4\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 635px; top: 499.234px; width: 153px; height: 40px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;\" data-codex-base-width=\"481.656\" data-codex-base-height=\"22.3906\">\u003cspan style=\"color: rgb(217, 45, 32);\">6天23小时59分59秒\u003c/span>\u003c/div>\u003cdiv class=\"meta-line text\" spellcheck=\"false\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_5\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 440px; top: 538.625px; width: 190px; height: 45px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;\" data-codex-base-width=\"481.656\" data-codex-base-height=\"22.3906\">椰青冰萃美式\u003c/div>\u003cdiv class=\"meta-line text\" spellcheck=\"false\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_6\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 440px; top: 567.016px; width: 221px; height: 40px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;\" data-codex-base-width=\"481.656\" data-codex-base-height=\"22.3906\">用户支付：9.99\u003c/div>\u003cdiv class=\"meta-line text\" spellcheck=\"false\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_7\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 440px; top: 595.406px; width: 161px; height: 42px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;\" data-codex-base-width=\"481.656\" data-codex-base-height=\"22.3906\">瑞幸\u003c/div>\u003cdiv class=\"meta-line accent text\" spellcheck=\"false\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_8\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 325px; top: 711.797px; width: 214px; height: 40px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;\" data-codex-base-width=\"481.656\" data-codex-base-height=\"22.3906\">赔付：1.5\u003c/div>\u003cdiv class=\"meta-line accent text\" spellcheck=\"false\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_8\" style=\"visibility: hidden; pointer-events: none; position: absolute; left: 325px; top: 711.797px; width: 481.656px; height: 22.3906px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;\" data-codex-pinned-clone=\"true\" data-codex-layer-element=\"true\" data-codex-base-width=\"481.656\" data-codex-base-height=\"22.3906\">赔付：1.5\u003c/div>\u003cdiv class=\"ghost-btn ax_default\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_9\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 652px; top: 764.188px; width: 58px; height: 44.3906px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;\" data-codex-base-width=\"58\" data-codex-base-height=\"44.3906\">\u003cdiv class=\"text\" spellcheck=\"false\">抢单\u003c/div>\u003c/div>","addedCounter":9,"templateVersion":"20260724.14"};</script><script src="codex-edit.js?v=20260727.supplier-nav1"></script>
+    
+  
+
+</body></html>
+
+
+
+
+
+
+
+
+
+
