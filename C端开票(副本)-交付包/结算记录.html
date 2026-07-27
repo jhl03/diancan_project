@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="codex-template-version" content="20260723.2">
+    <title>结算记录</title>
+    <link href="proto.css?v=20260727.delivery1" rel="stylesheet">
+    <link href="codex-edit.css?v=20260727.hide-expand-button1" rel="stylesheet">
+  </head>
+  <body class="">
+    <div id="base" class="app-shell">
+      <aside class="sidebar ax_default">
+        <div class="sidebar-head ax_default">
+          <div class="text" spellcheck="false">点餐供应商管理系统</div>
+        </div>
+
+        <div class="menu-group ax_default">
+          <div class="menu-item ax_default">
+            <div class="text" spellcheck="false">首页</div>
+          </div>
+        </div>
+
+        <div class="menu-group ax_default">
+          <div class="menu-item ax_default">
+            <div class="text" spellcheck="false">出价管理</div>
+          </div>
+        </div>
+
+        <div class="menu-group ax_default">
+          <div class="menu-group-title text" spellcheck="false">账户管理</div>
+          <div class="menu-item ax_default">
+            <div class="text" spellcheck="false">提现记录</div>
+          </div>
+          <div class="menu-item ax_default">
+            <div class="text" spellcheck="false">提现账户</div>
+          </div>
+          <div class="menu-item ax_default active">
+            <div class="text" spellcheck="false">结算记录</div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-shell">
+        <header class="page-header ax_default">
+          <h1 class="text" spellcheck="false">结算记录</h1>
+          <p class="text" spellcheck="false">纯代码重建：按原型包修正供应商端结算记录页筛选项与列表字段。</p>
+        </header>
+
+        <section class="section ax_default">
+          <div class="section-title text" spellcheck="false">页面变更说明</div>
+          <ul class="note-list text" spellcheck="false">
+            <li>列表增加流水记录。</li>
+            <li>当供应商上传的文件在后台审核通过【人工/自动】时，会给供应商增加一条流水记录，类型为“<span style="color: rgb(217, 45, 32);">售后单赔付</span>”。</li>
+          </ul>
+        </section>
+
+        <section class="section ax_default">
+          <div class="section-title text" spellcheck="false">结算记录列表</div>
+
+          <div class="field-grid cols-3">
+            <div class="field-card ax_default">
+              <div class="field-label text" spellcheck="false">结算流水单号</div>
+              <div class="field-input">
+                <div class="text" style="padding:10px 12px;color:#98a2b3;" spellcheck="false">请输入结算流水单号</div>
+              </div>
+            </div>
+
+            <div class="field-card ax_default">
+              <div class="field-label text" spellcheck="false">关联单号</div>
+              <div class="field-input">
+                <div class="text" style="padding:10px 12px;color:#98a2b3;" spellcheck="false">请输入关联单号</div>
+              </div>
+            </div>
+
+            <div class="field-card ax_default">
+              <div class="field-label text" spellcheck="false">交易时间</div>
+              <div class="field-input">
+                <div class="text" style="padding:10px 12px;color:#98a2b3;" spellcheck="false">交易开始时间  -  交易结束时间</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <div class="ghost-btn ax_default"><div class="text" spellcheck="false">搜索</div></div>
+            <div class="ghost-btn ax_default"><div class="text" spellcheck="false">重置</div></div>
+            <div class="ghost-btn ax_default"><div class="text" spellcheck="false">导出</div></div>
+          </div>
+
+          <div class="table-wrap ax_default" style="margin-top:12px;">
+            <table class="data-table" style="min-width:1080px;">
+              <thead>
+                <tr>
+                  <th><div class="text" spellcheck="false">结算流水单号</div></th>
+                  <th><div class="text" spellcheck="false">交易时间</div></th>
+                  <th><div class="text" spellcheck="false">交易类型</div></th>
+                  <th><div class="text" spellcheck="false">变动金额</div></th>
+                  <th><div class="text" spellcheck="false">关联单据号</div></th>
+                  <th><div class="text" spellcheck="false">所属供应商</div></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="">
+                  <td><div class="text" spellcheck="false">2079492463726620674</div></td>
+                  <td><div class="text" spellcheck="false">2026-07-21 18:16:41</div></td>
+                  <td><div class="text" spellcheck="false"><span style="color: rgb(217, 45, 32);">售后单赔付</span></div></td>
+                  <td class=""><div class="text" spellcheck="false"><span style="color: rgb(217, 45, 32);">+0.5</span></div></td>
+                  <td><div class="text" spellcheck="false">2079492428708343808</div></td>
+                  <td><div class="text" spellcheck="false">井井井</div></td>
+                </tr>
+                <tr>
+                  <td><div class="text" spellcheck="false">2079492463726620674</div></td>
+                  <td><div class="text" spellcheck="false">2026-07-21 17:06:52</div></td>
+                  <td><div class="text" spellcheck="false">订单完成结算</div></td>
+                  <td><div class="text" spellcheck="false">+2</div></td>
+                  <td><div class="text" spellcheck="false">2079492428708343808</div></td>
+                  <td><div class="text" spellcheck="false">井井井</div></td>
+                </tr>
+                <tr>
+                  <td><div class="text" spellcheck="false">2077196674669207554</div></td>
+                  <td><div class="text" spellcheck="false">2026-07-15 09:03:20</div></td>
+                  <td><div class="text" spellcheck="false">未出餐门减</div></td>
+                  <td><div class="text" spellcheck="false">-3</div></td>
+                  <td><div class="text" spellcheck="false">2077196674639728640</div></td>
+                  <td><div class="text" spellcheck="false">井井井</div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="proto.js"></script>
+    <script>window.__CODEX_INITIAL_STATE = {"snapshot":"\n      \u003caside class=\"sidebar ax_default\">\n        \u003cdiv class=\"sidebar-head ax_default\">\n          \u003cdiv class=\"text\" spellcheck=\"false\">点餐供应商管理系统\u003c/div>\n        \u003c/div>\n\n        \u003cdiv class=\"menu-group ax_default\">\n          \u003cdiv class=\"menu-item ax_default\">\n            \u003cdiv class=\"text\" spellcheck=\"false\">首页\u003c/div>\n          \u003c/div>\n        \u003c/div>\n\n        \u003cdiv class=\"menu-group ax_default\">\n          \u003cdiv class=\"menu-item ax_default\">\n            \u003cdiv class=\"text\" spellcheck=\"false\">出价管理\u003c/div>\n          \u003c/div>\n        \u003c/div>\n\n        \u003cdiv class=\"menu-group ax_default\">\n          \u003cdiv class=\"menu-group-title text\" spellcheck=\"false\">账户管理\u003c/div>\n          \u003cdiv class=\"menu-item ax_default\">\n            \u003cdiv class=\"text\" spellcheck=\"false\">提现记录\u003c/div>\n          \u003c/div>\n          \u003cdiv class=\"menu-item ax_default\">\n            \u003cdiv class=\"text\" spellcheck=\"false\">提现账户\u003c/div>\n          \u003c/div>\n          \u003cdiv class=\"menu-item ax_default active\">\n            \u003cdiv class=\"text\" spellcheck=\"false\">结算记录\u003c/div>\n          \u003c/div>\n        \u003c/div>\n      \u003c/aside>\n\n      \u003cmain class=\"main-shell\">\n        \u003cheader class=\"page-header ax_default\">\n          \u003ch1 class=\"text\" spellcheck=\"false\">结算记录\u003c/h1>\n          \u003cp class=\"text\" spellcheck=\"false\">纯代码重建：按原型包修正供应商端结算记录页筛选项与列表字段。\u003c/p>\n        \u003c/header>\n\n        \u003csection class=\"section ax_default\">\n          \u003cdiv class=\"section-title text\" spellcheck=\"false\">页面变更说明\u003c/div>\n          \u003cul class=\"note-list text\" spellcheck=\"false\">\n            \u003cli>列表增加流水记录。\u003c/li>\n            \u003cli>当供应商上传的文件在后台审核通过【人工/自动】时，会给供应商增加一条流水记录，类型为“\u003cspan style=\"color: rgb(217, 45, 32);\">售后单赔付\u003c/span>”。\u003c/li>\n          \u003c/ul>\n        \u003c/section>\n\n        \u003csection class=\"section ax_default\">\n          \u003cdiv class=\"section-title text\" spellcheck=\"false\">结算记录列表\u003c/div>\n\n          \u003cdiv class=\"field-grid cols-3\">\n            \u003cdiv class=\"field-card ax_default\">\n              \u003cdiv class=\"field-label text\" spellcheck=\"false\">结算流水单号\u003c/div>\n              \u003cdiv class=\"field-input\">\n                \u003cdiv class=\"text\" style=\"padding:10px 12px;color:#98a2b3;\" spellcheck=\"false\">请输入结算流水单号\u003c/div>\n              \u003c/div>\n            \u003c/div>\n\n            \u003cdiv class=\"field-card ax_default\">\n              \u003cdiv class=\"field-label text\" spellcheck=\"false\">关联单号\u003c/div>\n              \u003cdiv class=\"field-input\">\n                \u003cdiv class=\"text\" style=\"padding:10px 12px;color:#98a2b3;\" spellcheck=\"false\">请输入关联单号\u003c/div>\n              \u003c/div>\n            \u003c/div>\n\n            \u003cdiv class=\"field-card ax_default\">\n              \u003cdiv class=\"field-label text\" spellcheck=\"false\">交易时间\u003c/div>\n              \u003cdiv class=\"field-input\">\n                \u003cdiv class=\"text\" style=\"padding:10px 12px;color:#98a2b3;\" spellcheck=\"false\">交易开始时间  -  交易结束时间\u003c/div>\n              \u003c/div>\n            \u003c/div>\n          \u003c/div>\n\n          \u003cdiv class=\"button-row\">\n            \u003cdiv class=\"ghost-btn ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">搜索\u003c/div>\u003c/div>\n            \u003cdiv class=\"ghost-btn ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">重置\u003c/div>\u003c/div>\n            \u003cdiv class=\"ghost-btn ax_default\">\u003cdiv class=\"text\" spellcheck=\"false\">导出\u003c/div>\u003c/div>\n          \u003c/div>\n\n          \u003cdiv class=\"table-wrap ax_default\" style=\"margin-top:12px;\">\n            \u003ctable class=\"data-table\" style=\"min-width:1080px;\">\n              \u003cthead>\n                \u003ctr>\n                  \u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">结算流水单号\u003c/div>\u003c/th>\n                  \u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">交易时间\u003c/div>\u003c/th>\n                  \u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">交易类型\u003c/div>\u003c/th>\n                  \u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">变动金额\u003c/div>\u003c/th>\n                  \u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">关联单据号\u003c/div>\u003c/th>\n                  \u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">所属供应商\u003c/div>\u003c/th>\n                \u003c/tr>\n              \u003c/thead>\n              \u003ctbody>\n                \u003ctr class=\"\">\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">2079492463726620674\u003c/div>\u003c/td>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">2026-07-21 18:16:41\u003c/div>\u003c/td>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">\u003cspan style=\"color: rgb(217, 45, 32);\">售后单赔付\u003c/span>\u003c/div>\u003c/td>\n                  \u003ctd class=\"\">\u003cdiv class=\"text\" spellcheck=\"false\">\u003cspan style=\"color: rgb(217, 45, 32);\">+0.5\u003c/span>\u003c/div>\u003c/td>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">2079492428708343808\u003c/div>\u003c/td>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">井井井\u003c/div>\u003c/td>\n                \u003c/tr>\n                \u003ctr>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">2079492463726620674\u003c/div>\u003c/td>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">2026-07-21 17:06:52\u003c/div>\u003c/td>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">订单完成结算\u003c/div>\u003c/td>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">+2\u003c/div>\u003c/td>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">2079492428708343808\u003c/div>\u003c/td>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">井井井\u003c/div>\u003c/td>\n                \u003c/tr>\n                \u003ctr>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">2077196674669207554\u003c/div>\u003c/td>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">2026-07-15 09:03:20\u003c/div>\u003c/td>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">未出餐门减\u003c/div>\u003c/td>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">-3\u003c/div>\u003c/td>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">2077196674639728640\u003c/div>\u003c/td>\n                  \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">井井井\u003c/div>\u003c/td>\n                \u003c/tr>\n              \u003c/tbody>\n            \u003c/table>\n          \u003c/div>\n        \u003c/section>\n      \u003c/main>\n    ","addedCounter":0,"templateVersion":"20260723.2"};</script><script src="codex-edit.js?v=20260727.hide-copy-expand2"></script>
+  
+
+
+
+
+
+
+
+
+</body></html>
+
+
