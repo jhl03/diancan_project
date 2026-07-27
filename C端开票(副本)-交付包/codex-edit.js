@@ -28,7 +28,7 @@
       label: "供应商端【PC】",
       children: [
         { label: "接单大厅", file: "接单大厅.html" },
-        { label: "* 售后单", file: "__售后单.html" },
+        { label: "订单管理--*售后单", file: "订单管理--_售后单.html" },
         { label: "结算记录", file: "结算记录.html" }
       ]
     }
@@ -202,7 +202,7 @@ var editMode = false;
       "财务管理--结算记录___资金账户记录.html",
       "订单管理--_售后单列表.html",
       "接单大厅.html",
-      "__售后单.html",
+      "订单管理--_售后单.html",
       "结算记录.html"
     ];
 
@@ -225,14 +225,14 @@ var editMode = false;
         "C:\\Users\\Lenovo\\Documents\\Codex\\2026-06-18\\new-chat\\outputs\\订单管理--_售后单列表-编辑副本-20260724.html",
         "C:\\Users\\Lenovo\\Documents\\Codex\\2026-06-18\\new-chat\\outputs\\订单管理--_售后单列表-编辑副本-20260723.html"
       ];
-    } else if (currentFile.indexOf("__售后单") === 0) {
-      baselinePath = packageDir + "\\__售后单.html";
+    } else if (currentFile.indexOf("订单管理--_售后单") === 0) {
+      baselinePath = packageDir + "\\订单管理--_售后单.html";
       label = "供应商售后单";
       targetPaths = [
         baselinePath,
-        downloadsDir + "\\__售后单.html",
-        "C:\\Users\\Lenovo\\Documents\\Codex\\2026-06-18\\new-chat\\outputs\\__售后单-编辑副本-20260724.html",
-        "C:\\Users\\Lenovo\\Downloads\\__售后单-编辑副本 (2).html"
+        downloadsDir + "\\订单管理--_售后单.html",
+        "C:\\Users\\Lenovo\\Documents\\Codex\\2026-06-18\\new-chat\\outputs\\订单管理--_售后单-编辑副本-20260724.html",
+        "C:\\Users\\Lenovo\\Downloads\\订单管理--_售后单-编辑副本 (2).html"
       ];
     } else if (packagePages.indexOf(currentFile) >= 0) {
       baselinePath = packageDir + "\\" + currentFile;
