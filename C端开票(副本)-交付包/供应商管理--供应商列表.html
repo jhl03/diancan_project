@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="codex-template-version" content="20260723.1">
+    <title>供应商管理--供应商列表</title>
+    <link href="proto.css?v=20260727.delivery1" rel="stylesheet">
+    <link href="codex-edit.css?v=20260727.hide-expand-button1" rel="stylesheet">
+  </head>
+  <body class="codex-edit-mode">
+    <div id="base" class="app-shell ">
+      
+    <aside class="sidebar ax_default">
+      <div class="sidebar-head ax_default">
+        <div class="text" spellcheck="false">供应商链路</div>
+      </div>
+      
+        <div class="menu-group ax_default">
+          <div class="menu-group-title text" spellcheck="false">供应商管理</div>
+          
+            <div class="menu-item ax_default active">
+              <div class="text" spellcheck="false">供应商列表</div>
+            </div>
+          
+            <div class="menu-item ax_default ">
+              <div class="text" spellcheck="false">接单大厅</div>
+            </div>
+          
+            <div class="menu-item ax_default ">
+              <div class="text" spellcheck="false">售后单页面</div>
+            </div>
+          
+        </div>
+      
+    </aside>
+  
+      <main class="main-shell">
+        
+    <header class="page-header ax_default">
+      <h1 class="text" spellcheck="false">供应商管理--供应商列表</h1>
+      <p class="text" spellcheck="false">纯代码重建：供应商列表与接售后单权限配置页。</p>
+    </header>
+  
+        
+    <section class="section ax_default table-section">
+      <div class="section-title text" spellcheck="false">供应商列表</div>
+      
+    <div class="table-wrap ax_default">
+      <table class="data-table" style="min-width:1180px">
+        <thead>
+          <tr class="">
+            <th><div class="text" spellcheck="false">供应商编号</div></th><th><div class="text" spellcheck="false">供应商名称</div></th><th><div class="text" spellcheck="false">合作品牌</div></th><th><div class="text" spellcheck="false">联系电话</div></th><th><div class="text" spellcheck="false">合作状态</div></th><th><div class="text" spellcheck="false">合作方式</div></th><th class=""><div class="text" spellcheck="false"><span style="color: rgb(217, 45, 32);">是否接售后单</span></div></th>
+          </tr>
+          
+        </thead>
+        <tbody>
+          
+            <tr>
+              <td><div class="text" spellcheck="false">277283553914077185</div></td><td><div class="text" spellcheck="false">黄万盛</div></td><td><div class="text" spellcheck="false">瑞幸</div></td><td><div class="text" spellcheck="false">18176126035</div></td><td><div class="text" spellcheck="false">合作中</div></td><td><div class="text" spellcheck="false">平台出餐</div></td><td><div class="text" spellcheck="false"><span style="color: rgb(217, 45, 32);">关闭图标</span><div><span style="color: rgb(217, 45, 32);">开启图标</span></div></div></td>
+            </tr>
+          
+        </tbody>
+      </table>
+    </div>
+  
+    </section>
+  
+    <section class="section ax_default ">
+      <div class="section-title text" spellcheck="false">字段与交互说明</div>
+      
+    <ul class="note-list text" spellcheck="false">
+      <li class="">供应商列表  新增字段 “<span style="color: rgb(217, 45, 32);">是否接售后单</span>”：</li><li>显示逻辑：开关状态默认 关闭</li><li class=""><span style="color: rgb(217, 45, 32);">开启时，在供应商端</span>显示“售后单” 入口 及 “接单大厅”入口【PC端 】</li><li>交互逻辑：</li><li class="">开关  <span style="color: rgb(217, 45, 32);">由关--》开</span>：</li><li>弹出二次弹窗：</li><li>点击 确定按钮，即生效；提示“操作成功”。在供应商端可以看见对应的入口【PC端】</li><li class="">开关  由<span style="color: rgb(217, 45, 32);">开--》关：</span></li><li>弹出二次弹窗：</li><li>点击 确定按钮，即生效；提示“操作成功”。在供应商端隐藏售后单和接单大厅的入口，但保留已结算的流水记录【PC端】</li><li class="">点击确定 时，校验该供应商是否有还没处理的售后单和没有上传成功的售后单，若有提示“该供应商还有待处理/未上传成功的售后单”</li><li>注意：</li><li>关闭时，若有售后单补贴未结算，会按照正常流程结算</li><li>若第二次及以后多次开启，接开票单权限时，供应商端不显示之前已经处理过的售后单</li>
+    </ul>
+  
+    </section>
+  
+    <section class="section ax_default">
+      <div class="section-title text" spellcheck="false">权限弹窗</div>
+      
+          <div class="modal-grid">
+            
+    
+  
+            
+    
+  
+          </div>
+        
+    </section>
+  
+      </main>
+    <div class="field-card ax_default" style="position: absolute; left: 314px; top: 957.516px; width: 489px; height: 68px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481901;" data-codex-base-width="366.25" data-codex-base-height="93.1719">
+          <div class="field-label text" spellcheck="false" style="display: none;">确认文案</div>
+          <div class="field-value text" spellcheck="false">确定开启接售后单权限吗？<div>开启后，在供应商端可以看见 “售后单” 入口 及 “接单大厅”入口</div></div>
+        </div><div class="field-card ax_default" style="position: absolute; left: 916.5px; top: 961.516px; width: 576px; height: 67px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481904;" data-codex-base-width="366.25" data-codex-base-height="93.1719">
+          <div class="field-label text" spellcheck="false" style="display: none;">确认文案</div>
+          <div class="field-value text" spellcheck="false">确定关闭接售后单权限吗？<div>关闭后，只显示接单的流水记录；“售后单”、“接单大厅”入口隐藏</div></div>
+        </div><div class="ghost-btn ax_default" style="position: absolute; left: 1046.5px; top: 1079.69px; width: 58px; height: 44.3906px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481905;" data-codex-base-width="58" data-codex-base-height="44.3906"><div class="text" spellcheck="false">取消</div></div><div class="ghost-btn ax_default" style="position: absolute; left: 1138.5px; top: 1077.69px; width: 58px; height: 44.3906px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481906;" data-codex-base-width="58" data-codex-base-height="44.3906"><div class="text" spellcheck="false">确定</div></div><div class="ghost-btn ax_default" style="position: absolute; left: 442px; top: 1081.69px; width: 58px; height: 44.3906px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481902;" data-codex-base-width="58" data-codex-base-height="44.3906"><div class="text" spellcheck="false">取消</div></div><div class="ghost-btn ax_default" style="position: absolute; left: 540px; top: 1081.69px; width: 58px; height: 44.3906px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481903;" data-codex-base-width="58" data-codex-base-height="44.3906"><div class="text" spellcheck="false">确定</div></div><div class="modal-card ax_default" style="position: absolute; left: 300px; top: 911.922px; width: 576px; height: 222px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;" data-codex-base-width="774.5" data-codex-base-height="237.547">
+      <div class="modal-title text" spellcheck="false">开启权限</div>
+      
+              
+    <div class="field-grid cols-2">
+      
+        <div class="field-card ax_default" style="">
+          <div class="field-label text" spellcheck="false" style="display: none;">确认文案</div>
+          <div class="field-value text" spellcheck="false">确定开启接售后单权限吗？<div>开启后，在供应商端可以看见 “售后单” 入口 及 “接单大厅”入口</div></div>
+        </div>
+      
+        <div class="field-card ax_default" style="display: none;">
+          <div class="field-label text" spellcheck="false">说明</div>
+          <div class="field-value text" spellcheck="false">开启后，在供应商端可以看见 “售后单” 入口 及 “接单大厅”入口</div>
+        </div>
+      
+    </div>
+  
+              
+    <div class="button-row">
+      <div class="ghost-btn ax_default" style=""><div class="text" spellcheck="false">取消</div></div><div class="ghost-btn ax_default" style=""><div class="text" spellcheck="false">确定</div></div>
+    </div>
+  
+              
+    <ul class="note-list text" spellcheck="false">点击确定即生效<li class="" style="display: none;">点击确定即生效</li></ul>
+  
+            
+      
+    </div><div class="modal-card ax_default" style="position: absolute; left: 889.5px; top: 908.922px; width: 607px; height: 222px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;" data-codex-base-width="774.5" data-codex-base-height="237.547">
+      <div class="modal-title text" spellcheck="false">关闭权限</div>
+      
+              
+    <div class="field-grid cols-2">
+      
+        <div class="field-card ax_default" style="">
+          <div class="field-label text" spellcheck="false" style="display: none;">确认文案</div>
+          <div class="field-value text" spellcheck="false">确定关闭接售后单权限吗？<div>关闭后，只显示接单的流水记录；“售后单”、“接单大厅”入口隐藏</div></div>
+        </div>
+      
+        <div class="field-card ax_default" style="display: none;">
+          <div class="field-label text" spellcheck="false">说明</div>
+          <div class="field-value text" spellcheck="false">关闭后，只显示接单的流水记录；“售后单”、“接单大厅”入口隐藏</div>
+        </div>
+      
+    </div>
+  
+              
+    <div class="button-row">
+      <div class="ghost-btn ax_default" style=""><div class="text" spellcheck="false">取消</div></div><div class="ghost-btn ax_default" style=""><div class="text" spellcheck="false">确定</div></div>
+    </div>
+  
+              
+    <ul class="note-list text" spellcheck="false">点击确定即生效<li class="no-bullet" style="display: none;">点击确定即生效</li></ul>
+  
+            
+      
+    </div></div>
+    <script src="proto.js"></script>
+    <script>window.__CODEX_INITIAL_STATE = {"snapshot":"\n      \n    \u003caside class=\"sidebar ax_default\">\n      \u003cdiv class=\"sidebar-head ax_default\">\n        \u003cdiv class=\"text\" spellcheck=\"false\">供应商链路\u003c/div>\n      \u003c/div>\n      \n        \u003cdiv class=\"menu-group ax_default\">\n          \u003cdiv class=\"menu-group-title text\" spellcheck=\"false\">供应商管理\u003c/div>\n          \n            \u003cdiv class=\"menu-item ax_default active\">\n              \u003cdiv class=\"text\" spellcheck=\"false\">供应商列表\u003c/div>\n            \u003c/div>\n          \n            \u003cdiv class=\"menu-item ax_default \">\n              \u003cdiv class=\"text\" spellcheck=\"false\">接单大厅\u003c/div>\n            \u003c/div>\n          \n            \u003cdiv class=\"menu-item ax_default \">\n              \u003cdiv class=\"text\" spellcheck=\"false\">售后单页面\u003c/div>\n            \u003c/div>\n          \n        \u003c/div>\n      \n    \u003c/aside>\n  \n      \u003cmain class=\"main-shell\">\n        \n    \u003cheader class=\"page-header ax_default\">\n      \u003ch1 class=\"text\" spellcheck=\"false\">供应商管理--供应商列表\u003c/h1>\n      \u003cp class=\"text\" spellcheck=\"false\">纯代码重建：供应商列表与接售后单权限配置页。\u003c/p>\n    \u003c/header>\n  \n        \n    \u003csection class=\"section ax_default table-section\">\n      \u003cdiv class=\"section-title text\" spellcheck=\"false\">供应商列表\u003c/div>\n      \n    \u003cdiv class=\"table-wrap ax_default\">\n      \u003ctable class=\"data-table\" style=\"min-width:1180px\">\n        \u003cthead>\n          \u003ctr class=\"\">\n            \u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">供应商编号\u003c/div>\u003c/th>\u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">供应商名称\u003c/div>\u003c/th>\u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">合作品牌\u003c/div>\u003c/th>\u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">联系电话\u003c/div>\u003c/th>\u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">合作状态\u003c/div>\u003c/th>\u003cth>\u003cdiv class=\"text\" spellcheck=\"false\">合作方式\u003c/div>\u003c/th>\u003cth class=\"\">\u003cdiv class=\"text\" spellcheck=\"false\">\u003cspan style=\"color: rgb(217, 45, 32);\">是否接售后单\u003c/span>\u003c/div>\u003c/th>\n          \u003c/tr>\n          \n        \u003c/thead>\n        \u003ctbody>\n          \n            \u003ctr>\n              \u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">277283553914077185\u003c/div>\u003c/td>\u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">黄万盛\u003c/div>\u003c/td>\u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">瑞幸\u003c/div>\u003c/td>\u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">18176126035\u003c/div>\u003c/td>\u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">合作中\u003c/div>\u003c/td>\u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">平台出餐\u003c/div>\u003c/td>\u003ctd>\u003cdiv class=\"text\" spellcheck=\"false\">\u003cspan style=\"color: rgb(217, 45, 32);\">关闭图标\u003c/span>\u003cdiv>\u003cspan style=\"color: rgb(217, 45, 32);\">开启图标\u003c/span>\u003c/div>\u003c/div>\u003c/td>\n            \u003c/tr>\n          \n        \u003c/tbody>\n      \u003c/table>\n    \u003c/div>\n  \n    \u003c/section>\n  \n    \u003csection class=\"section ax_default \">\n      \u003cdiv class=\"section-title text\" spellcheck=\"false\">字段与交互说明\u003c/div>\n      \n    \u003cul class=\"note-list text\" spellcheck=\"false\">\n      \u003cli class=\"\">供应商列表  新增字段 “\u003cspan style=\"color: rgb(217, 45, 32);\">是否接售后单\u003c/span>”：\u003c/li>\u003cli>显示逻辑：开关状态默认 关闭\u003c/li>\u003cli class=\"\">\u003cspan style=\"color: rgb(217, 45, 32);\">开启时，在供应商端\u003c/span>显示“售后单” 入口 及 “接单大厅”入口【PC端 】\u003c/li>\u003cli>交互逻辑：\u003c/li>\u003cli class=\"\">开关  \u003cspan style=\"color: rgb(217, 45, 32);\">由关--》开\u003c/span>：\u003c/li>\u003cli>弹出二次弹窗：\u003c/li>\u003cli>点击 确定按钮，即生效；提示“操作成功”。在供应商端可以看见对应的入口【PC端】\u003c/li>\u003cli class=\"\">开关  由\u003cspan style=\"color: rgb(217, 45, 32);\">开--》关：\u003c/span>\u003c/li>\u003cli>弹出二次弹窗：\u003c/li>\u003cli>点击 确定按钮，即生效；提示“操作成功”。在供应商端隐藏售后单和接单大厅的入口，但保留已结算的流水记录【PC端】\u003c/li>\u003cli class=\"\">点击确定 时，校验该供应商是否有还没处理的售后单和没有上传成功的售后单，若有提示“该供应商还有待处理/未上传成功的售后单”\u003c/li>\u003cli>注意：\u003c/li>\u003cli>关闭时，若有售后单补贴未结算，会按照正常流程结算\u003c/li>\u003cli>若第二次及以后多次开启，接开票单权限时，供应商端不显示之前已经处理过的售后单\u003c/li>\n    \u003c/ul>\n  \n    \u003c/section>\n  \n    \u003csection class=\"section ax_default\">\n      \u003cdiv class=\"section-title text\" spellcheck=\"false\">权限弹窗\u003c/div>\n      \n          \u003cdiv class=\"modal-grid\">\n            \n    \u003cdiv class=\"modal-card ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_15\" style=\"visibility: hidden; pointer-events: none;\">\n      \u003cdiv class=\"modal-title text\" spellcheck=\"false\">开启权限\u003c/div>\n      \n              \n    \u003cdiv class=\"field-grid cols-2\">\n      \n        \u003cdiv class=\"field-card ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_1\" style=\"visibility: hidden; pointer-events: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\" style=\"display: none;\">确认文案\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">确定开启接售后单权限吗？\u003cdiv>开启后，在供应商端可以看见 “售后单” 入口 及 “接单大厅”入口\u003c/div>\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\" style=\"display: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">说明\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">开启后，在供应商端可以看见 “售后单” 入口 及 “接单大厅”入口\u003c/div>\n        \u003c/div>\n      \n    \u003c/div>\n  \n              \n    \u003cdiv class=\"button-row\">\n      \u003cdiv class=\"ghost-btn ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_13\" style=\"visibility: hidden; pointer-events: none;\">\u003cdiv class=\"text\" spellcheck=\"false\">取消\u003c/div>\u003c/div>\u003cdiv class=\"ghost-btn ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_14\" style=\"visibility: hidden; pointer-events: none;\">\u003cdiv class=\"text\" spellcheck=\"false\">确定\u003c/div>\u003c/div>\n    \u003c/div>\n  \n              \n    \u003cul class=\"note-list text\" spellcheck=\"false\">点击确定即生效\u003cli class=\"\" style=\"display: none;\">点击确定即生效\u003c/li>\u003c/ul>\n  \n            \n      \n    \u003c/div>\n  \n            \n    \u003cdiv class=\"modal-card ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_16\" style=\"visibility: hidden; pointer-events: none;\">\n      \u003cdiv class=\"modal-title text\" spellcheck=\"false\">关闭权限\u003c/div>\n      \n              \n    \u003cdiv class=\"field-grid cols-2\">\n      \n        \u003cdiv class=\"field-card ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_7\" style=\"visibility: hidden; pointer-events: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\" style=\"display: none;\">确认文案\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">确定关闭接售后单权限吗？\u003cdiv>关闭后，只显示接单的流水记录；“售后单”、“接单大厅”入口隐藏\u003c/div>\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\" style=\"display: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">说明\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">关闭后，只显示接单的流水记录；“售后单”、“接单大厅”入口隐藏\u003c/div>\n        \u003c/div>\n      \n    \u003c/div>\n  \n              \n    \u003cdiv class=\"button-row\">\n      \u003cdiv class=\"ghost-btn ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_8\" style=\"visibility: hidden; pointer-events: none;\">\u003cdiv class=\"text\" spellcheck=\"false\">取消\u003c/div>\u003c/div>\u003cdiv class=\"ghost-btn ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_9\" style=\"visibility: hidden; pointer-events: none;\">\u003cdiv class=\"text\" spellcheck=\"false\">确定\u003c/div>\u003c/div>\n    \u003c/div>\n  \n              \n    \u003cul class=\"note-list text\" spellcheck=\"false\">点击确定即生效\u003cli class=\"no-bullet\" style=\"display: none;\">点击确定即生效\u003c/li>\u003c/ul>\n  \n            \n      \n    \u003c/div>\n  \n          \u003c/div>\n        \n    \u003c/section>\n  \n      \u003c/main>\n    \u003cdiv class=\"field-card ax_default\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_1\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 314px; top: 957.516px; width: 489px; height: 68px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481901;\" data-codex-base-width=\"366.25\" data-codex-base-height=\"93.1719\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\" style=\"display: none;\">确认文案\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">确定开启接售后单权限吗？\u003cdiv>开启后，在供应商端可以看见 “售后单” 入口 及 “接单大厅”入口\u003c/div>\u003c/div>\n        \u003c/div>\u003cdiv class=\"field-card ax_default\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_7\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 916.5px; top: 961.516px; width: 576px; height: 67px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481904;\" data-codex-base-width=\"366.25\" data-codex-base-height=\"93.1719\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\" style=\"display: none;\">确认文案\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">确定关闭接售后单权限吗？\u003cdiv>关闭后，只显示接单的流水记录；“售后单”、“接单大厅”入口隐藏\u003c/div>\u003c/div>\n        \u003c/div>\u003cdiv class=\"ghost-btn ax_default\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_8\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 1046.5px; top: 1079.69px; width: 58px; height: 44.3906px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481905;\" data-codex-base-width=\"58\" data-codex-base-height=\"44.3906\">\u003cdiv class=\"text\" spellcheck=\"false\">取消\u003c/div>\u003c/div>\u003cdiv class=\"ghost-btn ax_default\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_9\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 1138.5px; top: 1077.69px; width: 58px; height: 44.3906px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481906;\" data-codex-base-width=\"58\" data-codex-base-height=\"44.3906\">\u003cdiv class=\"text\" spellcheck=\"false\">确定\u003c/div>\u003c/div>\u003cdiv class=\"ghost-btn ax_default\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_13\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 442px; top: 1081.69px; width: 58px; height: 44.3906px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481902;\" data-codex-base-width=\"58\" data-codex-base-height=\"44.3906\">\u003cdiv class=\"text\" spellcheck=\"false\">取消\u003c/div>\u003c/div>\u003cdiv class=\"ghost-btn ax_default\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_14\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 540px; top: 1081.69px; width: 58px; height: 44.3906px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481903;\" data-codex-base-width=\"58\" data-codex-base-height=\"44.3906\">\u003cdiv class=\"text\" spellcheck=\"false\">确定\u003c/div>\u003c/div>\u003cdiv class=\"modal-card ax_default\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_15\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 300px; top: 911.922px; width: 576px; height: 222px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;\" data-codex-base-width=\"774.5\" data-codex-base-height=\"237.547\">\n      \u003cdiv class=\"modal-title text\" spellcheck=\"false\">开启权限\u003c/div>\n      \n              \n    \u003cdiv class=\"field-grid cols-2\">\n      \n        \u003cdiv class=\"field-card ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_1\" style=\"visibility: hidden; pointer-events: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\" style=\"display: none;\">确认文案\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">确定开启接售后单权限吗？\u003cdiv>开启后，在供应商端可以看见 “售后单” 入口 及 “接单大厅”入口\u003c/div>\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\" style=\"display: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">说明\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">开启后，在供应商端可以看见 “售后单” 入口 及 “接单大厅”入口\u003c/div>\n        \u003c/div>\n      \n    \u003c/div>\n  \n              \n    \u003cdiv class=\"button-row\">\n      \u003cdiv class=\"ghost-btn ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_13\" style=\"visibility: hidden; pointer-events: none;\">\u003cdiv class=\"text\" spellcheck=\"false\">取消\u003c/div>\u003c/div>\u003cdiv class=\"ghost-btn ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_14\" style=\"visibility: hidden; pointer-events: none;\">\u003cdiv class=\"text\" spellcheck=\"false\">确定\u003c/div>\u003c/div>\n    \u003c/div>\n  \n              \n    \u003cul class=\"note-list text\" spellcheck=\"false\">点击确定即生效\u003cli class=\"\" style=\"display: none;\">点击确定即生效\u003c/li>\u003c/ul>\n  \n            \n      \n    \u003c/div>\u003cdiv class=\"modal-card ax_default\" data-codex-pinned-clone=\"true\" data-codex-pinned-source-id=\"codex_pinned_16\" data-codex-layer-element=\"true\" style=\"position: absolute; left: 889.5px; top: 908.922px; width: 607px; height: 222px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;\" data-codex-base-width=\"774.5\" data-codex-base-height=\"237.547\">\n      \u003cdiv class=\"modal-title text\" spellcheck=\"false\">关闭权限\u003c/div>\n      \n              \n    \u003cdiv class=\"field-grid cols-2\">\n      \n        \u003cdiv class=\"field-card ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_7\" style=\"visibility: hidden; pointer-events: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\" style=\"display: none;\">确认文案\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">确定关闭接售后单权限吗？\u003cdiv>关闭后，只显示接单的流水记录；“售后单”、“接单大厅”入口隐藏\u003c/div>\u003c/div>\n        \u003c/div>\n      \n        \u003cdiv class=\"field-card ax_default\" style=\"display: none;\">\n          \u003cdiv class=\"field-label text\" spellcheck=\"false\">说明\u003c/div>\n          \u003cdiv class=\"field-value text\" spellcheck=\"false\">关闭后，只显示接单的流水记录；“售后单”、“接单大厅”入口隐藏\u003c/div>\n        \u003c/div>\n      \n    \u003c/div>\n  \n              \n    \u003cdiv class=\"button-row\">\n      \u003cdiv class=\"ghost-btn ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_8\" style=\"visibility: hidden; pointer-events: none;\">\u003cdiv class=\"text\" spellcheck=\"false\">取消\u003c/div>\u003c/div>\u003cdiv class=\"ghost-btn ax_default\" data-codex-pinned-source=\"true\" data-codex-pinned-source-id=\"codex_pinned_9\" style=\"visibility: hidden; pointer-events: none;\">\u003cdiv class=\"text\" spellcheck=\"false\">确定\u003c/div>\u003c/div>\n    \u003c/div>\n  \n              \n    \u003cul class=\"note-list text\" spellcheck=\"false\">点击确定即生效\u003cli class=\"no-bullet\" style=\"display: none;\">点击确定即生效\u003c/li>\u003c/ul>\n  \n            \n      \n    \u003c/div>","addedCounter":16,"templateVersion":"20260723.1"};</script><script src="codex-edit.js?v=20260727.hide-copy-expand2"></script>
+    
+  
+
+</body></html>
+
+
+
+
+
+
+
+
+
