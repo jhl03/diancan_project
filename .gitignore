@@ -1,0 +1,11 @@
+*
+!/.gitignore
+!/docs/
+!/docs/**
+!/source/
+!/source/**
+!/C端开票-8.12交付包/
+!/C端开票-8.12交付包/**
+
+Thumbs.db
+Desktop.ini
