@@ -19440,8 +19440,48 @@ function syncSupplierTabs() {
     }, true);
   }
 
+  function enhanceFlowPage() {
+    var page = document.querySelector('.bundle-page[data-page="flow"]');
+    if (!page) return;
+    page.setAttribute("aria-label", "流程图");
+    setNodeText(page.querySelector(".page-header h1"), "流程图");
+    setNodeText(page.querySelector(".page-header p"), "替换为图片版流程图，点击图片可在浏览器新窗口放大查看。");
+    var main = page.querySelector(".main-shell");
+    if (!main) return;
+    Array.prototype.forEach.call(page.children, function (child) {
+      if (child !== main) {
+        child.style.setProperty("display", "none", "important");
+      }
+    });
+    var oldImage = page.querySelector("#codex_added_189");
+    if (oldImage) {
+      oldImage.style.setProperty("display", "none", "important");
+    }
+    var flowCard = main.querySelector(".final-flow-figure-card");
+    if (!flowCard) {
+      flowCard = document.createElement("section");
+      flowCard.className = "section ax_default final-flow-figure-card";
+      main.appendChild(flowCard);
+    }
+    flowCard.style.setProperty("width", "100%", "important");
+    flowCard.style.setProperty("padding", "28px", "important");
+    flowCard.style.setProperty("border", "1px solid #d7e3f6", "important");
+    flowCard.style.setProperty("border-radius", "28px", "important");
+    flowCard.style.setProperty("background", "#ffffff", "important");
+    flowCard.style.setProperty("box-shadow", "0 18px 40px rgba(30,57,111,.10)", "important");
+    flowCard.style.setProperty("display", "block", "important");
+    flowCard.innerHTML = [
+      '<div class="section-title text" spellcheck="false">C端开票流程图</div>',
+      '<div class="text" spellcheck="false" style="margin-top:10px;color:#5b6b7f;font-size:14px;line-height:1.7;">点击下方图片，可在浏览器新窗口查看完整大图。</div>',
+      '<a href="./c-end-invoice-flowchart.png" target="_blank" rel="noopener noreferrer" style="display:block;margin-top:18px;border:1px solid #e5edf9;border-radius:20px;overflow:hidden;background:#fff;transition:box-shadow .2s ease, transform .2s ease;cursor:zoom-in;text-decoration:none;">',
+      '<img src="./c-end-invoice-flowchart.png" alt="C端开票流程图" style="display:block;width:100%;height:auto;">',
+      '</a>'
+    ].join("");
+  }
+
   function applyFinalSupplierPackageOverride() {
     syncCatalogLabels();
+    enhanceFlowPage();
     hideMiniMyPage();
     buildHallPage();
     renderHallListSection();
