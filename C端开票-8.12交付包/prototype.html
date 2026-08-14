@@ -1548,6 +1548,22 @@ body.codex-bundle-editable .codex-edit-toolbar{display:none!important;}
     margin: 0;
   }
 
+  .mini-file-link-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .mini-upload-file-note {
+    display: block;
+    width: 100%;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+
   @media (max-width: 1080px) {
     .bundle-page[data-page="mini-my"] .main-shell,
     .bundle-page[data-page="mini-after-sale-detail"] .main-shell {
@@ -1701,7 +1717,7 @@ body.codex-bundle-editable .codex-edit-toolbar{display:none!important;}
       <div class="section-title text" spellcheck="false">同步能力说明</div>
       
     <ul class="note-list text" spellcheck="false">
-      <li class="" spellcheck="false">新增“<span style="color: rgb(217, 45, 32);">同步到后台</span>”按钮：</li><li spellcheck="false" class="">产品类型为“点餐”的。点击 创建开票 按钮后，同步失败的工单，显示“同步到后台”按钮</li><li spellcheck="false" class=""><b>若同步失败，同步到后台的按钮还可以点击；若同步成功，按钮置灰</b></li><li class="" spellcheck="false">点击创建开票按钮后，对应的发票工单同步到后台“售后补贴单”、“开票需求单”和供应商的接单大厅里<span style="color: rgb(217, 45, 32);">【根据点餐后台是否开权限，且开启选项时选择品牌，把对应的发票工单推给符合条件的供应商】</span></li><li spellcheck="false" class="">若同步成功后，再次点击“同步到后台”按钮，提示“该工单已同步”；<b>若同步失败，在同步失败提示“失败原因：XXXX”</b></li><li class="" spellcheck="false">新增 同步状态【列表】：</li><li spellcheck="false" class="">在处理状态列增加同步状态【同步成功/同步失败】&nbsp; &nbsp;</li><li class="no-bullet" spellcheck="false"><span style="display:inline-block;padding-left:18px;color: rgb(217, 45, 32);font-weight:700;">点击同步按钮后，校验券订单号对应点餐后台的券订单号的商家实收金额是否等于开票金额；若不等于，同步失败，且提示“开票金额不对”</span></li>
+      <li class="" spellcheck="false">新增“<span style="color: rgb(217, 45, 32);">同步到后台</span>”按钮：</li><li spellcheck="false" class="">产品类型为“点餐”的。点击创建开票按钮后，对应的发票工单同步到后台“售后补贴单”、“开票需求单”和供应商的接单大厅里，<span style="color: rgb(217, 45, 32);">【根据点餐后台是否开权限，且开启选项时选择品牌，把对应的发票工单推给符合条件的供应商】</span></li><li spellcheck="false" class=""><b>同步失败的工单，显示“同步到后台”按钮；若同步失败提示失败原因：XXXX，且同步到后台的按钮还可以点击，点击后若同步成功，按钮置灰</b></li><li class="" spellcheck="false" style="display:none;"></li><li spellcheck="false" class="" style="display:none;">若同步成功后，再次点击“同步到后台”按钮，提示“该工单已同步”；<b>同步失败时，提示“失败原因：XXXX”</b></li><li class="" spellcheck="false">新增 同步状态【列表】：</li><li spellcheck="false" class="">在处理状态列增加同步状态【同步成功/同步失败】&nbsp; &nbsp;</li><li class="no-bullet" spellcheck="false"><span style="display:inline-block;padding-left:18px;color: rgb(217, 45, 32);font-weight:700;">点击同步按钮后，校验券订单号对应点餐后台的券订单号的商家实收金额是否等于开票金额；若不等于，同步失败，且提示“开票金额不对”</span></li>
     </ul>
   
     </section><section class="section ax_default table-section" data-codex-layout-source-id="codex_pinned_213" data-codex-layout-detached="true" style="position: absolute; left: 18px; top: 35px; width: 1229px; height: 350px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;" data-codex-base-width="1228.8" data-codex-base-height="208">
@@ -1882,7 +1898,7 @@ body.codex-bundle-editable .codex-edit-toolbar{display:none!important;}
       <div class="section-title text" spellcheck="false">字段与交互说明</div>
       
     <ul class="note-list text" spellcheck="false">
-      <li class="" spellcheck="false">供应商列表  新增字段 “<span style="color: rgb(217, 45, 32);">是否接开票单</span>”：</li><li spellcheck="false">显示逻辑：开关状态默认 关闭</li><li class="" spellcheck="false"><span style="color: rgb(217, 45, 32);">开启时，在供应商端</span>显示“开票需求单” 入口 及 “接单大厅”入口</li><li spellcheck="false">交互逻辑：</li><li class="" spellcheck="false">开关  <span style="color: rgb(217, 45, 32);">由关--》开</span>：</li><li class="" spellcheck="false">弹出二次弹窗：</li><li class="" spellcheck="false">推送指定品牌开票订单&nbsp; 下拉选项：枚举值【后台的所有品牌，包括之后新增】<span style="color: rgb(217, 45, 32);"> 可多选</span></li><li class="" spellcheck="false">点击 确定按钮，即生效；提示“操作成功”。在供应商端可以看见对应的入口</li><li class="" spellcheck="false"><span style="display: inline-block; padding-left: 18px; color: rgb(217, 45, 32);">点击确定按钮，没有选择品牌，提示“请选择接单品牌”在下拉选项框下红色小字显示</span></li><li class="" spellcheck="false">且根据开票需求单列表的商品品牌推送</li><li class="" spellcheck="false">开关  由<span style="color: rgb(217, 45, 32);">开--》关：</span></li><li spellcheck="false">弹出二次弹窗：</li><li class="" spellcheck="false">点击 确定按钮，即生效；提示“操作成功”。在供应商端隐藏开票需求单和接单大厅的入口，但保留已结算的流水记录</li><li class="" spellcheck="false">点击确定 时，校验该供应商是否有还没处理的售后单和没有上传成功的售后单，若有提示“该供应商还有待处理/未上传成功的开票需求单”</li><li spellcheck="false">注意：</li><li spellcheck="false">关闭时，若有售后单补贴未结算，会按照正常流程结算</li><li spellcheck="false">若第二次及以后多次开启，接开票单权限时，供应商端不显示之前已经处理过的售后单</li>
+      <li class="" spellcheck="false">供应商列表  新增字段 “<span style="color: rgb(217, 45, 32);">是否接开票单</span>”：</li><li spellcheck="false">显示逻辑：开关状态默认 关闭</li><li class="" spellcheck="false"><span style="color: rgb(217, 45, 32);">开启时，在供应商端</span>显示“售后补贴单” 入口 及 “补偿单列表”入口</li><li spellcheck="false">交互逻辑：</li><li class="" spellcheck="false">开关  <span style="color: rgb(217, 45, 32);">由关--》开</span>：</li><li class="" spellcheck="false">弹出二次弹窗：</li><li class="" spellcheck="false">推送指定品牌开票订单&nbsp; 下拉选项：枚举值【后台的所有品牌，包括之后新增】<span style="color: rgb(217, 45, 32);"> 可多选</span></li><li class="" spellcheck="false">点击 确定按钮，即生效；提示“操作成功”。在供应商端可以看见对应的入口</li><li class="" spellcheck="false"><span style="display: inline-block; padding-left: 18px; color: rgb(217, 45, 32);">点击确定按钮，没有选择品牌，提示“请选择接单品牌”在下拉选项框下红色小字显示</span></li><li class="" spellcheck="false">且根据开票需求单列表的商品品牌推送</li><li class="" spellcheck="false">开关  由<span style="color: rgb(217, 45, 32);">开--》关：</span></li><li spellcheck="false">弹出二次弹窗：</li><li class="" spellcheck="false">点击 确定按钮，即生效；提示“操作成功”。在供应商端隐藏售后补贴单和补偿单列表的入口，但保留已结算的流水记录</li><li class="" spellcheck="false">点击确定 时，校验该供应商是否有还没处理的售后补贴单和没有上传成功的售后补贴单，若有提示“该供应商还有待处理/未上传成功的售后补贴单”</li><li spellcheck="false">注意：</li><li spellcheck="false">关闭时，若有售后单补贴未结算，会按照正常流程结算</li><li spellcheck="false">若第二次及以后多次开启，接开票单权限时，供应商端不显示之前已经处理过的售后补贴单</li>
     </ul>
   
     </section><section class="section ax_default" style="position: absolute; left: 20px; top: 796px; width: 1237px; height: 350px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481899;" data-codex-base-width="1735.73" data-codex-base-height="74.9333">
@@ -5922,6 +5938,22 @@ body.codex-bundle-editable .codex-edit-toolbar{display:none!important;}
     filterTitle.textContent = "筛选项 说明";
     filterGroup.appendChild(filterTitle);
     noteList.className = "proto-review-note-list";
+    var noteItems = noteList.querySelectorAll("li");
+    var hasSyncStatusNote = Array.prototype.some.call(noteItems, function (item) {
+      return ((item.textContent || "").replace(/\s+/g, " ").trim().indexOf("同步状态") > -1);
+    });
+    if (!hasSyncStatusNote) {
+      var syncLi = document.createElement("li");
+      syncLi.textContent = "同步状态：枚举值 全部、同步成功、同步失败；默认选择全部";
+      var insertAfter = Array.prototype.find.call(noteItems, function (item) {
+        return ((item.textContent || "").replace(/\s+/g, " ").trim().indexOf("发票抬头：模糊搜索") > -1);
+      });
+      if (insertAfter && insertAfter.parentNode === noteList) {
+        insertAfter.insertAdjacentElement("afterend", syncLi);
+      } else {
+        noteList.appendChild(syncLi);
+      }
+    }
     filterGroup.appendChild(noteList);
     desc.appendChild(filterGroup);
 
@@ -13699,7 +13731,7 @@ function syncSupplierTabs() {
       '.bundle-page[data-page="mini-hall"] .page-header{display:none!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;}',
       '.bundle-page[data-page="mini-hall"] .main-shell{padding-top:8px!important;}',
       '.bundle-page[data-page="mini-hall"] > .main-shell > .section.ax_default:first-of-type{top:16px!important;}',
-      '.bundle-page[data-page="mini-hall"] > .main-shell > .mini-phone-shell{height:640px!important;max-width:392px!important;}',
+      '.bundle-page[data-page="mini-hall"] > .main-shell > .mini-phone-shell{height:548px!important;max-width:392px!important;}',
       '.bundle-page[data-page="mini-hall"] .mini-status-bar{padding:10px 16px 0!important;font-size:11px!important;}',
       '.bundle-page[data-page="mini-hall"] .mini-scroll-area{padding:0 12px 12px!important;}',
       '.bundle-page[data-page="mini-hall"] .mini-panel{margin-top:10px!important;padding:12px!important;border-radius:20px!important;}',
@@ -17994,8 +18026,8 @@ function syncSupplierTabs() {
   function buildSupplierAfterSaleCleanPage() {
     var page = document.querySelector('.bundle-page[data-page="supplier-after-sale"]');
     if (!page) return;
-    if (page.getAttribute("data-supplier-clean-built") === "v16") return;
-    page.setAttribute("data-supplier-clean-built", "v16");
+    if (page.getAttribute("data-supplier-clean-built") === "v17") return;
+    page.setAttribute("data-supplier-clean-built", "v17");
     try {
       localStorage.removeItem("codex_proto_edit::" + location.pathname.replace(/\//g, "::"));
     } catch (error) {}
@@ -18017,7 +18049,7 @@ function syncSupplierTabs() {
         ".sa-clean-tip ul{margin:0;padding-left:20px;color:#1f3b6d;font:700 16px/1.9 \"Segoe UI\",\"PingFang SC\",\"Microsoft YaHei\",sans-serif;}",
         ".sa-clean-filter,.sa-clean-desc{position:relative;z-index:2;border:1px solid #dbe5f0;border-radius:20px;background:#fff;padding:18px 20px;margin-bottom:18px;box-sizing:border-box;}",
         ".sa-clean-desc{position:relative;}",
-        ".sa-clean-desc.has-state-image{padding-right:332px;min-height:280px;}",
+        ".sa-clean-desc.has-state-image{padding-right:20px;min-height:0;}",
         ".sa-clean-section-title{margin:0 0 14px;color:#173058;font:800 22px/1.2 \"Segoe UI\",\"PingFang SC\",\"Microsoft YaHei\",sans-serif;}",
         ".sa-clean-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}",
         ".sa-clean-field{border:1px solid #dbe5f0;border-radius:16px;background:#f8fbff;padding:14px 16px;min-height:86px;box-sizing:border-box;}",
@@ -18045,9 +18077,9 @@ function syncSupplierTabs() {
         ".sa-clean-desc ul{margin:0;padding-left:18px;color:#44526b;font:500 14px/1.8 \"Segoe UI\",\"PingFang SC\",\"Microsoft YaHei\",sans-serif;}",
         ".sa-clean-desc h4{margin:0 0 10px;color:#28508c;font:700 18px/1.2 \"Segoe UI\",\"PingFang SC\",\"Microsoft YaHei\",sans-serif;}",
         ".sa-clean-desc h4 + h4{margin-top:16px;}",
-        ".sa-clean-state-link{position:absolute;top:18px;right:20px;display:flex;flex-direction:column;gap:8px;width:280px;text-decoration:none;}",
-        ".sa-clean-state-image{display:block;width:100%;height:auto;border-radius:18px;border:1px solid #dbe5f0;box-shadow:0 12px 24px rgba(15,23,42,.08);background:#fff;}",
-        ".sa-clean-state-text{color:#1d4ed8;font:700 13px/1.4 \"Segoe UI\",\"PingFang SC\",\"Microsoft YaHei\",sans-serif;text-align:right;}",
+        ".sa-clean-state-link{display:none!important;}",
+        ".sa-clean-state-image{display:none!important;}",
+        ".sa-clean-state-text{display:none!important;}",
         ".sa-clean-flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px;}",
         ".sa-clean-flow-node{display:flex;align-items:center;justify-content:center;min-height:42px;padding:0 16px;border-radius:999px;background:#f8fbff;border:1px solid #bfd3ff;color:#173058;font:700 14px/1.3 \"Segoe UI\",\"PingFang SC\",\"Microsoft YaHei\",sans-serif;}",
         ".sa-clean-flow-node.is-accent{background:#153d74;border-color:#153d74;color:#fff;}",
@@ -19115,6 +19147,8 @@ function syncSupplierTabs() {
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:14px;
+  position:relative;
+  z-index:5;
 }
 .mini-workbench-entry{
   border:1px solid #dbe7fb;
@@ -19126,6 +19160,10 @@ function syncSupplierTabs() {
   gap:10px;
   box-shadow:0 10px 20px rgba(20,32,51,0.06);
   cursor:pointer;
+  position:relative;
+  z-index:6;
+  pointer-events:auto!important;
+  touch-action:manipulation;
 }
 .mini-workbench-entry-badge{
   width:54px;
@@ -19244,7 +19282,11 @@ function syncSupplierTabs() {
       name = "mini-workbench";
     }
 
-    switchCleanSupplierTab("processing");
+    if (typeof window.__SUPPLIER_CLEAN_SWITCH_TAB__ === "function") {
+      window.__SUPPLIER_CLEAN_SWITCH_TAB__("processing");
+    } else if (typeof switchCleanSupplierTab === "function") {
+      switchCleanSupplierTab("processing");
+    }
     if (typeof window.__CODEx_BUNDLE_SHOW_PAGE === "function") {
       window.__CODEx_BUNDLE_SHOW_PAGE(name, !!push);
       return;
@@ -19888,8 +19930,36 @@ function syncSupplierTabs() {
     var timeoutTable = timeoutPanel && timeoutPanel.querySelector(".table-wrap table");
     var pendingTable = pendingPanel && pendingPanel.querySelector(".table-wrap table");
     hideTableColumnByHeader(timeoutTable, "操作");
+    ensureInvoiceRequestUploadedSyncFilter(page);
     renderInvoiceRequestPendingPanel(page);
     ensureAfterSaleActionColumn(document.querySelector('.bundle-page[data-page="after-sale-list"] .tab-panel[data-tab-panel="backend-uploaded"] .table-wrap table'));
+  }
+
+  function ensureInvoiceRequestUploadedSyncFilter(page) {
+    if (!page) return;
+    Array.prototype.forEach.call(page.querySelectorAll('.tab-panel[data-tab-panel="backend-uploaded"] .field-grid.cols-4'), function (grid) {
+      if (!grid) return;
+      var existing = grid.querySelector('[data-sync-status-filter="1"]');
+      if (!existing) {
+        existing = document.createElement("div");
+        existing.className = "field-card ax_default";
+        existing.setAttribute("data-sync-status-filter", "1");
+        existing.innerHTML =
+          '<div class="field-label text" spellcheck="false">同步状态</div>' +
+          '<div class="field-input" style="display:flex;align-items:center;justify-content:space-between;padding:0 12px;box-sizing:border-box;"><div class="text" spellcheck="false" style="color:#0f172a;font-weight:600;">全部</div><div class="text" spellcheck="false" style="color:#98a2b3;">▼</div></div>' +
+          '<div class="text" spellcheck="false" style="margin-top:8px;color:#98a2b3;font-size:12px;line-height:1.5;">枚举值：全部 / 同步成功 / 同步失败</div>';
+        var invoiceTitleField = Array.prototype.find.call(grid.querySelectorAll('.field-card.ax_default'), function (node) {
+          var label = node.querySelector(".field-label");
+          return label && (label.textContent || "").replace(/\s+/g, " ").trim() === "发票抬头";
+        });
+        if (invoiceTitleField && invoiceTitleField.nextSibling) {
+          invoiceTitleField.insertAdjacentElement("afterend", existing);
+        } else {
+          grid.appendChild(existing);
+        }
+      }
+      existing.style.setProperty("display", "", "important");
+    });
   }
 
   function enhanceFinanceAndSettlementPages() {
@@ -19992,9 +20062,13 @@ function syncSupplierTabs() {
     var page = document.querySelector('.bundle-page[data-page="invoice"]');
     var section = findSectionByTitle(page, "同步能力说明");
     var items = section && section.querySelectorAll(".note-list li");
-    if (!items || items.length < 4) return;
-    items[1].textContent = "产品类型为“点餐”的。点击 创建开票 按钮后，同步失败的工单，显示“同步到后台”按钮";
-    items[3].innerHTML = '点击创建开票按钮后，对应的发票工单同步到后台“售后补贴单”、“开票需求单”和供应商的接单大厅里<span style="color: rgb(217, 45, 32);">【根据点餐后台是否开权限，且开启选项时选择品牌，把对应的发票工单推给符合条件的供应商】</span>';
+    if (!items || items.length < 5) return;
+    items[1].innerHTML = '产品类型为“点餐”的。点击创建开票按钮后，对应的发票工单同步到后台“售后补贴单”、“开票需求单”和供应商的接单大厅里，<span style="color: rgb(217, 45, 32);">【根据点餐后台是否开权限，且开启选项时选择品牌，把对应的发票工单推给符合条件的供应商】</span>';
+    items[2].innerHTML = "<b>同步失败的工单，显示“同步到后台”按钮；若同步失败提示失败原因：XXXX，且同步到后台的按钮还可以点击，点击后若同步成功，按钮置灰</b>";
+    items[3].textContent = "";
+    items[3].style.setProperty("display", "none", "important");
+    items[4].textContent = "";
+    items[4].style.setProperty("display", "none", "important");
   }
 
   function updateSupplierPermissionNotes() {
@@ -20002,6 +20076,10 @@ function syncSupplierTabs() {
     var section = findSectionByTitle(page, "字段与交互说明");
     var items = section && section.querySelectorAll(".note-list li");
     if (!items || !items.length) return;
+    replaceTextInScope(section, "开启时，在供应商端显示“开票需求单” 入口 及 “接单大厅”入口", "开启时，在供应商端显示“售后补贴单” 入口 及 “补偿单列表”入口");
+    replaceTextInScope(section, "在供应商端隐藏开票需求单和接单大厅的入口，但保留已结算的流水记录", "在供应商端隐藏售后补贴单和补偿单列表的入口，但保留已结算的流水记录");
+    replaceTextInScope(section, "点击确定 时，校验该供应商是否有还没处理的售后单和没有上传成功的售后单，若有提示“该供应商还有待处理/未上传成功的开票需求单”", "点击确定 时，校验该供应商是否有还没处理的售后补贴单和没有上传成功的售后补贴单，若有提示“该供应商还有待处理/未上传成功的售后补贴单”");
+    replaceTextInScope(section, "若第二次及以后多次开启，接开票单权限时，供应商端不显示之前已经处理过的售后单", "若第二次及以后多次开启，接开票单权限时，供应商端不显示之前已经处理过的售后补贴单");
     Array.prototype.forEach.call(items, function (item) {
       var text = (item.textContent || "").replace(/\s+/g, " ").trim();
       if (text.indexOf("推送指定品牌开票订单") > -1 && text.indexOf("后台的所有品牌") > -1) {
@@ -20510,7 +20588,7 @@ function syncSupplierTabs() {
       '      <li spellcheck="false"><span style="color:#d92d20;font-weight:700;">若超时未上传状态下点击放弃按钮，订单会从该供应商后台处理中页面消失，不会再进入补偿单列表；该订单在点餐后台开票需求单的处理中（供）页面进入到待处理（供）页面。</span></li>',
       '      <li spellcheck="false"><span style="color:#d92d20;font-weight:700;">若 A 放弃该工单后，该工单不会再次分配给 A。</span></li>',
       '      <li spellcheck="false"><span style="color:#d92d20;font-weight:700;">品牌tab[除全部tab]，是根据供应商列表开启接开票单时配置的供应商品牌变化。</span></li>',
-      '      <li spellcheck="false">批量抢单按钮：未选订单点击按钮时，提示“请选择订单”。</li>',
+      '      <li spellcheck="false">批量抢单按钮：未选订单点击按钮时，提示“请选择订单”。 可以根据筛选项搜索出的内容进行批量抢单</li>',
       "    </ul>",
       "  </section>",
       "</main>"
@@ -20565,8 +20643,8 @@ function syncSupplierTabs() {
       '        <div class="mini-workbench-subsection">',
       '          <div class="mini-workbench-section-title text" spellcheck="false">待处理订单</div>',
       '          <div class="mini-workbench-entry-grid">',
-      '            <button type="button" class="mini-workbench-entry" data-mini-nav-target="mini-hall"><div class="mini-workbench-entry-badge">补</div><div class="mini-workbench-entry-name text" spellcheck="false">补偿单列表</div></button>',
-      '            <button type="button" class="mini-workbench-entry" data-mini-nav-target="mini-after-sale"><div class="mini-workbench-entry-badge">售</div><div class="mini-workbench-entry-name text" spellcheck="false">售后补贴单</div></button>',
+      '            <button type="button" class="mini-workbench-entry" data-mini-nav-target="mini-hall" onclick="return window.__CODEx_BUNDLE_SHOW_PAGE&&window.__CODEx_BUNDLE_SHOW_PAGE(\'mini-hall\',true);"><div class="mini-workbench-entry-badge">补</div><div class="mini-workbench-entry-name text" spellcheck="false">补偿单列表</div></button>',
+      '            <button type="button" class="mini-workbench-entry" data-mini-nav-target="mini-after-sale" onclick="return window.__CODEx_BUNDLE_SHOW_PAGE&&window.__CODEx_BUNDLE_SHOW_PAGE(\'mini-after-sale\',true);"><div class="mini-workbench-entry-badge">售</div><div class="mini-workbench-entry-name text" spellcheck="false">售后补贴单</div></button>',
       "          </div>",
       "        </div>",
       "      </div>",
@@ -20617,7 +20695,7 @@ function syncSupplierTabs() {
     if (filterPanel) filterPanel.style.setProperty("display", "none", "important");
     var phone = page.querySelector(".mini-phone-shell");
     if (phone) {
-      phone.style.setProperty("height", "640px", "important");
+      phone.style.setProperty("height", "548px", "important");
       phone.style.setProperty("max-width", "392px", "important");
       phone.style.setProperty("overflow", "hidden", "important");
       phone.style.setProperty("position", "relative", "important");
@@ -20634,13 +20712,16 @@ function syncSupplierTabs() {
     });
     var hallText = navItems[3] && navItems[3].querySelector(".text");
     setNodeText(hallText, "补偿单列表");
-    if (scrollArea && !page.querySelector('[data-mini-batch-trigger="1"]')) {
-      var batchButton = document.createElement("button");
+    var batchButton = page.querySelector('[data-mini-batch-trigger="1"]');
+    if (scrollArea && !batchButton) {
+      batchButton = document.createElement("button");
       batchButton.type = "button";
       batchButton.setAttribute("data-mini-batch-trigger", "1");
       batchButton.textContent = "批量抢单";
-      batchButton.style.cssText = "position:sticky;left:0;bottom:14px;width:100%;height:44px;border:1px solid #94a3b8;border-radius:999px;background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);color:#334155;font:700 14px/1 'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;cursor:pointer;box-shadow:0 10px 20px rgba(15,23,42,.10);margin-top:12px;";
       scrollArea.appendChild(batchButton);
+    }
+    if (batchButton) {
+      batchButton.style.cssText = "position:sticky;left:0;bottom:12px;width:100%;height:50px;border:1px solid #f59e0b;border-radius:999px;background:linear-gradient(180deg,#fff7ed 0%,#fed7aa 100%);color:#9a3412;font:800 15px/1 'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;cursor:pointer;box-shadow:0 16px 28px rgba(245,158,11,.20);margin-top:14px;letter-spacing:.5px;";
     }
     if (phone && !phone.querySelector('[data-mini-batch-sheet="1"]')) {
       var sheet = document.createElement("div");
@@ -20673,6 +20754,17 @@ function syncSupplierTabs() {
     if (document.body.getAttribute("data-final-mini-nav-bound") === "1") return;
     document.body.setAttribute("data-final-mini-nav-bound", "1");
     document.addEventListener("click", function (event) {
+      var workbenchEntry = event.target.closest && event.target.closest(".mini-workbench-entry[data-mini-nav-target]");
+      if (workbenchEntry) {
+        var workbenchTarget = workbenchEntry.getAttribute("data-mini-nav-target") || "";
+        if (workbenchTarget) {
+          event.preventDefault();
+          event.stopPropagation();
+          if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+          showPage(workbenchTarget, true);
+          return;
+        }
+      }
       var navItem = event.target.closest && event.target.closest("[data-mini-nav-target]");
       if (!navItem) return;
       var pageName = navItem.getAttribute("data-mini-nav-target") || "";
@@ -20758,6 +20850,41 @@ function syncSupplierTabs() {
       hallState.selected[cardId] = !!checkbox.checked;
       renderHallListSection();
     }, true);
+  }
+
+  function bindMiniWorkbenchEntryJump() {
+    var page = document.querySelector('.bundle-page[data-page="mini-workbench"]');
+    if (!page) return;
+    Array.prototype.forEach.call(page.querySelectorAll('.mini-workbench-entry[data-mini-nav-target]'), function (button) {
+      var pageName = button.getAttribute("data-mini-nav-target") || "";
+      if (!pageName) return;
+      button.onclick = function (event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        showPage(pageName, true);
+        return false;
+      };
+    });
+  }
+
+  function patchMiniAfterSaleUploadHintText() {
+    Array.prototype.forEach.call(document.querySelectorAll('.mini-file-link-row'), function (row) {
+      row.style.setProperty("display", "flex", "important");
+      row.style.setProperty("align-items", "flex-start", "important");
+      row.style.setProperty("gap", "8px", "important");
+      row.style.setProperty("flex-wrap", "wrap", "important");
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.mini-upload-file-note'), function (node) {
+      node.textContent = "（格式pdf、zip，每个文件大小不超过20MB）";
+      node.style.setProperty("display", "block", "important");
+      node.style.setProperty("width", "100%", "important");
+      node.style.setProperty("margin-top", "2px", "important");
+      node.style.setProperty("color", "#64748b", "important");
+      node.style.setProperty("font-size", "12px", "important");
+      node.style.setProperty("line-height", "1.5", "important");
+    });
   }
 
   function bindMiniHallBatchClaim() {
@@ -21001,7 +21128,9 @@ function syncSupplierTabs() {
     ensureMiniWorkbenchPage();
     syncMiniHallPageText();
     tagMiniWorkbenchNav();
+    bindMiniWorkbenchEntryJump();
     bindMiniNavJump();
+    patchMiniAfterSaleUploadHintText();
     bindMiniHallBatchClaim();
     bindHallRowClaimCleanup();
     bindHallEnhancedActions();
