@@ -19939,9 +19939,9 @@ function syncSupplierTabs() {
     var table = panel && panel.querySelector(".table-wrap table");
     if (!table) return;
     var rows = [
-      { outOrder: "2078015550131081216", createdAt: "2026-07-18 15:14:49", addedAt: "2026-08-13 14:42:00", status: "待处理", product: "椰青冰萃美式", brand: "瑞幸", paid: "9.99", title: "井井井 / 税号：-" },
-      { outOrder: "2078260813143947", createdAt: "2026-08-12 14:35:00", addedAt: "2026-08-13 14:42:00", status: "待处理", product: "香辣鸡腿堡套餐", brand: "肯德基", paid: "28.50", title: "肯德基企业抬头 / 税号：91310106MA1FRC9K1H" },
-      { outOrder: "2078260813144047", createdAt: "2026-08-12 14:34:47", addedAt: "2026-08-13 14:41:47", status: "待处理", product: "伯牙绝弦大杯", brand: "霸王茶姬", paid: "16.80", title: "可可乐乐文化传播有限公司 / 税号：91440300MAE5XXE49N" }
+      { outOrder: "2078015550131081216", createdAt: "3天12小时18分42秒", addedAt: "2026-08-13 14:42:00", status: "待处理", product: "椰青冰萃美式", brand: "瑞幸", paid: "9.99", title: "井井井 / 税号：-" },
+      { outOrder: "2078260813143947", createdAt: "2天08小时36分15秒", addedAt: "2026-08-13 14:42:00", status: "待处理", product: "香辣鸡腿堡套餐", brand: "肯德基", paid: "28.50", title: "肯德基企业抬头 / 税号：91310106MA1FRC9K1H" },
+      { outOrder: "2078260813144047", createdAt: "1天05小时22分09秒", addedAt: "2026-08-13 14:41:47", status: "待处理", product: "伯牙绝弦大杯", brand: "霸王茶姬", paid: "16.80", title: "可可乐乐文化传播有限公司 / 税号：91440300MAE5XXE49N" }
     ];
     rows.sort(function (a, b) {
       return parseDateValue(a.createdAt) - parseDateValue(b.createdAt);
@@ -21213,8 +21213,8 @@ function syncSupplierTabs() {
       '    <div class="section-title text" spellcheck="false">状态机图片</div>',
       '    <div class="text" spellcheck="false" style="color:#5b6b7f;font-size:14px;line-height:1.7;">点击图片可在浏览器新窗口查看大图。</div>',
       '    <article style="display:grid;gap:10px;padding:16px;border:1px solid #e5edf9;border-radius:22px;background:#fbfdff;">',
-      '      <a href="./state-machine-supplier-request-flow.png?v=20260815-state-2" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, \'_blank\', \'noopener\'); return false;" style="display:block;width:min(92%,1120px);margin:0 auto;border:1px solid #dbe7fb;border-radius:18px;overflow:hidden;background:#fff;cursor:zoom-in;">',
-      '        <img src="./state-machine-supplier-request-flow.png?v=20260815-state-2" alt="供应商端状态机" style="display:block;width:100%;height:auto;">',
+      '      <a href="./state-machine-supplier-request-flow.png?v=20260817-state-1" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, \'_blank\', \'noopener\'); return false;" style="display:block;width:min(92%,1120px);margin:0 auto;border:1px solid #dbe7fb;border-radius:18px;overflow:hidden;background:#fff;cursor:zoom-in;">',
+      '        <img src="./state-machine-supplier-request-flow.png?v=20260817-state-1" alt="供应商端状态机" style="display:block;width:100%;height:auto;">',
       '      </a>',
       '    </article>',
       '    <article style="display:grid;gap:10px;padding:16px;border:1px solid #e5edf9;border-radius:22px;background:#fbfdff;">',
@@ -21806,9 +21806,9 @@ function syncSupplierTabs() {
       { id: "uploaded-2", couponNo: "6928014816062569588", orderNo: "2078015550131081903", addedAt: "2026-07-18 16:03:21", status: "已上传", product: "牛椰拿铁", brand: "瑞幸", paid: "19.90", supplierNo: "2077283553914081126", title: "肯德基企业抬头", taxNo: "91310106MA1FRC9K1H", uploadAt: "2026-07-18 16:10:08", syncStatus: "回传失败", syncClass: "is-fail", syncReason: "客服工作台接口调用超时，请稍后重新回传后重试", operatorName: "系统", operatorTime: "2026-07-18 16:10:08", actionText: "详情", canResync: true, fileHistory: [{ name: "invoice_2078015550131081903_20260718_161008.pdf", time: "2026-07-18 16:10:08", href: "./invoice_2078015550131081903_20260718_161008_preview.html?v=20260815-preview-2" }, { name: "invoice_2078015550131081903_20260718_154502.pdf", time: "2026-07-18 15:45:02", href: "./invoice_2078015550131081903_20260718_154502_preview.html?v=20260815-preview-2" }] }
     ],
     pending: [
-      { id: "pending-1", couponNo: "6928014816062569567", orderNo: "2078015550131081216", createdAt: "2026-08-12 14:34:47", addedAt: "2026-08-13 14:41:47", orderAt: "2026-07-17 15:14:49", status: "待处理", product: "椰青冰萃美式", store: "瑞幸-广州", brand: "瑞幸", paid: "9.99", title: "井井井", taxNo: "-" },
-      { id: "pending-2", couponNo: "6928014816062569701", orderNo: "2078260813143947", createdAt: "2026-08-12 14:35:00", addedAt: "2026-08-13 14:42:00", orderAt: "2026-08-13 14:42:00", status: "待处理", product: "香辣鸡腿堡套餐", store: "肯德基-上海", brand: "肯德基", paid: "28.50", title: "肯德基企业抬头", taxNo: "91310106MA1FRC9K1H" },
-      { id: "pending-3", couponNo: "6928014816062569722", orderNo: "2078260813144047", createdAt: "2026-08-12 14:20:00", addedAt: "2026-08-13 14:35:30", orderAt: "2026-08-13 14:34:47", status: "待处理", product: "伯牙绝弦大杯", store: "霸王茶姬-深圳", brand: "霸王茶姬", paid: "16.80", title: "可可乐乐文化传播有限公司", taxNo: "91440300MAE5XXE49N" }
+      { id: "pending-1", couponNo: "6928014816062569567", orderNo: "2078015550131081216", createdAt: "3天12小时18分42秒", addedAt: "2026-08-13 14:41:47", orderAt: "2026-07-17 15:14:49", status: "待处理", product: "椰青冰萃美式", store: "瑞幸-广州", brand: "瑞幸", paid: "9.99", title: "井井井", taxNo: "-" },
+      { id: "pending-2", couponNo: "6928014816062569701", orderNo: "2078260813143947", createdAt: "2天08小时36分15秒", addedAt: "2026-08-13 14:42:00", orderAt: "2026-08-13 14:42:00", status: "待处理", product: "香辣鸡腿堡套餐", store: "肯德基-上海", brand: "肯德基", paid: "28.50", title: "肯德基企业抬头", taxNo: "91310106MA1FRC9K1H" },
+      { id: "pending-3", couponNo: "6928014816062569722", orderNo: "2078260813144047", createdAt: "1天05小时22分09秒", addedAt: "2026-08-13 14:35:30", orderAt: "2026-08-13 14:34:47", status: "待处理", product: "伯牙绝弦大杯", store: "霸王茶姬-深圳", brand: "霸王茶姬", paid: "16.80", title: "可可乐乐文化传播有限公司", taxNo: "91440300MAE5XXE49N" }
     ],
     processing: [
       { id: "processing-1", couponNo: "6928014816062569733", orderNo: "2078260813144147", countdown: "1天23小时59分59秒", addedAt: "2026-08-13 14:20:00", orderAt: "2026-08-13 14:20:00", status: "处理中（供）", product: "藤椒鸡腿堡套餐", store: "喜德基-成都", brand: "喜德基", paid: "26.90", supplierName: "黄开良", supplierNo: "2077283553914081126", settlement: "9.98", title: "喜德基企业抬头", taxNo: "91310106MA1FRC9K1H" }
