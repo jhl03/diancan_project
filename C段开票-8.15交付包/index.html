@@ -20413,8 +20413,8 @@ function syncSupplierTabs() {
   function applyHallSearch() {
     var values = readHallRangeInputs();
     var validations = [
-      ["paidMin", "paidMax", "支付价区间"],
-      ["subsidyMin", "subsidyMax", "赔付金额区间"]
+      ["paidMin", "paidMax", "用户支付金额区间"],
+      ["subsidyMin", "subsidyMax", "补贴金额区间"]
     ];
     for (var i = 0; i < validations.length; i += 1) {
       var config = validations[i];
@@ -20535,17 +20535,37 @@ function syncSupplierTabs() {
     }).join("");
   }
 
+  window.__C_END_TOGGLE_HALL_SELECT_ALL__ = function (checked) {
+    var visibleRows = getVisibleHallRows().slice(0, 10);
+    visibleRows.forEach(function (row) {
+      hallState.selected[row.cardId] = !!checked;
+    });
+    renderHallListSection();
+    return false;
+  };
+
+  window.__C_END_TOGGLE_HALL_SELECT__ = function (cardId, checked) {
+    if (!cardId) return false;
+    hallState.selected[cardId] = !!checked;
+    renderHallListSection();
+    return false;
+  };
+
+  window.__C_END_BATCH_HALL_CLAIM__ = function () {
+    claimHallCards(Object.keys(hallState.selected).filter(function (cardId) { return !!hallState.selected[cardId]; }), { batch: true });
+    return false;
+  };
+
   window.__C_END_SWITCH_HALL_TAB__ = function (brand) {
     hallState.activeBrand = brand || "全部";
     hallState.selected = {};
-    clearHallRangeInput();
     renderHallListSection();
     return false;
   };
 
   function buildHallHeadHtml() {
     return [
-      '<div class="hall-final-select-cell is-head"><input type="checkbox" class="hall-final-checkbox" data-hall-select-all="1"><div class="hall-final-select-label">全选</div></div>',
+      '<div class="hall-final-select-cell is-head"><input type="checkbox" class="hall-final-checkbox" data-hall-select-all="1" onchange="return window.__C_END_TOGGLE_HALL_SELECT_ALL__&&window.__C_END_TOGGLE_HALL_SELECT_ALL__(this.checked);"><div class="hall-final-select-label">全选</div></div>',
       '<div class="text" spellcheck="false">门店地址</div>',
       '<div class="text" spellcheck="false">已创建时长</div>',
       '<div class="text" spellcheck="false">商品名称</div>',
@@ -20565,7 +20585,7 @@ function syncSupplierTabs() {
       var selected = !!hallState.selected[row.cardId];
       return [
         '<div class="hall-runtime-card' + (selected ? ' is-selected' : '') + '" data-order-id="' + escapeHtml(row.orderId) + '" data-card-id="' + escapeHtml(row.cardId) + '" data-brand="' + escapeHtml(normalizeHallBrand(row.brand)) + '">',
-        '  <div class="hall-final-select-cell"><input type="checkbox" class="hall-final-checkbox" data-hall-select="' + escapeHtml(row.cardId) + '"' + (selected ? ' checked="checked"' : '') + '></div>',
+        '  <div class="hall-final-select-cell"><input type="checkbox" class="hall-final-checkbox" data-hall-select="' + escapeHtml(row.cardId) + '"' + (selected ? ' checked="checked"' : '') + ' onchange="return window.__C_END_TOGGLE_HALL_SELECT__&&window.__C_END_TOGGLE_HALL_SELECT__(\'' + escapeHtml(row.cardId) + '\', this.checked);"></div>',
         '  <div class="hall-runtime-head">',
         '    <div class="hall-runtime-title">' + escapeHtml(row.store) + "</div>",
         '    <div class="hall-runtime-countdown" data-hall-elapsed="' + escapeHtml(row.cardId) + '">' + escapeHtml(formatElapsedDuration(Date.now() - parseDateValue(row.createdAt))) + "</div>",
@@ -20591,7 +20611,7 @@ function syncSupplierTabs() {
       return !!cardId && source.indexOf(cardId) === index;
     });
     if (!list.length) {
-      emitHallToast("请选择订单");
+      emitHallToast("请选择工单");
       return;
     }
     window.__hallClaimedOrders = window.__hallClaimedOrders || {};
@@ -20664,7 +20684,7 @@ function syncSupplierTabs() {
       '    <div class="section-title text" spellcheck="false">筛选项</div>',
       '    <div class="field-grid cols-3">',
       '      <div class="field-card ax_default">',
-      '        <div class="field-label text" spellcheck="false">支付价(含左区间) - 支付价(右区间)</div>',
+      '        <div class="field-label text" spellcheck="false">用户支付金额(含左区间) - 用户支付金额(右区间)</div>',
       '        <div class="field-input hall-final-range-group"><div class="hall-final-range-box"><input type="text" class="hall-final-range-input" data-hall-range-input="paid-min" placeholder="请输入左区间"></div><div class="hall-final-range-box"><input type="text" class="hall-final-range-input" data-hall-range-input="paid-max" placeholder="请输入右区间"></div></div>',
       "      </div>",
       '      <div class="field-card ax_default">',
@@ -20675,7 +20695,7 @@ function syncSupplierTabs() {
       '    <div class="hall-final-filter-actions">',
       '      <div class="ghost-btn ax_default" data-hall-search="1"><div class="text" spellcheck="false">搜索</div></div>',
       '      <div class="ghost-btn ax_default" data-hall-reset="1"><div class="text" spellcheck="false">重置</div></div>',
-      '      <div class="ghost-btn ax_default hall-final-batch-btn" data-hall-batch-claim="1"><div class="text" spellcheck="false">批量抢单</div></div>',
+      '      <div class="ghost-btn ax_default hall-final-batch-btn" data-hall-batch-claim="1" onclick="return window.__C_END_BATCH_HALL_CLAIM__&&window.__C_END_BATCH_HALL_CLAIM__();"><div class="text" spellcheck="false">批量抢单</div></div>',
       "    </div>",
       "  </section>",
       '  <section class="section ax_default hall-final-list-card">',
@@ -20694,12 +20714,12 @@ function syncSupplierTabs() {
       '    <div class="hall-runtime-card-grid">' + buildHallRowsHtml() + "</div>",
       "  </section>",
       '  <section class="section ax_default">',
-      '    <div class="section-title text" spellcheck="false">列表字段说明</div>',
+      '    <div class="section-title text" spellcheck="false">字段说明</div>',
       '    <ul class="note-list text" spellcheck="false">',
       '      <li spellcheck="false"><span style="color:#d92d20;font-weight:700;">列表数据源与点餐后台--开票需求单列表--待处理（供）列表数据的数据源一样</span></li>',
-      '      <li spellcheck="false">支付价区间：搜索时，按照输入的只有区间包含输入的值去寻找订单。<span style="color:#d92d20;font-weight:700;">每次切换TAB时，输入框清空。</span></li>',
-      '      <li spellcheck="false">赔付金额区间：搜索时，按照输入的只有区间包含输入的值去寻找订单。</li>',
-      '      <li spellcheck="false">列表字段：门店地址、已创建时长、商品名称、用户支付、商品品牌、补贴单金额、操作。</li>',
+      '      <li spellcheck="false">用户支付金额区间：左边区间一定小于等于右边区间，左右区间输入范围为0-100，两位小数</li>',
+      '      <li spellcheck="false">补贴金额区间：左边区间一定小于等于右边区间，左右区间输入范围为0-100，两位小数</li>',
+      '      <li spellcheck="false">每次切换tab时，筛选框不需要清空</li>',
       '      <li spellcheck="false"><b>注意：页面列表按已创建时长排序，时长最长的放最前面。</b></li>',
       '      <li spellcheck="false">点击权限按钮，只选当页的10条。</li>',
       '      <li spellcheck="false">门店地址：数据源取添加订单时对应的门店地址；显示逻辑只显示城市；例：瑞幸-东莞-环球贸易广场店，显示“瑞幸-东莞”。</li>',
@@ -20716,7 +20736,7 @@ function syncSupplierTabs() {
       '      <li spellcheck="false"><span style="color:#d92d20;font-weight:700;">若超时未上传状态下点击放弃按钮，订单会从该供应商后台处理中页面消失，不会再进入补偿单列表；该订单在点餐后台开票需求单的处理中（供）页面进入到待处理（供）页面。</span></li>',
       '      <li spellcheck="false"><span style="color:#d92d20;font-weight:700;">若 A 放弃该工单后，该工单不会再次分配给 A。</span></li>',
       '      <li spellcheck="false"><span style="color:#d92d20;font-weight:700;">品牌tab[除全部tab]，是根据供应商列表开启接开票单时配置的供应商品牌变化。</span></li>',
-      '      <li spellcheck="false">批量抢单按钮：未选订单点击按钮时，提示“请选择订单”。 可以根据筛选项搜索出的内容进行批量抢单</li>',
+      '      <li spellcheck="false"><span style="color:#001eff;">批量抢单按钮：未选订单点击按钮时，提示“请选择工单”。 可以根据筛选项搜索出的内容进行批量抢单</span></li>',
       "    </ul>",
       "  </section>",
       "</main>"
@@ -20826,8 +20846,7 @@ function syncSupplierTabs() {
       noteList.innerHTML = [
         '<li spellcheck="false">新增入口：补偿单列表。</li>',
         '<li spellcheck="false">所有字段的数据源与 PC 端补偿单列表页面保持一致。</li>',
-        '<li spellcheck="false">若点击一键抢单后，没有订单在选择的范围，提示“没有符合该筛选范围的订单”。</li>',
-        '<li spellcheck="false">点击一键抢单，提示“操作成功”；根据筛选条件，从上往下选择列表工单，进行抢单操作。</li>'
+        '<li spellcheck="false">批量抢单弹窗：<div style="margin-top:6px;">批量接单数量：枚举值为5、10、15</div><div>若批量接单数量设置了5，然后待抢单只有3个，那么就抢这三个，提示“操作成功”</div><div style="color:#fa0000;font-weight:700;">商品品牌：枚举值与品牌 tab 一致，且只有在全部 tab 时显示该筛选项</div><div>补贴金额区间：左边区间一定小于等于右边区间，左右区间输入范围为0-100，两位小数</div><div>用户支付金额区间：左边区间一定小于等于右边区间，左右区间输入范围为0-100，两位小数</div><div>点击“一键抢单”按钮：校验左右区间是否都填写了内容，若没有提示“区间框，不能只填写左/右单个输入框”</div><div style="color:#df0707;font-weight:700;">根据输入筛选项的内容，进行一键抢单，把符合筛选项的订单按时间长到时间短依次接单</div></li>'
       ].join("");
     }
     var filterPanel = page.querySelector(".mini-scroll-area > .mini-panel.ax_default:first-of-type");
@@ -20961,7 +20980,6 @@ function syncSupplierTabs() {
         if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
         hallState.activeBrand = tabBtn.getAttribute("data-hall-tab") || "全部";
         hallState.selected = {};
-        clearHallRangeInput();
         renderHallListSection();
         return;
       }
@@ -22351,7 +22369,7 @@ function syncSupplierTabs() {
       ["出餐单号", "处理倒计时", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "发票抬头/税号"],
       [
         '数据源：该订单对应的出餐成功的出餐单号；<div>显示逻辑：若订单非出餐成功，显示“-”</div>',
-        '数据源：系统配置里面设置的上传倒计时；<div>【倒计时最好实时的】；</div><div>列表排序：按倒计时升序排；倒计时结束放最上面</div>',
+        '数据源：系统配置里面设置的上传倒计时；<div>【倒计时最好实时的】；</div><div>列表排序：按倒计时升序排；</div>',
         '数据源：该订单，客服同步到列表的时间',
         '订单状态见“状态机”',
         '数据源：该订单对应的商品名称',
@@ -22392,6 +22410,16 @@ function syncSupplierTabs() {
       rows.push('<li>回传状态：枚举值 全部 / 回传成功 / 回传失败，默认全部</li>');
       rows.push('<li>按照上传时间：默认显示近一个月的工单</li>');
       rows.push('<li>列表：按照上传时间倒叙</li>');
+    } else if (tabKey === "backend-rejected") {
+      rows.push('<li>筛选项： 出餐单号、供应商编号：精准搜索</li>');
+      rows.push('<li>发票抬头：模糊搜索</li>');
+      rows.push('<li>默认显示近一个月的工单</li>');
+      rows.push('<li>已驳回 列表：按照供应商操作驳回时间倒叙</li>');
+    } else if (tabKey === "backend-timeout") {
+      rows.push('<li>筛选项： 出餐单号、供应商编号：精准搜索</li>');
+      rows.push('<li>发票抬头：模糊搜索</li>');
+      rows.push('<li>默认显示近一个月的工单</li>');
+      rows.push('<li>列表：按照进入列表时间，正序排</li>');
     } else {
       rows.push('<li>筛选项： 出餐单号、供应商编号：精准搜索</li>');
       rows.push('<li>发票抬头：模糊搜索</li>');
@@ -22639,8 +22667,12 @@ function syncSupplierTabs() {
 
   var miniHallCleanTimer = 0;
   var MINI_HALL_BRANDS = ["全部", "瑞幸", "麦当劳", "肯德基", "霸王茶姬", "星巴克", "塔斯汀", "电子卡券"];
+  var MINI_HALL_BATCH_BRANDS = MINI_HALL_BRANDS.filter(function (brand) { return brand !== "全部"; });
   var miniHallState = window.__C_END_MINI_HALL_STATE__ || (window.__C_END_MINI_HALL_STATE__ = {
     activeBrand: "全部",
+    batchBrands: [],
+    batchBrandPanelOpen: false,
+    batchOpen: false,
     claimed: {},
     cards: []
   });
@@ -22696,7 +22728,7 @@ function syncSupplierTabs() {
         paid: card.paid,
         brand: card.brand,
         subsidy: card.subsidy,
-        remainingSeconds: miniHallCleanParseCountdown(card.countdown),
+        elapsedSeconds: miniHallCleanParseCountdown(card.countdown),
         sortIndex: index
       };
     });
@@ -22707,9 +22739,53 @@ function syncSupplierTabs() {
     return MINI_HALL_BRANDS.indexOf(text) > -1 ? text : "电子卡券";
   }
 
+  function normalizeMiniHallBatchBrands(brands) {
+    var list = Array.isArray(brands) ? brands : [];
+    return list.map(function (brand) { return String(brand || "").trim(); }).filter(function (brand, index, source) {
+      return MINI_HALL_BATCH_BRANDS.indexOf(brand) > -1 && source.indexOf(brand) === index;
+    });
+  }
+
+  function getMiniHallBatchBrandSummary() {
+    var selected = normalizeMiniHallBatchBrands(miniHallState.batchBrands);
+    if (!selected.length) return "请选择接单的品牌";
+    return selected[0] + " +" + selected.length;
+  }
+
+  function buildMiniHallBatchBrandFieldHtml() {
+    var hiddenClass = miniHallState.activeBrand === "全部" ? "" : " is-hidden";
+    var summary = getMiniHallBatchBrandSummary();
+    var isPlaceholder = normalizeMiniHallBatchBrands(miniHallState.batchBrands).length === 0;
+    return [
+      '<div class="c-mini-hall-sheet-field' + hiddenClass + '" data-mini-hall-brand-field="1">',
+      '  <div class="c-mini-hall-sheet-label">商品品牌</div>',
+      '  <button type="button" class="c-mini-hall-brand-trigger" onclick="return window.__C_END_TOGGLE_MINI_HALL_BRAND_PANEL__&&window.__C_END_TOGGLE_MINI_HALL_BRAND_PANEL__();"><span class="' + (isPlaceholder ? 'is-placeholder' : '') + '">' + miniHallCleanEscape(summary) + '</span><span>▾</span></button>',
+      '  <div class="c-mini-hall-brand-panel' + (miniHallState.batchBrandPanelOpen ? ' is-show' : '') + '">',
+      MINI_HALL_BATCH_BRANDS.map(function (brand) {
+        var checked = normalizeMiniHallBatchBrands(miniHallState.batchBrands).indexOf(brand) > -1;
+        return '<label class="c-mini-hall-brand-option"><input type="checkbox" ' + (checked ? 'checked="checked" ' : '') + 'onchange="return window.__C_END_TOGGLE_MINI_HALL_BRAND_OPTION__&&window.__C_END_TOGGLE_MINI_HALL_BRAND_OPTION__(\'' + miniHallCleanEscape(brand) + '\', this.checked);"><span>' + miniHallCleanEscape(brand) + '</span></label>';
+      }).join(""),
+      '  </div>',
+      '</div>'
+    ].join("");
+  }
+
   function miniHallCleanMoney(value) {
     var number = parseFloat(String(value || "").replace(/[^\d.]/g, ""));
     return isFinite(number) ? number : NaN;
+  }
+
+  function miniHallCleanRangeInputState(minText, maxText) {
+    var leftRaw = String(minText || "").trim();
+    var rightRaw = String(maxText || "").trim();
+    var leftFilled = leftRaw !== "";
+    var rightFilled = rightRaw !== "";
+    return {
+      leftFilled: leftFilled,
+      rightFilled: rightFilled,
+      leftValue: miniHallCleanMoney(leftRaw),
+      rightValue: miniHallCleanMoney(rightRaw)
+    };
   }
 
   function getMiniHallCleanVisibleCards() {
@@ -22718,7 +22794,7 @@ function syncSupplierTabs() {
       if (miniHallState.claimed[card.id]) return false;
       return miniHallState.activeBrand === "全部" ? true : normalizeMiniHallCleanBrand(card.brand) === miniHallState.activeBrand;
     }).sort(function (a, b) {
-      var delta = (parseInt(b.remainingSeconds, 10) || 0) - (parseInt(a.remainingSeconds, 10) || 0);
+      var delta = (parseInt(b.elapsedSeconds, 10) || 0) - (parseInt(a.elapsedSeconds, 10) || 0);
       if (delta) return delta;
       return (parseInt(a.sortIndex, 10) || 0) - (parseInt(b.sortIndex, 10) || 0);
     });
@@ -22745,7 +22821,7 @@ function syncSupplierTabs() {
         '<div class="mini-order-card order-card ax_default c-mini-hall-card" data-mini-hall-card="' + miniHallCleanEscape(card.id) + '">',
         '  <div class="mini-order-top">',
         '    <div class="mini-order-store text" spellcheck="false">' + miniHallCleanEscape(card.store) + '</div>',
-        '    <div class="mini-order-deadline text" data-mini-hall-countdown-live="' + miniHallCleanEscape(card.id) + '" spellcheck="false">' + miniHallCleanEscape(miniHallCleanFormatCountdown(card.remainingSeconds)) + '</div>',
+        '    <div class="mini-order-deadline text" data-mini-hall-countdown-live="' + miniHallCleanEscape(card.id) + '" spellcheck="false">' + miniHallCleanEscape(miniHallCleanFormatCountdown(card.elapsedSeconds)) + '</div>',
         '  </div>',
         '  <div class="mini-order-content">',
         '    <div class="mini-order-thumb text" spellcheck="false">商品图</div>',
@@ -22793,7 +22869,14 @@ function syncSupplierTabs() {
       '.bundle-page[data-page="mini-hall"] .c-mini-hall-sheet input,.bundle-page[data-page="mini-hall"] .c-mini-hall-sheet select{width:100%;min-width:0;height:40px;border:1px solid #cbd5e1;border-radius:12px;padding:0 12px;background:#f8fafc;box-sizing:border-box;}',
       '.bundle-page[data-page="mini-hall"] .c-mini-hall-sheet-title{font:800 16px/1.2 Georgia,"Songti SC","SimSun",serif;color:#0f172a;}',
       '.bundle-page[data-page="mini-hall"] .c-mini-hall-sheet-label{margin-top:14px;color:#0f172a;font:700 13px/1.4 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;}',
-      '.bundle-page[data-page="mini-hall"] .c-mini-hall-sheet-error{min-height:18px;margin-top:10px;color:#dc2626;font:600 12px/1.4 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;}'
+      '.bundle-page[data-page="mini-hall"] .c-mini-hall-sheet-error{min-height:18px;margin-top:10px;color:#dc2626;font:600 12px/1.4 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;}',
+      '.bundle-page[data-page="mini-hall"] .c-mini-hall-sheet-field.is-hidden{display:none;}',
+      '.bundle-page[data-page="mini-hall"] .c-mini-hall-brand-trigger{width:100%;height:40px;border:1px solid #cbd5e1;border-radius:12px;background:#f8fafc;padding:0 12px;display:flex;align-items:center;justify-content:space-between;color:#0f172a;font:600 13px/1 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;cursor:pointer;box-sizing:border-box;}',
+      '.bundle-page[data-page="mini-hall"] .c-mini-hall-brand-trigger .is-placeholder{color:#98a2b3;}',
+      '.bundle-page[data-page="mini-hall"] .c-mini-hall-brand-panel{display:none;margin-top:8px;padding:10px 12px;border:1px solid #dbe5f0;border-radius:12px;background:#fff;box-shadow:0 10px 24px rgba(15,23,42,.08);}',
+      '.bundle-page[data-page="mini-hall"] .c-mini-hall-brand-panel.is-show{display:grid;gap:8px;}',
+      '.bundle-page[data-page="mini-hall"] .c-mini-hall-brand-option{display:flex;align-items:center;gap:8px;color:#334155;font:600 13px/1.4 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;}',
+      '.bundle-page[data-page="mini-hall"] .c-mini-hall-brand-option input{width:16px;height:16px;min-width:16px;padding:0;}'
     ].join("");
     document.head.appendChild(style);
   }
@@ -22808,7 +22891,7 @@ function syncSupplierTabs() {
     page.innerHTML = [
       '<main class="main-shell c-mini-hall-shell">',
       '  <header class="page-header ax_default"><h1 class="text" spellcheck="false">补偿单列表（小程序版）</h1><p class="text" spellcheck="false">纯代码重建：沿用 PC 端补偿单列表的核心字段与筛选逻辑，转为小程序卡片式原型。</p></header>',
-      '  <section class="section ax_default c-mini-hall-note"><div class="section-title text" spellcheck="false">页面说明</div><ul class="note-list text" spellcheck="false"><li spellcheck="false">新增入口：补偿单列表。</li><li spellcheck="false">所有字段的数据源与 PC 端补偿单列表页面保持一致。</li><li spellcheck="false">若点击一键抢单后，没有订单在选择的范围，提示“没有符合该筛选范围的订单”。</li><li spellcheck="false">点击一键抢单，提示“操作成功”；根据筛选条件，从上往下选择列表工单，进行抢单操作。</li></ul></section>',
+      '  <section class="section ax_default c-mini-hall-note"><div class="section-title text" spellcheck="false">页面说明</div><ul class="note-list text" spellcheck="false"><li spellcheck="false">新增入口：补偿单列表。</li><li spellcheck="false">所有字段的数据源与 PC 端补偿单列表页面保持一致。</li><li spellcheck="false">批量抢单弹窗：<div style="margin-top:6px;">批量接单数量：枚举值为5、10、15</div><div>若批量接单数量设置了5，然后待抢单只有3个，那么就抢这三个，提示“操作成功”</div><div style="color:#fa0000;font-weight:700;">商品品牌：枚举值与品牌 tab 一致，且只有在全部 tab 时显示该筛选项</div><div>补贴金额区间：左边区间一定小于等于右边区间，左右区间输入范围为0-100，两位小数</div><div>用户支付金额区间：左边区间一定小于等于右边区间，左右区间输入范围为0-100，两位小数</div><div>点击“一键抢单”按钮：校验左右区间是否都填写了内容，若没有提示“区间框，不能只填写左/右单个输入框”</div><div style="color:#df0707;font-weight:700;">根据输入筛选项的内容，进行一键抢单，把符合筛选项的订单按时间长到时间短依次接单</div></li></ul></section>',
       '  <div class="mini-phone-shell ax_default c-mini-hall-phone">',
       '    <div class="mini-status-bar"><div class="text" spellcheck="false">09:41</div><div class="text" spellcheck="false">供应商小程序</div><div class="text" spellcheck="false">5G 100%</div></div>',
       '    <div class="c-mini-hall-scroll">',
@@ -22816,10 +22899,11 @@ function syncSupplierTabs() {
       '      <div id="c-mini-hall-card-list" class="c-mini-hall-card-list">' + buildMiniHallCleanCardsHtml() + '</div>',
       '      <button type="button" class="c-mini-hall-batch-trigger" onclick="return window.__C_END_OPEN_MINI_HALL_BATCH__&&window.__C_END_OPEN_MINI_HALL_BATCH__();">批量抢单</button>',
       '    </div>',
-      '    <div class="c-mini-hall-sheet" data-mini-hall-clean-sheet="1">',
+      '    <div class="c-mini-hall-sheet' + (miniHallState.batchOpen ? ' is-show' : '') + '" data-mini-hall-clean-sheet="1">',
       '      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;"><div class="c-mini-hall-sheet-title">批量抢单</div><button type="button" class="codex-clean-close" onclick="return window.__C_END_CLOSE_MINI_HALL_BATCH__&&window.__C_END_CLOSE_MINI_HALL_BATCH__();">×</button></div>',
       '      <div class="c-mini-hall-sheet-label">批量接单数量</div>',
       '      <select data-mini-hall-batch-count="1"><option value="5">5</option><option value="10">10</option><option value="15">15</option></select>',
+      buildMiniHallBatchBrandFieldHtml(),
       '      <div class="c-mini-hall-sheet-label">补贴金额区间</div>',
       '      <div class="c-mini-hall-sheet-grid"><input data-mini-hall-subsidy-min="1" type="text" placeholder="最小值"><input data-mini-hall-subsidy-max="1" type="text" placeholder="最大值"></div>',
       '      <div class="c-mini-hall-sheet-label">用户支付金额区间</div>',
@@ -22848,6 +22932,7 @@ function syncSupplierTabs() {
 
   window.__C_END_SWITCH_MINI_HALL_TAB__ = function (brand) {
     miniHallState.activeBrand = brand || "全部";
+    miniHallState.batchBrandPanelOpen = false;
     renderMiniHallCleanPage();
     return false;
   };
@@ -22865,14 +22950,35 @@ function syncSupplierTabs() {
   };
 
   window.__C_END_OPEN_MINI_HALL_BATCH__ = function () {
-    var sheet = document.querySelector('.bundle-page[data-page="mini-hall"] [data-mini-hall-clean-sheet="1"]');
-    if (sheet) sheet.classList.add("is-show");
+    miniHallState.batchBrandPanelOpen = false;
+    miniHallState.batchOpen = true;
+    renderMiniHallCleanPage();
     return false;
   };
 
   window.__C_END_CLOSE_MINI_HALL_BATCH__ = function () {
-    var sheet = document.querySelector('.bundle-page[data-page="mini-hall"] [data-mini-hall-clean-sheet="1"]');
-    if (sheet) sheet.classList.remove("is-show");
+    miniHallState.batchBrandPanelOpen = false;
+    miniHallState.batchOpen = false;
+    renderMiniHallCleanPage();
+    return false;
+  };
+
+  window.__C_END_TOGGLE_MINI_HALL_BRAND_PANEL__ = function () {
+    miniHallState.batchBrandPanelOpen = !miniHallState.batchBrandPanelOpen;
+    renderMiniHallCleanPage();
+    return false;
+  };
+
+  window.__C_END_TOGGLE_MINI_HALL_BRAND_OPTION__ = function (brand, checked) {
+    var current = normalizeMiniHallBatchBrands(miniHallState.batchBrands);
+    if (checked) {
+      if (current.indexOf(brand) === -1) current.push(brand);
+    } else {
+      current = current.filter(function (item) { return item !== brand; });
+    }
+    miniHallState.batchBrands = current;
+    miniHallState.batchBrandPanelOpen = true;
+    renderMiniHallCleanPage();
     return false;
   };
 
@@ -22882,15 +22988,23 @@ function syncSupplierTabs() {
     if (!page) return false;
     var error = page.querySelector('[data-mini-hall-sheet-error="1"]');
     var countValue = parseInt((page.querySelector('[data-mini-hall-batch-count="1"]') || {}).value || "5", 10) || 5;
-    var subsidyMin = miniHallCleanMoney((page.querySelector('[data-mini-hall-subsidy-min="1"]') || {}).value || "");
-    var subsidyMax = miniHallCleanMoney((page.querySelector('[data-mini-hall-subsidy-max="1"]') || {}).value || "");
-    var paidMin = miniHallCleanMoney((page.querySelector('[data-mini-hall-paid-min="1"]') || {}).value || "");
-    var paidMax = miniHallCleanMoney((page.querySelector('[data-mini-hall-paid-max="1"]') || {}).value || "");
-    if (isFinite(subsidyMin) && isFinite(subsidyMax) && subsidyMin > subsidyMax) {
+    var batchBrands = miniHallState.activeBrand === "全部" ? normalizeMiniHallBatchBrands(miniHallState.batchBrands) : [miniHallState.activeBrand];
+    var subsidyState = miniHallCleanRangeInputState((page.querySelector('[data-mini-hall-subsidy-min="1"]') || {}).value || "", (page.querySelector('[data-mini-hall-subsidy-max="1"]') || {}).value || "");
+    var paidState = miniHallCleanRangeInputState((page.querySelector('[data-mini-hall-paid-min="1"]') || {}).value || "", (page.querySelector('[data-mini-hall-paid-max="1"]') || {}).value || "");
+    if (subsidyState.leftFilled !== subsidyState.rightFilled || paidState.leftFilled !== paidState.rightFilled) {
+      if (error) error.textContent = "区间框，不能只填写左/右单个输入框";
+      return false;
+    }
+    if ((subsidyState.leftFilled && (!isFinite(subsidyState.leftValue) || subsidyState.leftValue < 0 || subsidyState.leftValue > 100 || !isFinite(subsidyState.rightValue) || subsidyState.rightValue < 0 || subsidyState.rightValue > 100)) ||
+        (paidState.leftFilled && (!isFinite(paidState.leftValue) || paidState.leftValue < 0 || paidState.leftValue > 100 || !isFinite(paidState.rightValue) || paidState.rightValue < 0 || paidState.rightValue > 100))) {
+      if (error) error.textContent = "区间输入范围为0-100，两位小数";
+      return false;
+    }
+    if (isFinite(subsidyState.leftValue) && isFinite(subsidyState.rightValue) && subsidyState.leftValue > subsidyState.rightValue) {
       if (error) error.textContent = "补贴金额区间最小值不能大于最大值";
       return false;
     }
-    if (isFinite(paidMin) && isFinite(paidMax) && paidMin > paidMax) {
+    if (isFinite(paidState.leftValue) && isFinite(paidState.rightValue) && paidState.leftValue > paidState.rightValue) {
       if (error) error.textContent = "用户支付金额区间最小值不能大于最大值";
       return false;
     }
@@ -22898,10 +23012,11 @@ function syncSupplierTabs() {
     var matched = getMiniHallCleanVisibleCards().filter(function (card) {
       var subsidy = miniHallCleanMoney(card.subsidy);
       var paid = miniHallCleanMoney(card.paid);
-      if (isFinite(subsidyMin) && (!isFinite(subsidy) || subsidy < subsidyMin)) return false;
-      if (isFinite(subsidyMax) && (!isFinite(subsidy) || subsidy > subsidyMax)) return false;
-      if (isFinite(paidMin) && (!isFinite(paid) || paid < paidMin)) return false;
-      if (isFinite(paidMax) && (!isFinite(paid) || paid > paidMax)) return false;
+      if (batchBrands.length && batchBrands.indexOf(normalizeMiniHallCleanBrand(card.brand)) === -1) return false;
+      if (isFinite(subsidyState.leftValue) && (!isFinite(subsidy) || subsidy < subsidyState.leftValue)) return false;
+      if (isFinite(subsidyState.rightValue) && (!isFinite(subsidy) || subsidy > subsidyState.rightValue)) return false;
+      if (isFinite(paidState.leftValue) && (!isFinite(paid) || paid < paidState.leftValue)) return false;
+      if (isFinite(paidState.rightValue) && (!isFinite(paid) || paid > paidState.rightValue)) return false;
       return true;
     }).slice(0, countValue);
     if (!matched.length) {
@@ -22911,6 +23026,8 @@ function syncSupplierTabs() {
     matched.forEach(function (card) {
       miniHallState.claimed[card.id] = true;
     });
+    miniHallState.batchBrandPanelOpen = false;
+    miniHallState.batchOpen = false;
     renderMiniHallCleanPage();
     if (typeof showToast === "function") showToast("操作成功");
     return false;
@@ -22920,8 +23037,8 @@ function syncSupplierTabs() {
     syncMiniHallCleanState();
     var changed = false;
     miniHallState.cards.forEach(function (card) {
-      if (miniHallState.claimed[card.id] || card.remainingSeconds <= 0) return;
-      card.remainingSeconds -= 1;
+      if (miniHallState.claimed[card.id]) return;
+      card.elapsedSeconds += 1;
       changed = true;
     });
     if (changed) rerenderMiniHallCleanCards();
