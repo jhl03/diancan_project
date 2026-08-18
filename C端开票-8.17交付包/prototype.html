@@ -4711,7 +4711,8 @@ body.codex-bundle-editable .codex-edit-toolbar{display:none!important;}
           <div class="section-title text" spellcheck="false">页面变更说明</div>
           <ul class="note-list text" spellcheck="false">
             <li spellcheck="false">列表增加流水记录。</li>
-            <li spellcheck="false">当供应商上传的文件在后台审核通过【人工/自动】时，会给供应商增加一条流水记录，类型为“<span style="color: rgb(217, 45, 32);">售后补贴单</span>”。</li>
+            <li spellcheck="false">当供应商上传的文件在后台审核通过时，会给供应商增加一条流水记录，类型为“<span style="color: rgb(217, 45, 32);">售后补贴单</span>”。</li>
+            <li spellcheck="false">新增的交易类型 关联 补贴单号</li>
           </ul>
         </section><section class="section ax_default" data-codex-layout-source-id="codex_pinned_260" data-codex-layout-detached="true" style="position: absolute; left: 38px; top: 211px; width: 1628px; height: 428px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;" data-codex-base-width="1628" data-codex-base-height="427.938">
           <div class="section-title text" spellcheck="false">结算记录列表</div>
@@ -7898,10 +7899,11 @@ body.codex-bundle-editable .codex-edit-toolbar{display:none!important;}
       '<li class="" spellcheck="false">列表增加流水记录</li>' +
       '<li class="" spellcheck="false">当后台审核通过供应商上传的文件时，会给供应商增加一条流水记录，类型为<span style="color: rgb(217, 45, 32);">“售后补贴单</span>”；</li>' +
       '<li class="" spellcheck="false">对应的备注列，补上“<span style="color: rgb(217, 45, 32);">后台审核通过后自动添加</span>”</li>' +
+      '<li class="" spellcheck="false">新增的交易类型 关联 补贴单号</li>' +
       '<li class="" spellcheck="false" style="list-style:none;margin-top:8px;font-weight:700;">导出补贴单报表 说明：</li>' +
       '<li class="" spellcheck="false" style="list-style:none;padding-left:18px;">点击按钮，弹出弹窗，弹窗内容与该页面的导出按钮的弹窗内容一致，异步导出；</li>' +
       '<li class="" spellcheck="false" style="list-style:none;padding-left:18px;">导出的字段取值在点餐后台--售后补贴单列表可以找到</li>' +
-      '<li class="" spellcheck="false" style="list-style:none;padding-left:18px;">列表字段为“三方订单编号、出餐单号、商品名称、商品品牌、用户实际支付、供应商名称、补贴金额、发票抬头、税号”</li>';
+      '<li class="" spellcheck="false" style="list-style:none;padding-left:18px;">列表字段为“补贴单号、三方订单编号、出餐单号、商品名称、商品品牌、用户实际支付、供应商名称、补贴金额、发票抬头、税号”</li>';
     layoutFinanceSettlePanel(panel);
     var desc = createDescSection(panel, noteList, "finance-settle");
     placeDescAfter(panel, tableSection, desc, 18);
@@ -18129,8 +18131,8 @@ function syncSupplierTabs() {
   function buildSupplierAfterSaleCleanPage() {
     var page = document.querySelector('.bundle-page[data-page="supplier-after-sale"]');
     if (!page) return;
-    if (page.getAttribute("data-supplier-clean-built") === "v18") return;
-    page.setAttribute("data-supplier-clean-built", "v18");
+  if (page.getAttribute("data-supplier-clean-built") === "v19") return;
+  page.setAttribute("data-supplier-clean-built", "v19");
     try {
       localStorage.removeItem("codex_proto_edit::" + location.pathname.replace(/\//g, "::"));
     } catch (error) {}
@@ -18146,6 +18148,7 @@ function syncSupplierTabs() {
         ".sa-clean-tabs{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;}",
         ".sa-clean-tab{min-width:96px;height:52px;padding:0 18px;border-radius:999px;border:1px solid #c9d5e6;background:#fff;color:#0f172a;font:700 18px/1 \"Segoe UI\",\"PingFang SC\",\"Microsoft YaHei\",sans-serif;cursor:pointer;position:relative;z-index:3;pointer-events:auto;}",
         ".sa-clean-tab.is-active{background:#153d74;color:#fff;border-color:#153d74;box-shadow:0 10px 18px rgba(21,61,116,.18);}",
+        ".sa-clean-tab[data-clean-tab-target=\"timeout\"],.sa-clean-panel[data-clean-panel=\"timeout\"]{display:none!important;}",
         ".sa-clean-panel{display:none;position:relative;z-index:2;}",
         ".sa-clean-panel.is-active{display:block;}",
         ".sa-clean-tip{border:1px solid #dbe5f0;border-radius:20px;background:#fff;padding:18px 22px;margin-bottom:18px;}",
@@ -18233,7 +18236,6 @@ function syncSupplierTabs() {
   <section class="sa-clean-wrap">
     <div class="sa-clean-tabs">
       <button type="button" class="sa-clean-tab is-active" data-clean-tab-target="processing" onclick="return window.__SUPPLIER_CLEAN_SWITCH_TAB__&&window.__SUPPLIER_CLEAN_SWITCH_TAB__('processing');">处理中</button>
-      <button type="button" class="sa-clean-tab" data-clean-tab-target="timeout" onclick="return window.__SUPPLIER_CLEAN_SWITCH_TAB__&&window.__SUPPLIER_CLEAN_SWITCH_TAB__('timeout');">超时未上传</button>
       <button type="button" class="sa-clean-tab" data-clean-tab-target="rejected" onclick="return window.__SUPPLIER_CLEAN_SWITCH_TAB__&&window.__SUPPLIER_CLEAN_SWITCH_TAB__('rejected');">已驳回</button>
       <button type="button" class="sa-clean-tab" data-clean-tab-target="uploaded" onclick="return window.__SUPPLIER_CLEAN_SWITCH_TAB__&&window.__SUPPLIER_CLEAN_SWITCH_TAB__('uploaded');">已上传</button>
     </div>
@@ -18249,6 +18251,7 @@ function syncSupplierTabs() {
       <section class="sa-clean-filter">
         <h3 class="sa-clean-section-title">筛选项</h3>
         <div class="sa-clean-fields">
+          <div class="sa-clean-field" data-sa-subsidy-filter="1"><div class="sa-clean-label">补贴单号</div><div class="sa-clean-input"></div></div>
           <div class="sa-clean-field"><div class="sa-clean-label">券订单号</div><div class="sa-clean-input"></div></div>
           <div class="sa-clean-field"><div class="sa-clean-label">发票抬头</div><div class="sa-clean-input"></div></div>
           <div class="sa-clean-field"><div class="sa-clean-label">商品品牌</div><div class="sa-clean-input"></div></div>
@@ -18264,11 +18267,12 @@ function syncSupplierTabs() {
           <table class="sa-clean-table">
             <thead>
               <tr>
-                <th>订单号</th><th>处理倒计时</th><th>下单时间</th><th>状态</th><th>发票抬头/税号</th><th>用户支付</th><th>商品名称</th><th>门店地址</th><th>商品品牌</th><th>赔付金额</th><th>操作</th>
+                <th data-sa-subsidy-col="1">补贴单号</th><th>订单号</th><th>处理倒计时</th><th>下单时间</th><th>状态</th><th>发票抬头/税号</th><th>用户支付</th><th>商品名称</th><th>门店城市</th><th>商品品牌</th><th>赔付金额</th><th>操作</th>
               </tr>
             </thead>
             <tbody>
               <tr class="sa-clean-desc-row">
+                <td data-sa-subsidy-desc="1">同一笔工单的补贴单号与点餐后台--售后补贴单列表的补贴单号一致</td>
                 <td>数据源：客服同步的出餐订单号；显示逻辑：若没有渠道单号，显示“-”</td>
                 <td>超时未上传状态的处理倒计时字段 倒计时结束</td>
                 <td>数据源：该订单对应的下单时间</td>
@@ -18282,7 +18286,7 @@ function syncSupplierTabs() {
                 <td>点击按钮，弹出弹窗</td>
               </tr>
               <tr>
-                <td>6928014816062569567</td><td>1天23小时59分59秒</td><td>2026-07-17 15:14:49</td><td>处理中</td><td>井井井</td><td>9.99</td><td>椰青冰萃美式</td><td>瑞幸-广州</td><td>瑞幸</td><td>1.5</td><td><div class="sa-clean-op-group"><button type="button" class="sa-clean-op-btn is-primary" data-clean-action="upload" onclick="return window.__SUPPLIER_CLEAN_OPEN_ACTION__&&window.__SUPPLIER_CLEAN_OPEN_ACTION__('upload',this);">上传</button><button type="button" class="sa-clean-op-btn is-danger" data-clean-action="abandon" onclick="return window.__SUPPLIER_CLEAN_OPEN_ACTION__&&window.__SUPPLIER_CLEAN_OPEN_ACTION__('abandon',this);">放弃</button></div></td>
+                <td data-sa-subsidy-cell="1">BT20260813144047</td><td>6928014816062569567</td><td>1天23小时59分59秒</td><td>2026-07-17 15:14:49</td><td>处理中</td><td>井井井</td><td>9.99</td><td>椰青冰萃美式</td><td>瑞幸-广州</td><td>瑞幸</td><td>1.5</td><td><div class="sa-clean-op-group is-vertical"><button type="button" class="sa-clean-op-btn is-primary" data-clean-action="upload" onclick="return window.__SUPPLIER_CLEAN_OPEN_ACTION__&&window.__SUPPLIER_CLEAN_OPEN_ACTION__('upload',this);">上传</button><button type="button" class="sa-clean-op-btn" data-clean-action="extend" onclick="return window.__SUPPLIER_CLEAN_OPEN_ACTION__&&window.__SUPPLIER_CLEAN_OPEN_ACTION__('extend',this);">延长上传时间</button><button type="button" class="sa-clean-op-btn is-danger" data-clean-action="abandon" onclick="return window.__SUPPLIER_CLEAN_OPEN_ACTION__&&window.__SUPPLIER_CLEAN_OPEN_ACTION__('abandon',this);">放弃</button></div></td>
               </tr>
             </tbody>
           </table>
@@ -18295,7 +18299,7 @@ function syncSupplierTabs() {
         </a>
         <h4>筛选项说明</h4>
         <ul>
-          <li>券订单号：精准搜索</li>
+          <li>补贴单号、订单号：精准搜索</li>
           <li>发票抬头：模糊搜索</li>
           <li>商品品牌筛选项：枚举值跟点餐后台销售订单列表的相同筛选项一致</li>
         </ul>
@@ -18309,6 +18313,7 @@ function syncSupplierTabs() {
           <li>若文件大小不对，提示“单个文件大小不能超过20MB”</li>
           <li>点击确定时，若未上传文件，提示<strong>“请先上传发票文件”</strong></li>
           <li>点击确定后，提示“上传成功”；进行系统自动审核，审核通过同步上传本地生活工作台对应工单且，到达结算时间给供应商进行结算</li>
+          <li>点击确定后，该工单倒计时是否结束，若结束，提示“倒计时结束，不能处理”；工单在该供应商后台消失，回到补偿单列表</li>
           <li><strong>文件上传成功后，系统自动识别：</strong></li>
           <li>先识别上传的全部文件的发票抬头和税号是否与列表的完全一致，若不一致的话，驳回工单，<span style="color:#d92d20;font-weight:700;">驳回原因为：“请检查上传的文件发票抬头/税号”</span></li>
           <li>若发票抬头/税号一致的话，识别上传文件的发票金额【若多个发票金额就相加】是否大于等于申请金额【用户支付字段】小于申请金额的2倍，若不符合的话，驳回工单，<span style="color:#d92d20;font-weight:700;">驳回原因为：“发票金额不符合“申请开票金额≤发票金额≤申请开票金额*2”规则 ”</span></li>
@@ -18319,6 +18324,11 @@ function syncSupplierTabs() {
           <li>点击确定的时候，继续随机分配给候选者</li>
           <li>若无候选者，则回到接单大厅，倒计时显示设置的倒计时减去流转时占用的时间</li>
           <li>点击按钮，提示“操作成功”</li>
+        </ul>
+        <h4 data-clean-extend-desc="1">延长上传时间 弹窗</h4>
+        <ul data-clean-extend-desc-list="1">
+          <li>1.只能延长一次上传时间</li>
+          <li>2.原倒计时剩余1分钟时，根据设置的延长倒计时开始重新倒计时</li>
         </ul>
       </section>
     </div>
@@ -18539,6 +18549,94 @@ function syncSupplierTabs() {
 </main>`;
     replaceTextInScopeLocal(page, "券订单号", "订单号");
 
+    (function injectSupplierCleanSubsidyNo() {
+      var panelRows = {
+        processing: ["BT20260813144047"],
+        timeout: ["BT20260717151449"],
+        rejected: ["BT20260718100149"],
+        uploaded: ["BT20260718151449", "BT20260718160321"]
+      };
+      Array.prototype.forEach.call(page.querySelectorAll(".sa-clean-panel[data-clean-panel]"), function (panel) {
+        var panelName = panel.getAttribute("data-clean-panel") || "";
+        var fieldWrap = panel.querySelector(".sa-clean-fields");
+        if (fieldWrap && !fieldWrap.querySelector("[data-sa-subsidy-filter='1']")) {
+          var filterNode = document.createElement("div");
+          filterNode.className = "sa-clean-field";
+          filterNode.setAttribute("data-sa-subsidy-filter", "1");
+          filterNode.innerHTML = '<div class="sa-clean-label">补贴单号</div><div class="sa-clean-input"></div>';
+          fieldWrap.insertBefore(filterNode, fieldWrap.firstElementChild || null);
+        }
+        var descList = panel.querySelector(".sa-clean-desc ul");
+        if (descList) {
+          var firstLi = descList.querySelector("li");
+          if (firstLi) firstLi.textContent = "补贴单号、订单号：精准搜索";
+        }
+        var table = panel.querySelector(".sa-clean-table");
+        if (!table) return;
+        var headerRow = table.querySelector("thead tr:first-child");
+        var descRow = table.querySelector("tbody tr.sa-clean-desc-row, thead tr.sa-clean-desc-row");
+        if (headerRow && !headerRow.querySelector("[data-sa-subsidy-col='1']")) {
+          var th = document.createElement("th");
+          th.textContent = "补贴单号";
+          th.setAttribute("data-sa-subsidy-col", "1");
+          headerRow.insertBefore(th, headerRow.firstElementChild || null);
+        }
+        if (descRow && !descRow.querySelector("[data-sa-subsidy-desc='1']")) {
+          var td = document.createElement("td");
+          td.textContent = "同一笔工单的补贴单号与点餐后台--售后补贴单列表的补贴单号一致";
+          td.setAttribute("data-sa-subsidy-desc", "1");
+          descRow.insertBefore(td, descRow.firstElementChild || null);
+        }
+        var dataRows = Array.prototype.filter.call(table.querySelectorAll("tbody tr"), function (row) {
+          return !row.classList.contains("sa-clean-desc-row");
+        });
+        dataRows.forEach(function (row, index) {
+          if (row.querySelector("[data-sa-subsidy-cell='1']")) return;
+          var cell = document.createElement("td");
+          cell.textContent = (panelRows[panelName] && panelRows[panelName][index]) || "BT20260813144047";
+          cell.setAttribute("data-sa-subsidy-cell", "1");
+          row.insertBefore(cell, row.firstElementChild || null);
+        });
+      });
+    })();
+
+    (function enhanceSupplierProcessingPanel() {
+      var timeoutTab = page.querySelector('.sa-clean-tab[data-clean-tab-target="timeout"]');
+      if (timeoutTab && timeoutTab.parentNode) timeoutTab.parentNode.removeChild(timeoutTab);
+      var timeoutPanel = page.querySelector('.sa-clean-panel[data-clean-panel="timeout"]');
+      if (timeoutPanel && timeoutPanel.parentNode) timeoutPanel.parentNode.removeChild(timeoutPanel);
+
+      var processingPanel = page.querySelector('.sa-clean-panel[data-clean-panel="processing"]');
+      if (processingPanel) {
+        var opGroup = processingPanel.querySelector('tbody tr:not(.sa-clean-desc-row) td:last-child .sa-clean-op-group');
+        if (opGroup && !opGroup.querySelector('[data-clean-action="extend"]')) {
+          opGroup.classList.add('is-vertical');
+          var extendBtn = document.createElement("button");
+          extendBtn.type = "button";
+          extendBtn.className = "sa-clean-op-btn";
+          extendBtn.setAttribute("data-clean-action", "extend");
+          extendBtn.textContent = "延长上传时间";
+          var abandonBtn = opGroup.querySelector('[data-clean-action="abandon"]');
+          if (abandonBtn) {
+            opGroup.insertBefore(extendBtn, abandonBtn);
+          } else {
+            opGroup.appendChild(extendBtn);
+          }
+        }
+        var descSection = processingPanel.querySelector('.sa-clean-desc');
+        if (descSection && !descSection.querySelector('[data-clean-extend-desc="1"]')) {
+          var title = document.createElement("h4");
+          title.textContent = "延长上传时间 弹窗";
+          title.setAttribute("data-clean-extend-desc", "1");
+          var list = document.createElement("ul");
+          list.setAttribute("data-clean-extend-desc-list", "1");
+          list.innerHTML = '<li>1.只能延长一次上传时间</li><li>2.原倒计时剩余1分钟时，根据设置的延长倒计时开始重新倒计时</li>';
+          descSection.appendChild(title);
+          descSection.appendChild(list);
+        }
+      }
+    })();
+
     var modal = page.querySelector("[data-clean-modal]");
     var modalTitle = page.querySelector("[data-clean-modal-title]");
     var modalBody = page.querySelector("[data-clean-modal-body]");
@@ -18604,6 +18702,7 @@ function syncSupplierTabs() {
     }
 
     function switchCleanSupplierTab(target) {
+      if (target === "timeout") target = "processing";
       Array.prototype.forEach.call(page.querySelectorAll("[data-clean-tab-target]"), function (button) {
         var active = button.getAttribute("data-clean-tab-target") === target;
         button.classList.toggle("is-active", active);
@@ -18682,6 +18781,10 @@ function syncSupplierTabs() {
         modalTitle.textContent = "下载发票";
         modalBody.innerHTML = "<p>将下载最近一次上传成功的发票文件。</p><p>文件名示例：invoice_20260718_151449.pdf</p><p>上传时间：2026-07-18 15:14:49</p>";
         confirmBtn.textContent = "下载";
+      } else if (action === "extend") {
+        modalTitle.textContent = "延长上传时间";
+        modalBody.innerHTML = '<div style="margin:0 0 12px;padding:12px 14px;border-radius:14px;background:#f8fbff;border:1px solid #dbe7fb;color:#44526b;font:600 13px/1.7 \'Segoe UI\',\'PingFang SC\',\'Microsoft YaHei\',sans-serif;">1.只能延长一次上传时间<br>2.原倒计时剩余1分钟时，根据设置的延长倒计时开始重新倒计时</div><div style="margin-top:12px;"><select data-clean-extend-select style="width:100%;height:44px;border:1px solid #cbd5e1;border-radius:12px;padding:0 12px;background:#f8fafc;color:#0f172a;font:600 14px/1 \'Segoe UI\',\'PingFang SC\',\'Microsoft YaHei\',sans-serif;"><option value="">请选择延长上传时间</option><option value="2">2</option><option value="3">3</option><option value="5">5</option><option value="7">7</option></select></div>';
+        confirmBtn.textContent = "确定";
       }
       syncModalFileName();
       modal.classList.add("is-show");
@@ -18761,6 +18864,8 @@ function syncSupplierTabs() {
           showToast("上传成功");
         } else if (modalAction === "abandon") {
           showToast("已确认放弃");
+        } else if (modalAction === "extend") {
+          showToast("操作成功");
         }
         closeModal();
       }
@@ -18770,7 +18875,7 @@ function syncSupplierTabs() {
     if (!window.__SUPPLIER_CLEAN_PAGE_CAPTURE_BOUND__) {
       window.__SUPPLIER_CLEAN_PAGE_CAPTURE_BOUND__ = true;
       window.addEventListener("click", function (event) {
-        var activePage = document.querySelector('.bundle-page[data-page="supplier-after-sale"][data-supplier-clean-built="v16"]');
+        var activePage = document.querySelector('.bundle-page[data-page="supplier-after-sale"][data-supplier-clean-built]');
         if (!activePage) return;
         var trigger = event.target.closest && event.target.closest('.bundle-page[data-page="supplier-after-sale"] [data-clean-tab-target], .bundle-page[data-page="supplier-after-sale"] [data-clean-action], .bundle-page[data-page="supplier-after-sale"] [data-clean-upload-trigger], .bundle-page[data-page="supplier-after-sale"] [data-clean-close], .bundle-page[data-page="supplier-after-sale"] [data-clean-confirm]');
         if (!trigger) return;
@@ -19015,6 +19120,7 @@ function syncSupplierTabs() {
   justify-content:flex-end;
 }
 .bundle-page[data-page="hall"] .hall-runtime-actions .hall-claim-btn,
+.bundle-page[data-page="hall"] .hall-runtime-actions .hall-final-claim-action,
 .bundle-page[data-page="hall"] .hall-runtime-actions .flow-chain-repair-claim-btn,
 .bundle-page[data-page="hall"] .hall-runtime-actions .flow-fix-hall-claim-btn,
 .bundle-page[data-page="hall"] .hall-runtime-actions .flow-final-claim-btn{
@@ -19685,8 +19791,8 @@ function syncSupplierTabs() {
 
   function buildAfterSaleUploadedRows() {
     return [
-      { thirdParty: "D20260813144047", outOrder: "2078260813144047", addedAt: "2026-08-13 14:41:47", createdAt: "2026-08-12 14:34:47", acceptStatus: "已接单", orderAt: "2026-08-13 14:34:47", invoiced: "是", product: "伯牙绝弦大杯", store: "霸王茶姬-深圳", brand: "霸王茶姬", paid: "16.80", supplier: "苏雨茶", settlement: "9.98", subsidy: "2.0", status: "未补贴" },
-      { thirdParty: "D20260813144147", outOrder: "2078260813144147", addedAt: "2026-08-13 14:35:30", createdAt: "2026-08-12 14:20:00", acceptStatus: "未接单", orderAt: "2026-08-13 14:20:00", invoiced: "是", product: "藤椒鸡腿堡套餐", store: "喜德基-成都", brand: "喜德基", paid: "26.90", supplier: "-", settlement: "9.98", subsidy: "2.2", status: "未补贴" }
+      { thirdParty: "D20260813144147", outOrder: "2078260813144147", addedAt: "2026-08-13 14:35:30", createdAt: "3天15小时20分14秒", acceptStatus: "未接单", orderAt: "2026-08-13 14:20:00", invoiced: "是", product: "藤椒鸡腿堡套餐", store: "喜德基-成都", brand: "喜德基", paid: "26.90", supplier: "-", settlement: "9.98", subsidy: "2.2", status: "未补贴" },
+      { thirdParty: "D20260813144047", outOrder: "2078260813144047", addedAt: "2026-08-13 14:41:47", createdAt: "7天15小时20分14秒", acceptStatus: "已接单", orderAt: "2026-08-13 14:34:47", invoiced: "是", product: "伯牙绝弦大杯", store: "霸王茶姬-深圳", brand: "霸王茶姬", paid: "16.80", supplier: "苏雨茶", settlement: "9.98", subsidy: "2.0", status: "未补贴" }
     ];
   }
 
@@ -19727,7 +19833,8 @@ function syncSupplierTabs() {
     if (!table) return;
     var rows = buildAfterSaleUploadedRows();
     rows.sort(function (a, b) {
-      return parseDateValue(b.createdAt) - parseDateValue(a.createdAt);
+      if ((a.acceptStatus || "") === (b.acceptStatus || "")) return 0;
+      return (a.acceptStatus || "") === "未接单" ? -1 : 1;
     });
     table.style.setProperty("min-width", "2620px", "important");
     table.innerHTML = [
@@ -20556,6 +20663,11 @@ function syncSupplierTabs() {
     return false;
   };
 
+  window.__C_END_SINGLE_HALL_CLAIM__ = function (cardId) {
+    claimHallCards([cardId || ""], { batch: false });
+    return false;
+  };
+
   window.__C_END_SWITCH_HALL_TAB__ = function (brand) {
     hallState.activeBrand = brand || "全部";
     hallState.selected = {};
@@ -20566,7 +20678,7 @@ function syncSupplierTabs() {
   function buildHallHeadHtml() {
     return [
       '<div class="hall-final-select-cell is-head"><input type="checkbox" class="hall-final-checkbox" data-hall-select-all="1" onchange="return window.__C_END_TOGGLE_HALL_SELECT_ALL__&&window.__C_END_TOGGLE_HALL_SELECT_ALL__(this.checked);"><div class="hall-final-select-label">全选</div></div>',
-      '<div class="text" spellcheck="false">门店地址</div>',
+      '<div class="text" spellcheck="false">门店城市</div>',
       '<div class="text" spellcheck="false">已创建时长</div>',
       '<div class="text" spellcheck="false">商品名称</div>',
       '<div class="text" spellcheck="false">用户支付</div>',
@@ -20599,7 +20711,7 @@ function syncSupplierTabs() {
         '      <div class="hall-runtime-sub is-accent">补贴：' + escapeHtml(row.subsidy) + "</div>",
         "    </div>",
         "  </div>",
-        '  <div class="hall-runtime-actions"><button type="button" class="invoice-review-action is-primary final-hall-claim-btn" data-final-hall-claim="' + escapeHtml(row.cardId) + '">抢单</button></div>',
+        '  <div class="hall-runtime-actions"><button type="button" class="hall-final-claim-action final-hall-claim-btn" data-final-hall-claim="' + escapeHtml(row.cardId) + '" onclick="event.stopPropagation(); return window.__C_END_SINGLE_HALL_CLAIM__&&window.__C_END_SINGLE_HALL_CLAIM__(\'' + escapeHtml(row.cardId) + '\');">抢单</button></div>',
         "</div>"
       ].join("");
     }).join("");
@@ -20643,7 +20755,7 @@ function syncSupplierTabs() {
     if (config.batch) {
       emitHallToast("批量抢单成功");
     } else {
-      emitHallToast("抢单成功");
+      emitHallToast("操作成功");
     }
     renderHallListSection();
   }
@@ -20688,7 +20800,7 @@ function syncSupplierTabs() {
       '        <div class="field-input hall-final-range-group"><div class="hall-final-range-box"><input type="text" class="hall-final-range-input" data-hall-range-input="paid-min" placeholder="请输入左区间"></div><div class="hall-final-range-box"><input type="text" class="hall-final-range-input" data-hall-range-input="paid-max" placeholder="请输入右区间"></div></div>',
       "      </div>",
       '      <div class="field-card ax_default">',
-      '        <div class="field-label text" spellcheck="false">赔付金额(含左区间) - 赔付金额(右区间)</div>',
+      '        <div class="field-label text" spellcheck="false">补贴金额(含左区间) - 补贴金额(右区间)</div>',
       '        <div class="field-input hall-final-range-group"><div class="hall-final-range-box"><input type="text" class="hall-final-range-input" data-hall-range-input="subsidy-min" placeholder="请输入左区间"></div><div class="hall-final-range-box"><input type="text" class="hall-final-range-input" data-hall-range-input="subsidy-max" placeholder="请输入右区间"></div></div>',
       "      </div>",
       "    </div>",
@@ -20703,7 +20815,7 @@ function syncSupplierTabs() {
       '    <div class="hall-final-tab-row">' + buildHallTabsHtml() + "</div>",
       '    <div class="hall-final-table-head">',
       '      <div class="text" spellcheck="false">勾选</div>',
-      '      <div class="text" spellcheck="false">门店地址</div>',
+      '      <div class="text" spellcheck="false">门店城市</div>',
       '      <div class="text" spellcheck="false">已创建时长</div>',
       '      <div class="text" spellcheck="false">商品名称</div>',
       '      <div class="text" spellcheck="false">用户支付</div>',
@@ -20722,19 +20834,18 @@ function syncSupplierTabs() {
       '      <li spellcheck="false">每次切换tab时，筛选框不需要清空</li>',
       '      <li spellcheck="false"><b>注意：页面列表按已创建时长排序，时长最长的放最前面。</b></li>',
       '      <li spellcheck="false">点击权限按钮，只选当页的10条。</li>',
-      '      <li spellcheck="false">门店地址：数据源取添加订单时对应的门店地址；显示逻辑只显示城市；例：瑞幸-东莞-环球贸易广场店，显示“瑞幸-东莞”。</li>',
+      '      <li spellcheck="false">门店城市：数据源取添加订单时对应的门店地址；显示逻辑只显示城市；例：瑞幸-东莞-环球贸易广场店，显示“瑞幸-东莞”。</li>',
       '      <li spellcheck="false">已创建时长：进入该页面开始累计计时，从XX秒-->XX天XX小时XX分钟XX秒【时间要实时变化】；<span style="color:#d92d20;font-weight:700;">整个列表按时长倒叙排【时长长的在上面】</span></li>',
       '      <li spellcheck="false">商品名称：数据源取客服添加时订单号对应的商品名称【具体的商品名称不是券名称】。</li>',
       '      <li spellcheck="false">用户支付：数据源取客服添加时订单号对应的申请金额。</li>',
       '      <li spellcheck="false">商品品牌：数据源取客服添加时订单号对应的品牌。</li>',
       '      <li spellcheck="false">补贴单金额：数据源取后台配置的补贴金额。</li>',
-      '      <li spellcheck="false">抢单按钮：交互逻辑为点击抢单，订单进入供应商端售后补贴单页面的待处理列表。点击时，校验该订单是否是自己的订单，若不是，提示“该订单不是您的订单”。</li>',
-      '      <li spellcheck="false">抢单成功后，提示“抢单成功，到售后单列表查看”。</li>',
+      '      <li spellcheck="false">抢单按钮：点击抢单，提示“操作成功”，订单进入供应商端售后补贴单页面的待处理列表。点击时，校验该订单是否是自己的订单，若不是，提示“该订单不是您的订单”。</li>',
       '      <li spellcheck="false">支持勾选多条工单后点击“批量抢单”，批量进入待处理列表。</li>',
       '      <li spellcheck="false">抢单规则：多人同时抢单时，只能分配给一个人【随机分配】。</li>',
       '      <li spellcheck="false"><span style="color:#d92d20;font-weight:700;">分配规则：第一次多人点击抢单时，随机分配；若第一个抢单成功的人放弃后，订单回到补偿单列表。</span></li>',
-      '      <li spellcheck="false"><span style="color:#d92d20;font-weight:700;">若超时未上传状态下点击放弃按钮，订单会从该供应商后台处理中页面消失，不会再进入补偿单列表；该订单在点餐后台开票需求单的处理中（供）页面进入到待处理（供）页面。</span></li>',
-      '      <li spellcheck="false"><span style="color:#d92d20;font-weight:700;">若 A 放弃该工单后，该工单不会再次分配给 A。</span></li>',
+      '      <li spellcheck="false"><span style="color:#d92d20;font-weight:700;">处理倒计时结束，订单会从该供应商后台处理中页面消失，会再进入补偿单列表；该订单在点餐后台开票需求单的处理中（供）页面进入到待处理（供）页面。</span></li>',
+      '      <li spellcheck="false"><span style="color:#d92d20;font-weight:700;">若 A 供应商放弃/处理倒计时结束未上传发票，该工单回到补贴单列表后，该工单不会再次分配给 A。</span></li>',
       '      <li spellcheck="false"><span style="color:#d92d20;font-weight:700;">品牌tab[除全部tab]，是根据供应商列表开启接开票单时配置的供应商品牌变化。</span></li>',
       '      <li spellcheck="false"><span style="color:#001eff;">批量抢单按钮：未选订单点击按钮时，提示“请选择工单”。 可以根据筛选项搜索出的内容进行批量抢单</span></li>',
       "    </ul>",
@@ -20986,12 +21097,16 @@ function syncSupplierTabs() {
       var singleClaimBtn = event.target.closest && event.target.closest("[data-final-hall-claim]");
       if (singleClaimBtn) {
         event.preventDefault();
+        event.stopPropagation();
+        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
         claimHallCards([singleClaimBtn.getAttribute("data-final-hall-claim") || ""], { batch: false });
         return;
       }
       var batchBtn = event.target.closest && event.target.closest("[data-hall-batch-claim]");
       if (batchBtn) {
         event.preventDefault();
+        event.stopPropagation();
+        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
         claimHallCards(Object.keys(hallState.selected).filter(function (cardId) { return !!hallState.selected[cardId]; }), { batch: true });
         return;
       }
@@ -21173,8 +21288,8 @@ function syncSupplierTabs() {
     flowCard.innerHTML = [
       '<div class="section-title text" spellcheck="false">C端开票流程图</div>',
       '<div class="text" spellcheck="false" style="margin-top:10px;color:#5b6b7f;font-size:14px;line-height:1.7;">点击下方图片，可在浏览器新窗口查看完整大图。</div>',
-      '<a href="./c-end-invoice-flowchart.png?v=20260815-flow-2" target="_blank" rel="noopener noreferrer" style="display:block;margin-top:18px;border:1px solid #e5edf9;border-radius:20px;overflow:hidden;background:#fff;transition:box-shadow .2s ease, transform .2s ease;cursor:zoom-in;text-decoration:none;">',
-      '<img src="./c-end-invoice-flowchart.png?v=20260815-flow-2" alt="C端开票流程图" style="display:block;width:100%;height:auto;">',
+      '<a href="./c-end-invoice-flowchart.png?v=20260818-flow-3" target="_blank" rel="noopener noreferrer" style="display:block;margin-top:18px;border:1px solid #e5edf9;border-radius:20px;overflow:hidden;background:#fff;transition:box-shadow .2s ease, transform .2s ease;cursor:zoom-in;text-decoration:none;">',
+      '<img src="./c-end-invoice-flowchart.png?v=20260818-flow-3" alt="C端开票流程图" style="display:block;width:100%;height:auto;">',
       '</a>'
     ].join("");
   }
@@ -21231,15 +21346,15 @@ function syncSupplierTabs() {
       '    <div class="section-title text" spellcheck="false">状态机图片</div>',
       '    <div class="text" spellcheck="false" style="color:#5b6b7f;font-size:14px;line-height:1.7;">点击图片可在浏览器新窗口查看大图。</div>',
       '    <article style="display:grid;gap:10px;padding:16px;border:1px solid #e5edf9;border-radius:22px;background:#fbfdff;">',
-      '      <a href="./state-machine-supplier-request-flow.png?v=20260817-state-1" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, \'_blank\', \'noopener\'); return false;" style="display:block;width:min(92%,1120px);margin:0 auto;border:1px solid #dbe7fb;border-radius:18px;overflow:hidden;background:#fff;cursor:zoom-in;">',
-      '        <img src="./state-machine-supplier-request-flow.png?v=20260817-state-1" alt="供应商端状态机" style="display:block;width:100%;height:auto;">',
+      '      <a href="./state-machine-supplier-request-flow.png?v=20260818-state-2" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, \'_blank\', \'noopener\'); return false;" style="display:block;width:min(92%,1120px);margin:0 auto;border:1px solid #dbe7fb;border-radius:18px;overflow:hidden;background:#fff;cursor:zoom-in;">',
+      '        <img src="./state-machine-supplier-request-flow.png?v=20260818-state-2" alt="供应商端状态机" style="display:block;width:100%;height:auto;">',
       '      </a>',
       '    </article>',
       '    <article style="display:grid;gap:10px;padding:16px;border:1px solid #e5edf9;border-radius:22px;background:#fbfdff;">',
       '      <div class="text" spellcheck="false" style="color:#173058;font-size:18px;font-weight:800;">微信公众号提醒模板【发票未上传通知】</div>',
       '      <div class="text" spellcheck="false" style="color:#5b6b7f;font-size:14px;line-height:1.7;">第三张图下方说明已拆成单独文案，后续可直接修改，不再跟图片内容绑在一起。</div>',
-      '      <a href="./state-machine-reminder-template-top.png" target="_blank" rel="noopener noreferrer" style="display:block;width:min(82%,900px);margin:0 auto;border:1px solid #dbe7fb;border-radius:18px;overflow:hidden;background:#fff;">',
-      '        <img src="./state-machine-reminder-template-top.png" alt="微信公众号提醒模板" style="display:block;width:100%;height:auto;">',
+      '      <a href="./state-machine-reminder-template-top.png?v=20260818-template-1" target="_blank" rel="noopener noreferrer" style="display:block;width:min(82%,900px);margin:0 auto;border:1px solid #dbe7fb;border-radius:18px;overflow:hidden;background:#fff;">',
+      '        <img src="./state-machine-reminder-template-top.png?v=20260818-template-1" alt="微信公众号提醒模板" style="display:block;width:100%;height:auto;">',
       '      </a>',
       '      <div style="margin-top:4px;padding:18px 20px;border:1px solid #dbe7fb;border-radius:18px;background:#f8fbff;display:grid;gap:10px;">',
       '        <div class="text" spellcheck="false" style="color:#173058;font-size:17px;font-weight:800;">模板说明</div>',
@@ -21537,11 +21652,11 @@ function syncSupplierTabs() {
     page.innerHTML = [
       '<main class="main-shell">',
       '  <header class="page-header ax_default"><h1 class="text" spellcheck="false">售后补贴单（小程序版）</h1><p class="text" spellcheck="false">纯代码重建：小程序端售后补贴单沿用供应商 PC 端售后单结构，并补充移动端弹窗交互。</p></header>',
-      '  <section class="section ax_default"><div class="section-title text" spellcheck="false">页面说明</div><ul class="note-list text" spellcheck="false"><li spellcheck="false">内容与供应商 PC 端售后单保持一致，保留处理中、超时未上传、已驳回、已上传 Tab。</li><li spellcheck="false">只有点击商品图区域进入详情页；上传、重新上传、放弃按钮直接在列表内处理。</li><li spellcheck="false">上传、重新上传与放弃弹层均限制在小程序边框内显示。</li><li spellcheck="false">上传弹窗：点击“选择微信对话文件”按钮，调出微信对话窗口；点击某一个对话后可以看到该对话窗口的所有文件，点击文件后显示上传进度条，上传后文件进入系统自动审核流程。</li></ul></section>',
+      '  <section class="section ax_default"><div class="section-title text" spellcheck="false">页面说明</div><ul class="note-list text" spellcheck="false"><li spellcheck="false">内容与供应商 PC 端售后单保持一致，保留处理中、超时未上传、已驳回、已上传 Tab。</li><li spellcheck="false">只有点击商品图区域进入详情页；上传、重新上传、放弃按钮直接在列表内处理。</li><li spellcheck="false">上传、重新上传与放弃弹层均限制在小程序边框内显示。</li><li spellcheck="false">上传弹窗：点击“选择微信对话文件”按钮，调出微信对话窗口；点击某一个对话后可以看到该对话窗口的所有文件，点击文件后显示上传进度条，上传后文件进入系统自动审核流程。【事变/与校验跟PC端上传弹窗 点击确定按钮是一样的】</li></ul></section>',
       '  <div class="mini-phone-shell ax_default"><div class="mini-status-bar"><div class="text" spellcheck="false">09:41</div><div class="text" spellcheck="false">供应商小程序</div><div class="text" spellcheck="false">5G 100%</div></div><div class="mini-scroll-area"><div class="mini-page-backbar"><button type="button" class="mini-page-back-trigger mini-after-sale-list-back" aria-label="返回上一页">‹</button><div class="mini-page-back-title text" spellcheck="false">售后补贴单</div></div><section class="mini-panel ax_default"><div class="tab-row mini-after-sale-tab-row" data-tab-group="mini-after-sale-tabs"><button class="tab-btn ax_default' + (miniAfterSaleState.activeTab === 'mini-processing' ? ' active' : '') + '" data-tab-target="mini-processing" onclick="return window.__C_END_SWITCH_MINI_AFTER_SALE_TAB__&&window.__C_END_SWITCH_MINI_AFTER_SALE_TAB__(\'mini-processing\');"><span class="text" spellcheck="false">处理中</span></button><button class="tab-btn ax_default' + (miniAfterSaleState.activeTab === 'mini-timeout' ? ' active' : '') + '" data-tab-target="mini-timeout" onclick="return window.__C_END_SWITCH_MINI_AFTER_SALE_TAB__&&window.__C_END_SWITCH_MINI_AFTER_SALE_TAB__(\'mini-timeout\');"><span class="text" spellcheck="false">超时未上传</span></button><button class="tab-btn ax_default' + (miniAfterSaleState.activeTab === 'mini-rejected' ? ' active' : '') + '" data-tab-target="mini-rejected" onclick="return window.__C_END_SWITCH_MINI_AFTER_SALE_TAB__&&window.__C_END_SWITCH_MINI_AFTER_SALE_TAB__(\'mini-rejected\');"><span class="text" spellcheck="false">已驳回</span></button><button class="tab-btn ax_default' + (miniAfterSaleState.activeTab === 'mini-uploaded' ? ' active' : '') + '" data-tab-target="mini-uploaded" onclick="return window.__C_END_SWITCH_MINI_AFTER_SALE_TAB__&&window.__C_END_SWITCH_MINI_AFTER_SALE_TAB__(\'mini-uploaded\');"><span class="text" spellcheck="false">已上传</span></button></div>',
       buildMiniAfterSalePanelHtml("mini-processing", [
-        { id: "after-1", store: "瑞幸-广州", deadline: "上传倒计时：1天23小时59分59秒", orderNo: "6928014816062569567", state: "待处理", brand: "瑞幸", product: "椰青冰萃美式", paid: "9.99", subsidy: "1.5", actions: '<div class="mini-order-actions compact"><button type="button" class="ghost-btn ax_default mini-after-sale-card-action" data-order-id="after-1" data-action="abandon"><div class="text" spellcheck="false">放弃</div></button><button type="button" class="ghost-btn ax_default mini-after-sale-card-action" data-order-id="after-1" data-action="upload" style="background:#1d4ed8;border-color:#1d4ed8;"><div class="text" spellcheck="false" style="color:#fff;">上传</div></button></div>' },
-        { id: "after-2", store: "霸王茶姬-深圳", deadline: "上传倒计时：2天11小时08分08秒", orderNo: "6928014816062569701", state: "待处理", brand: "霸王茶姬", product: "伯牙绝弦大杯", paid: "18.00", subsidy: "2.0", actions: '<div class="mini-order-actions compact"><button type="button" class="ghost-btn ax_default mini-after-sale-card-action" data-order-id="after-2" data-action="abandon"><div class="text" spellcheck="false">放弃</div></button><button type="button" class="ghost-btn ax_default mini-after-sale-card-action" data-order-id="after-2" data-action="upload" style="background:#1d4ed8;border-color:#1d4ed8;"><div class="text" spellcheck="false" style="color:#fff;">上传</div></button></div>' }
+        { id: "after-1", store: "瑞幸-广州", deadline: "上传倒计时：1天23小时59分59秒", orderNo: "6928014816062569567", state: "待处理", brand: "瑞幸", product: "椰青冰萃美式", paid: "9.99", subsidy: "1.5", actions: '<div class="mini-order-actions compact"><button type="button" class="ghost-btn ax_default mini-after-sale-card-action" data-order-id="after-1" data-action="abandon"><div class="text" spellcheck="false">放弃</div></button><button type="button" class="ghost-btn ax_default mini-after-sale-card-action" data-order-id="after-1" data-action="extend" onclick="return window.__C_END_OPEN_MINI_EXTEND_MODAL__&&window.__C_END_OPEN_MINI_EXTEND_MODAL__(\'list\');"><div class="text" spellcheck="false">延长上传时间</div></button><button type="button" class="ghost-btn ax_default mini-after-sale-card-action" data-order-id="after-1" data-action="upload" style="background:#1d4ed8;border-color:#1d4ed8;"><div class="text" spellcheck="false" style="color:#fff;">上传</div></button></div>' },
+        { id: "after-2", store: "霸王茶姬-深圳", deadline: "上传倒计时：2天11小时08分08秒", orderNo: "6928014816062569701", state: "待处理", brand: "霸王茶姬", product: "伯牙绝弦大杯", paid: "18.00", subsidy: "2.0", actions: '<div class="mini-order-actions compact"><button type="button" class="ghost-btn ax_default mini-after-sale-card-action" data-order-id="after-2" data-action="abandon"><div class="text" spellcheck="false">放弃</div></button><button type="button" class="ghost-btn ax_default mini-after-sale-card-action" data-order-id="after-2" data-action="extend" onclick="return window.__C_END_OPEN_MINI_EXTEND_MODAL__&&window.__C_END_OPEN_MINI_EXTEND_MODAL__(\'list\');"><div class="text" spellcheck="false">延长上传时间</div></button><button type="button" class="ghost-btn ax_default mini-after-sale-card-action" data-order-id="after-2" data-action="upload" style="background:#1d4ed8;border-color:#1d4ed8;"><div class="text" spellcheck="false" style="color:#fff;">上传</div></button></div>' }
       ]),
       buildMiniAfterSalePanelHtml("mini-timeout", [
         { id: "after-4", store: "肯德基-杭州", deadline: "倒计时结束", orderNo: "6928014816062569733", state: "超时未上传", brand: "肯德基", product: "香辣鸡腿堡", paid: "24.00", subsidy: "2.5", actions: '<div class="mini-order-actions compact"><button type="button" class="ghost-btn ax_default mini-after-sale-card-action" data-order-id="after-4" data-action="abandon"><div class="text" spellcheck="false">放弃</div></button><button type="button" class="ghost-btn ax_default mini-after-sale-card-action" data-order-id="after-4" data-action="upload" style="background:#1d4ed8;border-color:#1d4ed8;"><div class="text" spellcheck="false" style="color:#fff;">上传</div></button></div>' }
@@ -21554,6 +21669,7 @@ function syncSupplierTabs() {
       ]),
       '</section>',
       '<div class="mini-inline-modal" data-mini-modal="upload" data-host="list"><div class="mini-inline-modal-mask" data-host="list"></div><div class="mini-inline-modal-card ax_default"><div class="mini-inline-modal-head"><div class="mini-inline-modal-title text" data-upload-title="list" spellcheck="false">上传发票</div><button type="button" class="mini-modal-close-x mini-after-sale-upload-close" data-host="list" aria-label="关闭">×</button></div><div class="mini-upload-echo"><div class="mini-grid-2"><div class="mini-field-card ax_default"><div class="mini-field-label text" spellcheck="false">发票抬头</div><div class="mini-field-value text" spellcheck="false"><span data-upload-invoice-title="list">深圳市可可乐乐文化传播有限公司</span></div></div><div class="mini-field-card ax_default"><div class="mini-field-label text" spellcheck="false">税号</div><div class="mini-field-value text" spellcheck="false"><span data-upload-tax-no="list">91440300MAE5XXE49N</span></div></div></div><div class="mini-grid-1"><div class="mini-field-card ax_default"><div class="mini-field-label text" spellcheck="false">用户支付</div><div class="mini-field-value text" spellcheck="false"><span data-upload-pay="list">9.99</span></div></div></div><div class="mini-field-card ax_default"><div class="mini-field-label text" spellcheck="false">上传发票</div><div class="mini-file-link-row"><button type="button" class="mini-upload-file-trigger" data-host="list">选择微信对话文件</button><span class="mini-upload-file-note text" spellcheck="false">支持 PDF、zip，单个文件不超过20MB</span></div><div class="mini-upload-progress" data-upload-progress-host="list" style="display:none;"><div class="mini-upload-progress-bar"><div class="mini-upload-progress-fill" data-upload-progress-fill="list" style="width:0%;"></div></div><div class="mini-upload-progress-text text" data-upload-progress-text="list" spellcheck="false">上传中 0%</div></div><div class="mini-uploaded-file-line" data-file-line-host="list"></div></div></div><div class="mini-detail-actions compact" style="margin-top:14px;"><button type="button" class="ghost-btn ax_default mini-after-sale-upload-close" data-host="list"><div class="text" spellcheck="false">取消</div></button><button type="button" class="ghost-btn ax_default mini-after-sale-upload-submit" data-host="list" style="background:#1d4ed8;border-color:#1d4ed8;"><div class="text" spellcheck="false" style="color:#fff;">提交</div></button></div></div></div>',
+      '<div class="mini-inline-modal" data-mini-modal="extend" data-host="list"><div class="mini-inline-modal-mask" data-host="list" onclick="return window.__C_END_CLOSE_MINI_EXTEND_MODAL__&&window.__C_END_CLOSE_MINI_EXTEND_MODAL__(\'list\');"></div><div class="mini-inline-modal-card ax_default"><div class="mini-inline-modal-head"><div class="mini-inline-modal-title text" spellcheck="false">延长上传时间</div><button type="button" class="mini-modal-close-x" aria-label="关闭" onclick="return window.__C_END_CLOSE_MINI_EXTEND_MODAL__&&window.__C_END_CLOSE_MINI_EXTEND_MODAL__(\'list\');">×</button></div><div class="mini-upload-echo"><div style="padding:12px 14px;border-radius:14px;background:#f8fbff;border:1px solid #dbe7fb;color:#44526b;font:600 13px/1.7 \'Segoe UI\',\'PingFang SC\',\'Microsoft YaHei\',sans-serif;">1.只能延长一次上传时间<br>2.原倒计时剩余1分钟时，根据设置的延长倒计时开始重新倒计时</div><div class="mini-field-card ax_default" style="margin-top:12px;"><div class="mini-field-label text" spellcheck="false">选择延长上传时间</div><select data-mini-extend-select="list" style="width:100%;height:42px;border:1px solid #cbd5e1;border-radius:12px;padding:0 12px;background:#fff;box-sizing:border-box;"><option value=\"\">请选择延长上传时间</option><option value=\"2\">2</option><option value=\"3\">3</option><option value=\"5\">5</option><option value=\"7\">7</option></select></div></div><div class="mini-detail-actions compact" style="margin-top:14px;"><button type="button" class="ghost-btn ax_default" onclick="return window.__C_END_CLOSE_MINI_EXTEND_MODAL__&&window.__C_END_CLOSE_MINI_EXTEND_MODAL__(\'list\');"><div class="text" spellcheck="false">取消</div></button><button type="button" class="ghost-btn ax_default" onclick="return window.__C_END_CONFIRM_MINI_EXTEND_MODAL__&&window.__C_END_CONFIRM_MINI_EXTEND_MODAL__(\'list\');" style="background:#1d4ed8;border-color:#1d4ed8;"><div class="text" spellcheck="false" style="color:#fff;">确定</div></button></div></div></div>',
       '<div class="mini-inline-modal" data-mini-modal="abandon" data-host="list"><div class="mini-inline-modal-mask" data-host="list"></div><div class="mini-inline-modal-card ax_default"><div class="mini-inline-modal-head"><div class="mini-inline-modal-title text" spellcheck="false">放弃开票</div><button type="button" class="mini-modal-close-x mini-after-sale-abandon-close" data-host="list" aria-label="关闭">×</button></div><div class="mini-field-card ax_default"><div class="mini-field-value mini-abandon-message text" spellcheck="false">确定放弃对该订单开票吗？<br>放弃后，该订单将在该列表消失。</div></div><div class="mini-detail-actions compact" style="margin-top:14px;"><button type="button" class="ghost-btn ax_default mini-after-sale-abandon-close" data-host="list"><div class="text" spellcheck="false">取消</div></button><button type="button" class="ghost-btn ax_default mini-after-sale-abandon-submit" data-host="list" style="background:#dc2626;border-color:#dc2626;"><div class="text" spellcheck="false" style="color:#fff;">确定</div></button></div></div></div>',
       '<div class="mini-inline-modal" data-mini-modal="chat" data-host="list"><div class="mini-inline-modal-mask" data-host="list"></div><div class="mini-inline-modal-card ax_default"><div class="mini-inline-modal-head"><div class="mini-inline-modal-title text" spellcheck="false">选择微信对话框</div><button type="button" class="mini-modal-close-x mini-after-sale-chat-close" data-host="list" aria-label="关闭">×</button></div><div class="mini-upload-echo"><div class="mini-chat-section-title text" spellcheck="false">选择对话框</div><div class="mini-chat-list" data-chat-list-host="list"><button type="button" class="ghost-btn ax_default mini-chat-item mini-chat-select" data-chat-id="chat-luckin" data-host="list"><div class="mini-chat-item-title text" spellcheck="false">瑞幸售后群</div><div class="mini-chat-item-desc text" spellcheck="false">最近上传 2 个文件</div></button><button type="button" class="ghost-btn ax_default mini-chat-item mini-chat-select" data-chat-id="chat-chagee" data-host="list"><div class="mini-chat-item-title text" spellcheck="false">霸王茶姬补贴群</div><div class="mini-chat-item-desc text" spellcheck="false">最近上传 2 个文件</div></button><button type="button" class="ghost-btn ax_default mini-chat-item mini-chat-select" data-chat-id="chat-kfc" data-host="list"><div class="mini-chat-item-title text" spellcheck="false">肯德基工单沟通群</div><div class="mini-chat-item-desc text" spellcheck="false">最近上传 2 个文件</div></button></div><div class="mini-chat-section-title text" spellcheck="false">该对话框内文件</div><div class="mini-chat-file-list" data-chat-file-list-host="list"><div class="mini-chat-item-desc text" spellcheck="false">请选择上方对话框</div></div></div></div></div>',
       '<div class="mini-inline-modal" data-mini-modal="file" data-host="list"><div class="mini-inline-modal-mask" data-host="list"></div><div class="mini-inline-modal-card ax_default"><div class="mini-inline-modal-head"><div class="mini-inline-modal-title text" spellcheck="false">查看文件</div><button type="button" class="mini-modal-close-x mini-after-sale-file-close" data-host="list" aria-label="关闭">×</button></div><div class="mini-upload-echo"><div class="mini-field-card ax_default"><div class="mini-field-label text" spellcheck="false">文件名称</div><div class="mini-field-value text" spellcheck="false"><span data-view-file-name="list">-</span></div></div><div class="mini-field-card ax_default"><div class="mini-field-label text" spellcheck="false">上传时间</div><div class="mini-field-value text" spellcheck="false"><span data-view-file-time="list">-</span></div></div><div class="mini-field-card ax_default"><div class="mini-field-label text" spellcheck="false">提示</div><div class="mini-field-value text" spellcheck="false">点击下方按钮后，将调起手机自带浏览器查看文件。</div></div></div><div class="mini-detail-actions compact" style="margin-top:14px;"><button type="button" class="ghost-btn ax_default mini-after-sale-file-close" data-host="list"><div class="text" spellcheck="false">取消</div></button><button type="button" class="ghost-btn ax_default mini-after-sale-file-open" data-host="list" style="background:#1d4ed8;border-color:#1d4ed8;"><div class="text" spellcheck="false" style="color:#fff;">在浏览器查看</div></button></div></div></div>',
@@ -21584,6 +21700,34 @@ function syncSupplierTabs() {
     });
   }
 
+  window.__C_END_OPEN_MINI_EXTEND_MODAL__ = function (host) {
+    var modal = document.querySelector('.bundle-page[data-page="mini-after-sale"] .mini-inline-modal[data-mini-modal="extend"][data-host="' + (host || "list") + '"]');
+    if (!modal) return false;
+    modal.classList.add("open");
+    return false;
+  };
+
+  window.__C_END_CLOSE_MINI_EXTEND_MODAL__ = function (host) {
+    var modal = document.querySelector('.bundle-page[data-page="mini-after-sale"] .mini-inline-modal[data-mini-modal="extend"][data-host="' + (host || "list") + '"]');
+    if (!modal) return false;
+    modal.classList.remove("open");
+    return false;
+  };
+
+  window.__C_END_CONFIRM_MINI_EXTEND_MODAL__ = function (host) {
+    var scope = document.querySelector('.bundle-page[data-page="mini-after-sale"]');
+    if (!scope) return false;
+    var modal = scope.querySelector('.mini-inline-modal[data-mini-modal="extend"][data-host="' + (host || "list") + '"]');
+    var select = scope.querySelector('[data-mini-extend-select="' + (host || "list") + '"]');
+    if (select && !select.value) {
+      if (typeof miniHallShowToast === "function") miniHallShowToast("请选择延长上传时间");
+      return false;
+    }
+    if (modal) modal.classList.remove("open");
+    if (typeof miniHallShowToast === "function") miniHallShowToast("操作成功");
+    return false;
+  };
+
   window.__C_END_SWITCH_MINI_AFTER_SALE_TAB__ = function (target) {
     miniAfterSaleState.activeTab = target || "mini-processing";
     renderMiniAfterSaleFinalPage();
@@ -21610,6 +21754,16 @@ function syncSupplierTabs() {
   window.addEventListener("hashchange", function () {
     [40, 160, 360].forEach(function (delay) { window.setTimeout(applyFinalAfterSalePages, delay); });
   });
+  document.addEventListener("click", function (event) {
+    var extendTrigger = event.target.closest && event.target.closest('.bundle-page[data-page="mini-after-sale"] .mini-after-sale-card-action[data-action="extend"]');
+    if (!extendTrigger) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+    if (typeof window.__C_END_OPEN_MINI_EXTEND_MODAL__ === "function") {
+      window.__C_END_OPEN_MINI_EXTEND_MODAL__("list");
+    }
+  }, true);
   document.addEventListener("click", function (event) {
     var trigger = event.target.closest && event.target.closest('.bundle-catalog-link[data-page="mini-after-sale"], .bundle-catalog-link[data-page="supplier-after-sale"]');
     if (!trigger) return;
@@ -21757,32 +21911,15 @@ function syncSupplierTabs() {
 
   var afterSaleState = {
     editingId: "",
+    detailId: "",
     rows: [
       {
-        id: "uploaded-row-0",
-        thirdParty: "D20260813144047",
-        outOrder: "2078260813144047",
-        addedAt: "2026-08-13 14:41:47",
-        createdAt: "2026-08-12 14:34:47",
-        acceptStatus: "已接单",
-        orderAt: "2026-08-13 14:34:47",
-        invoiced: "是",
-        product: "伯牙绝弦大杯",
-        store: "霸王茶姬-深圳",
-        brand: "霸王茶姬",
-        paid: "16.80",
-        supplier: "苏雨茶",
-        settlement: "9.98",
-        subsidy: "2.0",
-        subsidyStatus: "未补贴",
-        canEdit: false
-      },
-      {
         id: "uploaded-row-1",
+        subsidyNo: "BT20260813144147",
         thirdParty: "D20260813144147",
         outOrder: "2078260813144147",
         addedAt: "2026-08-13 14:35:30",
-        createdAt: "2026-08-12 14:20:00",
+        createdAt: "3天15小时20分14秒",
         acceptStatus: "未接单",
         orderAt: "2026-08-13 14:20:00",
         invoiced: "是",
@@ -21794,13 +21931,41 @@ function syncSupplierTabs() {
         settlement: "9.98",
         subsidy: "2.2",
         subsidyStatus: "未补贴",
-        canEdit: true
+        canEdit: true,
+        claimLogs: [
+          { time: "2026-08-13 14:35:30", actor: "系统", action: "生成补贴单", result: "待抢单" },
+          { time: "2026-08-13 15:10:08", actor: "供应商-喜德基", action: "抢单", result: "未接单" }
+        ]
+      },
+      {
+        id: "uploaded-row-0",
+        subsidyNo: "BT20260813144047",
+        thirdParty: "D20260813144047",
+        outOrder: "2078260813144047",
+        addedAt: "2026-08-13 14:41:47",
+        createdAt: "7天15小时20分14秒",
+        acceptStatus: "已接单",
+        orderAt: "2026-08-13 14:34:47",
+        invoiced: "是",
+        product: "伯牙绝弦大杯",
+        store: "霸王茶姬-深圳",
+        brand: "霸王茶姬",
+        paid: "16.80",
+        supplier: "苏雨茶",
+        settlement: "9.98",
+        subsidy: "2.0",
+        subsidyStatus: "未补贴",
+        canEdit: false,
+        claimLogs: [
+          { time: "2026-08-13 14:41:47", actor: "系统", action: "生成补贴单", result: "待抢单" },
+          { time: "2026-08-13 14:43:12", actor: "苏雨茶", action: "抢单", result: "已接单" }
+        ]
       }
     ]
   };
 
   var invoiceRequestState = {
-    activeTab: "backend-timeout"
+    activeTab: "backend-processing"
   };
 
   var invoiceRequestUiState = {
@@ -21817,19 +21982,19 @@ function syncSupplierTabs() {
       { id: "timeout-1", couponNo: "6928014816062569567", orderNo: "2078015550131081216", addedAt: "2026-07-18 15:14:49", orderAt: "2026-07-17 15:14:49", status: "超时未上传", product: "椰青冰萃美式", store: "瑞幸-广州", brand: "瑞幸", paid: "9.99", supplierName: "黄开良", supplierNo: "2077283553914077185", settlement: "9.98", title: "井井井", taxNo: "-", actionText: "分配 / 上传" }
     ],
     rejected: [
-      { id: "rejected-1", couponNo: "6928014816062569744", orderNo: "2078015550131081830", addedAt: "2026-07-18 14:57:26", orderAt: "2026-07-17 14:57:26", status: "已驳回", product: "伯牙绝弦大杯", store: "霸王茶姬-深圳", brand: "霸王茶姬", paid: "16.80", supplierName: "黄开良", supplierNo: "2077283553914077992", settlement: "9.98", title: "可可乐乐文化传播有限公司", taxNo: "91440300MAE5XXE49N", rejectReason: "发票抬头与税号不匹配，请核对后重新上传清晰文件。", uploadAt: "2026-07-18 15:01:26", operatorName: "系统", operatorTime: "2026-07-18 15:01:26", actionText: "详情", fileHistory: [{ name: "invoice_207801555013081902_20260815_202412.pdf", time: "2026-08-15 20:24:12", href: "./invoice_207801555013081902_20260815_202412_preview.html?v=20260815-preview-2" }] }
+      { id: "rejected-1", couponNo: "6928014816062569744", orderNo: "2078015550131081830", invoiceNo: "BT20260718100149", addedAt: "2026-07-18 14:57:26", orderAt: "2026-07-17 14:57:26", status: "已驳回", product: "伯牙绝弦大杯", store: "霸王茶姬-深圳", brand: "霸王茶姬", paid: "16.80", supplierName: "黄开良", supplierNo: "2077283553914077992", settlement: "9.98", title: "可可乐乐文化传播有限公司", taxNo: "91440300MAE5XXE49N", rejectReason: "发票抬头与税号不匹配，请核对后重新上传清晰文件。", uploadAt: "2026-07-18 15:01:26", operatorName: "系统", operatorTime: "2026-07-18 15:01:26", actionText: "详情", fileHistory: [{ name: "invoice_207801555013081902_20260815_202412.pdf", time: "2026-08-15 20:24:12", href: "./invoice_207801555013081902_20260815_202412_preview.html?v=20260815-preview-2" }] }
     ],
     uploaded: [
-      { id: "uploaded-1", couponNo: "6928014816062569567", orderNo: "2078015550131081901", addedAt: "2026-07-18 15:14:49", status: "已上传", product: "椰青冰萃美式", brand: "瑞幸", paid: "9.99", supplierNo: "2077283553914077185", title: "井井井", taxNo: "-", uploadAt: "2026-07-18 15:20:31", syncStatus: "回传成功", syncClass: "is-success", operatorName: "井惠琳", operatorTime: "2026-07-18 15:20:31", actionText: "详情", fileHistory: [{ name: "invoice_2078015550131081901_20260718_152031.pdf", time: "2026-07-18 15:20:31", href: "./invoice_2078015550131081901_20260718_152031_preview.html?v=20260815-preview-2" }, { name: "invoice_2078015550131081901_20260717_184213.pdf", time: "2026-07-17 18:42:13", href: "./invoice_2078015550131081901_20260717_184213_preview.html?v=20260815-preview-2" }] },
-      { id: "uploaded-2", couponNo: "6928014816062569588", orderNo: "2078015550131081903", addedAt: "2026-07-18 16:03:21", status: "已上传", product: "牛椰拿铁", brand: "瑞幸", paid: "19.90", supplierNo: "2077283553914081126", title: "肯德基企业抬头", taxNo: "91310106MA1FRC9K1H", uploadAt: "2026-07-18 16:10:08", syncStatus: "回传失败", syncClass: "is-fail", syncReason: "客服工作台接口调用超时，请稍后重新回传后重试", operatorName: "系统", operatorTime: "2026-07-18 16:10:08", actionText: "详情", canResync: true, fileHistory: [{ name: "invoice_2078015550131081903_20260718_161008.pdf", time: "2026-07-18 16:10:08", href: "./invoice_2078015550131081903_20260718_161008_preview.html?v=20260815-preview-2" }, { name: "invoice_2078015550131081903_20260718_154502.pdf", time: "2026-07-18 15:45:02", href: "./invoice_2078015550131081903_20260718_154502_preview.html?v=20260815-preview-2" }] }
+      { id: "uploaded-1", couponNo: "6928014816062569567", orderNo: "2078015550131081901", invoiceNo: "BT20260718151449", addedAt: "2026-07-18 15:14:49", status: "已上传", product: "椰青冰萃美式", brand: "瑞幸", paid: "9.99", supplierNo: "2077283553914077185", title: "井井井", taxNo: "-", uploadAt: "2026-07-18 15:20:31", syncStatus: "回传成功", syncClass: "is-success", operatorName: "井惠琳", operatorTime: "2026-07-18 15:20:31", actionText: "详情", fileHistory: [{ name: "invoice_2078015550131081901_20260718_152031.pdf", time: "2026-07-18 15:20:31", href: "./invoice_2078015550131081901_20260718_152031_preview.html?v=20260815-preview-2" }, { name: "invoice_2078015550131081901_20260717_184213.pdf", time: "2026-07-17 18:42:13", href: "./invoice_2078015550131081901_20260717_184213_preview.html?v=20260815-preview-2" }] },
+      { id: "uploaded-2", couponNo: "6928014816062569588", orderNo: "2078015550131081903", invoiceNo: "BT20260718160321", addedAt: "2026-07-18 16:03:21", status: "已上传", product: "牛椰拿铁", brand: "瑞幸", paid: "19.90", supplierNo: "2077283553914081126", title: "肯德基企业抬头", taxNo: "91310106MA1FRC9K1H", uploadAt: "2026-07-18 16:10:08", syncStatus: "回传失败", syncClass: "is-fail", syncReason: "客服工作台接口调用超时，请稍后重新回传后重试", operatorName: "系统", operatorTime: "2026-07-18 16:10:08", actionText: "详情", canResync: true, fileHistory: [{ name: "invoice_2078015550131081903_20260718_161008.pdf", time: "2026-07-18 16:10:08", href: "./invoice_2078015550131081903_20260718_161008_preview.html?v=20260815-preview-2" }, { name: "invoice_2078015550131081903_20260718_154502.pdf", time: "2026-07-18 15:45:02", href: "./invoice_2078015550131081903_20260718_154502_preview.html?v=20260815-preview-2" }] }
     ],
     pending: [
-      { id: "pending-1", couponNo: "6928014816062569567", orderNo: "2078015550131081216", createdAt: "3天12小时18分42秒", addedAt: "2026-08-13 14:41:47", orderAt: "2026-07-17 15:14:49", status: "待处理", product: "椰青冰萃美式", store: "瑞幸-广州", brand: "瑞幸", paid: "9.99", title: "井井井", taxNo: "-" },
-      { id: "pending-2", couponNo: "6928014816062569701", orderNo: "2078260813143947", createdAt: "2天08小时36分15秒", addedAt: "2026-08-13 14:42:00", orderAt: "2026-08-13 14:42:00", status: "待处理", product: "香辣鸡腿堡套餐", store: "肯德基-上海", brand: "肯德基", paid: "28.50", title: "肯德基企业抬头", taxNo: "91310106MA1FRC9K1H" },
-      { id: "pending-3", couponNo: "6928014816062569722", orderNo: "2078260813144047", createdAt: "1天05小时22分09秒", addedAt: "2026-08-13 14:35:30", orderAt: "2026-08-13 14:34:47", status: "待处理", product: "伯牙绝弦大杯", store: "霸王茶姬-深圳", brand: "霸王茶姬", paid: "16.80", title: "可可乐乐文化传播有限公司", taxNo: "91440300MAE5XXE49N" }
+      { id: "pending-1", couponNo: "6928014816062569567", orderNo: "2078015550131081216", invoiceNo: "BT20260813144147", createdAt: "3天12小时18分42秒", addedAt: "2026-08-13 14:41:47", orderAt: "2026-07-17 15:14:49", status: "待处理", product: "椰青冰萃美式", store: "瑞幸-广州", brand: "瑞幸", paid: "9.99", title: "井井井", taxNo: "-" },
+      { id: "pending-2", couponNo: "6928014816062569701", orderNo: "2078260813143947", invoiceNo: "BT20260813144200", createdAt: "2天08小时36分15秒", addedAt: "2026-08-13 14:42:00", orderAt: "2026-08-13 14:42:00", status: "待处理", product: "香辣鸡腿堡套餐", store: "肯德基-上海", brand: "肯德基", paid: "28.50", title: "肯德基企业抬头", taxNo: "91310106MA1FRC9K1H" },
+      { id: "pending-3", couponNo: "6928014816062569722", orderNo: "2078260813144047", invoiceNo: "BT20260813143447", createdAt: "1天05小时22分09秒", addedAt: "2026-08-13 14:35:30", orderAt: "2026-08-13 14:34:47", status: "待处理", product: "伯牙绝弦大杯", store: "霸王茶姬-深圳", brand: "霸王茶姬", paid: "16.80", title: "可可乐乐文化传播有限公司", taxNo: "91440300MAE5XXE49N" }
     ],
     processing: [
-      { id: "processing-1", couponNo: "6928014816062569733", orderNo: "2078260813144147", countdown: "1天23小时59分59秒", addedAt: "2026-08-13 14:20:00", orderAt: "2026-08-13 14:20:00", status: "处理中（供）", product: "藤椒鸡腿堡套餐", store: "喜德基-成都", brand: "喜德基", paid: "26.90", supplierName: "黄开良", supplierNo: "2077283553914081126", settlement: "9.98", title: "喜德基企业抬头", taxNo: "91310106MA1FRC9K1H" }
+      { id: "processing-1", couponNo: "6928014816062569733", orderNo: "2078260813144147", invoiceNo: "BT20260813144147", countdown: "1天23小时59分59秒", addedAt: "2026-08-13 14:20:00", orderAt: "2026-08-13 14:20:00", status: "处理中", product: "藤椒鸡腿堡套餐", store: "喜德基-成都", brand: "喜德基", paid: "26.90", supplierName: "黄开良", supplierNo: "2077283553914081126", settlement: "9.98", title: "喜德基企业抬头", taxNo: "91310106MA1FRC9K1H" }
     ]
   };
 
@@ -21928,8 +22093,15 @@ function syncSupplierTabs() {
 
   function buildAfterSaleRowsHtml() {
     return afterSaleState.rows.map(function (item) {
+      var actionButtons = [
+        '<button type="button" class="codex-clean-btn" style="min-width:72px;height:34px;padding:0 14px;" onclick="return window.__C_END_OPEN_AFTER_SALE_DETAIL__(\'' + cleanEscape(item.id) + '\');">详情</button>'
+      ];
+      if (item.canEdit) {
+        actionButtons.push('<button type="button" class="codex-clean-action-btn" data-clean-after-sale-edit="' + cleanEscape(item.id) + '" onclick="return window.__C_END_OPEN_SUBSIDY_MODAL__(\'' + cleanEscape(item.id) + '\');">修改补贴金额</button>');
+      }
       return [
         '<tr>',
+        '<td>' + cleanEscape(item.subsidyNo || "-") + '</td>',
         '<td>' + cleanEscape(item.thirdParty) + '</td>',
         '<td>' + cleanEscape(item.outOrder) + '</td>',
         '<td>' + cleanEscape(item.addedAt) + '</td>',
@@ -21945,7 +22117,7 @@ function syncSupplierTabs() {
         '<td>' + cleanEscape(item.settlement) + '</td>',
         '<td>' + cleanEscape(item.subsidy) + '</td>',
         '<td>' + cleanEscape(item.subsidyStatus) + '</td>',
-        '<td>' + (item.canEdit ? '<button type="button" class="codex-clean-action-btn" data-clean-after-sale-edit="' + cleanEscape(item.id) + '" onclick="return window.__C_END_OPEN_SUBSIDY_MODAL__(\'' + cleanEscape(item.id) + '\');">修改补贴金额</button>' : '<span class="codex-clean-empty">-</span>') + '</td>',
+        '<td><div class="codex-clean-op-group">' + actionButtons.join("") + '</div></td>',
         '</tr>'
       ].join("");
     }).join("");
@@ -21953,6 +22125,7 @@ function syncSupplierTabs() {
 
   function buildAfterSaleFieldDescHtml() {
     var items = [
+      { name: "补贴单号", text: "数据源：系统自动创建16位数字编号，格式为BT+14位数字。" },
       { name: "三方订单编号", text: "数据源：客服同步的三方订单编号；显示逻辑：若没有渠道单号，显示“-”。" },
       { name: "出餐单号", text: "数据源：该订单对应的出餐成功的出餐单号；显示逻辑：若订单非出餐成功，显示“-”。" },
       { name: "添加时间", text: "数据源：该订单，客服同步到列表的时间。" },
@@ -21961,7 +22134,7 @@ function syncSupplierTabs() {
       { name: "下单时间", text: "数据源：该订单对应的下单时间。" },
       { name: "是否开票订单", text: "进入该页面的默认全部都填“是”。" },
       { name: "商品名称", text: "数据源：该订单对应的商品名称。" },
-      { name: "门店地址", text: "数据源：该订单对应的门店地址；显示逻辑：门店地址只显示城市。" },
+      { name: "门店城市", text: "数据源：该订单对应的门店地址；显示逻辑：门店地址只显示城市。" },
       { name: "商品品牌", text: "数据源：该订单对应的商品品牌。" },
       { name: "用户实际支付", text: "数据源：客服上传的该订单申请金额。" },
       { name: "供应商名称", text: "数据源取：对应订单在供应商端补偿单列表抢单成功的供应商名称；显示逻辑：已接单的工单显示供应商名称；未接单的显示“-”。" },
@@ -21985,6 +22158,51 @@ function syncSupplierTabs() {
   }
 
   function buildAfterSaleModalHtml() {
+    if (afterSaleState.detailId) {
+      var detailTarget = afterSaleState.rows.find(function (item) { return item.id === afterSaleState.detailId; });
+      if (!detailTarget) return "";
+      return [
+        '<div class="codex-clean-modal is-show">',
+        '  <div class="codex-clean-modal-mask" onclick="return window.__C_END_CLOSE_SUBSIDY_MODAL__();"></div>',
+        '  <div class="codex-clean-modal-card" style="width:min(720px,calc(100vw - 40px));">',
+        '    <div class="codex-clean-modal-head">',
+        '      <h3>详情</h3>',
+        '      <button type="button" class="codex-clean-close" onclick="return window.__C_END_CLOSE_SUBSIDY_MODAL__();">×</button>',
+        '    </div>',
+        '    <div style="margin-top:18px;color:#173058;font:800 16px/1.4 \'Segoe UI\',\'PingFang SC\',\'Microsoft YaHei\',sans-serif;">抢单记录</div>',
+        '    <div style="margin-top:12px;overflow-x:auto;border:1px solid #dbe7fb;border-radius:18px;background:#fff;">',
+        '      <table style="width:100%;min-width:560px;border-collapse:collapse;">',
+        '        <thead><tr>',
+        '          <th style="padding:12px 14px;background:#f8fbff;border-bottom:1px solid #dbe7fb;color:#173058;font:700 14px/1.4 \'Segoe UI\',\'PingFang SC\',\'Microsoft YaHei\',sans-serif;text-align:left;">补贴单号</th>',
+        '          <th style="padding:12px 14px;background:#f8fbff;border-bottom:1px solid #dbe7fb;color:#173058;font:700 14px/1.4 \'Segoe UI\',\'PingFang SC\',\'Microsoft YaHei\',sans-serif;text-align:left;">商品名称</th>',
+        '          <th style="padding:12px 14px;background:#f8fbff;border-bottom:1px solid #dbe7fb;color:#173058;font:700 14px/1.4 \'Segoe UI\',\'PingFang SC\',\'Microsoft YaHei\',sans-serif;text-align:left;">操作人</th>',
+        '          <th style="padding:12px 14px;background:#f8fbff;border-bottom:1px solid #dbe7fb;color:#173058;font:700 14px/1.4 \'Segoe UI\',\'PingFang SC\',\'Microsoft YaHei\',sans-serif;text-align:left;">抢单时间</th>',
+        '        </tr></thead>',
+        '        <tbody>',
+        (detailTarget.claimLogs || []).slice().sort(function (a, b) {
+          var aTime = String(a.action === "生成补贴单" ? "" : (a.time || ""));
+          var bTime = String(b.action === "生成补贴单" ? "" : (b.time || ""));
+          return bTime.localeCompare(aTime);
+        }).map(function (log) {
+          var claimTime = log.action === "生成补贴单" ? "" : (log.time || "");
+          var actorName = log.action === "生成补贴单" ? "系统" : log.actor;
+          return '<tr>' +
+            '<td style="padding:12px 14px;border-top:1px solid #eef4ff;color:#334155;font:600 14px/1.6 \'Segoe UI\',\'PingFang SC\',\'Microsoft YaHei\',sans-serif;">' + cleanEscape(detailTarget.subsidyNo || "-") + '</td>' +
+            '<td style="padding:12px 14px;border-top:1px solid #eef4ff;color:#334155;font:600 14px/1.6 \'Segoe UI\',\'PingFang SC\',\'Microsoft YaHei\',sans-serif;">' + cleanEscape(detailTarget.product || "-") + '</td>' +
+            '<td style="padding:12px 14px;border-top:1px solid #eef4ff;color:#334155;font:600 14px/1.6 \'Segoe UI\',\'PingFang SC\',\'Microsoft YaHei\',sans-serif;">' + cleanEscape(actorName) + '</td>' +
+            '<td style="padding:12px 14px;border-top:1px solid #eef4ff;color:#334155;font:600 14px/1.6 \'Segoe UI\',\'PingFang SC\',\'Microsoft YaHei\',sans-serif;">' + cleanEscape(claimTime) + '</td>' +
+          '</tr>';
+        }).join(""),
+        '        </tbody>',
+        '      </table>',
+        '    </div>',
+        '    <div class="codex-clean-modal-actions">',
+        '      <button type="button" class="codex-clean-btn" onclick="return window.__C_END_CLOSE_SUBSIDY_MODAL__();">关闭</button>',
+        '    </div>',
+        '  </div>',
+        '</div>'
+      ].join("");
+    }
     if (!afterSaleState.editingId) return "";
     var target = afterSaleState.rows.find(function (item) { return item.id === afterSaleState.editingId; });
     if (!target) return "";
@@ -22023,6 +22241,7 @@ function syncSupplierTabs() {
       '    <section class="codex-clean-card">',
       '      <h2 class="codex-clean-title">筛选项</h2>',
       '      <div class="codex-clean-filter-grid">',
+      buildFieldCard("补贴单号"),
       buildFieldCard("三方订单编号"),
       buildFieldCard("出餐单号"),
       buildFieldCard("添加开始时间 - 添加结束时间"),
@@ -22038,7 +22257,7 @@ function syncSupplierTabs() {
       '        <table class="codex-clean-table">',
       '          <thead>',
       '            <tr>',
-      '              <th>三方订单编号</th><th>出餐单号</th><th>添加时间</th><th>已创建时长</th><th>接单状态</th><th>下单时间</th><th>是否开票订单</th><th>商品名称</th><th>门店地址</th><th>商品品牌</th><th>用户实际支付</th><th>供应商名称</th><th>结算金额</th><th>补贴金额</th><th>补贴状态</th><th>操作</th>',
+      '              <th>补贴单号</th><th>三方订单编号</th><th>出餐单号</th><th>添加时间</th><th>已创建时长</th><th>接单状态</th><th>下单时间</th><th>是否开票订单</th><th>商品名称</th><th>门店城市</th><th>商品品牌</th><th>用户实际支付</th><th>供应商名称</th><th>结算金额</th><th>补贴金额</th><th>补贴状态</th><th>操作</th>',
       '            </tr>',
       '          </thead>',
       '          <tbody>',
@@ -22052,13 +22271,17 @@ function syncSupplierTabs() {
       '      <h2 class="codex-clean-title">说明</h2>',
       '      <ul class="codex-clean-note-list">',
       '        <li class="codex-clean-note-strong">列表数据来源：点餐后台-开票需求单列表的数据</li>',
-      '        <li>筛选项： 三方订单编号、出餐单号：精准搜索</li>',
+      '        <li>筛选项： 补贴单号、三方订单编号、出餐单号：精准搜索</li>',
       '        <li>按照上传时间：默认显示近一个月的工单</li>',
       '        <li>列表：按照添加时间倒叙</li>',
       '        <li style="list-style:none;margin-top:8px;font-weight:700;">修改补贴金额：</li>',
       '        <li style="list-style:none;padding-left:18px;">列表按钮显示逻辑：未接单的订单显示“修改补贴金额”按钮</li>',
       '        <li style="list-style:none;padding-left:18px;">弹窗内的输入框内容要回显列表的补贴金额字段</li>',
       '        <li style="list-style:none;padding-left:18px;">弹窗内点击确定按钮后，修改后的金额同步到列表和补贴单列表内</li>',
+      '        <li style="list-style:none;margin-top:8px;font-weight:700;">详情 弹窗：</li>',
+      '        <li style="list-style:none;padding-left:18px;">补贴单号、商品名称：取列表的值</li>',
+      '        <li style="list-style:none;padding-left:18px;">抢单时间：创建订单时，为空；显示每次供应商抢单的时间</li>',
+      '        <li style="list-style:none;padding-left:18px;">操作人：取抢单供应商名称；创建订单时，显示系统</li>',
       '      </ul>',
       '    </section>',
       '  </div>',
@@ -22080,6 +22303,7 @@ function syncSupplierTabs() {
       return [
         '<div class="codex-clean-filter-grid cols-4">',
         buildFieldCard("出餐单号"),
+        buildFieldCard("开票单号"),
         buildFieldCard("供应商编号"),
         buildFieldCard("发票抬头"),
         buildFieldCard("回传状态", "枚举值：全部 / 回传成功 / 回传失败", "select"),
@@ -22098,6 +22322,7 @@ function syncSupplierTabs() {
       return [
         '<div class="codex-clean-filter-grid">',
         buildFieldCard("出餐单号"),
+        buildFieldCard("开票单号"),
         buildFieldCard("发票抬头"),
         buildFieldCard("倒计时是否结束", "枚举值：是 / 否", "select"),
         buildFieldCard("添加开始时间 - 添加结束时间"),
@@ -22111,6 +22336,7 @@ function syncSupplierTabs() {
     return [
       '<div class="codex-clean-filter-grid">',
       buildFieldCard("出餐单号"),
+      buildFieldCard("开票单号"),
       buildFieldCard("供应商编号"),
       buildFieldCard("发票抬头"),
       buildFieldCard("添加开始时间 - 添加结束时间"),
@@ -22262,9 +22488,10 @@ function syncSupplierTabs() {
     }
     if (tabKey === "backend-rejected") {
       return buildInvoiceRequestTableFrame(
-        ["出餐单号", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "发票抬头/税号", "驳回原因", "上传时间", "操作人", "操作"],
+        ["出餐单号", "开票单号", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "发票抬头/税号", "驳回原因", "上传时间", "操作人", "操作"],
         [
           '数据源：该订单对应的出餐成功的出餐单号；<div>显示逻辑：若订单非出餐成功，显示“-”</div>',
+          '同一条工单的开票单号与点餐后台--售后补贴单列表的补贴单号一致',
           '数据源：该订单，客服同步到列表的时间',
           '订单状态见“状态机”',
           '数据源：该订单对应的商品名称',
@@ -22280,6 +22507,7 @@ function syncSupplierTabs() {
         invoiceRequestData.rejected.map(function (item) {
           return '<tr>' +
             buildInvoiceRequestTd(item.orderNo) +
+            buildInvoiceRequestTd(item.invoiceNo || "-") +
             buildInvoiceRequestTd(item.addedAt) +
             buildInvoiceRequestTd(item.status) +
             buildInvoiceRequestTd(item.product) +
@@ -22300,9 +22528,10 @@ function syncSupplierTabs() {
     }
     if (tabKey === "backend-uploaded") {
       return buildInvoiceRequestTableFrame(
-        ["出餐单号", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "发票抬头/税号", "上传时间", "回传状态", "操作人", "操作"],
+        ["出餐单号", "开票单号", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "发票抬头/税号", "上传时间", "回传状态", "操作人", "操作"],
         [
           '数据源：客服同步的对应的出餐成功的出餐单号',
+          '同一条工单的开票单号与点餐后台--售后补贴单列表的补贴单号一致',
           '数据源：该订单，客服同步到列表的时间',
           '订单状态见“状态机”',
           '数据源：该订单对应的商品名称',
@@ -22318,6 +22547,7 @@ function syncSupplierTabs() {
         invoiceRequestData.uploaded.map(function (item) {
           return '<tr>' +
             buildInvoiceRequestTd(item.orderNo) +
+            buildInvoiceRequestTd(item.invoiceNo || "-") +
             buildInvoiceRequestTd(item.addedAt) +
             buildInvoiceRequestTd(item.status) +
             buildInvoiceRequestTd(item.product) +
@@ -22339,9 +22569,10 @@ function syncSupplierTabs() {
     }
     if (tabKey === "backend-pending") {
       return buildInvoiceRequestTableFrame(
-        ["出餐单号", "已创建时长", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "发票抬头/税号"],
+        ["出餐单号", "开票单号", "已创建时长", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "发票抬头/税号"],
         [
           '数据源：客服同步的对应的出餐成功的出餐单号',
+          '同一条工单的开票单号与点餐后台--售后补贴单列表的补贴单号一致',
           '从进入该页面起开始计时，从秒-->XX分XX秒-->XX小时XX分XX秒-->XX天XX小时XX分XX秒；列表排序按照该字段倒叙【时间越长在上面】',
           '数据源：该订单，客服同步到列表的时间',
           '订单状态见“状态机”',
@@ -22353,6 +22584,7 @@ function syncSupplierTabs() {
         invoiceRequestData.pending.map(function (item) {
           return '<tr>' +
             buildInvoiceRequestTd(item.orderNo) +
+            buildInvoiceRequestTd(item.invoiceNo || "-") +
             buildInvoiceRequestTd(cleanElapsed(item.createdAt)) +
             buildInvoiceRequestTd(item.addedAt) +
             buildInvoiceRequestTd(item.status) +
@@ -22366,10 +22598,11 @@ function syncSupplierTabs() {
       );
     }
     return buildInvoiceRequestTableFrame(
-      ["出餐单号", "处理倒计时", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "发票抬头/税号"],
+      ["出餐单号", "开票单号", "处理倒计时", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "发票抬头/税号"],
       [
         '数据源：该订单对应的出餐成功的出餐单号；<div>显示逻辑：若订单非出餐成功，显示“-”</div>',
-        '数据源：系统配置里面设置的上传倒计时；<div>【倒计时最好实时的】；</div><div>列表排序：按倒计时升序排；</div>',
+        '同一条工单的开票单号与点餐后台--售后补贴单列表的补贴单号一致',
+        '数据源：系统配置里面设置的上传倒计时；<div>【倒计时最好实时的】；该倒计时与供应商端相同补贴单号的倒计时一样</div><div>列表排序：按倒计时升序排；</div>',
         '数据源：该订单，客服同步到列表的时间',
         '订单状态见“状态机”',
         '数据源：该订单对应的商品名称',
@@ -22381,6 +22614,7 @@ function syncSupplierTabs() {
       invoiceRequestData.processing.map(function (item) {
         return '<tr>' +
           buildInvoiceRequestTd(item.orderNo) +
+          buildInvoiceRequestTd(item.invoiceNo || "-") +
           buildInvoiceRequestTd(item.countdown) +
           buildInvoiceRequestTd(item.addedAt) +
           buildInvoiceRequestTd(item.status) +
@@ -22399,29 +22633,29 @@ function syncSupplierTabs() {
     var rows = [];
     if (tabKey === "backend-pending") {
       rows.push('<li class="codex-clean-note-strong">待处理（供）列表的数据源是客服工作台定时同步过来的</li>');
-      rows.push('<li>筛选项： 出餐单号：精准搜索</li>');
+      rows.push('<li>筛选项： 开票单号、出餐单号：精准搜索</li>');
       rows.push('<li>发票抬头：模糊搜索</li>');
       rows.push('<li>倒计时是否结束：枚举值 是/否</li>');
       rows.push('<li>选 是 时，筛选出倒计时结束的订单</li>');
       rows.push('<li>默认显示近一个月的申请工单</li>');
     } else if (tabKey === "backend-uploaded") {
-      rows.push('<li>筛选项： 出餐单号、供应商编号：精准搜索</li>');
+      rows.push('<li>筛选项： 开票单号、出餐单号、供应商编号：精准搜索</li>');
       rows.push('<li>发票抬头：模糊搜索</li>');
       rows.push('<li>回传状态：枚举值 全部 / 回传成功 / 回传失败，默认全部</li>');
       rows.push('<li>按照上传时间：默认显示近一个月的工单</li>');
       rows.push('<li>列表：按照上传时间倒叙</li>');
     } else if (tabKey === "backend-rejected") {
-      rows.push('<li>筛选项： 出餐单号、供应商编号：精准搜索</li>');
+      rows.push('<li>筛选项： 开票单号、出餐单号、供应商编号：精准搜索</li>');
       rows.push('<li>发票抬头：模糊搜索</li>');
       rows.push('<li>默认显示近一个月的工单</li>');
       rows.push('<li>已驳回 列表：按照供应商操作驳回时间倒叙</li>');
     } else if (tabKey === "backend-timeout") {
-      rows.push('<li>筛选项： 出餐单号、供应商编号：精准搜索</li>');
+      rows.push('<li>筛选项： 开票单号、出餐单号、供应商编号：精准搜索</li>');
       rows.push('<li>发票抬头：模糊搜索</li>');
       rows.push('<li>默认显示近一个月的工单</li>');
       rows.push('<li>列表：按照进入列表时间，正序排</li>');
     } else {
-      rows.push('<li>筛选项： 出餐单号、供应商编号：精准搜索</li>');
+      rows.push('<li>筛选项： 开票单号、出餐单号、供应商编号：精准搜索</li>');
       rows.push('<li>发票抬头：模糊搜索</li>');
       rows.push('<li>默认显示近一个月的工单</li>');
     }
@@ -22511,14 +22745,14 @@ function syncSupplierTabs() {
     var page = document.querySelector('.bundle-page[data-page="invoice-request-list"]');
     if (!page) return;
     ensureCleanPageStyle();
-    var active = invoiceRequestState.activeTab || "backend-timeout";
-    page.setAttribute("data-clean-page-version", "invoice-request-v6");
+    var active = invoiceRequestState.activeTab || "backend-processing";
+    if (active === "backend-timeout") active = "backend-processing";
+    page.setAttribute("data-clean-page-version", "invoice-request-v7");
     page.innerHTML = [
       '<main class="main-shell codex-clean-shell">',
       '  <div class="codex-clean-stack">',
       '    <section class="codex-clean-card">',
       '      <div class="codex-clean-tabs">',
-      '        <button type="button" class="codex-clean-tab-btn ' + (active === "backend-timeout" ? 'is-active' : '') + '" data-clean-invoice-request-tab="backend-timeout" onclick="return window.__C_END_SWITCH_INVOICE_REQUEST_TAB__(\'backend-timeout\');">超时未上传</button>',
       '        <button type="button" class="codex-clean-tab-btn ' + (active === "backend-rejected" ? 'is-active' : '') + '" data-clean-invoice-request-tab="backend-rejected" onclick="return window.__C_END_SWITCH_INVOICE_REQUEST_TAB__(\'backend-rejected\');">已驳回</button>',
       '        <button type="button" class="codex-clean-tab-btn ' + (active === "backend-uploaded" ? 'is-active' : '') + '" data-clean-invoice-request-tab="backend-uploaded" onclick="return window.__C_END_SWITCH_INVOICE_REQUEST_TAB__(\'backend-uploaded\');">已上传</button>',
       '        <button type="button" class="codex-clean-tab-btn ' + (active === "backend-pending" ? 'is-active' : '') + '" data-clean-invoice-request-tab="backend-pending" onclick="return window.__C_END_SWITCH_INVOICE_REQUEST_TAB__(\'backend-pending\');">待处理（供）</button>',
@@ -22535,13 +22769,22 @@ function syncSupplierTabs() {
   window.__C_END_RENDER_INVOICE_REQUEST_CLEAN__ = renderInvoiceRequestCleanPage;
 
   window.__C_END_OPEN_SUBSIDY_MODAL__ = function (id) {
+    afterSaleState.detailId = "";
     afterSaleState.editingId = id;
+    renderAfterSaleCleanPage();
+    return false;
+  };
+
+  window.__C_END_OPEN_AFTER_SALE_DETAIL__ = function (id) {
+    afterSaleState.editingId = "";
+    afterSaleState.detailId = id;
     renderAfterSaleCleanPage();
     return false;
   };
 
   window.__C_END_CLOSE_SUBSIDY_MODAL__ = function () {
     afterSaleState.editingId = "";
+    afterSaleState.detailId = "";
     renderAfterSaleCleanPage();
     return false;
   };
@@ -22566,6 +22809,7 @@ function syncSupplierTabs() {
   };
 
   window.__C_END_SWITCH_INVOICE_REQUEST_TAB__ = function (tabKey) {
+    if (tabKey === "backend-timeout") tabKey = "backend-processing";
     invoiceRequestState.activeTab = tabKey;
     renderInvoiceRequestCleanPage();
     return false;
@@ -22601,7 +22845,7 @@ function syncSupplierTabs() {
     return {
       afterSaleVersion: !!document.querySelector('.bundle-page[data-page="after-sale-list"][data-clean-page-version="after-sale-v1"]'),
       afterSaleEditButtons: document.querySelectorAll('.bundle-page[data-page="after-sale-list"] [data-clean-after-sale-edit]').length,
-      invoiceRequestVersion: !!document.querySelector('.bundle-page[data-page="invoice-request-list"][data-clean-page-version="invoice-request-v1"]'),
+      invoiceRequestVersion: !!document.querySelector('.bundle-page[data-page="invoice-request-list"][data-clean-page-version="invoice-request-v7"]'),
       invoiceRequestTabs: document.querySelectorAll('.bundle-page[data-page="invoice-request-list"] [data-clean-invoice-request-tab]').length,
       invoiceRequestHasReviewingTab: !!Array.prototype.find.call(document.querySelectorAll('.bundle-page[data-page="invoice-request-list"] [data-clean-invoice-request-tab]'), function (node) {
         return String(node.textContent || "").indexOf("审核中") > -1;
@@ -22620,7 +22864,7 @@ function syncSupplierTabs() {
     if (!page) return false;
     var version = page.getAttribute("data-clean-page-version") || "";
     var tabCount = page.querySelectorAll('[data-clean-invoice-request-tab]').length;
-    return version !== "invoice-request-v6" || tabCount !== 5;
+    return version !== "invoice-request-v7" || tabCount !== 4;
   }
 
   function repairInvoiceRequestPage() {
