@@ -18327,8 +18327,7 @@ function syncSupplierTabs() {
         </ul>
         <h4 data-clean-extend-desc="1">延长上传时间 弹窗</h4>
         <ul data-clean-extend-desc-list="1">
-          <li>1.只能延长一次上传时间</li>
-          <li>2.原倒计时剩余1分钟时，根据设置的延长倒计时开始重新倒计时</li>
+          <li>确定 按钮：点击确定即生效，整体倒计时剩余1分时，开始按照设置的时间进行重新倒计时；点击确定后，列表的延长上传时间的按钮失效，不可再次点击</li>
         </ul>
       </section>
     </div>
@@ -18630,7 +18629,7 @@ function syncSupplierTabs() {
           title.setAttribute("data-clean-extend-desc", "1");
           var list = document.createElement("ul");
           list.setAttribute("data-clean-extend-desc-list", "1");
-          list.innerHTML = '<li>1.只能延长一次上传时间</li><li>2.原倒计时剩余1分钟时，根据设置的延长倒计时开始重新倒计时</li>';
+          list.innerHTML = '<li>确定 按钮：点击确定即生效，整体倒计时剩余1分时，开始按照设置的时间进行重新倒计时；点击确定后，列表的延长上传时间的按钮失效，不可再次点击</li>';
           descSection.appendChild(title);
           descSection.appendChild(list);
         }
@@ -22125,7 +22124,7 @@ function syncSupplierTabs() {
 
   function buildAfterSaleFieldDescHtml() {
     var items = [
-      { name: "补贴单号", text: "数据源：系统自动创建16位数字编号，格式为BT+14位数字。" },
+      { name: "补贴单号", text: "同一条工单的开票单号与点餐后台--售后补贴单列表的补贴单号一致" },
       { name: "三方订单编号", text: "数据源：客服同步的三方订单编号；显示逻辑：若没有渠道单号，显示“-”。" },
       { name: "出餐单号", text: "数据源：该订单对应的出餐成功的出餐单号；显示逻辑：若订单非出餐成功，显示“-”。" },
       { name: "添加时间", text: "数据源：该订单，客服同步到列表的时间。" },
@@ -22430,7 +22429,6 @@ function syncSupplierTabs() {
     if (action === "resync") {
       return '<div style="display:grid;gap:12px;">' +
         '<div style="padding:12px 14px;border:1px solid #dbe7fb;border-radius:16px;background:#f8fbff;">确认重新回传该工单吗？</div>' +
-        '<div style="padding:12px 14px;border:1px solid #dbe7fb;border-radius:16px;background:#fff;color:#475467;font-size:14px;line-height:1.8;">点击确定后，该文件将重新回传。</div>' +
         '</div>';
     }
     return '<p>暂无操作说明</p>';
@@ -22449,7 +22447,8 @@ function syncSupplierTabs() {
       '    </div>',
       '    <div style="margin-top:16px;">' + (invoiceRequestUiState.modalBody || "") + '</div>',
       '    <div class="codex-clean-modal-actions" style="' + (isDetailModal ? 'justify-content:flex-end;' : '') + '">',
-      '      <button type="button" class="codex-clean-btn" onclick="return window.__C_END_CLOSE_INVOICE_REQUEST_MODAL__&&window.__C_END_CLOSE_INVOICE_REQUEST_MODAL__();">关闭</button>',
+      (invoiceRequestUiState.modalAction === "resync" ? '      <div class="codex-clean-modal-tip" style="margin-right:auto;">点击确定后，该文件将重新回传。</div>' : ''),
+      '      <button type="button" class="codex-clean-btn" onclick="return window.__C_END_CLOSE_INVOICE_REQUEST_MODAL__&&window.__C_END_CLOSE_INVOICE_REQUEST_MODAL__();">' + (isDetailModal ? '关闭' : '取消') + '</button>',
       (isDetailModal ? '' : '      <button type="button" class="codex-clean-btn is-primary" onclick="return window.__C_END_CONFIRM_INVOICE_REQUEST_MODAL__&&window.__C_END_CONFIRM_INVOICE_REQUEST_MODAL__();">确定</button>'),
       '    </div>',
       '  </div>',
@@ -22491,7 +22490,7 @@ function syncSupplierTabs() {
         ["出餐单号", "开票单号", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "发票抬头/税号", "驳回原因", "上传时间", "操作人", "操作"],
         [
           '数据源：该订单对应的出餐成功的出餐单号；<div>显示逻辑：若订单非出餐成功，显示“-”</div>',
-          '同一条工单的开票单号与点餐后台--售后补贴单列表的补贴单号一致',
+          '数据源：系统自动创建16位数字编号，格式为BT+14位数字。',
           '数据源：该订单，客服同步到列表的时间',
           '订单状态见“状态机”',
           '数据源：该订单对应的商品名称',
@@ -22531,7 +22530,7 @@ function syncSupplierTabs() {
         ["出餐单号", "开票单号", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "发票抬头/税号", "上传时间", "回传状态", "操作人", "操作"],
         [
           '数据源：客服同步的对应的出餐成功的出餐单号',
-          '同一条工单的开票单号与点餐后台--售后补贴单列表的补贴单号一致',
+          '数据源：系统自动创建16位数字编号，格式为BT+14位数字。',
           '数据源：该订单，客服同步到列表的时间',
           '订单状态见“状态机”',
           '数据源：该订单对应的商品名称',
@@ -22572,7 +22571,7 @@ function syncSupplierTabs() {
         ["出餐单号", "开票单号", "已创建时长", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "发票抬头/税号"],
         [
           '数据源：客服同步的对应的出餐成功的出餐单号',
-          '同一条工单的开票单号与点餐后台--售后补贴单列表的补贴单号一致',
+          '数据源：系统自动创建16位数字编号，格式为BT+14位数字。',
           '从进入该页面起开始计时，从秒-->XX分XX秒-->XX小时XX分XX秒-->XX天XX小时XX分XX秒；列表排序按照该字段倒叙【时间越长在上面】',
           '数据源：该订单，客服同步到列表的时间',
           '订单状态见“状态机”',
@@ -22601,7 +22600,7 @@ function syncSupplierTabs() {
       ["出餐单号", "开票单号", "处理倒计时", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "发票抬头/税号"],
       [
         '数据源：该订单对应的出餐成功的出餐单号；<div>显示逻辑：若订单非出餐成功，显示“-”</div>',
-        '同一条工单的开票单号与点餐后台--售后补贴单列表的补贴单号一致',
+        '数据源：系统自动创建16位数字编号，格式为BT+14位数字。',
         '数据源：系统配置里面设置的上传倒计时；<div>【倒计时最好实时的】；该倒计时与供应商端相同补贴单号的倒计时一样</div><div>列表排序：按倒计时升序排；</div>',
         '数据源：该订单，客服同步到列表的时间',
         '订单状态见“状态机”',
