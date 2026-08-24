@@ -4249,13 +4249,14 @@
             </div>
           </div>
         </section>
-        <section class="panel panel-inner" style="margin-top: 18px;">
+        <section class="panel panel-inner" id="supplierOrderNotePanel" style="margin-top: 18px;">
           <div class="section-head" style="padding: 0 0 18px;">
             <div>
               <h2 class="section-title">说明</h2>
             </div>
           </div>
           <div class="spec-prose">
+            <p><strong>新增范围包括：</strong><span style="color: #ff4d4f;">一级供应商后台、二级供应商后台</span>。</p>
             <p><strong>页面定位：</strong>供应商端【PC】 > 订单管理 > 订单列表。竞价失败不是独立页面，而是订单列表中的一个 tab。</p>
             <p><strong>字段口径：</strong>竞价失败 tab 仅展示商品名称、门店名称、店铺地址、出餐状态、出餐方式、报价金额、成交价、报价规则名称和操作。</p>
             <p><strong>筛选项输入框逻辑：</strong></p>
@@ -4342,6 +4343,7 @@
             </div>
           </div>
           <div class="spec-prose">
+            <p><strong>新增页面范围包括：</strong><span style="color: #ff4d4f;">一级供应商后台、二级供应商后台</span>。</p>
             <p><strong>页面定位：</strong>供应商端【PC】 > 出价管理 > 可报价商品列表，用于展示供应商当前可报价的商品范围。</p>
             <p><strong>列表数据源：</strong>只显示点餐后台--商品列表的商品状态上架、平台销售状态上架的商品。</p>
             <p><strong>更新规则：</strong>定时更新【每天凌晨2点更新数据】，可点击按钮 手动更新【要注意防抖】。</p>
@@ -6277,7 +6279,11 @@
       const table = document.querySelector(".supplier-order-table");
       const head = document.getElementById("supplierOrderTableHead");
       const body = document.getElementById("supplierOrderTableBody");
+      const notePanel = document.getElementById("supplierOrderNotePanel");
       if (!table || !head || !body) return;
+      if (notePanel) {
+        notePanel.style.display = state.supplierOrderTab === "bid-failed" ? "" : "none";
+      }
       table.classList.toggle("is-bid-failed", state.supplierOrderTab === "bid-failed");
       document.querySelectorAll("[data-supplier-order-tab]").forEach((button) => {
         button.classList.toggle("active", button.dataset.supplierOrderTab === state.supplierOrderTab);
