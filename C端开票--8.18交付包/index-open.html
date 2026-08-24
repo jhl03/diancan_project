@@ -1626,7 +1626,7 @@ body.codex-bundle-editable .codex-edit-toolbar{display:none!important;}
 <button type="button" class="bundle-catalog-link" data-page="invoice-detail">发票工单--订单详情</button>
 </details>
 <details class="bundle-catalog-group" open=""><summary>点餐后台</summary>
-<button type="button" class="bundle-catalog-link" data-page="supplier-list">供应商管理--供应商列表</button>
+<button type="button" class="bundle-catalog-link" data-page="supplier-list">供应商管理--供应商列表（合作中tab）</button>
 <button type="button" class="bundle-catalog-link" data-page="ops-config">运营管理--补贴单配置</button>
 <button type="button" class="bundle-catalog-link" data-page="finance-combo">财务管理--结算记录___资金账户记录</button>
 <button type="button" class="bundle-catalog-link" data-page="after-sale-list">订单管理--售后补贴单列表</button>
@@ -1866,7 +1866,7 @@ body.codex-bundle-editable .codex-edit-toolbar{display:none!important;}
 <section class="bundle-page" data-page="supplier-list" aria-label="供应商管理--供应商列表" style="position: relative;"><main class="main-shell" style="position: relative;">
         
     <header class="page-header ax_default">
-      <h1 class="text" spellcheck="false">供应商管理--供应商列表</h1>
+      <h1 class="text" spellcheck="false">供应商管理--供应商列表（合作中tab）</h1>
       <p class="text" spellcheck="false">纯代码重建：供应商列表与接售后单权限配置页。</p>
     </header>
   
@@ -1907,7 +1907,7 @@ body.codex-bundle-editable .codex-edit-toolbar{display:none!important;}
       <div class="section-title text" spellcheck="false">字段与交互说明</div>
       
     <ul class="note-list text" spellcheck="false">
-      <li class="" spellcheck="false">供应商列表  新增字段 “<span style="color: rgb(217, 45, 32);">是否接开票单</span>”：</li><li spellcheck="false">显示逻辑：开关状态默认 关闭</li><li class="" spellcheck="false"><span style="color: rgb(217, 45, 32);">开启后，在供应商端可以显示</span>“补贴单列表” 入口 及 “售后补贴单” 入口</li><li spellcheck="false">交互逻辑：</li><li class="" spellcheck="false">开关  <span style="color: rgb(217, 45, 32);">由关--》开</span>：</li><li class="" spellcheck="false">弹出二次弹窗：</li><li class="" spellcheck="false">推送指定品牌开票订单&nbsp; 下拉选项：枚举值【后台的所有品牌，包括之后新增】<span style="color: rgb(217, 45, 32);"> 可多选</span></li><li class="" spellcheck="false">点击 确定按钮，即生效；提示“操作成功”。在供应商端可以看见对应的入口</li><li class="" spellcheck="false"><span style="display: inline-block; padding-left: 18px; color: rgb(217, 45, 32);">点击确定按钮，没有选择品牌，提示“请选择接单品牌”在下拉选项框下红色小字显示</span></li><li class="" spellcheck="false">且根据开票需求单列表的商品品牌推送</li><li class="" spellcheck="false">开关  由<span style="color: rgb(217, 45, 32);">开--》关：</span></li><li spellcheck="false">弹出二次弹窗：</li><li class="" spellcheck="false">点击 确定按钮，即生效；提示“操作成功”。在供应商端隐藏售后补贴单和补偿单列表的页面数据，但保留已结算的流水记录</li><li spellcheck="false">关闭后，请到售后补偿单列表查看该供应是否有已结单工单，若有，请操作返回供应商端补贴单列表</li><li spellcheck="false">注意：</li><li spellcheck="false">关闭时，若有售后单补贴未结算，会按照正常流程结算</li><li spellcheck="false">若第二次及以后多次开启，接开票单权限时，供应商端不显示之前已经处理过的售后补贴单</li>
+      <li class="" spellcheck="false">供应商列表  新增字段 “<span style="color: rgb(217, 45, 32);">是否接开票单</span>”：</li><li spellcheck="false">显示逻辑：开关状态默认 关闭</li><li class="" spellcheck="false"><span style="color: rgb(29, 78, 216);">只有在合作中的才会显示数据</span></li><li class="" spellcheck="false"><span style="color: rgb(29, 78, 216);">是否接开票单为开启时，点击退回待审核或停止合作都要弹出二次弹窗，弹窗提示内容为</span></li><li class="" spellcheck="false"><span style="color: rgb(29, 78, 216);">退回待审核后，隐藏补贴单列表页面和售后补贴单页面的数据</span></li><li class="" spellcheck="false"><span style="color: rgb(29, 78, 216);">退回待审核后，请到售后补偿单列表查看该供应是否有已结单工单，若有，请操作返回供应商端补贴单列表</span></li><li class="" spellcheck="false"><span style="color: rgb(29, 78, 216);">停止合作后，隐藏补贴单列表页面和售后补贴单页面的数据</span></li><li class="" spellcheck="false"><span style="color: rgb(29, 78, 216);">停止合作后，请到售后补偿单列表查看该供应是否有已结单工单，若有，请操作返回供应商端补贴单列表</span></li><li class="" spellcheck="false"><span style="color: rgb(217, 45, 32);">开启后，在供应商端可以显示</span>“补贴单列表” 入口 及 “售后补贴单” 入口</li><li spellcheck="false">交互逻辑：</li><li class="" spellcheck="false">开关  <span style="color: rgb(217, 45, 32);">由关--》开</span>：</li><li class="" spellcheck="false">弹出二次弹窗：</li><li class="" spellcheck="false">推送指定品牌开票订单&nbsp; 下拉选项：枚举值【后台的所有品牌，包括之后新增】<span style="color: rgb(217, 45, 32);"> 可多选</span></li><li class="" spellcheck="false">点击 确定按钮，即生效；提示“操作成功”。在供应商端可以看见对应的入口</li><li class="" spellcheck="false"><span style="display: inline-block; padding-left: 18px; color: rgb(217, 45, 32);">点击确定按钮，没有选择品牌，提示“请选择接单品牌”在下拉选项框下红色小字显示</span></li><li class="" spellcheck="false">且根据开票需求单列表的商品品牌推送</li><li class="" spellcheck="false">开关  由<span style="color: rgb(217, 45, 32);">开--》关：</span></li><li class="" spellcheck="false">弹出二次弹窗：</li><li class="" spellcheck="false">点击 确定按钮，即生效；提示“操作成功”。在供应商端隐藏售后补贴单和补偿单列表的页面数据，但保留已结算的流水记录</li><li class="" spellcheck="false">关闭后，请到售后补偿单列表查看该供应是否有已结单工单，若有，请操作返回供应商端补贴单列表</li><li class="" spellcheck="false">注意：</li><li class="" spellcheck="false">关闭时，若有售后单补贴未结算，会按照正常流程结算</li><li class="" spellcheck="false">若第二次及以后多次开启，接开票单权限时，供应商端不显示之前已经处理过的售后补贴单</li>
     </ul>
   
     </section><section class="section ax_default" style="position: absolute; left: 20px; top: 796px; width: 1237px; height: 350px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481899;" data-codex-base-width="1735.73" data-codex-base-height="74.9333">
@@ -18938,8 +18938,8 @@ function syncSupplierTabs() {
       if (fileInput) fileInput.value = "";
       if (action === "upload") {
         var uploadCells = row ? row.querySelectorAll("td") : [];
-        var uploadTitle = uploadCells[5] ? uploadCells[5].textContent.trim() : "井井井";
-        var uploadAmount = uploadCells[6] ? uploadCells[6].textContent.trim() : "9.99";
+        var uploadTitle = uploadCells[6] ? uploadCells[6].textContent.trim() : "井井井";
+        var uploadAmount = uploadCells[7] ? uploadCells[7].textContent.trim() : "9.99";
         modalTitle.textContent = "上传发票";
         modalBody.innerHTML = buildUploadModalHtml(uploadTitle, "-", uploadAmount);
         confirmBtn.textContent = "确定";
@@ -22760,7 +22760,6 @@ function syncSupplierTabs() {
         '<div class="codex-clean-btn-row">',
         '  <button type="button" class="codex-clean-btn is-primary">搜索</button>',
         '  <button type="button" class="codex-clean-btn">重置</button>',
-        '  <button type="button" class="codex-clean-btn">导出</button>',
         '</div>'
       ].join("");
     }
@@ -22847,19 +22846,21 @@ function syncSupplierTabs() {
 
   function buildInvoiceRequestModalBody(tabKey, action, row) {
     if (!row) return '<p>暂无数据</p>';
-    if (action === "detail") {
-      var files = Array.isArray(row.fileHistory) ? row.fileHistory.slice().sort(function (a, b) {
-        return String(b.time || "").localeCompare(String(a.time || ""));
-      }) : [];
-      return '<div class="codex-clean-file-list">' +
-        files.map(function (file) {
-          return '<div class="codex-clean-file-item">' +
-            '<a class="codex-clean-file-link" href="' + cleanEscape(file.href || "#") + '" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, \'_blank\', \'noopener\'); return false;">' + cleanEscape(file.name) + '</a>' +
-            '<div class="codex-clean-file-time">' + cleanEscape(file.time) + '</div>' +
+  if (action === "detail") {
+    var files = Array.isArray(row.fileHistory) ? row.fileHistory.slice().sort(function (a, b) {
+      return String(b.time || "").localeCompare(String(a.time || ""));
+    }) : [];
+    var unifiedTime = tabKey === "backend-uploaded" ? (row.uploadAt || row.addedAt || "") : "";
+    return '<div class="codex-clean-file-list">' +
+      files.map(function (file) {
+        var fileTime = tabKey === "backend-uploaded" ? (unifiedTime || file.time || "") : (file.time || "");
+        return '<div class="codex-clean-file-item">' +
+          '<a class="codex-clean-file-link" href="' + cleanEscape(file.href || "#") + '" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, \'_blank\', \'noopener\'); return false;">' + cleanEscape(file.name) + '</a>' +
+            '<div class="codex-clean-file-time">' + cleanEscape(fileTime) + '</div>' +
           '</div>';
-        }).join("") +
-      '</div>';
-    }
+      }).join("") +
+    '</div>';
+  }
     if (action === "assign") {
       return '<div style="display:grid;gap:12px;">' +
         '<div style="padding:12px 14px;border:1px solid #dbe7fb;border-radius:16px;background:#f8fbff;">分配给供应商：请选择供应商</div>' +
@@ -23789,6 +23790,7 @@ function syncSupplierTabs() {
 })();
 </script>
 </body></html>
+
 
 
 
