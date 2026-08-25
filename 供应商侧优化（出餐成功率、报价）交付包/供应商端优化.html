@@ -5130,6 +5130,7 @@
                 待出单
                 <span class="status-tab-badge" id="supplierOrderCompletedBadge" aria-label="待出单">0</span>
               </button>
+              <button class="status-tab" data-supplier-order-tab="finished">已完成</button>
               <button class="status-tab" data-supplier-order-tab="failed">已失败</button>
               <button class="status-tab" data-supplier-order-tab="all">全部</button>
             </div>
@@ -5155,9 +5156,10 @@
             <p><strong>新订单提示音开关：</strong>页面右上角显示“新订单提示：”开关图标，默认开启；点击开关关闭时弹出二次确认弹窗“确认要关闭提示音？关闭提示音可能会错过新订单”，可选择“暂不关闭”或“确认关闭”。</p>
             <p><strong>右上角语音提醒：</strong>有新订单进入时，网站右上角显示通知“守兔来新订单啦”，左侧带音量图标，右侧带删除图标；语音响起时显示，持续 2s 后自动消失，也可点击删除图标手动关闭。关闭提示音后不再显示新的语音提醒。</p>
             <p hidden><strong>站内新订单提醒：</strong>订单列表页面标题与筛选区之间显示红色提醒条“又有N笔新订单了，戳我立即刷新~”；点击提醒条后刷新订单列表并隐藏提醒条。若“新订单提示”开启，同时会有右上角语音提醒。</p>
-            <p><strong>页面定位：</strong>供应商端【PC】 > 订单管理 > 订单列表，用于展示供应商的出餐订单，按“新订单/竞价中/待出单/已失败/全部”切换 tab。</p>
-            <p><strong>新订单 tab：</strong>展示所有下单成功但尚未报价的订单。</p>
-            <p><strong>竞价中 tab：</strong>展示所有已报价、正在参与竞价的订单，字段与「新订单」tab 保持一致。</p>
+      <p><strong>页面定位：</strong>供应商端【PC】 > 订单管理 > 订单列表，用于展示供应商的出餐订单，按“新订单/竞价中/待出单/已完成/已失败/全部”切换 tab。</p>
+      <p><strong>新订单 tab：</strong>展示所有下单成功但尚未报价的订单。【新增的tab】</p>
+      <p><strong>竞价中 tab：</strong>展示所有已报价、正在参与竞价的订单，字段与「新订单」tab 保持一致。【新增的tab】</p>
+      <p><strong>原tab名称“进行中”改为“待出单” 【小程序也是一样的】</strong></p>
             <p><strong>列表排序：</strong>「新订单」与「竞价中」tab 均根据倒计时排序，短的在上面。</p>
             <p><strong>待出单角标：</strong>「待出单」tab 右上角红字角标显示待出单订单数量，数量为 0 时隐藏。</p>
             <p><strong>筛选项输入框逻辑：</strong></p>
@@ -5585,9 +5587,10 @@
           </div>
           <div class="spec-prose">
             <p hidden><strong>Tab 文案：</strong>小程序端订单列表按“新订单/竞价中/待出单/已完成/全部”切换 tab。</p>
-            <p hidden><strong>新订单：</strong>展示下单成功但尚未报价的订单，卡片头部显示门店、复制按钮、红色报价倒计时；正文展示商品名称、商品品牌、市场价、最高限价、报价金额、报价规则名称；底部为行内报价输入框+“报价”按钮。</p>
-            <p hidden><strong>竞价中：</strong>展示已报价、正在参与竞价的订单，卡片头部显示门店、复制按钮、红色竞价倒计时；正文字段与「新订单」tab 保持一致，报价金额红字显示；操作按钮显示“修改报价”。</p>
+            <p hidden><strong>新订单：</strong>展示下单成功但尚未报价的订单，卡片头部显示门店、复制按钮、红色报价倒计时；正文展示商品名称、商品品牌、市场价、最高限价、报价金额、报价规则名称；底部为行内报价输入框+“报价”按钮。【新增的tab】</p>
+            <p hidden><strong>竞价中：</strong>展示已报价、正在参与竞价的订单，卡片头部显示门店、复制按钮、红色竞价倒计时；正文字段与「新订单」tab 保持一致，报价金额红字显示；操作按钮显示“修改报价”。【新增的tab】</p>
             <p><strong>待出单：</strong>卡片与现在已有卡片一样。</p>
+            <p><strong>原tab名称“进行中”改为“待出单” 【小程序也是一样的】</strong></p>
             <p hidden><strong>已完成：</strong>展示已出餐完成的订单。</p>
             <p hidden><strong>列表排序：</strong>「新订单」与「竞价中」根据倒计时排序，短的在上面；「待出单」按竞价成功时间倒序；「已完成」按接单时间倒序。</p>
             <p style="color:#ff4d4f;"><strong>行内报价规则：</strong>点击“报价”按钮时校验：① 报价倒计时已结束（00:00:00）时提示“报价倒计时结束，不能添加报价”；② 报价金额必填，为空提示“请填写报价金额”；③ 报价金额必须为数字且不能为 0；④ 报价金额不能大于该商品最高限价；⑤ 报价金额小数位数按后台配置的“供应商报价金额保留小数”生效，不符合时提示“报价金额保留 N 位小数”。校验通过后订单进入「竞价中」页面。</p>
@@ -7305,6 +7308,7 @@
       { key: "pending", label: "新订单" },
       { key: "processing", label: "竞价中" },
       { key: "completed", label: "待出单" },
+      { key: "finished", label: "已完成" },
       { key: "failed", label: "已失败" },
       { key: "all", label: "全部" }
     ];
@@ -7397,6 +7401,27 @@
         supplierName: "鹭岛供应链",
         pickupCode: "-",
         pickupQrCode: "-",
+        secondarySupplier: "-"
+      },
+      {
+        id: "SO-002-F1",
+        tab: "finished",
+        thirdOrderNo: "MT202608190009",
+        mealOrderNo: "DC202608190009",
+        acceptRecordNo: "REC202608190009",
+        acceptTime: "2026-08-19 09:41:50",
+        mealTime: "2026-08-19 10:02:33",
+        settlementTime: "2026-08-19 11:20:00",
+        mealStatus: "出餐成功",
+        settlementStatus: "已结算",
+        productName: "伯牙绝弦",
+        orderPlatform: "美团",
+        storeName: "霸王茶姬软件园店",
+        storeAddress: "软件园二期观日路26号101室",
+        productBrand: "霸王茶姬",
+        marketPrice: "¥18.0",
+        dealPrice: "¥15.5",
+        supplierName: "厦门优供",
         secondarySupplier: "-"
       },
       {
@@ -8073,6 +8098,18 @@
       { key: "action", label: "操作", cellClass: "is-action" }
     ];
 
+    const supplierOrderFinishedSchema = [
+      { key: "thirdOrderNo", label: "三方订单编号", cellClass: "is-code" },
+      { key: "mealOrderNo", label: "出餐订单", cellClass: "is-code" },
+      { key: "acceptTime", label: "接单时间" },
+      { key: "mealTime", label: "出餐时间" },
+      { key: "settlementTime", label: "结算时间" },
+      { key: "mealStatus", label: "出餐状态", cellClass: "is-status" },
+      { key: "dealPrice", label: "成交价", cellClass: "is-money" },
+      { key: "settlementStatus", label: "结算状态", cellClass: "is-status" },
+      { key: "action", label: "操作", cellClass: "is-action" }
+    ];
+
     const bidRecordSchema = [
       { key: "productName", label: "商品名称", cellClass: "is-long" },
       { key: "productBrand", label: "商品品牌" },
@@ -8105,6 +8142,8 @@
         rows = supplierOrderRecords.filter((item) => (item.tab === "pending" && item.quoteAmount && item.quoteAmount !== "-") || item.tab === "processing");
       } else if (state.supplierOrderTab === "completed") {
         rows = supplierOrderRecords.filter((item) => item.tab === "bid-success" || item.tab === "completed");
+      } else if (state.supplierOrderTab === "finished") {
+        rows = supplierOrderRecords.filter((item) => item.tab === "finished");
       } else {
         rows = supplierOrderRecords.filter((item) => item.tab === state.supplierOrderTab);
       }
@@ -8112,6 +8151,8 @@
         rows = rows.slice().sort((a, b) => countdownToSeconds(a.quoteCountdown) - countdownToSeconds(b.quoteCountdown));
       } else if (state.supplierOrderTab === "completed") {
         rows = rows.slice().sort((a, b) => (b.bidSuccessTime || "").localeCompare(a.bidSuccessTime || ""));
+      } else if (state.supplierOrderTab === "finished") {
+        rows = rows.slice().sort((a, b) => (b.acceptTime || "").localeCompare(a.acceptTime || ""));
       }
       return rows;
     }
@@ -8128,6 +8169,9 @@
       }
       if (state.supplierOrderTab === "completed") {
         return supplierOrderCompletedSchema;
+      }
+      if (state.supplierOrderTab === "finished") {
+        return supplierOrderFinishedSchema;
       }
       return supplierOrderBaseSchema;
     }
@@ -8195,6 +8239,15 @@
         }
         if (item.tab === "failed") {
           return `<td class="${column.cellClass || ""}">-</td>`;
+        }
+        if (item.tab === "finished" || state.supplierOrderTab === "finished") {
+          return `
+            <td class="${column.cellClass || ""}">
+              <div class="supplier-order-action">
+                <button class="link-btn" type="button">查看详情</button>
+              </div>
+            </td>
+          `;
         }
         return `
           <td class="${column.cellClass || ""}">
