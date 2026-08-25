@@ -4735,6 +4735,7 @@
             <p><strong>新增范围包括：</strong><span style="color: #ff4d4f;">一级供应商后台、二级供应商后台</span>。</p>
             <p><strong>页面定位：</strong>供应商端【PC】 > 订单管理 > 订单列表，用于展示供应商的出餐订单，按“处理中/进行中/已完成/已失败/全部”切换 tab。</p>
             <p><strong>处理中 tab：</strong>位于「进行中」左侧，展示所有下单成功但尚未进入竞价阶段的订单，包括已报价和未报价的订单。</p>
+            <p><strong>列表排序：</strong>根据倒计时排序，短的在上面。</p>
             <p><strong>进行中角标：</strong>「进行中」tab 右上角红字角标显示处理中订单数量，数量为 0 时隐藏。</p>
             <p><strong>字段口径：</strong>处理中 tab 列表展示商品名称、门店名称、店铺地址、竞价状态、市场价、最高限价、报价金额、竞价倒计时、报价规则名称、操作。</p>
             <p><strong>筛选项输入框逻辑：</strong></p>
@@ -4762,7 +4763,7 @@
             <p class="spec-subline"><strong>报价金额：</strong>必填，输入参与竞价的报价金额。</p>
             <p class="spec-subline"><strong>确定按钮校验：</strong>未填写时提示“请填写报价金额”；填写为 0 时提示“不能为0”；大于最高限价时提示“报价金额不能大于最高限价”；小数位数按后台配置的“供应商报价金额保留小数”生效，不符合时提示“报价金额保留一位小数”或“报价金额保留两位小数”。</p>
             <p class="spec-subline"><strong>保存结果：</strong>校验通过后保存，订单状态变为“竞价中”。</p>
-            <p><strong>修改报价弹窗：</strong>竞价中状态点击“修改报价”按钮后打开，弹窗内容与竞价记录页面的修改报价金额弹窗内容一致，保存后同步更新报价金额。</p>
+            <p><strong>修改报价：</strong>竞价中状态点击“修改报价”按钮后进入「编辑报价规则」页面，保存后同步更新报价金额。</p>
           </div>
         </section>
       </section>
@@ -4835,8 +4836,7 @@
             <p class="spec-subline"><strong>竞价失败原因：</strong>展示竞价失败的具体原因，如“金额原因：报价金额不是最低”“超过最大接单数量：竞价时有出餐中订单”。</p>
             <p class="spec-subline"><strong>竞价失败时间：</strong>实际失败时间，列表按照竞价失败时间倒叙。</p>
             <p class="spec-subline"><strong>操作：</strong>展示“修改报价金额”按钮。</p>
-            <p><strong>修改报价金额弹窗的确定按钮：</strong>点击“确定”后，保存结果同步到出价管理--商品报价页面、点餐后台--商品报价页面、一级供应商的出餐管理--商品报价页面，以及对应的小程序端。</p>
-            <p><strong>修改报价金额弹窗：</strong>修改报价金额弹窗的内容与供应商后台的商品报价页面的修改报价规则弹窗的内容一致。</p>
+            <p><strong>编辑报价规则页面：</strong>点击“编辑报价金额”后进入「编辑报价规则」页面，内容与供应商后台的商品报价页面的修改报价规则弹窗内容一致。点击“确定”后保存结果同步到出价管理--商品报价页面、点餐后台--商品报价页面、一级供应商的出餐管理--商品报价页面，以及对应的小程序端。</p>
           </div>
         </section>
       </section>
@@ -5120,7 +5120,7 @@
             </div>
           </div>
           <div class="spec-prose">
-            <p>说明跟PC端的一致。</p>
+            <p>说明跟PC端的一致。列表排序：根据倒计时排序，短的在上面。</p>
           </div>
         </section>
       </section>
@@ -5205,7 +5205,7 @@
             <p><strong>列表数据：</strong>内容与 PC 端竞价记录保持一致，展示供应商竞价失败的订单。</p>
             <p><strong>成交价：</strong>取所有竞价表里面的最低报价；竞价记录中成交价始终存在，不为空。</p>
             <p><strong>报价规则：</strong>在商品金额下方展示该商品所属的报价规则名称。</p>
-            <p><strong>编辑报价金额：</strong>每条记录成交价下方展示「编辑报价金额」按钮，点击后进入「新增报价规则」页面（与 PC 端修改报价规则弹窗内容一致）。</p>
+            <p><strong>编辑报价金额：</strong>每条记录成交价下方展示「编辑报价金额」按钮，点击后进入「编辑报价规则」页面（与 PC 端修改报价规则弹窗内容一致）。</p>
           </div>
         </section>
       </section>
@@ -5259,8 +5259,8 @@
             <div class="mini-order-top">
               <div class="mini-order-time">9:25</div>
               <div class="mini-order-title-bar">
-                <button class="mini-order-back" type="button" data-page-target="supplier-mini-quote-products">‹</button>
-                <div class="mini-order-title">新增报价规则</div>
+                <button class="mini-order-back" type="button" data-action="back-from-mini-quote-rule">‹</button>
+                <div class="mini-order-title" id="miniQuoteRulePageTitle">新增报价规则</div>
               </div>
               <div class="mini-order-actions">
                 <div class="mini-order-action-pill" aria-hidden="true">
@@ -5349,19 +5349,7 @@
             </div>
           </div>
           <div class="spec-prose">
-            <p><strong>入口：</strong>从小程序「竞价记录」的「编辑报价金额」或「可报价商品列表」的「一键报价」点击进入。</p>
-            <p><strong>返回：</strong>点击顶部左侧返回按钮回到「可报价商品列表」页面。</p>
-            <p><strong>商品品牌：</strong>下拉选择，选择后带出对应品牌下的商品。</p>
-            <p><strong>商品数量：</strong>显示当前已添加的商品数量。</p>
-            <p><strong>商品表格：</strong>展示商品名称、市场价、报价限价和操作；空数据时展示「暂无数据」。</p>
-            <p><strong>规则名称：</strong>必填，最多 50 个字符。</p>
-            <p><strong>报价金额：</strong>必填，单位为「元」。</p>
-            <p><strong>出餐方式：</strong>必填，单选：人工/自动/H5链接/链接平台/API。</p>
-            <p><strong>出餐城市：</strong>可填写多个城市。</p>
-            <p><strong>套餐模式：</strong>开关控制；开启后「套餐编号」可编辑。</p>
-            <p><strong>套餐编号：</strong>套餐模式开启时必填。</p>
-            <p><strong>新增商品：</strong>点击后在商品表格中添加一行默认商品。</p>
-            <p><strong>确定：</strong>点击后保存规则，保存结果同步到出价管理--商品报价页面、点餐后台--商品报价页面、一级供应商的出餐管理--商品报价页面，以及对应的小程序端。</p>
+            <p>编辑报价规则页面的内容跟首页对应报价规则的编辑报价规则页面的内容、校验、交互等等都一致。</p>
           </div>
         </section>
       </section>
@@ -6294,40 +6282,6 @@
           </div>
         </div>
       </div>
-      <div class="drawer-body handle-body">
-        <div class="handle-order-no">
-          <span>出餐订单：</span><strong id="handleSalesOrderNo">-</strong>
-        </div>
-        <div class="handle-summary-grid">
-          <div class="handle-summary-col">
-            <div class="handle-summary-item"><span>订单渠道：</span><strong id="handleOrderChannel">-</strong></div>
-            <div class="handle-summary-item"><span>支付金额：</span><strong id="handlePaidAmount">0</strong></div>
-            <div class="handle-summary-item"><span>支付方式：</span><strong id="handlePaymentMethod">-</strong></div>
-          </div>
-          <div class="handle-summary-col">
-            <div class="handle-summary-item"><span>结算状态：</span><strong id="handleSettlementStatus">-</strong></div>
-            <div class="handle-summary-item"><span>结算金额：</span><strong id="handleSettlementAmount">0</strong></div>
-          </div>
-        </div>
-        <div class="handle-divider"></div>
-
-        <div class="handle-variant" id="handleDirectSection">
-          <div class="handle-field-row">
-            <span class="handle-field-label required-star">给用户退款金额</span>
-            <div class="handle-inline-input">
-              <input class="field-control" id="handleRefundAmountInput" inputmode="decimal" placeholder="">
-              <span class="handle-unit">元</span>
-            </div>
-          </div>
-          <div class="handle-field-row">
-            <span class="handle-field-label">是否正常结算</span>
-            <div class="handle-radio-group">
-              <label class="handle-radio"><input type="radio" name="handleSettlementMode" value="no" checked> 否</label>
-            <label class="handle-radio"><input type="radio" name="handleSettlementMode" value="yes"> 是</label>
-          </div>
-        </div>
-      </div>
-
       <div class="handle-variant" id="handleVoucherSection" hidden>
         <div class="handle-field-row">
           <span class="handle-field-label">退款方式</span>
@@ -6701,6 +6655,8 @@
       activeProductQuoteId: null,
       supplierOrderTab: "pending",
       miniOrderTab: "handling",
+      miniQuoteRuleMode: "add",
+      miniQuoteRuleEditOrderId: null,
       noteDraftImageCount: 0,
       notePreviewUrl: "",
       addOrderDraftImageCount: 0,
@@ -7179,6 +7135,74 @@
     const miniQuoteRuleDefaultProducts = quoteRuleDefaultProducts.map((item) => ({ ...item }));
     let miniQuoteRuleProductRows = miniQuoteRuleDefaultProducts.map((item) => ({ ...item }));
 
+    const miniQuoteRuleTemplates = {
+      "瑞幸10选1": {
+        brand: "瑞幸",
+        name: "瑞幸10选1",
+        amount: "0.2",
+        method: "manual",
+        city: "",
+        packageMode: false,
+        packageNo: "",
+        products: [
+          { id: "QR-LK-001", name: "橙C美式(首创)", marketPrice: "¥32", limitPrice: "¥10.33" },
+          { id: "QR-LK-002", name: "柚C美式", marketPrice: "¥32", limitPrice: "¥10.33" },
+          { id: "QR-LK-003", name: "耶加雪菲·拿铁", marketPrice: "¥32", limitPrice: "¥11" },
+          { id: "QR-LK-004", name: "耶加雪菲·澳瑞白", marketPrice: "¥35", limitPrice: "¥20" },
+          { id: "QR-LK-005", name: "耶加雪菲·美式", marketPrice: "¥29", limitPrice: "¥4" }
+        ]
+      },
+      "霸王茶姬10选1": {
+        brand: "霸王茶姬",
+        name: "霸王茶姬10选1",
+        amount: "0.5",
+        method: "manual",
+        city: "",
+        packageMode: false,
+        packageNo: "",
+        products: [
+          { id: "QR-BW-001", name: "伯牙绝弦", marketPrice: "¥18", limitPrice: "¥10" },
+          { id: "QR-BW-002", name: "清茉柠柠檬茶", marketPrice: "¥16", limitPrice: "¥9" }
+        ]
+      },
+      "瑞幸16选1": {
+        brand: "瑞幸",
+        name: "瑞幸16选1",
+        amount: "0.3",
+        method: "manual",
+        city: "",
+        packageMode: false,
+        packageNo: "",
+        products: [
+          { id: "QR-LK-006", name: "芝士葡萄", marketPrice: "¥32", limitPrice: "¥12" }
+        ]
+      },
+      "肯德基早餐套餐": {
+        brand: "肯德基",
+        name: "肯德基早餐套餐",
+        amount: "0.4",
+        method: "manual",
+        city: "",
+        packageMode: false,
+        packageNo: "",
+        products: [
+          { id: "QR-KFC-001", name: "芝士猪柳蛋帕尼尼豆浆二件套", marketPrice: "¥26", limitPrice: "¥15" }
+        ]
+      },
+      "瑞幸美式系列": {
+        brand: "瑞幸",
+        name: "瑞幸美式系列",
+        amount: "0.2",
+        method: "manual",
+        city: "",
+        packageMode: false,
+        packageNo: "",
+        products: [
+          { id: "QR-LK-007", name: "美式（标准杯）", marketPrice: "¥18", limitPrice: "¥8" }
+        ]
+      }
+    };
+
     function getSupplierOrderRows() {
       if (state.supplierOrderTab === "all") return supplierOrderRecords;
       return supplierOrderRecords.filter((item) => item.tab === state.supplierOrderTab);
@@ -7362,9 +7386,24 @@
       { key: "action", label: "操作", cellClass: "is-action" }
     ];
 
+    function countdownToSeconds(countdown) {
+      if (!countdown || countdown === "-") return Infinity;
+      const parts = String(countdown).split(":").map(Number);
+      if (parts.length !== 3 || parts.some(Number.isNaN)) return Infinity;
+      return parts[0] * 3600 + parts[1] * 60 + parts[2];
+    }
+
     function getSupplierOrderRows() {
-      if (state.supplierOrderTab === "all") return supplierOrderRecords.filter((item) => item.tab !== "bid-failed" && item.tab !== "pending");
-      return supplierOrderRecords.filter((item) => item.tab === state.supplierOrderTab);
+      let rows;
+      if (state.supplierOrderTab === "all") {
+        rows = supplierOrderRecords.filter((item) => item.tab !== "bid-failed" && item.tab !== "pending");
+      } else {
+        rows = supplierOrderRecords.filter((item) => item.tab === state.supplierOrderTab);
+      }
+      if (state.supplierOrderTab === "pending") {
+        rows = rows.slice().sort((a, b) => countdownToSeconds(a.quoteCountdown) - countdownToSeconds(b.quoteCountdown));
+      }
+      return rows;
     }
 
     function getSupplierOrderTableSchema() {
@@ -7656,9 +7695,18 @@
     }
 
     function getMiniOrderRows() {
-      if (state.miniOrderTab === "handling") return supplierOrderRecords.filter((item) => item.tab === "pending");
-      if (state.miniOrderTab === "all") return miniOrderRecords;
-      return miniOrderRecords.filter((item) => item.tab === state.miniOrderTab);
+      let rows;
+      if (state.miniOrderTab === "handling") {
+        rows = supplierOrderRecords.filter((item) => item.tab === "pending");
+      } else if (state.miniOrderTab === "all") {
+        rows = miniOrderRecords;
+      } else {
+        rows = miniOrderRecords.filter((item) => item.tab === state.miniOrderTab);
+      }
+      if (state.miniOrderTab === "handling") {
+        rows = rows.slice().sort((a, b) => countdownToSeconds(a.quoteCountdown) - countdownToSeconds(b.quoteCountdown));
+      }
+      return rows;
     }
 
     function renderMiniOrderPage() {
@@ -7692,6 +7740,7 @@
           const isBidding = item.mealStatus === "竞价中";
           const btnLabel = isBidding || hasRule ? "修改报价" : "去报价";
           const actionType = isBidding || hasRule ? "open-mini-quote-rule-page" : "open-mini-pending-quote";
+          const actionMode = isBidding || hasRule ? "edit" : "";
           const quoteAmountClass = item.quoteAmount && item.quoteAmount !== "-" ? "is-quoted" : "";
           return `
             <article class="mini-order-card" data-mini-order-row="${escapeHtml(item.id)}">
@@ -7713,7 +7762,7 @@
                 <span>报价规则名称：${escapeHtml(item.quoteRuleName || "-")}</span>
               </div>
               <div class="mini-order-action-row">
-                <button class="mini-order-btn" type="button" data-action="${actionType}" data-id="${escapeHtml(item.id)}">${escapeHtml(btnLabel)}</button>
+                <button class="mini-order-btn" type="button" data-action="${actionType}" data-mode="${actionMode}" data-id="${escapeHtml(item.id)}">${escapeHtml(btnLabel)}</button>
               </div>
             </article>
           `;
@@ -7770,7 +7819,7 @@
           </div>
           <div class="mini-order-deal">成交价：<strong>${escapeHtml(item.dealPrice && item.dealPrice !== "-" ? item.dealPrice : "-")}</strong></div>
           <div class="mini-order-action-row">
-            <button class="mini-order-btn" type="button" data-action="open-mini-quote-rule-page" data-id="${escapeHtml(item.id)}">编辑报价金额</button>
+            <button class="mini-order-btn" type="button" data-action="open-mini-quote-rule-page" data-mode="edit" data-id="${escapeHtml(item.id)}">编辑报价金额</button>
           </div>
         </article>
       `).join("") + `<div class="mini-order-empty">没有更多了</div>`;
@@ -7821,27 +7870,44 @@
     }
 
     function resetMiniQuoteRuleForm() {
-      miniQuoteRuleProductRows = miniQuoteRuleDefaultProducts.map((item) => ({ ...item }));
+      const isEdit = state.miniQuoteRuleMode === "edit";
+      const order = isEdit && state.miniQuoteRuleEditOrderId
+        ? supplierOrderRecords.find((item) => item.id === state.miniQuoteRuleEditOrderId)
+        : null;
+      const template = order && order.quoteRuleName && miniQuoteRuleTemplates[order.quoteRuleName]
+        ? miniQuoteRuleTemplates[order.quoteRuleName]
+        : null;
+
+      const title = document.getElementById("miniQuoteRulePageTitle");
+      if (title) title.textContent = isEdit ? "编辑报价规则" : "新增报价规则";
+
+      if (template && isEdit) {
+        miniQuoteRuleProductRows = template.products.map((item) => ({ ...item }));
+      } else {
+        miniQuoteRuleProductRows = miniQuoteRuleDefaultProducts.map((item) => ({ ...item }));
+      }
+
       const nameInput = document.getElementById("miniQuoteRuleName");
       const packageSwitch = document.getElementById("miniQuotePackageModeSwitch");
       const packageNoInput = document.getElementById("miniQuoteRulePackageNo");
       const brandSelect = document.getElementById("miniQuoteRuleBrand");
       const cityInput = document.getElementById("miniQuoteRuleCity");
       const amountInput = document.getElementById("miniQuoteRuleAmount");
-      if (nameInput) nameInput.value = "";
+      if (nameInput) nameInput.value = template && isEdit ? template.name : "";
       if (packageSwitch) {
-        packageSwitch.classList.remove("on");
-        packageSwitch.setAttribute("aria-pressed", "false");
+        packageSwitch.classList.toggle("on", Boolean(template && isEdit && template.packageMode));
+        packageSwitch.setAttribute("aria-pressed", Boolean(template && isEdit && template.packageMode) ? "true" : "false");
       }
       if (packageNoInput) {
-        packageNoInput.value = "";
-        packageNoInput.disabled = true;
+        packageNoInput.value = template && isEdit ? template.packageNo : "";
+        packageNoInput.disabled = !(template && isEdit && template.packageMode);
       }
-      if (brandSelect) brandSelect.value = "瑞幸";
-      if (cityInput) cityInput.value = "";
-      if (amountInput) amountInput.value = "";
+      if (brandSelect) brandSelect.value = template && isEdit ? template.brand : "瑞幸";
+      if (cityInput) cityInput.value = template && isEdit ? template.city : "";
+      if (amountInput) amountInput.value = template && isEdit ? template.amount : "";
+      const targetMethod = template && isEdit ? template.method : "manual";
       document.querySelectorAll('input[name="miniQuoteMealMethod"]').forEach((input) => {
-        input.checked = input.value === "manual";
+        input.checked = input.value === targetMethod;
       });
       syncMiniQuoteRuleNameCounter();
       renderMiniQuoteRuleProducts();
@@ -8364,7 +8430,11 @@
         button.classList.toggle("active", isActive);
       });
       const meta = pageMeta[state.currentPage];
-      document.title = meta.current + " - 点餐售后列表纯代码重建版";
+      let pageTitle = meta.current;
+      if (state.currentPage === "supplier-mini-quote-rule") {
+        pageTitle = state.miniQuoteRuleMode === "edit" ? "编辑报价规则" : "新增报价规则";
+      }
+      document.title = pageTitle + " - 点餐售后列表纯代码重建版";
       window.scrollTo({ top: 0, behavior: "auto" });
     }
 
@@ -10769,8 +10839,16 @@
             openMiniPendingQuoteModal(id);
           }
           if (action === "open-mini-quote-rule-page") {
+            const mode = actionButton.dataset.mode || "add";
+            state.miniQuoteRuleMode = mode;
+            state.miniQuoteRuleEditOrderId = mode === "edit" ? id : null;
             state.currentPage = "supplier-mini-quote-rule";
             resetMiniQuoteRuleForm();
+            renderAll();
+          }
+          if (action === "back-from-mini-quote-rule") {
+            const backPage = state.miniQuoteRuleMode === "edit" ? "supplier-mini-order" : "supplier-mini-quote-products";
+            state.currentPage = backPage;
             renderAll();
           }
           if (action === "delete-mini-quote-rule-product") {
@@ -11005,6 +11083,31 @@
       const miniQuoteRuleSaveButton = document.getElementById("miniQuoteRuleSave");
       if (miniQuoteRuleSaveButton) {
         miniQuoteRuleSaveButton.addEventListener("click", () => {
+          if (state.miniQuoteRuleMode === "edit" && state.miniQuoteRuleEditOrderId) {
+            const amountInput = document.getElementById("miniQuoteRuleAmount");
+            const amount = amountInput ? amountInput.value.trim() : "";
+            if (!amount) {
+              showPageToast("请填写报价金额");
+              return;
+            }
+            const numAmount = Number(amount);
+            if (Number.isNaN(numAmount) || numAmount <= 0) {
+              showPageToast("请填写正确的报价金额");
+              return;
+            }
+            const order = supplierOrderRecords.find((item) => item.id === state.miniQuoteRuleEditOrderId);
+            if (order) {
+              order.quoteAmount = amount;
+              if (order.mealStatus === "待报价") {
+                order.mealStatus = "竞价中";
+              }
+            }
+            state.currentPage = "supplier-mini-order";
+            state.miniOrderTab = "handling";
+            showPageToast("已同步到相关页面");
+            renderAll();
+            return;
+          }
           state.currentPage = "supplier-mini-quote-products";
           showPageToast("已同步到相关页面");
           renderAll();
