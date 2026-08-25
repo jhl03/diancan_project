@@ -612,6 +612,35 @@
       box-shadow: inset 0 0 0 1px rgba(216, 19, 19, 0.18);
     }
 
+    .tab-bar {
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab-item {
+      min-height: 44px;
+      padding: 0 8px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-item:hover {
+      color: var(--text);
+    }
+
+    .tab-item.active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent);
+      font-weight: 800;
+    }
+
     .filters {
       padding: 20px 24px 24px;
     }
@@ -840,6 +869,12 @@
 
     .supplier-order-table.is-bid-failed .is-money {
       min-width: 64px;
+    }
+
+    .supplier-order-table.is-bid-success th:last-child,
+    .supplier-order-table.is-bid-success td:last-child {
+      position: static;
+      box-shadow: none;
     }
 
     .supplier-order-table th:last-child,
@@ -1112,6 +1147,7 @@
     }
 
     .mini-order-shell {
+      position: relative;
       width: min(292px, 100%);
       min-height: 580px;
       border-radius: 20px;
@@ -1228,7 +1264,7 @@
       background: rgba(255, 255, 255, 0.98);
       box-shadow: 0 12px 26px rgba(18, 35, 58, 0.08);
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr auto auto;
       align-items: center;
       gap: 6px;
       padding: 0 8px 0 10px;
@@ -1272,6 +1308,184 @@
       font-size: 12px;
       font-weight: 800;
       border: 0;
+    }
+
+    .mini-order-filter-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid rgba(79, 125, 255, 0.35);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .mini-order-filter-icon {
+      width: 14px;
+      height: 10px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .mini-order-filter-icon::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 2px;
+      border-radius: 999px;
+      background: #4f7dff;
+    }
+
+    .mini-order-filter-icon::after {
+      content: "";
+      position: absolute;
+      left: 3px;
+      bottom: 0;
+      width: 8px;
+      height: 2px;
+      border-radius: 999px;
+      background: #4f7dff;
+    }
+
+    .mini-order-new-arrival {
+      margin: 0 10px 6px;
+      padding: 7px 10px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #fff4f4, #fff0f0);
+      color: #ff4d4f;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .mini-order-new-arrival-speaker {
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .mini-order-new-arrival-text {
+      line-height: 1.3;
+    }
+
+    .mini-order-sheet {
+      position: absolute;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      justify-content: flex-end;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .mini-order-shell .mini-order-sheet.show {
+      display: flex;
+    }
+
+    .mini-order-sheet-mask {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+    }
+
+    .mini-order-sheet-body {
+      position: relative;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+      transform: translateY(100%);
+      transition: transform 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 60vh;
+    }
+
+    .mini-order-sheet.show .mini-order-sheet-body {
+      transform: translateY(0);
+    }
+
+    .mini-order-sheet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mini-order-sheet-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #1d2533;
+    }
+
+    .mini-order-sheet-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 0;
+      background: #f2f4f8;
+      color: #7a8499;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .mini-order-sheet-content {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mini-order-filter-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1d2533;
+    }
+
+    .mini-order-filter-select {
+      width: 100%;
+      min-height: 40px;
+      padding: 0 10px;
+      border-radius: 10px;
+      border: 1px solid #e1e4eb;
+      background: #fff;
+      color: #1d2533;
+      font-size: 13px;
+    }
+
+    .mini-order-sheet-footer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding-top: 4px;
+    }
+
+    .mini-order-sheet-reset,
+    .mini-order-sheet-confirm {
+      min-height: 42px;
+      border-radius: 12px;
+      border: 0;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .mini-order-sheet-reset {
+      background: #f2f4f8;
+      color: #5a6375;
+    }
+
+    .mini-order-sheet-confirm {
+      background: linear-gradient(135deg, #4f7dff, #48c2ff);
+      color: #fff;
     }
 
     .mini-order-tabs {
@@ -1401,6 +1615,11 @@
       font-weight: 800;
     }
 
+    .mini-order-status.is-success {
+      color: #23b26d;
+      font-weight: 800;
+    }
+
     .mini-order-countdown {
       color: #ff4d4f;
       font-size: 10px;
@@ -1492,6 +1711,42 @@
       font-size: 10px;
       font-weight: 800;
       border: 0;
+      cursor: pointer;
+    }
+
+    .mini-order-quote-input-row {
+      display: flex;
+      gap: 0;
+      margin-top: -2px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e1e4eb;
+    }
+
+    .mini-order-quote-input {
+      flex: 1;
+      min-height: 28px;
+      padding: 0 8px;
+      border: 0;
+      background: #fff;
+      font-size: 11px;
+      color: #1d2533;
+      outline: none;
+    }
+
+    .mini-order-quote-input::placeholder {
+      color: #a0a7b5;
+      font-size: 10px;
+    }
+
+    .mini-order-quote-submit {
+      min-height: 28px;
+      padding: 0 14px;
+      border: 0;
+      background: linear-gradient(135deg, #4f7dff, #48c2ff);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
       cursor: pointer;
     }
 
@@ -1877,7 +2132,51 @@
     .mini-workbench-card span {
       font-size: 12px;
       font-weight: 700;
-      color: #1f2430;
+      color: #ff4d4f;
+    }
+
+    .mini-setting-list {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 22px rgba(18, 35, 58, 0.06);
+      overflow: hidden;
+    }
+
+    .mini-setting-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 14px;
+      min-height: 56px;
+    }
+
+    .mini-setting-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1a1f2d;
+    }
+
+    .mini-setting-switch {
+      width: 48px;
+      height: 28px;
+      border: 0;
+      cursor: pointer;
+      background: rgba(118, 136, 170, 0.26);
+    }
+
+    .mini-setting-switch::after {
+      width: 22px;
+      height: 22px;
+      top: 3px;
+      left: 3px;
+    }
+
+    .mini-setting-switch.on {
+      background: linear-gradient(135deg, #ff7a00, #ff9500);
+    }
+
+    .mini-setting-switch.on::after {
+      transform: translateX(20px);
     }
 
     .spec-prose {
@@ -2602,6 +2901,117 @@
 
     .switch.on::after {
       transform: translateX(24px);
+    }
+
+    .page-top-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: #fff;
+      border-radius: 999px;
+      box-shadow: 0 6px 18px rgba(18, 35, 58, 0.06);
+    }
+
+    .page-top-switch-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1a1f2d;
+      white-space: nowrap;
+    }
+
+    .pc-sound-switch.on {
+      background: linear-gradient(135deg, #ff7a00, #ff9500);
+    }
+
+    .page-top-switch .switch {
+      transform: scale(0.78);
+    }
+
+    .pc-new-arrival {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin: 0 22px 14px;
+      padding: 9px 14px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #fff4f4, #fff0f0);
+      color: #ff4d4f;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .pc-new-arrival-speaker {
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .pc-new-arrival-text {
+      line-height: 1.3;
+    }
+
+    .global-toast-stack {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 320px;
+      pointer-events: none;
+    }
+
+    .global-toast {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 12px 32px rgba(18, 35, 58, 0.16);
+      border-left: 4px solid #ff7a00;
+      font-size: 13px;
+      color: #1a1f2d;
+      animation: toastIn 0.24s ease;
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .global-toast-icon {
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+
+    .global-toast-text {
+      flex: 1 1 auto;
+      line-height: 1.4;
+    }
+
+    .global-toast-close {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border: 0;
+      background: transparent;
+      color: #9aa0ac;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+    }
+
+    .global-toast-close:hover {
+      background: #f3f4f6;
+      color: #1a1f2d;
     }
 
     .reason-tabs {
@@ -4685,6 +5095,14 @@
             <div>
               <h2 class="section-title">订单管理 - 订单列表</h2>
             </div>
+            <div class="page-top-switch">
+              <span class="page-top-switch-label">新订单提示：</span>
+              <button class="switch pc-sound-switch" id="pcSoundSwitch" type="button" data-action="toggle-pc-sound" aria-pressed="true"></button>
+            </div>
+          </div>
+          <div class="pc-new-arrival" id="pcNewArrival" data-action="refresh-pc-order" style="display: none;" hidden>
+            <span class="pc-new-arrival-speaker" aria-hidden="true">🔊</span>
+            <span class="pc-new-arrival-text">又有2笔新订单了，戳我立即刷新~</span>
           </div>
           <div class="filters">
             <div class="filter-row">
@@ -4706,12 +5124,12 @@
               </div>
             </div>
             <div class="status-tabs" id="supplierOrderTabs">
-              <button class="status-tab" data-supplier-order-tab="pending">处理中</button>
-              <button class="status-tab" data-supplier-order-tab="processing">
-                进行中
-                <span class="status-tab-badge" id="supplierOrderPendingBadge" aria-label="待处理">0</span>
+              <button class="status-tab" data-supplier-order-tab="pending">新订单</button>
+              <button class="status-tab" data-supplier-order-tab="processing">竞价中</button>
+              <button class="status-tab" data-supplier-order-tab="completed">
+                待出单
+                <span class="status-tab-badge" id="supplierOrderCompletedBadge" aria-label="待出单">0</span>
               </button>
-              <button class="status-tab" data-supplier-order-tab="completed">已完成</button>
               <button class="status-tab" data-supplier-order-tab="failed">已失败</button>
               <button class="status-tab" data-supplier-order-tab="all">全部</button>
             </div>
@@ -4733,11 +5151,15 @@
           </div>
           <div class="spec-prose">
             <p><strong>新增范围包括：</strong><span style="color: #ff4d4f;">一级供应商后台、二级供应商后台</span>。</p>
-            <p><strong>页面定位：</strong>供应商端【PC】 > 订单管理 > 订单列表，用于展示供应商的出餐订单，按“处理中/进行中/已完成/已失败/全部”切换 tab。</p>
-            <p><strong>处理中 tab：</strong>位于「进行中」左侧，展示所有下单成功但尚未进入竞价阶段的订单，包括已报价和未报价的订单。</p>
-            <p><strong>列表排序：</strong>根据倒计时排序，短的在上面。</p>
-            <p><strong>进行中角标：</strong>「进行中」tab 右上角红字角标显示处理中订单数量，数量为 0 时隐藏。</p>
-            <p><strong>字段口径：</strong>处理中 tab 列表展示商品名称、门店名称、店铺地址、竞价状态、市场价、最高限价、报价金额、竞价倒计时、报价规则名称、操作。</p>
+            <p><strong>页面的流转：</strong>未报价的订单在新订单页面，报价后直接进入竞价中页面，倒计时继续，如果报价后倒计时结束直接进入待出单页面【不再进入竞价中页面了】。</p>
+            <p><strong>新订单提示音开关：</strong>页面右上角显示“新订单提示：”开关图标，默认开启；点击开关关闭时弹出二次确认弹窗“确认要关闭提示音？关闭提示音可能会错过新订单”，可选择“暂不关闭”或“确认关闭”。</p>
+            <p><strong>右上角语音提醒：</strong>有新订单进入时，网站右上角显示通知“守兔来新订单啦”，左侧带音量图标，右侧带删除图标；语音响起时显示，持续 2s 后自动消失，也可点击删除图标手动关闭。关闭提示音后不再显示新的语音提醒。</p>
+            <p hidden><strong>站内新订单提醒：</strong>订单列表页面标题与筛选区之间显示红色提醒条“又有N笔新订单了，戳我立即刷新~”；点击提醒条后刷新订单列表并隐藏提醒条。若“新订单提示”开启，同时会有右上角语音提醒。</p>
+            <p><strong>页面定位：</strong>供应商端【PC】 > 订单管理 > 订单列表，用于展示供应商的出餐订单，按“新订单/竞价中/待出单/已失败/全部”切换 tab。</p>
+            <p><strong>新订单 tab：</strong>展示所有下单成功但尚未报价的订单。</p>
+            <p><strong>竞价中 tab：</strong>展示所有已报价、正在参与竞价的订单，字段与「新订单」tab 保持一致。</p>
+            <p><strong>列表排序：</strong>「新订单」与「竞价中」tab 均根据倒计时排序，短的在上面。</p>
+            <p><strong>待出单角标：</strong>「待出单」tab 右上角红字角标显示待出单订单数量，数量为 0 时隐藏。</p>
             <p><strong>筛选项输入框逻辑：</strong></p>
             <p class="spec-subline"><strong>出餐单号：</strong>支持按出餐单号精确查询。</p>
             <p class="spec-subline"><strong>商品名称：</strong>支持按商品名称关键词查询。</p>
@@ -4746,23 +5168,30 @@
             <p class="spec-subline"><strong>清空：</strong>恢复为空条件。</p>
             <p><strong>列表字段的数据源与显示逻辑：</strong></p>
             <p class="spec-subline">有两个状态，一个是待报价，一个是竞价中，有报价金额的状态为“竞价中”；没有报价金额的状态为“待报价”。</p>
-            <p class="spec-subline"><strong>处理中列表数据源：</strong>展示所有下单成功但尚未进入竞价阶段的订单，包括已报价和未报价的订单。</p>
+            <p class="spec-subline"><strong>新订单列表数据源：</strong>展示所有下单成功但尚未报价的订单（无报价金额）。</p>
+            <p class="spec-subline"><strong>竞价中列表数据源：</strong>展示所有已报价、正在参与竞价的订单（有报价金额）。</p>
+            <p class="spec-subline"><strong>待出单列表数据源：</strong>展示竞价成功（已分配）的订单；列表字段与小程序「待出单」卡片一致：商品名称、商品品牌、竞价成功时间、成交价、操作。</p>
             <p class="spec-subline"><strong>商品名称：</strong>取当前订单的商品名称；若同一订单包含多个商品名称，换行显示，全部展示。</p>
+            <p class="spec-subline"><strong>商品品牌：</strong>取当前订单的商品品牌。</p>
             <p class="spec-subline"><strong>门店名称：</strong>取该订单对应门店的展示名称。</p>
             <p class="spec-subline"><strong>店铺地址：</strong>取对应门店地址，过长时允许自动换行。</p>
-            <p class="spec-subline"><strong>竞价状态：</strong>命中报价规则时显示“竞价中”；未命中报价规则时显示“待报价”。</p>
             <p class="spec-subline"><strong>市场价：</strong>取后台配置的商品原价。</p>
             <p class="spec-subline"><strong>最高限价：</strong>取后台配置的最高限价。</p>
             <p class="spec-subline"><strong>报价金额：</strong>命中报价规则时显示“该供应商配置的报价金额”（取实际报价）；未命中报价规则时显示“-”。</p>
-            <p class="spec-subline"><strong>竞价倒计时：</strong>取后台配置的订单处理中倒计时，按 HH:mm:ss 格式展示；倒计时结束，系统按照报价最低的供应商进行订单分配。</p>
+            <p class="spec-subline"><strong>报价倒计时/竞价倒计时：</strong>均取后台配置的“订单分配前倒计时”，按 HH:mm:ss 格式展示；新订单 tab 列头显示“报价倒计时”，竞价中 tab 列头显示“竞价倒计时”。倒计时结束，系统按照报价最低的供应商进行订单分配。</p>
             <p class="spec-subline"><strong>报价规则名称：</strong>命中报价规则时显示当前命中的报价规则名称；未命中时显示“-”。</p>
-            <p class="spec-subline"><strong>操作：</strong>命中报价规则（竞价中）显示“修改报价”按钮；未命中显示“去报价”按钮。</p>
-            <p><strong>填写报价金额弹窗：</strong>未命中规则点击“去报价”按钮后打开。</p>
-            <p class="spec-subline"><strong>商品名称：</strong>取当前订单的商品名称。</p>
-            <p class="spec-subline"><strong>最高限价：</strong>取后台配置的最高限价。</p>
-            <p class="spec-subline"><strong>报价金额：</strong>必填，输入参与竞价的报价金额。</p>
-            <p class="spec-subline"><strong>确定按钮校验：</strong>未填写时提示“请填写报价金额”；填写为 0 时提示“不能为0”；大于最高限价时提示“报价金额不能大于最高限价”；小数位数按后台配置的“供应商报价金额保留小数”生效，不符合时提示“报价金额保留一位小数”或“报价金额保留两位小数”。</p>
-            <p class="spec-subline"><strong>保存结果：</strong>校验通过后保存，订单状态变为“竞价中”。</p>
+            <p class="spec-subline"><strong>操作：</strong>新订单 tab 展示行内报价输入框与“报价”按钮；竞价中 tab 显示“修改报价”按钮；待出单 tab 显示“手工出餐”“取消出餐”按钮。</p>
+            <p style="color:#ff4d4f;"><span style="color:#1a1f2d;">点击“报价”按钮时校验：</span>① 报价倒计时已结束（00:00:00）时提示“报价倒计时结束，不能添加报价”；② 报价金额必填，为空提示“请填写报价金额”；③ 报价金额必须为数字且不能为 0；④ 报价金额不能大于该商品最高限价；⑤ 报价金额小数位数按后台配置的“供应商报价金额保留小数”生效，不符合时提示“报价金额保留 N 位小数”。校验通过后订单进入「竞价中」页面。报价成功后并按照报价的金额商品创建一条报价规则。</p>
+            <p><strong>【去报价弹窗】说明：</strong>未命中规则点击“去报价”按钮后打开，用于未命中报价规则的订单首次报价。</p>
+            <p class="spec-subline"><strong>报价规则：</strong>自动取列表商品的报价规则名称，不可修改。</p>
+            <p class="spec-subline"><strong>商品品牌：</strong>自动取列表商品品牌，不可修改。</p>
+            <p class="spec-subline"><strong>报价商品：</strong>预置列表对应商品，删除按钮禁用，不可移除。</p>
+            <p class="spec-subline"><strong>套餐模式：</strong>开关控制；开启后「套餐编号」可编辑。</p>
+            <p class="spec-subline"><strong>套餐编号：</strong>套餐模式开启时必填。</p>
+            <p class="spec-subline"><strong>出餐方式：</strong>必填，默认选中“手动”，可选人工/自动/H5链接/链接平台/API。</p>
+            <p class="spec-subline"><strong>报价金额：</strong>必填，需小于等于最高限价。</p>
+            <p class="spec-subline"><strong>确定按钮校验：</strong>竞价倒计时已结束提示“竞价倒计时结束，不能添加报价”；弹窗商品与处理中列表商品不一致提示“该商品与列表商品不一致”；未填写报价金额提示“请填写报价金额”；填写为 0 提示“不能为0”；大于最高限价提示“报价金额不能大于最高限价”；小数位数按后台配置的“供应商报价金额保留小数”生效，不符合时提示“报价金额保留一位小数”或“报价金额保留两位小数”。</p>
+            <p class="spec-subline"><strong>保存结果：</strong>校验通过后保存，订单状态变为“竞价中”。<span style="color:#ff4d4f;">点击确定按钮，新增报价规则与新增报价规则弹窗的确定按钮是一致的。</span></p>
             <p><strong>修改报价：</strong>竞价中状态点击“修改报价”按钮后进入「编辑报价规则」页面，保存后同步更新报价金额。</p>
           </div>
         </section>
@@ -4775,6 +5204,10 @@
               <h2 class="section-title">订单管理 - 竞价记录</h2>
             </div>
           </div>
+          <div class="tab-bar" style="padding: 0 24px;">
+            <button class="tab-item active" type="button" data-bid-record-tab="failed">竞价失败</button>
+            <button class="tab-item" type="button" data-bid-record-tab="success">竞价成功</button>
+          </div>
           <div class="filters">
             <div class="filter-row">
               <label class="field">
@@ -4786,16 +5219,17 @@
                 <input class="field-control" placeholder="请输入商品品牌">
               </label>
               <label class="field field-range">
-                <span class="field-label">竞价失败时间</span>
+                <span class="field-label">竞价时间</span>
                 <div class="range-control">
-                  <input type="date" aria-label="竞价失败开始日期">
+                  <input type="date" aria-label="竞价开始日期">
                   <span class="range-separator">至</span>
-                  <input type="date" aria-label="竞价失败结束日期">
+                  <input type="date" aria-label="竞价结束日期">
                 </div>
               </label>
               <div class="hero-actions">
                 <button class="btn btn-primary">搜索</button>
                 <button class="btn btn-secondary">清空</button>
+                <button class="btn btn-secondary" type="button" id="exportBidRecord" data-export-bid-record>导出</button>
               </div>
             </div>
           </div>
@@ -4816,26 +5250,29 @@
           </div>
           <div class="spec-prose">
             <p><strong>新增范围包括：</strong><span style="color: #ff4d4f;">一级供应商后台、二级供应商后台</span>。</p>
-            <p><strong>页面定位：</strong>供应商端【PC】 > 订单管理 > 竞价记录，用于展示供应商参与竞价但竞价失败的订单。</p>
-            <p><strong>字段口径：</strong>竞价记录页面仅展示商品名称、门店名称、店铺地址、竞价状态、报价金额、成交价、报价规则名称、竞价失败原因和竞价失败时间。</p>
+            <p><strong>页面定位：</strong>供应商端【PC】 > 订单管理 > 竞价记录，用于展示供应商参与竞价的订单，按「竞价失败」「竞价成功」两个 tab 切换查看。</p>
+            <p><strong>字段口径：</strong>竞价记录页面展示商品名称、商品品牌、门店名称、店铺地址、市场价、报价金额、成交价、报价规则名称、竞价成功时间、竞价失败原因、竞价失败时间和操作。</p>
             <p><strong>筛选项输入框逻辑：</strong></p>
             <p class="spec-subline"><strong>商品名称：</strong>支持按商品名称关键词下拉检索。</p>
             <p class="spec-subline"><strong>商品品牌：</strong>支持按品牌名称下拉检索。</p>
-            <p class="spec-subline"><strong>竞价失败时间：</strong>按开始时间和结束时间做区间筛选。</p>
+            <p class="spec-subline"><strong>竞价时间：</strong>按开始时间和结束时间做区间筛选。</p>
             <p class="spec-subline"><strong>搜索：</strong>按当前输入条件组合查询。</p>
             <p class="spec-subline"><strong>清空：</strong>恢复为空条件。</p>
+            <p><strong>导出按钮：</strong>「搜索」「清空」按钮后方提供「导出」按钮，点击后导出当前 tab 列表所有内容（不含操作列）为 CSV 文件。异步导出</p>
             <p><strong>列表字段的数据源与显示逻辑：</strong></p>
-            <p class="spec-subline"><strong>列表数据源：</strong>取当前供应商所有报价商品中，所有未分配且出餐成功的出餐订单。</p>
-            <p class="spec-subline"><strong>商品名称：</strong>取当前竞价失败订单的商品名称。</p>
+            <p class="spec-subline"><strong>列表数据源：</strong>取当前供应商所有报价商品中，对应竞价状态的出餐订单。</p>
+            <p class="spec-subline"><strong>商品名称：</strong>取当前竞价记录订单的商品名称。</p>
+            <p class="spec-subline"><strong>商品品牌：</strong>取当前竞价记录订单的商品品牌。</p>
             <p class="spec-subline"><strong>门店名称：</strong>取该订单对应门店的展示名称。</p>
             <p class="spec-subline"><strong>店铺地址：</strong>取对应门店地址，过长时允许自动换行。</p>
-            <p class="spec-subline"><strong>竞价状态：</strong>固定展示“竞价失败”。</p>
+            <p class="spec-subline"><strong>市场价：</strong>取后台配置的商品原价。</p>
             <p class="spec-subline"><strong>报价金额：</strong>取该供应商本次参与竞价时的报价。</p>
             <p class="spec-subline"><strong>成交价：</strong>取所有竞价表里面的最低报价；竞价记录中成交价始终存在，不为空。</p>
             <p class="spec-subline"><strong>报价规则名称：</strong>取当前命中的报价规则名称。</p>
-            <p class="spec-subline"><strong>竞价失败原因：</strong>展示竞价失败的具体原因，如“金额原因：报价金额不是最低”“超过最大接单数量：竞价时有出餐中订单”。</p>
-            <p class="spec-subline"><strong>竞价失败时间：</strong>实际失败时间，列表按照竞价失败时间倒叙。</p>
-            <p class="spec-subline"><strong>操作：</strong>展示“修改报价金额”按钮。</p>
+            <p class="spec-subline"><strong>竞价成功时间：</strong>仅竞价成功 tab 展示实际成功时间，列表按该时间倒序；竞价失败 tab 不展示该字段。</p>
+            <p class="spec-subline"><strong>竞价失败原因：</strong>仅竞价失败 tab 展示具体原因，如“金额原因：报价金额不是最低”“超过最大接单数量：竞价时有出餐中订单”“报价相同：系统随机分配失败”；竞价成功 tab 不展示该字段。</p>
+            <p class="spec-subline"><strong>竞价失败时间：</strong>仅竞价失败 tab 展示实际失败时间，列表按该时间倒序；竞价成功 tab 不展示该字段。</p>
+            <p class="spec-subline"><strong>操作：</strong>竞价失败 tab 展示“修改报价金额”按钮；竞价成功 tab 操作列不展示按钮，且最后一列不固定。</p>
             <p><strong>编辑报价规则页面：</strong>点击“编辑报价金额”后进入「编辑报价规则」页面，内容与供应商后台的商品报价页面的修改报价规则弹窗内容一致。点击“确定”后保存结果同步到出价管理--商品报价页面、点餐后台--商品报价页面、一级供应商的出餐管理--商品报价页面，以及对应的小程序端。</p>
           </div>
         </section>
@@ -4995,11 +5432,11 @@
                 <div class="mini-workbench-grid">
                   <div class="mini-workbench-card">
                     <div class="mini-workbench-icon" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);">账</div>
-                    <span>瑞幸账号</span>
+                    <span style="color:#1f2430;">瑞幸账号</span>
                   </div>
                   <div class="mini-workbench-card">
                     <div class="mini-workbench-icon" style="background: linear-gradient(135deg, #0ea5e9, #38bdf8);">券</div>
-                    <span>瑞幸兑换券</span>
+                    <span style="color:#1f2430;">瑞幸兑换券</span>
                   </div>
                 </div>
               </div>
@@ -5008,11 +5445,11 @@
                 <div class="mini-workbench-grid">
                   <div class="mini-workbench-card">
                     <div class="mini-workbench-icon" style="background: linear-gradient(135deg, #6366f1, #818cf8);">补</div>
-                    <span>补偿单列表</span>
+                    <span style="color:#1f2430;">补偿单列表</span>
                   </div>
                   <div class="mini-workbench-card">
                     <div class="mini-workbench-icon" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">售</div>
-                    <span>售后补贴单</span>
+                    <span style="color:#1f2430;">售后补贴单</span>
                   </div>
                   <div class="mini-workbench-card" data-page-target="supplier-mini-bid-record">
                     <div class="mini-workbench-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">竞</div>
@@ -5020,12 +5457,12 @@
                   </div>
                 </div>
               </div>
-              <div class="mini-workbench-section" hidden>
+              <div class="mini-workbench-section">
                 <h3 class="mini-workbench-section-title">其他</h3>
                 <div class="mini-workbench-grid">
-                  <div class="mini-workbench-card" data-page-target="supplier-mini-quote-products">
-                    <div class="mini-workbench-icon" style="background: linear-gradient(135deg, #10b981, #34d399);">报</div>
-                    <span>可报价商品列表</span>
+                  <div class="mini-workbench-card" data-page-target="supplier-mini-settings">
+                    <div class="mini-workbench-icon" style="background: linear-gradient(135deg, #64748b, #94a3b8);">设</div>
+                    <span>设置</span>
                   </div>
                 </div>
               </div>
@@ -5060,6 +5497,7 @@
           <div class="spec-prose">
             <p><strong>品牌账号：</strong>展示供应商可管理的品牌账号入口，如瑞幸账号、瑞幸兑换券。</p>
             <p><strong>待处理订单：</strong>展示待处理业务入口，包括补偿单列表、售后补贴单、竞价记录。</p>
+            <p><strong>其他：</strong>工作台新增「其他」区域，内置「设置」入口；点击「设置」进入设置页面。</p>
             <p><strong>底部导航：</strong>「工作台」与「订单」可点击切换对应页面；「首页」「我的」为占位展示。</p>
           </div>
         </section>
@@ -5088,7 +5526,14 @@
                   <span>请输入订单号</span>
                 </div>
                 <button class="mini-order-search-btn" type="button">搜索</button>
+                <button class="mini-order-filter-btn" type="button" data-action="open-mini-order-filter" aria-label="筛选">
+                  <span class="mini-order-filter-icon" aria-hidden="true"></span>
+                </button>
               </div>
+            </div>
+            <div class="mini-order-new-arrival" id="miniOrderNewArrival" data-action="refresh-mini-order" style="display: none;">
+              <span class="mini-order-new-arrival-speaker" aria-hidden="true">🔊</span>
+              <span class="mini-order-new-arrival-text">又有2笔新订单了，戳我立即刷新~</span>
             </div>
             <div class="mini-order-tabs" id="miniOrderTabs"></div>
             <div class="mini-order-list" id="miniOrderList"></div>
@@ -5111,6 +5556,25 @@
                 <span>我的</span>
               </div>
             </div>
+            <div class="mini-order-sheet" id="miniOrderFilterSheet" aria-hidden="true">
+              <div class="mini-order-sheet-mask" data-action="close-mini-order-filter"></div>
+              <div class="mini-order-sheet-body">
+                <div class="mini-order-sheet-head">
+                  <div class="mini-order-sheet-title">筛选</div>
+                  <button class="mini-order-sheet-close" type="button" data-action="close-mini-order-filter" aria-label="关闭">×</button>
+                </div>
+                <div class="mini-order-sheet-content">
+                  <label class="mini-order-filter-label">商品品牌</label>
+                  <select class="mini-order-filter-select" id="miniOrderBrandSelect">
+                    <option value="">全部品牌</option>
+                  </select>
+                </div>
+                <div class="mini-order-sheet-footer">
+                  <button class="mini-order-sheet-reset" type="button" data-action="reset-mini-order-filter">重置</button>
+                  <button class="mini-order-sheet-confirm" type="button" data-action="confirm-mini-order-filter">确定</button>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
         <section class="panel panel-inner">
@@ -5120,7 +5584,18 @@
             </div>
           </div>
           <div class="spec-prose">
-            <p>说明跟PC端的一致。列表排序：根据倒计时排序，短的在上面。</p>
+            <p hidden><strong>Tab 文案：</strong>小程序端订单列表按“新订单/竞价中/待出单/已完成/全部”切换 tab。</p>
+            <p hidden><strong>新订单：</strong>展示下单成功但尚未报价的订单，卡片头部显示门店、复制按钮、红色报价倒计时；正文展示商品名称、商品品牌、市场价、最高限价、报价金额、报价规则名称；底部为行内报价输入框+“报价”按钮。</p>
+            <p hidden><strong>竞价中：</strong>展示已报价、正在参与竞价的订单，卡片头部显示门店、复制按钮、红色竞价倒计时；正文字段与「新订单」tab 保持一致，报价金额红字显示；操作按钮显示“修改报价”。</p>
+            <p><strong>待出单：</strong>卡片与现在已有卡片一样。</p>
+            <p hidden><strong>已完成：</strong>展示已出餐完成的订单。</p>
+            <p hidden><strong>列表排序：</strong>「新订单」与「竞价中」根据倒计时排序，短的在上面；「待出单」按竞价成功时间倒序；「已完成」按接单时间倒序。</p>
+            <p style="color:#ff4d4f;"><strong>行内报价规则：</strong>点击“报价”按钮时校验：① 报价倒计时已结束（00:00:00）时提示“报价倒计时结束，不能添加报价”；② 报价金额必填，为空提示“请填写报价金额”；③ 报价金额必须为数字且不能为 0；④ 报价金额不能大于该商品最高限价；⑤ 报价金额小数位数按后台配置的“供应商报价金额保留小数”生效，不符合时提示“报价金额保留 N 位小数”。校验通过后订单进入「竞价中」页面。</p>
+            <p><strong>筛选：</strong>搜索按钮右侧显示筛选图标；点击后自下而上弹出半屏弹窗，弹窗内提供「商品品牌」下拉选择，选项取与供应商合作的品牌列表；点击「确定」后按所选品牌过滤当前 tab 订单列表，点击「重置」清空已选品牌。</p>
+            <p><strong>新订单提醒：</strong>当有新的未报价订单进入时，在搜索筛选区与 tab 栏之间显示红色提醒条“又有N笔新订单了，戳我立即刷新~”；点击提醒条后刷新订单列表并隐藏提醒条。若“新订单提示音”开启，同时会有语音提醒“守兔来新订单啦”。</p>
+            <p><strong>设置入口：</strong>小程序「工作台」页面「其他」区域新增「设置」入口；点击进入设置页面，可开启/关闭“新订单提示音”。</p>
+            <p><strong>提示音开关：</strong>设置页面中“新订单提示音”开关默认开启；关闭时弹出二次确认弹窗“确认要关闭提示音？关闭提示音可能会错过新订单”，可选择“暂不关闭”或“确认关闭”。</p>
+            <p hidden><strong>待出单角标：</strong>底部「订单」导航与「待出单」tab 右上角显示待出单数量。</p>
           </div>
         </section>
       </section>
@@ -5176,6 +5651,66 @@
         </section>
       </section>
 
+      <section class="page mini-order-page" data-page="supplier-mini-settings">
+        <section class="panel mini-order-panel">
+          <div class="mini-order-shell">
+            <div class="mini-order-top">
+              <div class="mini-order-time">9:25</div>
+              <div class="mini-order-title-bar">
+                <button class="mini-order-back" type="button" data-page-target="supplier-mini-workbench">‹</button>
+                <div class="mini-order-title">设置</div>
+              </div>
+              <div class="mini-order-actions">
+                <div class="mini-order-action-pill" aria-hidden="true">
+                  <span class="mini-order-action-dot"></span>
+                </div>
+                <div class="mini-order-action-pill" aria-hidden="true" style="min-width: 86px;">
+                  <span class="mini-order-action-circle"></span>
+                </div>
+              </div>
+            </div>
+            <div class="mini-workbench-body">
+              <div class="mini-setting-list">
+                <div class="mini-setting-item">
+                  <span class="mini-setting-label">新订单提示音</span>
+                  <button class="switch mini-setting-switch" id="miniSoundSwitch" type="button" data-action="toggle-mini-sound" aria-pressed="true"></button>
+                </div>
+              </div>
+            </div>
+            <div class="mini-order-bottom">
+              <div class="mini-order-nav-item" data-page-target="supplier-mini-home">
+                <div class="mini-order-nav-icon">⌂</div>
+                <span>首页</span>
+              </div>
+              <div class="mini-order-nav-item" data-page-target="supplier-mini-workbench">
+                <div class="mini-order-nav-icon">▥</div>
+                <span>工作台</span>
+              </div>
+              <div class="mini-order-nav-item" data-page-target="supplier-mini-order">
+                <div class="mini-order-nav-icon">☰</div>
+                <span>订单</span>
+                <span class="mini-order-nav-badge" data-order-nav-badge style="display: none;">0</span>
+              </div>
+              <div class="mini-order-nav-item" data-page-target="supplier-mini-mine">
+                <div class="mini-order-nav-icon">◔</div>
+                <span>我的</span>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="panel panel-inner">
+          <div class="section-head" style="padding: 0 0 18px;">
+            <div>
+              <h2 class="section-title">说明</h2>
+            </div>
+          </div>
+          <div class="spec-prose">
+            <p><strong>设置入口：</strong>从工作台「其他」区域点击「设置」进入。</p>
+            <p><strong>新订单提示音：</strong>开关默认开启；开启后，有新订单进入时会播放语音提醒“守兔来新订单啦”。关闭时弹出二次确认弹窗，确认后才生效。</p>
+          </div>
+        </section>
+      </section>
+
       <section class="page mini-order-page" data-page="supplier-mini-bid-record">
         <section class="panel mini-order-panel">
           <div class="mini-order-shell">
@@ -5191,6 +5726,7 @@
                 </div>
               </div>
             </div>
+            <div class="mini-order-tabs" id="miniBidRecordTabs"></div>
             <div class="mini-order-list" id="miniBidRecordList"></div>
           </div>
         </section>
@@ -5202,10 +5738,13 @@
           </div>
           <div class="spec-prose">
             <p><strong>入口：</strong>从工作台「待处理订单」区域的「竞价记录」点击进入。</p>
-            <p><strong>列表数据：</strong>内容与 PC 端竞价记录保持一致，展示供应商竞价失败的订单。</p>
+            <p><strong>Tab 切换：</strong>页面顶部提供「竞价失败」「竞价成功」两个 tab，默认展示「竞价失败」；切换后列表按对应状态筛选，当前 tab 有选中下划线样式。</p>
+            <p><strong>列表数据：</strong>内容与 PC 端竞价记录保持一致，分别展示供应商竞价失败、竞价成功的订单。</p>
             <p><strong>成交价：</strong>取所有竞价表里面的最低报价；竞价记录中成交价始终存在，不为空。</p>
             <p><strong>报价规则：</strong>在商品金额下方展示该商品所属的报价规则名称。</p>
-            <p><strong>编辑报价金额：</strong>每条记录成交价下方展示「编辑报价金额」按钮，点击后进入「编辑报价规则」页面（与 PC 端修改报价规则弹窗内容一致）。</p>
+            <p><strong>竞价失败时间/失败原因：</strong>仅竞价失败 tab 展示。</p>
+            <p><strong>竞价成功时间：</strong>仅竞价成功 tab 展示。</p>
+            <p><strong>编辑报价金额：</strong>仅竞价失败 tab 每条记录成交价下方展示「编辑报价金额」按钮，点击后进入「编辑报价规则」页面（与 PC 端修改报价规则弹窗内容一致）。</p>
           </div>
         </section>
       </section>
@@ -5373,7 +5912,7 @@
             </article>
             <article class="deliver-card">
               <h3>当前配置值</h3>
-              <p>统一保留 <strong>1 位小数</strong></p>
+              <p>统一保留 <strong>2 位小数</strong></p>
             </article>
           </div>
         </section>
@@ -5414,15 +5953,15 @@
                   </div>
                 </div>
                 <div class="ops-card-body" id="quoteRoundingDisplay">
-                  <strong id="quoteRoundingValue">1</strong>
+                  <strong id="quoteRoundingValue">2</strong>
                   <span class="ops-card-unit" id="quoteRoundingUnit">位小数</span>
                 </div>
                 <div class="ops-card-edit" id="quoteRoundingEdit" hidden>
                   <label class="coupon-field" style="gap: 6px;">
                     <span class="coupon-field-label">保留小数位数</span>
-                    <select class="ops-card-select" id="quoteRoundingSelect" data-saved="1">
-                      <option value="1" selected>1位小数</option>
-                      <option value="2">2位小数</option>
+                    <select class="ops-card-select" id="quoteRoundingSelect" data-saved="2">
+                      <option value="1">1位小数</option>
+                      <option value="2" selected>2位小数</option>
                     </select>
                   </label>
                   <div class="ops-card-actions">
@@ -5482,10 +6021,10 @@
               </article>
               <article class="ops-config-card">
                 <div class="ops-card-head">
-                  <h3>订单处理中倒计时</h3>
+                  <h3>订单分配前倒计时</h3>
                   <div class="ops-card-help" tabindex="0">
                     <span class="ops-card-tip">?</span>
-                    <div class="ops-card-tooltip">按照配置的时间进行倒计时，倒计时结束，按照报价最低的进行分配订单</div>
+                    <div class="ops-card-tooltip">按照配置的时间进行倒计时，在新订单页面和竞价中页面，倒计时结束，按照报价最低的进行分配订单</div>
                   </div>
                 </div>
                 <div class="ops-card-body" id="orderProcessCountdownDisplay">
@@ -5529,13 +6068,13 @@
             <p class="spec-subline"><strong>保存校验：</strong>点击保存时校验三个输入框是否都已填写；若有未填写，提示“不能为空”。</p>
             <p class="spec-subline"><strong>生效含义：</strong>输入框为 0 时表示不关闭报价权限；大于 0 时，系统按照对应次数的人工出餐超时未处理状态，暂停供应商对应时长的报价权限，超时后自动开启。每次系统自动开启/关闭报价权限，都会进行公众号提醒。</p>
             <p class="spec-subline"><strong>注意：</strong><br>1. 对所有超时未处理的人工报价状态开启的系统自动关闭，到达配置的关闭报价时间后，进行自动开启【每一次系统的自动关闭/开启都会进行公众号提醒】<br>2. 第三次开启后，如果第四次还是超时未处理，【中间没有出餐成功的情况下】，按照时间停止报价时间最长的生效；若有一次出餐成功，在超时未处理，从第一个设置的开始停止报价配置生效<br>3. 系统自动关闭后，供应商端点击报价规则 开启状态时，提示<strong>“因超时未处理，报价权限被关闭，具体请看公众号提醒”</strong></p>
-            <p><strong>卡片标题：</strong><span style="color:#e5484d;">订单处理中倒计时</span></p>
-            <p><strong>卡片定位：</strong>【瑞幸】订单相关配置中的“订单处理中倒计时”卡片，控制供应商端订单处理中列表的竞价倒计时长度。</p>
+            <p><strong>卡片标题：</strong><span style="color:#e5484d;">订单分配前倒计时</span></p>
+            <p><strong>卡片定位：</strong>【瑞幸】订单相关配置中的“订单分配前倒计时”卡片，控制供应商端订单列表在新订单、竞价中阶段的倒计时长度。</p>
             <p><strong>编辑逻辑：</strong></p>
             <p class="spec-subline"><strong>输入框规则：</strong>1-3600 的整数，默认值为 30，单位为秒。</p>
             <p class="spec-subline"><strong>保存校验：</strong>点击保存时校验输入框是否已填写；若未填写，提示“不能为空”。</p>
-            <p class="spec-subline"><strong>生效含义：</strong>配置后，订单处理中列表按照配置的时间进行倒计时展示；倒计时结束，系统按照报价最低的供应商进行订单分配。</p>
-            <p class="spec-subline"><strong>影响范围：</strong>供应商端 PC 订单处理中列表【一级和二级供应商后台】、小程序端订单处理中列表。</p>
+            <p class="spec-subline"><strong>生效含义：</strong>配置后，新订单、竞价中列表按照配置的时间进行倒计时展示；倒计时结束，系统按照报价最低的供应商进行订单分配。</p>
+            <p class="spec-subline"><strong>影响范围：</strong>供应商端 PC 订单列表【一级和二级供应商后台】、小程序端订单列表。</p>
             <div class="wechat-notice-box">
               <h4>微信公众号提醒：</h4>
               <p><strong>模板ID：</strong>kTKE9wk825QcA0fiVJiLL2uFLsr9oG2LgIRESUxSswE</p>
@@ -5679,6 +6218,7 @@
 
   <div class="modal-mask" id="modalMask"></div>
   <div class="drawer-mask" id="drawerMask"></div>
+  <div class="global-toast-stack" id="globalToastStack"></div>
 
   <section class="modal" id="addOrderModal" aria-hidden="true">
     <div class="modal-head">
@@ -6197,18 +6737,66 @@
       </div>
       <button class="close-btn" data-close-modal="pendingQuoteModal" aria-label="关闭">×</button>
     </div>
-    <div class="modal-body">
-      <div class="pending-quote-summary">
-        <div class="pending-quote-row"><span>商品名称：</span><strong id="pendingQuoteProduct">-</strong></div>
-        <div class="pending-quote-row"><span>最高限价：</span><strong id="pendingQuoteMaxLimit">-</strong></div>
-      </div>
-      <label class="field">
-        <span class="field-label required">报价金额</span>
-        <div class="quote-amount-row">
-          <input class="field-control" id="pendingQuoteAmount" inputmode="decimal" placeholder="请输入报价金额">
-          <span class="quote-rule-hint">平台订单将优先分配给最低报价供应商</span>
+    <div class="modal-body quote-rule-body">
+      <div class="quote-rule-form">
+        <label class="field quote-rule-field">
+          <span class="field-label required">报价规则</span>
+          <div class="quote-rule-counter-wrap">
+            <input class="field-control" id="pendingQuoteRuleNameInput" maxlength="50" value="" disabled>
+            <span class="quote-rule-counter" id="pendingQuoteRuleNameCounter">0 / 50</span>
+          </div>
+        </label>
+        <div class="quote-rule-line">
+          <span class="field-label">套餐模式:</span>
+          <button class="switch quote-rule-switch" id="pendingQuotePackageModeSwitch" type="button" aria-pressed="false"></button>
         </div>
-      </label>
+        <label class="field">
+          <span class="field-label">套餐编号</span>
+          <input class="field-control quote-rule-disabled" id="pendingQuotePackageNoInput" placeholder="输入套餐编号" disabled>
+        </label>
+        <label class="field">
+          <span class="field-label required">商品品牌</span>
+          <select class="field-control" id="pendingQuoteBrandSelect" disabled>
+            <option value="瑞幸">瑞幸</option>
+            <option value="霸王茶姬">霸王茶姬</option>
+            <option value="肯德基">肯德基</option>
+            <option value="星巴克">星巴克</option>
+          </select>
+        </label>
+        <div class="table-shell quote-rule-table-shell">
+          <div class="table-wrap">
+            <table class="quote-rule-table">
+              <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>商品名称</th>
+                  <th>市场价</th>
+                  <th>报价最高限价</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="pendingQuoteProductBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="quote-rule-methods">
+          <span class="field-label required">出餐方式:</span>
+          <div class="quote-rule-radio-group">
+            <label class="quote-rule-radio"><input type="radio" name="pendingQuoteMealMethod" value="manual" checked> 手动</label>
+            <label class="quote-rule-radio"><input type="radio" name="pendingQuoteMealMethod" value="auto"> 自动</label>
+            <label class="quote-rule-radio"><input type="radio" name="pendingQuoteMealMethod" value="h5"> H5链接</label>
+            <label class="quote-rule-radio"><input type="radio" name="pendingQuoteMealMethod" value="link"> 链接平台</label>
+            <label class="quote-rule-radio"><input type="radio" name="pendingQuoteMealMethod" value="api"> API</label>
+          </div>
+        </div>
+        <label class="field">
+          <span class="field-label required">报价金额</span>
+          <div class="quote-amount-row">
+            <input class="field-control" id="pendingQuoteAmount" inputmode="decimal" placeholder="请输入报价金额">
+            <span class="quote-rule-hint">平台订单将优先分配给最低报价供应商</span>
+          </div>
+        </label>
+      </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-secondary" data-close-modal="pendingQuoteModal">取消</button>
@@ -6239,6 +6827,20 @@
     <div class="modal-foot">
       <button class="btn btn-secondary" data-close-modal="miniPendingQuoteModal">取消</button>
       <button class="btn btn-primary" id="saveMiniPendingQuote" type="button">确定</button>
+    </div>
+  </section>
+
+  <section class="modal" id="closeSoundModal" aria-hidden="true">
+    <div class="modal-head">
+      <div>
+        <h2 class="modal-title">确认要关闭提示音？</h2>
+        <p class="modal-sub">关闭提示音可能会错过新订单</p>
+      </div>
+      <button class="close-btn" data-close-modal="closeSoundModal" aria-label="关闭">×</button>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-close-modal="closeSoundModal">暂不关闭</button>
+      <button class="btn btn-danger" id="confirmCloseSound" type="button">确认关闭</button>
     </div>
   </section>
 
@@ -6654,7 +7256,18 @@
       activePendingQuoteMaxLimit: null,
       activeProductQuoteId: null,
       supplierOrderTab: "pending",
+      bidRecordTab: "failed",
+      miniBidRecordTab: "failed",
       miniOrderTab: "handling",
+      miniOrderBrandFilter: "",
+      miniOrderBrandFilterOpen: false,
+      miniOrderNewArrivalCount: 2,
+      pcNewArrivalCount: 2,
+      miniSoundEnabled: true,
+      soundToastTimer: null,
+      soundNotifications: [
+        { id: "sound-1", text: "守兔来新订单啦" }
+      ],
       miniQuoteRuleMode: "add",
       miniQuoteRuleEditOrderId: null,
       noteDraftImageCount: 0,
@@ -6677,6 +7290,7 @@
       "supplier-mini-workbench": { section: "商家小程序端", current: "工作台" },
       "supplier-mini-order": { section: "商家小程序端", current: "订单" },
       "supplier-mini-bid-record": { section: "商家小程序端", current: "竞价记录" },
+      "supplier-mini-settings": { section: "商家小程序端", current: "设置" },
       "supplier-mini-quote-products": { section: "商家小程序端", current: "可报价商品列表" },
       "supplier-mini-quote-rule": { section: "商家小程序端", current: "新增报价规则" },
       "supplier-mini-mine": { section: "商家小程序端", current: "我的" },
@@ -6688,12 +7302,14 @@
     };
 
     const supplierOrderTabConfig = [
-      { key: "pending", label: "处理中" },
-      { key: "processing", label: "进行中" },
-      { key: "completed", label: "已完成" },
+      { key: "pending", label: "新订单" },
+      { key: "processing", label: "竞价中" },
+      { key: "completed", label: "待出单" },
       { key: "failed", label: "已失败" },
       { key: "all", label: "全部" }
     ];
+
+    const supplierCoopBrands = ["瑞幸", "霸王茶姬", "肯德基", "麦当劳", "KFC"];
 
     const supplierOrderRecords = [
       {
@@ -6922,6 +7538,76 @@
         pickupCode: "D305",
         pickupQrCode: "查看二维码",
         secondarySupplier: "-"
+      },
+      {
+        id: "SO-006",
+        tab: "bid-success",
+        thirdOrderNo: "DY202608190031",
+        mealOrderNo: "DC202608190031",
+        acceptRecordNo: "REC202608190031",
+        acceptTime: "2026-08-19 13:05:22",
+        remainingMealTime: "00分00秒",
+        mealTime: "2026-08-19 13:18:45",
+        settlementTime: "2026-08-19 13:35:10",
+        mealStatus: "竞价成功",
+        mealMethod: "自动",
+        productName: "丝绒拿铁",
+        quoteAmount: "13.5",
+        dealPrice: "13.5",
+        quoteRuleName: "瑞幸10选1",
+        bidFailedReason: "-",
+        bidFailedTime: "-",
+        bidSuccessTime: "2026-08-19 13:18:45",
+        orderPlatform: "抖音",
+        mealAccount: "luckin-xm-03",
+        redeemLink: "查看链接",
+        redeemCode: "DH331029",
+        pickupRemark: "少冰",
+        settlementAmount: "¥13.5",
+        settlementStatus: "已结算",
+        storeName: "瑞幸火车站店",
+        storeAddress: "思明区厦禾路1032号火车站商圈B1层",
+        productBrand: "瑞幸",
+        marketPrice: "¥19.0",
+        supplierName: "厦门优供",
+        pickupCode: "C088",
+        pickupQrCode: "查看二维码",
+        secondarySupplier: "-"
+      },
+      {
+        id: "SO-007",
+        tab: "bid-success",
+        thirdOrderNo: "MT202608190035",
+        mealOrderNo: "DC202608190035",
+        acceptRecordNo: "REC202608190035",
+        acceptTime: "2026-08-19 13:42:10",
+        remainingMealTime: "00分00秒",
+        mealTime: "2026-08-19 13:55:33",
+        settlementTime: "-",
+        mealStatus: "竞价成功",
+        mealMethod: "人工",
+        productName: "伯牙绝弦",
+        quoteAmount: "14.8",
+        dealPrice: "14.8",
+        quoteRuleName: "伯牙绝弦专线",
+        bidFailedReason: "-",
+        bidFailedTime: "-",
+        bidSuccessTime: "2026-08-19 13:55:33",
+        orderPlatform: "美团",
+        mealAccount: "bwcj-xm-11",
+        redeemLink: "查看链接",
+        redeemCode: "DH442156",
+        pickupRemark: "正常制作",
+        settlementAmount: "-",
+        settlementStatus: "待结算",
+        storeName: "霸王茶姬湾悦城店",
+        storeAddress: "湖里区日圆二里1号湾悦城L1",
+        productBrand: "霸王茶姬",
+        marketPrice: "¥18.0",
+        supplierName: "鹭岛供应链",
+        pickupCode: "D412",
+        pickupQrCode: "查看二维码",
+        secondarySupplier: "-"
       }
     ];
 
@@ -7082,10 +7768,16 @@
     }
 
     const miniOrderTabConfig = [
-      { key: "handling", label: "处理中" },
-      { key: "processing", label: "进行中" },
-      { key: "completed", label: "已完成" },
+      { key: "handling", label: "新订单" },
+      { key: "processing", label: "竞价中" },
+      { key: "completed", label: "待出单" },
+      { key: "finished", label: "已完成" },
       { key: "all", label: "全部" }
+    ];
+
+    const miniBidRecordTabConfig = [
+      { key: "failed", label: "竞价失败" },
+      { key: "success", label: "竞价成功" }
     ];
 
     const miniOrderRecords = [
@@ -7131,6 +7823,7 @@
     ];
 
     let quoteRuleProductRows = quoteRuleDefaultProducts.map((item) => ({ ...item }));
+    let pendingQuoteProductRows = [];
 
     const miniQuoteRuleDefaultProducts = quoteRuleDefaultProducts.map((item) => ({ ...item }));
     let miniQuoteRuleProductRows = miniQuoteRuleDefaultProducts.map((item) => ({ ...item }));
@@ -7264,7 +7957,7 @@
 
     function getQuoteRoundingDigits() {
       const select = document.getElementById("quoteRoundingSelect");
-      return Number(select ? (select.dataset.saved || select.value || "1") : "1");
+      return Number(select ? (select.dataset.saved || select.value || "2") : "2");
     }
 
     function renderQuoteRoundingCard() {
@@ -7275,7 +7968,7 @@
       const value = document.getElementById("quoteRoundingValue");
       const unit = document.getElementById("quoteRoundingUnit");
       if (!select || !display || !edit || !trigger || !value || !unit) return;
-      const digits = select.dataset.saved || select.value || "1";
+      const digits = select.dataset.saved || select.value || "2";
       value.textContent = digits;
       unit.textContent = "位小数";
     }
@@ -7361,9 +8054,9 @@
 
     const supplierOrderBidFailedSchema = [
       { key: "productName", label: "商品名称", cellClass: "is-long" },
+      { key: "productBrand", label: "商品品牌" },
       { key: "storeName", label: "门店名称", cellClass: "is-long" },
       { key: "storeAddress", label: "店铺地址", cellClass: "is-long" },
-      { key: "mealStatus", label: "竞价状态", toneKey: "mealStatus" },
       { key: "marketPrice", label: "市场价", cellClass: "is-money" },
       { key: "maxLimitPrice", label: "最高限价", cellClass: "is-money" },
       { key: "quoteAmount", label: "报价金额", cellClass: "is-money" },
@@ -7372,15 +8065,24 @@
       { key: "action", label: "操作", cellClass: "is-action" }
     ];
 
+    const supplierOrderCompletedSchema = [
+      { key: "productName", label: "商品名称", cellClass: "is-long" },
+      { key: "productBrand", label: "商品品牌" },
+      { key: "bidSuccessTime", label: "竞价成功时间" },
+      { key: "dealPrice", label: "成交价", cellClass: "is-money" },
+      { key: "action", label: "操作", cellClass: "is-action" }
+    ];
+
     const bidRecordSchema = [
       { key: "productName", label: "商品名称", cellClass: "is-long" },
+      { key: "productBrand", label: "商品品牌" },
       { key: "storeName", label: "门店名称", cellClass: "is-long" },
       { key: "storeAddress", label: "店铺地址", cellClass: "is-long" },
-      { key: "mealStatus", label: "竞价状态", toneKey: "mealStatus" },
       { key: "marketPrice", label: "市场价", cellClass: "is-money" },
       { key: "quoteAmount", label: "报价金额", cellClass: "is-money" },
       { key: "dealPrice", label: "成交价", cellClass: "is-money" },
       { key: "quoteRuleName", label: "报价规则名称" },
+      { key: "bidSuccessTime", label: "竞价成功时间" },
       { key: "bidFailedReason", label: "竞价失败原因", cellClass: "is-long" },
       { key: "bidFailedTime", label: "竞价失败时间" },
       { key: "action", label: "操作", cellClass: "is-action" }
@@ -7396,22 +8098,36 @@
     function getSupplierOrderRows() {
       let rows;
       if (state.supplierOrderTab === "all") {
-        rows = supplierOrderRecords.filter((item) => item.tab !== "bid-failed" && item.tab !== "pending");
+        rows = supplierOrderRecords.filter((item) => item.tab !== "bid-failed");
+      } else if (state.supplierOrderTab === "pending") {
+        rows = supplierOrderRecords.filter((item) => item.tab === "pending" && (item.quoteAmount === "-" || !item.quoteAmount));
+      } else if (state.supplierOrderTab === "processing") {
+        rows = supplierOrderRecords.filter((item) => (item.tab === "pending" && item.quoteAmount && item.quoteAmount !== "-") || item.tab === "processing");
+      } else if (state.supplierOrderTab === "completed") {
+        rows = supplierOrderRecords.filter((item) => item.tab === "bid-success" || item.tab === "completed");
       } else {
         rows = supplierOrderRecords.filter((item) => item.tab === state.supplierOrderTab);
       }
-      if (state.supplierOrderTab === "pending") {
+      if (state.supplierOrderTab === "pending" || state.supplierOrderTab === "processing") {
         rows = rows.slice().sort((a, b) => countdownToSeconds(a.quoteCountdown) - countdownToSeconds(b.quoteCountdown));
+      } else if (state.supplierOrderTab === "completed") {
+        rows = rows.slice().sort((a, b) => (b.bidSuccessTime || "").localeCompare(a.bidSuccessTime || ""));
       }
       return rows;
     }
 
     function getSupplierOrderTableSchema() {
-      if (state.supplierOrderTab === "processing") {
-        return supplierOrderBaseSchema.filter((column) => !supplierOrderProcessingHiddenFields.has(column.key));
+      if (state.supplierOrderTab === "pending" || state.supplierOrderTab === "processing") {
+        const countdownLabel = state.supplierOrderTab === "pending" ? "报价倒计时" : "竞价倒计时";
+        const schema = supplierOrderBidFailedSchema.map((column) => ({ ...column }));
+        const countdownIndex = schema.findIndex((column) => column.key === "quoteCountdown");
+        const countdownColumn = schema.splice(countdownIndex, 1)[0];
+        const brandIndex = schema.findIndex((column) => column.key === "productBrand");
+        schema.splice(brandIndex + 1, 0, { ...countdownColumn, label: countdownLabel });
+        return schema;
       }
-      if (state.supplierOrderTab === "pending") {
-        return supplierOrderBidFailedSchema;
+      if (state.supplierOrderTab === "completed") {
+        return supplierOrderCompletedSchema;
       }
       return supplierOrderBaseSchema;
     }
@@ -7430,7 +8146,7 @@
 
     function renderSupplierOrderSpecialCell(item, column) {
       if (column.key === "action") {
-        if (item.tab === "processing") {
+        if (state.supplierOrderTab === "completed" || item.tab === "bid-success" || item.tab === "completed") {
           return `
             <td class="${column.cellClass || ""}">
               <div class="supplier-order-action">
@@ -7440,7 +8156,16 @@
             </td>
           `;
         }
-        if (item.tab === "pending") {
+        if (state.supplierOrderTab === "processing") {
+          return `
+            <td class="${column.cellClass || ""}">
+              <div class="supplier-order-action">
+                <button class="link-btn" type="button" data-action="open-quote-rule-modal" data-id="${escapeHtml(item.id)}">修改报价</button>
+              </div>
+            </td>
+          `;
+        }
+        if (item.tab === "pending" || state.supplierOrderTab === "pending") {
           const hasRule = Boolean(item.quoteRuleName && item.quoteRuleName !== "-");
           if (hasRule || item.mealStatus === "竞价中") {
             return `
@@ -7468,7 +8193,7 @@
             </td>
           `;
         }
-        if (item.tab === "completed" || item.tab === "failed") {
+        if (item.tab === "failed") {
           return `<td class="${column.cellClass || ""}">-</td>`;
         }
         return `
@@ -7524,15 +8249,15 @@
       document.querySelectorAll("[data-supplier-order-tab]").forEach((button) => {
         button.classList.toggle("active", button.dataset.supplierOrderTab === state.supplierOrderTab);
       });
-      const pendingCount = supplierOrderRecords.filter((item) => item.tab === "pending").length;
-      const badge = document.getElementById("supplierOrderPendingBadge");
+      const completedCount = supplierOrderRecords.filter((item) => item.tab === "bid-success" || item.tab === "completed").length;
+      const badge = document.getElementById("supplierOrderCompletedBadge");
       if (badge) {
-        badge.textContent = pendingCount > 99 ? "99+" : String(pendingCount);
-        badge.style.display = pendingCount > 0 ? "" : "none";
+        badge.textContent = completedCount > 99 ? "99+" : String(completedCount);
+        badge.style.display = completedCount > 0 ? "" : "none";
       }
       const specPanel = document.getElementById("supplierOrderPendingSpec");
       if (specPanel) {
-        specPanel.style.display = state.supplierOrderTab === "pending" ? "" : "none";
+        specPanel.style.display = "";
       }
       const schema = getSupplierOrderTableSchema();
       head.innerHTML = `
@@ -7556,22 +8281,70 @@
       }).join("");
     }
 
+    function getBidRecordRows() {
+      const isFailed = state.bidRecordTab === "failed";
+      return supplierOrderRecords
+        .filter((item) => item.tab === (isFailed ? "bid-failed" : "bid-success"))
+        .slice()
+        .sort((a, b) => {
+          const timeKey = isFailed ? "bidFailedTime" : "bidSuccessTime";
+          return (b[timeKey] || "").localeCompare(a[timeKey] || "");
+        });
+    }
+
+    function getBidRecordSchema() {
+      const isFailed = state.bidRecordTab === "failed";
+      if (isFailed) {
+        return bidRecordSchema.filter((column) => column.key !== "bidSuccessTime");
+      }
+      return bidRecordSchema.filter((column) => column.key !== "bidFailedReason" && column.key !== "bidFailedTime" && column.key !== "action");
+    }
+
+    function exportBidRecord() {
+      const rows = getBidRecordRows();
+      const exportSchema = getBidRecordSchema().filter((column) => column.key !== "action");
+      const headers = exportSchema.map((column) => column.label).join(",");
+      const lines = rows.map((item) => exportSchema.map((column) => {
+        let value = item[column.key] || "-";
+        if (String(value).includes(",")) value = `"${value}"`;
+        return value;
+      }).join(","));
+      const csv = "\ufeff" + [headers, ...lines].join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `竞价记录-${state.bidRecordTab === "failed" ? "竞价失败" : "竞价成功"}-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showPageToast("导出成功");
+    }
+
     function renderBidRecord() {
       const head = document.getElementById("bidRecordTableHead");
       const body = document.getElementById("bidRecordTableBody");
+      const table = document.querySelector(".supplier-order-table.is-bid-failed");
       if (!head || !body) return;
+      document.querySelectorAll("[data-bid-record-tab]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.bidRecordTab === state.bidRecordTab);
+      });
+      const isFailed = state.bidRecordTab === "failed";
+      if (table) {
+        table.classList.toggle("is-bid-failed", isFailed);
+        table.classList.toggle("is-bid-success", !isFailed);
+      }
+      const currentSchema = getBidRecordSchema();
       head.innerHTML = `
         <tr>
-          ${bidRecordSchema.map((column) => `<th class="${column.cellClass || ""}">${escapeHtml(column.label)}</th>`).join("")}
+          ${currentSchema.map((column) => `<th class="${column.cellClass || ""}">${escapeHtml(column.label)}</th>`).join("")}
         </tr>
       `;
-      const rows = supplierOrderRecords
-        .filter((item) => item.tab === "bid-failed")
-        .slice()
-        .sort((a, b) => (b.bidFailedTime || "").localeCompare(a.bidFailedTime || ""));
+      const rows = getBidRecordRows();
       body.innerHTML = rows.map((item) => `
         <tr>
-          ${bidRecordSchema.map((column) => {
+          ${currentSchema.map((column) => {
             const specialCell = renderSupplierOrderSpecialCell(item, column);
             if (specialCell) {
               return specialCell;
@@ -7697,14 +8470,29 @@
     function getMiniOrderRows() {
       let rows;
       if (state.miniOrderTab === "handling") {
-        rows = supplierOrderRecords.filter((item) => item.tab === "pending");
+        rows = supplierOrderRecords.filter((item) => item.tab === "pending" && (item.quoteAmount === "-" || !item.quoteAmount));
+      } else if (state.miniOrderTab === "processing") {
+        rows = supplierOrderRecords
+          .filter((item) => item.tab === "pending" && item.quoteAmount && item.quoteAmount !== "-")
+          .concat(miniOrderRecords.filter((item) => item.tab === "processing" && item.quoteAmount && item.quoteAmount !== "-"));
+      } else if (state.miniOrderTab === "completed") {
+        rows = supplierOrderRecords.filter((item) => item.tab === "bid-success");
+      } else if (state.miniOrderTab === "finished") {
+        rows = miniOrderRecords.filter((item) => item.tab === "completed");
       } else if (state.miniOrderTab === "all") {
-        rows = miniOrderRecords;
+        rows = miniOrderRecords.concat(supplierOrderRecords.filter((item) => item.tab !== "bid-failed"));
       } else {
         rows = miniOrderRecords.filter((item) => item.tab === state.miniOrderTab);
       }
-      if (state.miniOrderTab === "handling") {
+      if (state.miniOrderBrandFilter) {
+        rows = rows.filter((item) => item.productBrand === state.miniOrderBrandFilter);
+      }
+      if (state.miniOrderTab === "handling" || state.miniOrderTab === "processing") {
         rows = rows.slice().sort((a, b) => countdownToSeconds(a.quoteCountdown) - countdownToSeconds(b.quoteCountdown));
+      } else if (state.miniOrderTab === "completed") {
+        rows = rows.slice().sort((a, b) => (b.bidSuccessTime || "").localeCompare(a.bidSuccessTime || ""));
+      } else if (state.miniOrderTab === "finished") {
+        rows = rows.slice().sort((a, b) => (b.acceptTime || "").localeCompare(a.acceptTime || ""));
       }
       return rows;
     }
@@ -7713,11 +8501,21 @@
       const tabs = document.getElementById("miniOrderTabs");
       const list = document.getElementById("miniOrderList");
       if (!tabs || !list) return;
-      const pendingCount = supplierOrderRecords.filter((item) => item.tab === "pending").length;
+      const newArrival = document.getElementById("miniOrderNewArrival");
+      if (newArrival) {
+        const count = state.miniOrderNewArrivalCount;
+        if (count > 0) {
+          newArrival.querySelector(".mini-order-new-arrival-text").textContent = `又有${count}笔新订单了，戳我立即刷新~`;
+          newArrival.style.display = "flex";
+        } else {
+          newArrival.style.display = "none";
+        }
+      }
+      const completedCount = supplierOrderRecords.filter((item) => item.tab === "bid-success").length;
       tabs.innerHTML = miniOrderTabConfig.map((tab) => {
-        const isProcessing = tab.key === "processing";
-        const badge = isProcessing && pendingCount > 0
-          ? `<span class="mini-order-tab-badge">${pendingCount > 99 ? "99+" : pendingCount}</span>`
+        const isCompleted = tab.key === "completed";
+        const badge = isCompleted && completedCount > 0
+          ? `<span class="mini-order-tab-badge">${completedCount > 99 ? "99+" : completedCount}</span>`
           : "";
         return `
           <button class="mini-order-tab ${state.miniOrderTab === tab.key ? "active" : ""}" type="button" data-mini-order-tab="${tab.key}">
@@ -7730,18 +8528,26 @@
         pendingBadge.style.display = "none";
       }
       document.querySelectorAll("[data-order-nav-badge]").forEach((badge) => {
-        badge.textContent = pendingCount > 99 ? "99+" : String(pendingCount);
-        badge.style.display = pendingCount > 0 ? "" : "none";
+        badge.textContent = completedCount > 99 ? "99+" : String(completedCount);
+        badge.style.display = completedCount > 0 ? "" : "none";
       });
       const rows = getMiniOrderRows();
-      if (state.miniOrderTab === "handling") {
+      if (state.miniOrderTab === "handling" || state.miniOrderTab === "processing") {
+        const isHandling = state.miniOrderTab === "handling";
         list.innerHTML = rows.map((item) => {
-          const hasRule = Boolean(item.quoteRuleName && item.quoteRuleName !== "-");
-          const isBidding = item.mealStatus === "竞价中";
-          const btnLabel = isBidding || hasRule ? "修改报价" : "去报价";
-          const actionType = isBidding || hasRule ? "open-mini-quote-rule-page" : "open-mini-pending-quote";
-          const actionMode = isBidding || hasRule ? "edit" : "";
-          const quoteAmountClass = item.quoteAmount && item.quoteAmount !== "-" ? "is-quoted" : "";
+          const quoteAmountClass = isHandling ? "" : "is-quoted";
+          const actionHtml = isHandling
+            ? `
+              <div class="mini-order-quote-input-row">
+                <input class="mini-order-quote-input" type="text" inputmode="decimal" placeholder="请输入报价金额" data-mini-quote-input-id="${escapeHtml(item.id)}">
+                <button class="mini-order-quote-submit" type="button" data-action="submit-mini-quote" data-id="${escapeHtml(item.id)}">报价</button>
+              </div>
+            `
+            : `
+              <div class="mini-order-action-row">
+                <button class="mini-order-btn" type="button" data-action="open-mini-quote-rule-page" data-mode="edit" data-id="${escapeHtml(item.id)}">修改报价</button>
+              </div>
+            `;
           return `
             <article class="mini-order-card" data-mini-order-row="${escapeHtml(item.id)}">
               <div class="mini-order-card-head">
@@ -7754,19 +8560,59 @@
               <div class="mini-order-product">
                 <div class="mini-order-product-name-row">
                   <strong>${escapeHtml(item.productName)}</strong>
-                  <span class="mini-order-status ${isBidding || item.mealStatus === "待报价" ? "is-bidding" : ""}">${escapeHtml(item.mealStatus)}</span>
                 </div>
+                <span>商品品牌：${escapeHtml(item.productBrand || "-")}</span>
                 <span>市场价：${escapeHtml(item.marketPrice || "-")}</span>
                 <span>最高限价：${escapeHtml(item.maxLimitPrice || "-")}</span>
                 <span class="mini-order-quote-amount ${quoteAmountClass}">报价金额：${escapeHtml(item.quoteAmount || "-")}</span>
                 <span>报价规则名称：${escapeHtml(item.quoteRuleName || "-")}</span>
               </div>
-              <div class="mini-order-action-row">
-                <button class="mini-order-btn" type="button" data-action="${actionType}" data-mode="${actionMode}" data-id="${escapeHtml(item.id)}">${escapeHtml(btnLabel)}</button>
-              </div>
+              ${actionHtml}
             </article>
           `;
         }).join("") + `<div class="mini-order-empty">没有更多了</div>`;
+      } else if (state.miniOrderTab === "completed") {
+        list.innerHTML = rows.map((item) => `
+          <article class="mini-order-card" data-mini-order-row="${escapeHtml(item.id)}">
+            <div class="mini-order-card-head">
+              <div class="mini-order-store">
+                <span class="mini-order-store-name">${escapeHtml(item.storeName)}</span>
+                <span class="mini-order-copy">复制</span>
+              </div>
+            </div>
+            <div class="mini-order-product">
+              <div class="mini-order-product-name-row">
+                <strong>${escapeHtml(item.productName)}</strong>
+              </div>
+              <span>商品品牌：${escapeHtml(item.productBrand || "-")}</span>
+              <span>竞价成功时间：${escapeHtml(item.bidSuccessTime || "-")}</span>
+              <span>成交价：${escapeHtml(item.dealPrice || "-")}</span>
+            </div>
+            <div class="mini-order-action-row">
+              <button class="mini-order-btn" type="button">手工出餐</button>
+              <button class="mini-order-btn secondary" type="button">取消出餐</button>
+            </div>
+          </article>
+        `).join("") + `<div class="mini-order-empty">没有更多了</div>`;
+      } else if (state.miniOrderTab === "finished") {
+        list.innerHTML = rows.map((item) => `
+          <article class="mini-order-card" data-mini-order-row="${escapeHtml(item.id)}">
+            <div class="mini-order-card-head">
+              <div class="mini-order-store">
+                <span class="mini-order-store-name">${escapeHtml(item.storeName)}</span>
+                <span class="mini-order-copy">复制</span>
+              </div>
+              <span class="mini-order-status ${item.status === "竞价失败" ? "is-failed" : ""}">${escapeHtml(item.status)}</span>
+            </div>
+            <div class="mini-order-product">
+              <strong>${escapeHtml(item.productName)}</strong>
+              <span>${escapeHtml(item.price)}</span>
+            </div>
+            <div class="mini-order-meta">
+              <div>接单时间：${escapeHtml(item.acceptTime)}</div>
+            </div>
+          </article>
+        `).join("") + `<div class="mini-order-empty">没有更多了</div>`;
       } else {
         list.innerHTML = rows.map((item) => `
           <article class="mini-order-card" data-mini-order-row="${escapeHtml(item.id)}">
@@ -7792,13 +8638,33 @@
       });
     }
 
+    function renderMiniOrderFilterSheet() {
+      const sheet = document.getElementById("miniOrderFilterSheet");
+      const select = document.getElementById("miniOrderBrandSelect");
+      if (!sheet || !select) return;
+      select.innerHTML = `<option value="">全部品牌</option>` +
+        supplierCoopBrands.map((brand) => `<option value="${escapeHtml(brand)}" ${state.miniOrderBrandFilter === brand ? "selected" : ""}>${escapeHtml(brand)}</option>`).join("");
+      sheet.classList.toggle("show", state.miniOrderBrandFilterOpen);
+      sheet.setAttribute("aria-hidden", String(!state.miniOrderBrandFilterOpen));
+    }
+
     function renderMiniBidRecord() {
+      const tabs = document.getElementById("miniBidRecordTabs");
       const list = document.getElementById("miniBidRecordList");
-      if (!list) return;
+      if (!tabs || !list) return;
+      const isFailed = state.miniBidRecordTab === "failed";
+      tabs.innerHTML = miniBidRecordTabConfig.map((tab) => `
+        <button class="mini-order-tab ${state.miniBidRecordTab === tab.key ? "active" : ""}" type="button" data-mini-bid-record-tab="${tab.key}">
+          ${escapeHtml(tab.label)}
+        </button>
+      `).join("");
       const rows = supplierOrderRecords
-        .filter((item) => item.tab === "bid-failed")
+        .filter((item) => item.tab === (isFailed ? "bid-failed" : "bid-success"))
         .slice()
-        .sort((a, b) => (b.bidFailedTime || "").localeCompare(a.bidFailedTime || ""));
+        .sort((a, b) => {
+          const timeKey = isFailed ? "bidFailedTime" : "bidSuccessTime";
+          return (b[timeKey] || "").localeCompare(a[timeKey] || "");
+        });
       list.innerHTML = rows.map((item) => `
         <article class="mini-order-card" data-mini-bid-record-row="${escapeHtml(item.id)}">
           <div class="mini-order-card-head">
@@ -7806,23 +8672,81 @@
               <span class="mini-order-store-name">${escapeHtml(item.storeName)}</span>
               <span class="mini-order-copy">复制</span>
             </div>
-            <span class="mini-order-status is-failed">竞价失败</span>
+            <span class="mini-order-status ${isFailed ? "is-failed" : "is-success"}" hidden>${isFailed ? "竞价失败" : "竞价成功"}</span>
           </div>
           <div class="mini-order-product">
             <strong>${escapeHtml(item.productName)}</strong>
-            <span>¥${escapeHtml(item.quoteAmount)}</span>
+            <span>报价金额：¥${escapeHtml(item.quoteAmount)}</span>
             <span>报价规则：${escapeHtml(item.quoteRuleName || "-")}</span>
           </div>
+          ${isFailed ? `
           <div class="mini-order-meta">
             <div>竞价失败时间：${escapeHtml(item.bidFailedTime)}</div>
             <div>失败原因：${escapeHtml(item.bidFailedReason || "-")}</div>
-          </div>
+          </div>` : `
+          <div class="mini-order-meta">
+            <div>竞价成功时间：${escapeHtml(item.bidSuccessTime)}</div>
+          </div>`}
           <div class="mini-order-deal">成交价：<strong>${escapeHtml(item.dealPrice && item.dealPrice !== "-" ? item.dealPrice : "-")}</strong></div>
+          ${isFailed ? `
           <div class="mini-order-action-row">
             <button class="mini-order-btn" type="button" data-action="open-mini-quote-rule-page" data-mode="edit" data-id="${escapeHtml(item.id)}">编辑报价金额</button>
-          </div>
+          </div>` : ""}
         </article>
       `).join("") + `<div class="mini-order-empty">没有更多了</div>`;
+      tabs.querySelectorAll("[data-mini-bid-record-tab]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.miniBidRecordTab === state.miniBidRecordTab);
+      });
+    }
+
+    function renderMiniSettings() {
+      const sw = document.getElementById("miniSoundSwitch");
+      if (!sw) return;
+      sw.classList.toggle("on", state.miniSoundEnabled);
+      sw.setAttribute("aria-pressed", String(state.miniSoundEnabled));
+    }
+
+    function renderSoundToggle() {
+      const sw = document.getElementById("pcSoundSwitch");
+      if (!sw) return;
+      sw.classList.toggle("on", state.miniSoundEnabled);
+      sw.setAttribute("aria-pressed", String(state.miniSoundEnabled));
+    }
+
+    function renderSoundNotifications() {
+      const stack = document.getElementById("globalToastStack");
+      if (!stack) return;
+      if (state.soundToastTimer) {
+        clearTimeout(state.soundToastTimer);
+        state.soundToastTimer = null;
+      }
+      if (!state.miniSoundEnabled || state.soundNotifications.length === 0) {
+        stack.innerHTML = "";
+        return;
+      }
+      stack.innerHTML = state.soundNotifications.map((item) => `
+        <div class="global-toast" data-sound-toast-id="${escapeHtml(item.id)}">
+          <span class="global-toast-icon" aria-hidden="true">🔊</span>
+          <span class="global-toast-text">${escapeHtml(item.text)}</span>
+          <button class="global-toast-close" type="button" data-action="dismiss-sound-toast" data-sound-toast-id="${escapeHtml(item.id)}" aria-label="删除">×</button>
+        </div>
+      `).join("");
+      state.soundToastTimer = setTimeout(() => {
+        state.soundNotifications = [];
+        renderSoundNotifications();
+      }, 2000);
+    }
+
+    function renderPcNewArrival() {
+      const bar = document.getElementById("pcNewArrival");
+      if (!bar) return;
+      const count = state.pcNewArrivalCount;
+      if (count > 0) {
+        bar.querySelector(".pc-new-arrival-text").textContent = `又有${count}笔新订单了，戳我立即刷新~`;
+        bar.style.display = "flex";
+      } else {
+        bar.style.display = "none";
+      }
     }
 
     function renderMiniQuoteProducts() {
@@ -9168,16 +10092,85 @@
       openModal("quoteRuleEditModal");
     }
 
+    function renderPendingQuoteProducts() {
+      const body = document.getElementById("pendingQuoteProductBody");
+      if (!body) return;
+      body.innerHTML = pendingQuoteProductRows.map((item, index) => `
+        <tr data-pending-quote-row-id="${escapeHtml(item.id)}">
+          <td>${index + 1}</td>
+          <td>${escapeHtml(item.name)}</td>
+          <td>${escapeHtml(item.marketPrice)}</td>
+          <td>${escapeHtml(item.limitPrice)}</td>
+          <td>
+            <button class="link-btn secondary" type="button" disabled>删除</button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function syncPendingQuoteRuleNameCounter() {
+      const input = document.getElementById("pendingQuoteRuleNameInput");
+      const counter = document.getElementById("pendingQuoteRuleNameCounter");
+      if (!input || !counter) return;
+      counter.textContent = `${input.value.length} / 50`;
+    }
+
+    function togglePendingQuotePackageMode() {
+      const switchEl = document.getElementById("pendingQuotePackageModeSwitch");
+      const packageNoInput = document.getElementById("pendingQuotePackageNoInput");
+      if (!switchEl) return;
+      const nextOn = !switchEl.classList.contains("on");
+      switchEl.classList.toggle("on", nextOn);
+      switchEl.setAttribute("aria-pressed", nextOn ? "true" : "false");
+      if (packageNoInput) packageNoInput.disabled = !nextOn;
+    }
+
+    function resetPendingQuoteModal() {
+      const nameInput = document.getElementById("pendingQuoteRuleNameInput");
+      const packageSwitch = document.getElementById("pendingQuotePackageModeSwitch");
+      const packageNoInput = document.getElementById("pendingQuotePackageNoInput");
+      const brandSelect = document.getElementById("pendingQuoteBrandSelect");
+      const amountInput = document.getElementById("pendingQuoteAmount");
+      if (nameInput) nameInput.value = "";
+      if (packageSwitch) {
+        packageSwitch.classList.remove("on");
+        packageSwitch.setAttribute("aria-pressed", "false");
+      }
+      if (packageNoInput) {
+        packageNoInput.value = "";
+        packageNoInput.disabled = true;
+      }
+      if (brandSelect) brandSelect.value = "瑞幸";
+      if (amountInput) amountInput.value = "";
+      document.querySelectorAll('input[name="pendingQuoteMealMethod"]').forEach((input) => {
+        input.checked = input.value === "manual";
+      });
+      pendingQuoteProductRows = [];
+      syncPendingQuoteRuleNameCounter();
+      renderPendingQuoteProducts();
+    }
+
     function openPendingQuoteModal(orderId = null) {
+      resetPendingQuoteModal();
       const order = supplierOrderRecords.find((item) => item.id === orderId);
       const product = order ? order.productName : "";
+      const brand = order ? order.productBrand : "";
       const maxLimit = order ? (order.maxLimitPrice || "-") : "-";
-      const productEl = document.getElementById("pendingQuoteProduct");
-      const maxLimitEl = document.getElementById("pendingQuoteMaxLimit");
-      const amountEl = document.getElementById("pendingQuoteAmount");
-      if (productEl) productEl.textContent = product;
-      if (maxLimitEl) maxLimitEl.textContent = maxLimit;
-      if (amountEl) amountEl.value = "";
+      const marketPrice = order ? (order.marketPrice || "-") : "-";
+      const nameInput = document.getElementById("pendingQuoteRuleNameInput");
+      const brandSelect = document.getElementById("pendingQuoteBrandSelect");
+      const amountInput = document.getElementById("pendingQuoteAmount");
+      if (nameInput) nameInput.value = product;
+      if (brandSelect) brandSelect.value = brand || "瑞幸";
+      pendingQuoteProductRows = product ? [{
+        id: `PQ-${orderId}`,
+        name: product,
+        marketPrice,
+        limitPrice: maxLimit
+      }] : [];
+      syncPendingQuoteRuleNameCounter();
+      renderPendingQuoteProducts();
+      if (amountInput) amountInput.value = "";
       state.activeQuoteRuleOrderId = orderId;
       state.activePendingQuoteMaxLimit = maxLimit;
       openModal("pendingQuoteModal");
@@ -9196,6 +10189,49 @@
       state.activeQuoteRuleOrderId = orderId;
       state.activePendingQuoteMaxLimit = maxLimit;
       openModal("miniPendingQuoteModal");
+    }
+
+    function submitMiniInlineQuote(orderId) {
+      const input = document.querySelector(`[data-mini-quote-input-id="${escapeHtml(orderId)}"]`);
+      const amountRaw = input ? input.value.trim() : "";
+      const order = supplierOrderRecords.find((item) => item.id === orderId);
+      if (!amountRaw) {
+        showPageToast("请填写报价金额");
+        return;
+      }
+      const amountNum = parseFloat(amountRaw);
+      if (Number.isNaN(amountNum)) {
+        showPageToast("请填写正确的报价金额");
+        return;
+      }
+      if (amountNum === 0) {
+        showPageToast("不能为0");
+        return;
+      }
+      const maxLimitRaw = order ? (order.maxLimitPrice || "-") : "-";
+      const maxLimitNum = parseFloat(String(maxLimitRaw).replace(/[^0-9.]/g, ""));
+      if (!Number.isNaN(maxLimitNum) && amountNum > maxLimitNum) {
+        showPageToast("报价金额不能大于最高限价");
+        return;
+      }
+      const digits = getQuoteRoundingDigits();
+      const decimalRegex = new RegExp(`^\\d+(\\.\\d{${digits}})?$`);
+      if (!decimalRegex.test(amountRaw)) {
+        showPageToast(`报价金额保留${digits}位小数`);
+        return;
+      }
+      if (order) {
+        const remaining = countdownToSeconds(order.quoteCountdown);
+        if (!Number.isFinite(remaining) || remaining <= 0) {
+          showPageToast("报价倒计时结束，不能添加报价");
+          return;
+        }
+        order.quoteAmount = amountRaw;
+        order.mealStatus = "竞价中";
+        order.quoteRuleName = "该供应商配置的报价规则";
+      }
+      showPageToast("报价已提交");
+      renderAll();
     }
 
     function toggleQuotePackageMode() {
@@ -9460,7 +10496,12 @@
       renderSupplierQuoteProducts();
       renderProductQuoteRows();
       renderMiniOrderPage();
+      renderMiniOrderFilterSheet();
       renderMiniBidRecord();
+      renderMiniSettings();
+      renderSoundToggle();
+      renderSoundNotifications();
+      renderPcNewArrival();
       renderMiniQuoteProducts();
       renderMiniQuoteRule();
       renderReasonRows();
@@ -10093,10 +11134,21 @@
           renderSupplierOrderList();
         }
 
+        const bidRecordTabButton = event.target.closest("[data-bid-record-tab]");
+        if (bidRecordTabButton) {
+          state.bidRecordTab = bidRecordTabButton.dataset.bidRecordTab;
+          renderBidRecord();
+        }
+
         const statusButton = event.target.closest("[data-status-tab]");
         if (statusButton) {
           state.afterSalesTab = statusButton.dataset.statusTab;
           renderAll();
+        }
+
+        const exportBidRecordButton = event.target.closest("[data-export-bid-record]");
+        if (exportBidRecordButton) {
+          exportBidRecord();
         }
 
         const actionButton = event.target.closest("[data-action]");
@@ -10218,6 +11270,15 @@
         closeModal("deleteReasonModal");
         renderAll();
       });
+      const confirmCloseSoundBtn = document.getElementById("confirmCloseSound");
+      if (confirmCloseSoundBtn) {
+        confirmCloseSoundBtn.addEventListener("click", () => {
+          state.miniSoundEnabled = false;
+          closeModal("closeSoundModal");
+          renderAll();
+          showPageToast("提示音已关闭");
+        });
+      }
       document.getElementById("resetFilters").addEventListener("click", () => {
         state.filters = { salesOrderNo: "", channelOrderNo: "", startDate: "", endDate: "" };
         syncFilterInputs();
@@ -10816,16 +11877,38 @@
           renderSupplierOrderList();
         }
 
+        const bidRecordTabButton = event.target.closest("[data-bid-record-tab]");
+        if (bidRecordTabButton) {
+          state.bidRecordTab = bidRecordTabButton.dataset.bidRecordTab;
+          renderBidRecord();
+        }
+
         const miniOrderTabButton = event.target.closest("[data-mini-order-tab]");
         if (miniOrderTabButton) {
           state.miniOrderTab = miniOrderTabButton.dataset.miniOrderTab;
           renderMiniOrderPage();
         }
 
+        const miniBidRecordTabButton = event.target.closest("[data-mini-bid-record-tab]");
+        if (miniBidRecordTabButton) {
+          state.miniBidRecordTab = miniBidRecordTabButton.dataset.miniBidRecordTab;
+          renderMiniBidRecord();
+        }
+
+        const quoteRuleDeleteButton = event.target.closest("[data-quote-product-delete]");
+        if (quoteRuleDeleteButton) {
+          removeQuoteRuleProductRow(quoteRuleDeleteButton.dataset.quoteProductDelete);
+        }
+
         const statusButton = event.target.closest("[data-status-tab]");
         if (statusButton) {
           state.afterSalesTab = statusButton.dataset.statusTab;
           renderAll();
+        }
+
+        const exportBidRecordButton = event.target.closest("[data-export-bid-record]");
+        if (exportBidRecordButton) {
+          exportBidRecord();
         }
 
         const actionButton = event.target.closest("[data-action]");
@@ -10837,6 +11920,54 @@
           if (action === "open-pending-quote-modal") openPendingQuoteModal(id);
           if (action === "open-mini-pending-quote") {
             openMiniPendingQuoteModal(id);
+          }
+          if (action === "submit-mini-quote") {
+            submitMiniInlineQuote(id);
+          }
+          if (action === "open-mini-order-filter") {
+            state.miniOrderBrandFilterOpen = true;
+            renderMiniOrderFilterSheet();
+          }
+          if (action === "close-mini-order-filter") {
+            state.miniOrderBrandFilterOpen = false;
+            renderMiniOrderFilterSheet();
+          }
+          if (action === "reset-mini-order-filter") {
+            state.miniOrderBrandFilter = "";
+            const select = document.getElementById("miniOrderBrandSelect");
+            if (select) select.value = "";
+          }
+          if (action === "confirm-mini-order-filter") {
+            const select = document.getElementById("miniOrderBrandSelect");
+            state.miniOrderBrandFilter = select ? select.value : "";
+            state.miniOrderBrandFilterOpen = false;
+            renderMiniOrderFilterSheet();
+            renderMiniOrderPage();
+            showPageToast("筛选已更新");
+          }
+          if (action === "refresh-mini-order") {
+            state.miniOrderNewArrivalCount = 0;
+            renderMiniOrderPage();
+            showPageToast("订单列表已刷新");
+          }
+          if (action === "refresh-pc-order") {
+            state.pcNewArrivalCount = 0;
+            renderPcNewArrival();
+            showPageToast("订单列表已刷新");
+          }
+          if (action === "toggle-mini-sound" || action === "toggle-pc-sound") {
+            if (state.miniSoundEnabled) {
+              openModal("closeSoundModal");
+            } else {
+              state.miniSoundEnabled = true;
+              renderAll();
+              showPageToast("提示音已开启");
+            }
+          }
+          if (action === "dismiss-sound-toast") {
+            const toastId = actionButton.dataset.soundToastId;
+            state.soundNotifications = state.soundNotifications.filter((item) => item.id !== toastId);
+            renderSoundNotifications();
           }
           if (action === "open-mini-quote-rule-page") {
             const mode = actionButton.dataset.mode || "add";
@@ -10967,6 +12098,10 @@
       if (quotePackageModeSwitch) {
         quotePackageModeSwitch.addEventListener("click", toggleQuotePackageMode);
       }
+      const pendingQuotePackageModeSwitch = document.getElementById("pendingQuotePackageModeSwitch");
+      if (pendingQuotePackageModeSwitch) {
+        pendingQuotePackageModeSwitch.addEventListener("click", togglePendingQuotePackageMode);
+      }
       const addQuoteProductRowButton = document.getElementById("addQuoteProductRow");
       if (addQuoteProductRowButton) {
         addQuoteProductRowButton.addEventListener("click", addQuoteRuleProductRow);
@@ -11018,6 +12153,16 @@
             return;
           }
           if (order) {
+            const remaining = countdownToSeconds(order.quoteCountdown);
+            if (!Number.isFinite(remaining) || remaining <= 0) {
+              showPageToast("竞价倒计时结束，不能添加报价");
+              return;
+            }
+            const modalProductName = pendingQuoteProductRows[0] ? pendingQuoteProductRows[0].name : "";
+            if (modalProductName !== order.productName) {
+              showPageToast("该商品与列表商品不一致");
+              return;
+            }
             order.quoteAmount = amountRaw;
             order.mealStatus = "竞价中";
             order.quoteRuleName = "该供应商配置的报价规则";
@@ -11102,8 +12247,8 @@
                 order.mealStatus = "竞价中";
               }
             }
-            state.currentPage = "supplier-mini-order";
-            state.miniOrderTab = "handling";
+            state.currentPage = "supplier-mini-bid-record";
+            state.miniBidRecordTab = "failed";
             showPageToast("已同步到相关页面");
             renderAll();
             return;
@@ -11194,7 +12339,7 @@
       const quoteRoundingSelect = document.getElementById("quoteRoundingSelect");
       if (quoteRoundingEditTrigger && quoteRoundingEdit && quoteRoundingDisplay && quoteRoundingSelect) {
         quoteRoundingEditTrigger.addEventListener("click", () => {
-          quoteRoundingSelect.value = quoteRoundingSelect.dataset.saved || quoteRoundingSelect.value || "1";
+          quoteRoundingSelect.value = quoteRoundingSelect.dataset.saved || quoteRoundingSelect.value || "2";
           quoteRoundingDisplay.hidden = true;
           quoteRoundingEdit.hidden = false;
           quoteRoundingEditTrigger.hidden = true;
@@ -11202,7 +12347,7 @@
       }
       if (quoteRoundingCancel && quoteRoundingEdit && quoteRoundingDisplay && quoteRoundingEditTrigger && quoteRoundingSelect) {
         quoteRoundingCancel.addEventListener("click", () => {
-          quoteRoundingSelect.value = quoteRoundingSelect.dataset.saved || "1";
+          quoteRoundingSelect.value = quoteRoundingSelect.dataset.saved || "2";
           quoteRoundingEdit.hidden = true;
           quoteRoundingDisplay.hidden = false;
           quoteRoundingEditTrigger.hidden = false;
@@ -11211,7 +12356,7 @@
       }
       if (quoteRoundingSave && quoteRoundingEdit && quoteRoundingDisplay && quoteRoundingEditTrigger && quoteRoundingSelect) {
         quoteRoundingSave.addEventListener("click", () => {
-          quoteRoundingSelect.dataset.saved = quoteRoundingSelect.value || "1";
+          quoteRoundingSelect.dataset.saved = quoteRoundingSelect.value || "2";
           quoteRoundingEdit.hidden = true;
           quoteRoundingDisplay.hidden = false;
           quoteRoundingEditTrigger.hidden = false;
@@ -11365,6 +12510,15 @@
         closeModal("deleteReasonModal");
         renderAll();
       });
+      const confirmCloseSoundBtn = document.getElementById("confirmCloseSound");
+      if (confirmCloseSoundBtn) {
+        confirmCloseSoundBtn.addEventListener("click", () => {
+          state.miniSoundEnabled = false;
+          closeModal("closeSoundModal");
+          renderAll();
+          showPageToast("提示音已关闭");
+        });
+      }
       document.getElementById("confirmDeleteCouponTemplate").addEventListener("click", () => {
         const index = couponTemplates.findIndex((item) => item.id === state.activeCouponTemplateId);
         if (index >= 0) couponTemplates.splice(index, 1);
