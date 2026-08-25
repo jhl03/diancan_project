@@ -5125,7 +5125,7 @@
             </div>
             <div class="status-tabs" id="supplierOrderTabs">
               <button class="status-tab" data-supplier-order-tab="pending">新订单</button>
-              <button class="status-tab" data-supplier-order-tab="processing">竞价中</button>
+              <button class="status-tab" data-supplier-order-tab="processing">已报价</button>
               <button class="status-tab" data-supplier-order-tab="completed">
                 待出单
                 <span class="status-tab-badge" id="supplierOrderCompletedBadge" aria-label="待出单">0</span>
@@ -5152,15 +5152,20 @@
           </div>
           <div class="spec-prose">
             <p><strong>新增范围包括：</strong><span style="color: #ff4d4f;">一级供应商后台、二级供应商后台</span>。</p>
-            <p><strong>页面的流转：</strong>未报价的订单在新订单页面，报价后直接进入竞价中页面，倒计时继续，如果报价后倒计时结束直接进入待出单页面【不再进入竞价中页面了】。</p>
+            <p><strong>页面的流转：</strong>未报价的订单在新订单页面，报价后直接进入已报价页面，倒计时继续，如果报价后倒计时结束直接进入待出单页面【不再进入已报价页面了】。</p>
+            <div style="background:#f7f9fc; border-left:3px solid #3366ff; padding:10px 12px; margin:8px 0; border-radius:6px;">
+              <p style="margin:0 0 6px 0;"><strong>竞价记录包括：</strong>所有的出餐方式【人工、自动…】</p>
+              <p style="margin:0 0 6px 0;"><strong>竞价记录页面数据源：</strong><br>例：第一轮：有A、B、C三个供应商竞价，A竞价成功，出餐失败，B、C竞价失败；<br>第二轮：有B、C、D、E四个供应商竞价，B竞价成功，出餐成功，C、D、E竞价失败；<br>以此类推，注意，最后竞价记录是A、B竞价成功，C、D、E竞价失败</p>
+              <p style="margin:0;"><strong>竞价失败原因：</strong><br>1. 超出接单配置时，原因为：超过最大接单数量：有出餐中订单<br>2. 比价失败时，原因为：金额原因：报价金额不是最低<br>3.价格相同随机分配时：订单价格相同，供应商随机分配，未被选中</p>
+            </div>
             <p><strong>新订单提示音开关：</strong>页面右上角显示“新订单提示：”开关图标，默认开启；点击开关关闭时弹出二次确认弹窗“确认要关闭提示音？关闭提示音可能会错过新订单”，可选择“暂不关闭”或“确认关闭”。</p>
             <p><strong>右上角语音提醒：</strong>有新订单进入时，网站右上角显示通知“守兔来新订单啦”，左侧带音量图标，右侧带删除图标；语音响起时显示，持续 2s 后自动消失，也可点击删除图标手动关闭。关闭提示音后不再显示新的语音提醒。</p>
             <p hidden><strong>站内新订单提醒：</strong>订单列表页面标题与筛选区之间显示红色提醒条“又有N笔新订单了，戳我立即刷新~”；点击提醒条后刷新订单列表并隐藏提醒条。若“新订单提示”开启，同时会有右上角语音提醒。</p>
-      <p><strong>页面定位：</strong>供应商端【PC】 > 订单管理 > 订单列表，用于展示供应商的出餐订单，按“新订单/竞价中/待出单/已完成/已失败/全部”切换 tab。</p>
+      <p><strong>页面定位：</strong>供应商端【PC】 > 订单管理 > 订单列表，用于展示供应商的出餐订单，按“新订单/已报价/待出单/已完成/已失败/全部”切换 tab。</p>
       <p><strong>新订单 tab：</strong>展示所有下单成功但尚未报价的订单。【新增的tab】</p>
-      <p><strong>竞价中 tab：</strong>展示所有已报价、正在参与竞价的订单，字段与「新订单」tab 保持一致。【新增的tab】</p>
+      <p><strong>已报价 tab：</strong>展示所有已报价、正在参与竞价的订单，字段与「新订单」tab 保持一致。【新增的tab】</p>
       <p><strong>原tab名称“进行中”改为“待出单” 【小程序也是一样的】</strong></p>
-            <p><strong>列表排序：</strong>「新订单」与「竞价中」tab 均根据倒计时排序，短的在上面。</p>
+            <p><strong>列表排序：</strong>「新订单」与「已报价」tab 均根据倒计时排序，短的在上面。</p>
             <p><strong>待出单角标：</strong>「待出单」tab 右上角红字角标显示待出单订单数量，数量为 0 时隐藏。</p>
             <p><strong>筛选项输入框逻辑：</strong></p>
             <p class="spec-subline"><strong>出餐单号：</strong>支持按出餐单号精确查询。</p>
@@ -5169,9 +5174,8 @@
             <p class="spec-subline"><strong>搜索：</strong>按当前输入条件组合查询。</p>
             <p class="spec-subline"><strong>清空：</strong>恢复为空条件。</p>
             <p><strong>列表字段的数据源与显示逻辑：</strong></p>
-            <p class="spec-subline">有两个状态，一个是待报价，一个是竞价中，有报价金额的状态为“竞价中”；没有报价金额的状态为“待报价”。</p>
             <p class="spec-subline"><strong>新订单列表数据源：</strong>展示所有下单成功但尚未报价的订单（无报价金额）。</p>
-            <p class="spec-subline"><strong>竞价中列表数据源：</strong>展示所有已报价、正在参与竞价的订单（有报价金额）。</p>
+            <p class="spec-subline"><strong>已报价列表数据源：</strong>展示所有已报价、正在参与竞价的订单（有报价金额）。</p>
             <p class="spec-subline"><strong>待出单列表数据源：</strong>展示竞价成功（已分配）的订单；列表字段与小程序「待出单」卡片一致：商品名称、商品品牌、竞价成功时间、成交价、操作。</p>
             <p class="spec-subline"><strong>商品名称：</strong>取当前订单的商品名称；若同一订单包含多个商品名称，换行显示，全部展示。</p>
             <p class="spec-subline"><strong>商品品牌：</strong>取当前订单的商品品牌。</p>
@@ -5180,10 +5184,10 @@
             <p class="spec-subline"><strong>市场价：</strong>取后台配置的商品原价。</p>
             <p class="spec-subline"><strong>最高限价：</strong>取后台配置的最高限价。</p>
             <p class="spec-subline"><strong>报价金额：</strong>命中报价规则时显示“该供应商配置的报价金额”（取实际报价）；未命中报价规则时显示“-”。</p>
-            <p class="spec-subline"><strong>报价倒计时/竞价倒计时：</strong>均取后台配置的“订单分配前倒计时”，按 HH:mm:ss 格式展示；新订单 tab 列头显示“报价倒计时”，竞价中 tab 列头显示“竞价倒计时”。倒计时结束，系统按照报价最低的供应商进行订单分配。</p>
+            <p class="spec-subline"><strong>报价倒计时/竞价倒计时：</strong>均取后台配置的“订单分配前倒计时”，按 HH:mm:ss 格式展示；新订单 tab 列头显示“报价倒计时”，已报价 tab 列头显示“竞价倒计时”。倒计时结束，系统按照报价最低的供应商进行订单分配。</p>
             <p class="spec-subline"><strong>报价规则名称：</strong>命中报价规则时显示当前命中的报价规则名称；未命中时显示“-”。</p>
-            <p class="spec-subline"><strong>操作：</strong>新订单 tab 展示行内报价输入框与“报价”按钮；竞价中 tab 显示“修改报价”按钮；待出单 tab 显示“手工出餐”“取消出餐”按钮。</p>
-            <p style="color:#ff4d4f;"><span style="color:#1a1f2d;">点击“报价”按钮时校验：</span>① 报价倒计时已结束（00:00:00）时提示“报价倒计时结束，不能添加报价”；② 报价金额必填，为空提示“请填写报价金额”；③ 报价金额必须为数字且不能为 0；④ 报价金额不能大于该商品最高限价；⑤ 报价金额小数位数按后台配置的“供应商报价金额保留小数”生效，不符合时提示“报价金额保留 N 位小数”。校验通过后订单进入「竞价中」页面。报价成功后并按照报价的金额商品创建一条报价规则。</p>
+            <p class="spec-subline"><strong>操作：</strong>新订单 tab 展示行内报价输入框与“报价”按钮；已报价 tab 显示“修改报价”按钮；待出单 tab 显示“手工出餐”“取消出餐”按钮。</p>
+            <p style="color:#ff4d4f;"><span style="color:#1a1f2d;">点击“报价”按钮时校验：</span>① 报价倒计时已结束（00:00:00）时提示“报价倒计时结束，不能添加报价”；② 报价金额必填，为空提示“请填写报价金额”；③ 报价金额必须为数字且不能为 0；④ 报价金额不能大于该商品最高限价；⑤ 报价金额小数位数按后台配置的“供应商报价金额保留小数”生效，不符合时提示“报价金额保留 N 位小数”。校验通过后订单进入「已报价」页面。报价成功后并按照报价的金额商品创建一条报价规则。</p>
             <p><strong>【去报价弹窗】说明：</strong>未命中规则点击“去报价”按钮后打开，用于未命中报价规则的订单首次报价。</p>
             <p class="spec-subline"><strong>报价规则：</strong>自动取列表商品的报价规则名称，不可修改。</p>
             <p class="spec-subline"><strong>商品品牌：</strong>自动取列表商品品牌，不可修改。</p>
@@ -5193,8 +5197,8 @@
             <p class="spec-subline"><strong>出餐方式：</strong>必填，默认选中“手动”，可选人工/自动/H5链接/链接平台/API。</p>
             <p class="spec-subline"><strong>报价金额：</strong>必填，需小于等于最高限价。</p>
             <p class="spec-subline"><strong>确定按钮校验：</strong>竞价倒计时已结束提示“竞价倒计时结束，不能添加报价”；弹窗商品与处理中列表商品不一致提示“该商品与列表商品不一致”；未填写报价金额提示“请填写报价金额”；填写为 0 提示“不能为0”；大于最高限价提示“报价金额不能大于最高限价”；小数位数按后台配置的“供应商报价金额保留小数”生效，不符合时提示“报价金额保留一位小数”或“报价金额保留两位小数”。</p>
-            <p class="spec-subline"><strong>保存结果：</strong>校验通过后保存，订单状态变为“竞价中”。<span style="color:#ff4d4f;">点击确定按钮，新增报价规则与新增报价规则弹窗的确定按钮是一致的。</span></p>
-            <p><strong>修改报价：</strong>竞价中状态点击“修改报价”按钮后进入「编辑报价规则」页面，保存后同步更新报价金额。</p>
+            <p class="spec-subline"><strong>保存结果：</strong>校验通过后保存，订单状态变为“已报价”。<span style="color:#ff4d4f;">点击确定按钮，新增报价规则与新增报价规则弹窗的确定按钮是一致的。且新增一条报价规则</span></p>
+            <p><strong>修改报价：</strong>已报价状态点击“修改报价”按钮后进入「编辑报价规则」页面，保存后同步更新报价金额。</p>
           </div>
         </section>
       </section>
@@ -5272,7 +5276,7 @@
             <p class="spec-subline"><strong>成交价：</strong>取所有竞价表里面的最低报价；竞价记录中成交价始终存在，不为空。</p>
             <p class="spec-subline"><strong>报价规则名称：</strong>取当前命中的报价规则名称。</p>
             <p class="spec-subline"><strong>竞价成功时间：</strong>仅竞价成功 tab 展示实际成功时间，列表按该时间倒序；竞价失败 tab 不展示该字段。</p>
-            <p class="spec-subline"><strong>竞价失败原因：</strong>仅竞价失败 tab 展示具体原因，如“金额原因：报价金额不是最低”“超过最大接单数量：竞价时有出餐中订单”“报价相同：系统随机分配失败”；竞价成功 tab 不展示该字段。</p>
+            <p class="spec-subline"><strong>竞价失败原因：</strong>仅竞价失败 tab 展示具体原因，如<br>1. 超出接单配置时，原因为：超过最大接单数量：有出餐中订单<br>2. 比价失败时，原因为：金额原因：报价金额不是最低<br>3.价格相同随机分配时：订单价格相同，供应商随机分配，未被选中；<br>竞价成功 tab 不展示该字段。</p>
             <p class="spec-subline"><strong>竞价失败时间：</strong>仅竞价失败 tab 展示实际失败时间，列表按该时间倒序；竞价成功 tab 不展示该字段。</p>
             <p class="spec-subline"><strong>操作：</strong>竞价失败 tab 展示“修改报价金额”按钮；竞价成功 tab 操作列不展示按钮，且最后一列不固定。</p>
             <p><strong>编辑报价规则页面：</strong>点击“编辑报价金额”后进入「编辑报价规则」页面，内容与供应商后台的商品报价页面的修改报价规则弹窗内容一致。点击“确定”后保存结果同步到出价管理--商品报价页面、点餐后台--商品报价页面、一级供应商的出餐管理--商品报价页面，以及对应的小程序端。</p>
@@ -5586,14 +5590,14 @@
             </div>
           </div>
           <div class="spec-prose">
-            <p hidden><strong>Tab 文案：</strong>小程序端订单列表按“新订单/竞价中/待出单/已完成/全部”切换 tab。</p>
+            <p hidden><strong>Tab 文案：</strong>小程序端订单列表按“新订单/已报价/待出单/已完成/全部”切换 tab。</p>
             <p hidden><strong>新订单：</strong>展示下单成功但尚未报价的订单，卡片头部显示门店、复制按钮、红色报价倒计时；正文展示商品名称、商品品牌、市场价、最高限价、报价金额、报价规则名称；底部为行内报价输入框+“报价”按钮。【新增的tab】</p>
-            <p hidden><strong>竞价中：</strong>展示已报价、正在参与竞价的订单，卡片头部显示门店、复制按钮、红色竞价倒计时；正文字段与「新订单」tab 保持一致，报价金额红字显示；操作按钮显示“修改报价”。【新增的tab】</p>
+            <p hidden><strong>已报价：</strong>展示已报价、正在参与竞价的订单，卡片头部显示门店、复制按钮、红色竞价倒计时；正文字段与「新订单」tab 保持一致，报价金额红字显示；操作按钮显示“修改报价”。【新增的tab】</p>
             <p><strong>待出单：</strong>卡片与现在已有卡片一样。</p>
             <p><strong>原tab名称“进行中”改为“待出单” 【小程序也是一样的】</strong></p>
             <p hidden><strong>已完成：</strong>展示已出餐完成的订单。</p>
-            <p hidden><strong>列表排序：</strong>「新订单」与「竞价中」根据倒计时排序，短的在上面；「待出单」按竞价成功时间倒序；「已完成」按接单时间倒序。</p>
-            <p style="color:#ff4d4f;"><strong>行内报价规则：</strong>点击“报价”按钮时校验：① 报价倒计时已结束（00:00:00）时提示“报价倒计时结束，不能添加报价”；② 报价金额必填，为空提示“请填写报价金额”；③ 报价金额必须为数字且不能为 0；④ 报价金额不能大于该商品最高限价；⑤ 报价金额小数位数按后台配置的“供应商报价金额保留小数”生效，不符合时提示“报价金额保留 N 位小数”。校验通过后订单进入「竞价中」页面。</p>
+            <p hidden><strong>列表排序：</strong>「新订单」与「已报价」根据倒计时排序，短的在上面；「待出单」按竞价成功时间倒序；「已完成」按接单时间倒序。</p>
+            <p style="color:#ff4d4f;"><strong>行内报价规则：</strong>点击“报价”按钮时校验：① 报价倒计时已结束（00:00:00）时提示“报价倒计时结束，不能添加报价”；② 报价金额必填，为空提示“请填写报价金额”；③ 报价金额必须为数字且不能为 0；④ 报价金额不能大于该商品最高限价；⑤ 报价金额小数位数按后台配置的“供应商报价金额保留小数”生效，不符合时提示“报价金额保留 N 位小数”。校验通过后订单进入「已报价」页面。</p>
             <p><strong>筛选：</strong>搜索按钮右侧显示筛选图标；点击后自下而上弹出半屏弹窗，弹窗内提供「商品品牌」下拉选择，选项取与供应商合作的品牌列表；点击「确定」后按所选品牌过滤当前 tab 订单列表，点击「重置」清空已选品牌。</p>
             <p><strong>新订单提醒：</strong>当有新的未报价订单进入时，在搜索筛选区与 tab 栏之间显示红色提醒条“又有N笔新订单了，戳我立即刷新~”；点击提醒条后刷新订单列表并隐藏提醒条。若“新订单提示音”开启，同时会有语音提醒“守兔来新订单啦”。</p>
             <p><strong>设置入口：</strong>小程序「工作台」页面「其他」区域新增「设置」入口；点击进入设置页面，可开启/关闭“新订单提示音”。</p>
@@ -6027,7 +6031,7 @@
                   <h3>订单分配前倒计时</h3>
                   <div class="ops-card-help" tabindex="0">
                     <span class="ops-card-tip">?</span>
-                    <div class="ops-card-tooltip">按照配置的时间进行倒计时，在新订单页面和竞价中页面，倒计时结束，按照报价最低的进行分配订单</div>
+                    <div class="ops-card-tooltip">按照配置的时间进行倒计时，在新订单页面和已报价页面，倒计时结束，按照报价最低的进行分配订单</div>
                   </div>
                 </div>
                 <div class="ops-card-body" id="orderProcessCountdownDisplay">
@@ -6065,6 +6069,7 @@
             <p class="spec-subline"><strong>可选值：</strong>支持 1 位小数和 2 位小数切换。</p>
             <p class="spec-subline"><strong>保存：</strong>点击保存后立即生效，并同步到相关页面。若配置改为1位小数，供应商在新增/修改报价后，点击弹窗新增/修改按钮，提示“报价金额保留一位小数”；反之提示“报价金额保留两位小数”。</p>
             <p class="spec-subline"><strong>影响范围：</strong>供应商端、小程序端的【新增/修改报价金额】。</p>
+            <p class="spec-subline"><strong>注意：</strong>若报价权限关闭时，在打开时校验报价金额的小数是否符合设置，若不符合，提示“报价金额保留n位小数”；点击修改报价权限弹窗的确定按钮时，也进行校验；N为后台配置小数的1/2。</p>
             <p><strong>卡片标题：</strong><span style="color:#e5484d;">人工超时未处理暂停报价权限</span></p>
             <p><strong>编辑逻辑：</strong></p>
             <p class="spec-subline"><strong>输入框规则：</strong>0-180 的整数，默认值为 0。</p>
@@ -6072,11 +6077,11 @@
             <p class="spec-subline"><strong>生效含义：</strong>输入框为 0 时表示不关闭报价权限；大于 0 时，系统按照对应次数的人工出餐超时未处理状态，暂停供应商对应时长的报价权限，超时后自动开启。每次系统自动开启/关闭报价权限，都会进行公众号提醒。</p>
             <p class="spec-subline"><strong>注意：</strong><br>1. 对所有超时未处理的人工报价状态开启的系统自动关闭，到达配置的关闭报价时间后，进行自动开启【每一次系统的自动关闭/开启都会进行公众号提醒】<br>2. 第三次开启后，如果第四次还是超时未处理，【中间没有出餐成功的情况下】，按照时间停止报价时间最长的生效；若有一次出餐成功，在超时未处理，从第一个设置的开始停止报价配置生效<br>3. 系统自动关闭后，供应商端点击报价规则 开启状态时，提示<strong>“因超时未处理，报价权限被关闭，具体请看公众号提醒”</strong></p>
             <p><strong>卡片标题：</strong><span style="color:#e5484d;">订单分配前倒计时</span></p>
-            <p><strong>卡片定位：</strong>【瑞幸】订单相关配置中的“订单分配前倒计时”卡片，控制供应商端订单列表在新订单、竞价中阶段的倒计时长度。</p>
+            <p><strong>卡片定位：</strong>【瑞幸】订单相关配置中的“订单分配前倒计时”卡片，控制供应商端订单列表在新订单、已报价阶段的倒计时长度。</p>
             <p><strong>编辑逻辑：</strong></p>
             <p class="spec-subline"><strong>输入框规则：</strong>1-3600 的整数，默认值为 30，单位为秒。</p>
             <p class="spec-subline"><strong>保存校验：</strong>点击保存时校验输入框是否已填写；若未填写，提示“不能为空”。</p>
-            <p class="spec-subline"><strong>生效含义：</strong>配置后，新订单、竞价中列表按照配置的时间进行倒计时展示；倒计时结束，系统按照报价最低的供应商进行订单分配。</p>
+            <p class="spec-subline"><strong>生效含义：</strong>配置后，新订单、已报价列表按照配置的时间进行倒计时展示；倒计时结束，系统按照报价最低的供应商进行订单分配。</p>
             <p class="spec-subline"><strong>影响范围：</strong>供应商端 PC 订单列表【一级和二级供应商后台】、小程序端订单列表。</p>
             <div class="wechat-notice-box">
               <h4>微信公众号提醒：</h4>
@@ -7306,7 +7311,7 @@
 
     const supplierOrderTabConfig = [
       { key: "pending", label: "新订单" },
-      { key: "processing", label: "竞价中" },
+      { key: "processing", label: "已报价" },
       { key: "completed", label: "待出单" },
       { key: "finished", label: "已完成" },
       { key: "failed", label: "已失败" },
@@ -7794,7 +7799,7 @@
 
     const miniOrderTabConfig = [
       { key: "handling", label: "新订单" },
-      { key: "processing", label: "竞价中" },
+      { key: "processing", label: "已报价" },
       { key: "completed", label: "待出单" },
       { key: "finished", label: "已完成" },
       { key: "all", label: "全部" }
