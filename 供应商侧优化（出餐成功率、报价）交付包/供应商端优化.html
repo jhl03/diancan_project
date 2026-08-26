@@ -606,6 +606,56 @@
       pointer-events: none;
     }
 
+    .status-tab-help {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      margin-left: 6px;
+      border-radius: 50%;
+      background: rgba(17, 24, 39, 0.12);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: help;
+      flex: 0 0 auto;
+      pointer-events: auto;
+    }
+
+    .status-tab.active .status-tab-help {
+      background: rgba(32, 147, 255, 0.2);
+      color: var(--accent-strong);
+    }
+
+    .status-tab-help-tip {
+      position: absolute;
+      top: 24px;
+      right: -8px;
+      width: 240px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(20, 35, 56, 0.96);
+      color: #f8fbff;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.6;
+      box-shadow: 0 12px 28px rgba(13, 22, 38, 0.22);
+      opacity: 0;
+      transform: translateY(-4px);
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      z-index: 10;
+      text-align: left;
+    }
+
+    .status-tab-help:hover .status-tab-help-tip,
+    .status-tab-help:focus-within .status-tab-help-tip {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     .status-tab[data-supplier-order-tab="bid-failed"].active {
       background: rgba(216, 19, 19, 0.1);
       color: #d81313;
@@ -5132,7 +5182,13 @@
               </button>
               <button class="status-tab" data-supplier-order-tab="finished">已完成</button>
               <button class="status-tab" data-supplier-order-tab="failed">已失败</button>
-              <button class="status-tab" data-supplier-order-tab="all">全部</button>
+              <button class="status-tab" data-supplier-order-tab="all">
+                全部
+                <span class="status-tab-help" aria-label="提示" tabindex="0">
+                  ?
+                  <span class="status-tab-help-tip">全部页面数据不包括“新订单”、“已报价”页面的数据</span>
+                </span>
+              </button>
             </div>
           </div>
           <div class="table-shell">
@@ -5153,7 +5209,7 @@
           <div class="spec-prose">
             <p><strong>新增范围包括：</strong><span style="color: #ff4d4f;">一级供应商后台、二级供应商后台</span>。</p>
             <p><strong>页面的流转：</strong>未报价的订单在新订单页面，报价后直接进入已报价页面，倒计时继续，如果报价后倒计时结束直接进入待出单页面【不再进入已报价页面了】。</p>
-            <div style="background:#f7f9fc; border-left:3px solid #3366ff; padding:10px 12px; margin:8px 0; border-radius:6px;">
+            <div id="supplierOrderBidRecordNote" style="background:#f7f9fc; border-left:3px solid #3366ff; padding:10px 12px; margin:8px 0; border-radius:6px;">
               <p style="margin:0 0 6px 0;"><strong>竞价记录包括：</strong>所有的出餐方式【人工、自动…】</p>
               <p style="margin:0 0 6px 0;"><strong>竞价记录页面数据源：</strong><br>例：第一轮：有A、B、C三个供应商竞价，A竞价成功，出餐失败，B、C竞价失败；<br>第二轮：有B、C、D、E四个供应商竞价，B竞价成功，出餐成功，C、D、E竞价失败；<br>以此类推，注意，最后竞价记录是A、B竞价成功，C、D、E竞价失败</p>
               <p style="margin:0;"><strong>竞价失败原因：</strong><br>1. 超出接单配置时，原因为：超过最大接单数量：有出餐中订单<br>2. 比价失败时，原因为：金额原因：报价金额不是最低<br>3.价格相同随机分配时：订单价格相同，供应商随机分配，未被选中</p>
@@ -5176,7 +5232,7 @@
             <p><strong>列表字段的数据源与显示逻辑：</strong></p>
             <p class="spec-subline"><strong>新订单列表数据源：</strong>展示所有下单成功但尚未报价的订单（无报价金额）。</p>
             <p class="spec-subline"><strong>已报价列表数据源：</strong>展示所有已报价、正在参与竞价的订单（有报价金额）。</p>
-            <p class="spec-subline"><strong>待出单列表数据源：</strong>展示竞价成功（已分配）的订单；列表字段与小程序「待出单」卡片一致：商品名称、商品品牌、竞价成功时间、成交价、操作。</p>
+            <p class="spec-subline"><strong>待出单列表数据源：</strong>待出单页面列表的字段与已出单页面列表的字段是一样的。</p>
             <p class="spec-subline"><strong>商品名称：</strong>取当前订单的商品名称；若同一订单包含多个商品名称，换行显示，全部展示。</p>
             <p class="spec-subline"><strong>商品品牌：</strong>取当前订单的商品品牌。</p>
             <p class="spec-subline"><strong>门店名称：</strong>取该订单对应门店的展示名称。</p>
@@ -6211,8 +6267,8 @@
               <h3>需求背景</h3>
               <p><strong>需求目的：</strong>是为了让供应商可以及时调整自己的报价。</p>
               <p><strong>需求更改：</strong>在供应商端新增了竞价记录页面，页面可以看到竞价失败商品的最终成交价。</p>
-              <p><strong>需求背景及目的：</strong>一些新的供应商不知道应该报哪些商品，为了不让供应商盲目地报价。</p>
-              <p><strong>需求更改：</strong>在供应商端新增了可报价商品列表。</p>
+              <p><strong>需求背景及目的：</strong>新供应商不知道报哪些商品，然后我们新订单进入时也不会展示在页面。</p>
+              <p><strong>需求更改：</strong>在订单列表新增"新订单"、"已报价"页面。</p>
               <p><strong>需求背景及目的：</strong>目前，很多手工出餐的供应商不会及时地出餐，会导致整体出餐时间变长，导致可以出餐的供应商最后因为出餐时长不够，没有接到单；为了缩短整体的出餐时长，节省出餐时间。</p>
               <p><strong>需求更改：</strong>对那些手工超时未出餐的供应商，限制报价权限。</p>
             </div>
@@ -8269,6 +8325,10 @@
         return `<td class="${column.cellClass || ""}">${html}</td>`;
       }
       if (column.key === "mealStatus") {
+        const hiddenStatuses = ["待报价", "报价中", "竞价中", "竞价成功"];
+        if (hiddenStatuses.includes(item.mealStatus)) {
+          return `<td class="${column.cellClass || ""}">-</td>`;
+        }
         return `<td class="${column.cellClass || ""}"><span class="badge ${getSupplierOrderTone(item.mealStatus)}">${escapeHtml(item.mealStatus)}</span></td>`;
       }
       if (column.key === "quoteAmount") {
@@ -8316,6 +8376,10 @@
       const specPanel = document.getElementById("supplierOrderPendingSpec");
       if (specPanel) {
         specPanel.style.display = "";
+      }
+      const bidRecordNote = document.getElementById("supplierOrderBidRecordNote");
+      if (bidRecordNote) {
+        bidRecordNote.hidden = !["pending", "processing"].includes(state.supplierOrderTab);
       }
       const schema = getSupplierOrderTableSchema();
       head.innerHTML = `
@@ -8660,7 +8724,7 @@
                 <span class="mini-order-store-name">${escapeHtml(item.storeName)}</span>
                 <span class="mini-order-copy">复制</span>
               </div>
-              <span class="mini-order-status ${item.status === "竞价失败" ? "is-failed" : ""}">${escapeHtml(item.status)}</span>
+              <span class="mini-order-status ${item.status === "竞价失败" ? "is-failed" : ""}" ${["待报价", "报价中", "竞价中", "竞价成功"].includes(item.status) ? "hidden" : ""}>${escapeHtml(item.status)}</span>
             </div>
             <div class="mini-order-product">
               <strong>${escapeHtml(item.productName)}</strong>
@@ -8679,7 +8743,7 @@
                 <span class="mini-order-store-name">${escapeHtml(item.storeName)}</span>
                 <span class="mini-order-copy">复制</span>
               </div>
-              <span class="mini-order-status ${item.status === "竞价失败" ? "is-failed" : ""}">${escapeHtml(item.status)}</span>
+              <span class="mini-order-status ${item.status === "竞价失败" ? "is-failed" : ""}" ${["待报价", "报价中", "竞价中", "竞价成功"].includes(item.status) ? "hidden" : ""}>${escapeHtml(item.status)}</span>
             </div>
             <div class="mini-order-product">
               <strong>${escapeHtml(item.productName)}</strong>
