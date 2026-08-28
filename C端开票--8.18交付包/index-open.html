@@ -2851,7 +2851,7 @@ body.codex-bundle-editable .codex-edit-toolbar{display:none!important;}
   
               
     <ul class="note-list text" spellcheck="false">
-      <li class="" spellcheck="false">筛选项： 券订单号、出餐单号：精准搜索</li><li class="" spellcheck="false">发票抬头：模糊搜索</li><li spellcheck="false">倒计时是否结束：枚举值 是/否</li><li spellcheck="false">选 是 时，筛选出倒计时结束的订单</li><li spellcheck="false">默认显示近一个月的申请工单</li>
+      <li class="" spellcheck="false">筛选项： 券订单号、出餐单号：精准搜索</li><li class="" spellcheck="false">发票抬头：模糊搜索</li><li spellcheck="false">默认显示近一个月的申请工单</li>
     </ul>
   
             
@@ -3810,7 +3810,7 @@ body.codex-bundle-editable .codex-edit-toolbar{display:none!important;}
     </section>
   
         <div class="codex-added button" id="codex_added_58" style="position: absolute; left: 24px; top: 179px; width: 140px; height: 40px; display: none;" spellcheck="false" data-codex-base-width="140" data-codex-base-height="40" data-codex-tab-scoped="true" data-codex-tab-group="invoice-request-list__backend-status" data-codex-tab-panel="backend-pending" data-codex-tab-base-display="">搜索</div><div class="codex-added button" id="codex_added_59" style="position: absolute; left: 173px; top: 179px; width: 140px; height: 40px; display: none;" spellcheck="false" data-codex-base-width="140" data-codex-base-height="40" data-codex-tab-scoped="true" data-codex-tab-group="invoice-request-list__backend-status" data-codex-tab-panel="backend-pending" data-codex-tab-base-display="">重置</div><ul class="note-list text" spellcheck="false" style="position: absolute; left: 25px; top: 304.984px; width: 1539px; height: 135.953px; margin: 0px; max-width: none; min-width: 80px; min-height: 40px; z-index: 2147481900;" data-codex-base-width="1539" data-codex-base-height="135.953">
-      <li class="" spellcheck="false">筛选项： 出餐单号：精准搜索</li><li class="" spellcheck="false">发票抬头：模糊搜索</li><li spellcheck="false">倒计时是否结束：枚举值 是/否</li><li spellcheck="false" class="">选 是 时，筛选出倒计时结束的订单</li><li spellcheck="false" class="">默认显示近一个月的申请工单</li><li spellcheck="false">列表：按照进入列表时间，正序排</li>
+      <li class="" spellcheck="false">筛选项： 出餐单号：精准搜索</li><li class="" spellcheck="false">发票抬头：模糊搜索</li><li spellcheck="false" class="">默认显示近一个月的申请工单</li><li spellcheck="false">列表：按照进入列表时间，正序排</li>
     </ul></div>
       
         <div class="tab-panel" data-tab-group="invoice-request-list__backend-status" data-tab-panel="backend-processing" style="position: relative;">
@@ -23041,7 +23041,7 @@ function syncSupplierTabs() {
       [
         '数据源：该订单对应的出餐成功的出餐单号；<div>显示逻辑：若订单非出餐成功，显示“-”</div>',
         '数据源：系统自动创建16位编号，格式为BT+14位数字。',
-        '数据源：系统配置里面设置的上传倒计时；<div>【倒计时最好实时的】；该倒计时与供应商端相同补贴单号的倒计时一样</div><div>列表排序：按倒计时升序排；</div>',
+        '数据源：系统配置里面设置的上传倒计时；<div>【倒计时最好实时的】；该倒计时与供应商端相同补贴单号的倒计时一样；倒计时结束全部归零</div><div>列表排序：按倒计时升序排；</div>',
         '数据源：该订单，客服同步到列表的时间',
         '订单状态见“状态机”',
         '数据源：该订单对应的商品名称',
@@ -23074,8 +23074,6 @@ function syncSupplierTabs() {
       rows.push('<li class="codex-clean-note-strong">待处理（供）列表的数据源是客服工作台定时同步过来的</li>');
       rows.push('<li>筛选项： 开票单号、出餐单号：精准搜索</li>');
       rows.push('<li>发票抬头：模糊搜索</li>');
-      rows.push('<li>倒计时是否结束：枚举值 是/否</li>');
-      rows.push('<li>选 是 时，筛选出倒计时结束的订单</li>');
       rows.push('<li>默认显示近一个月的申请工单</li>');
     } else if (tabKey === "backend-uploaded") {
       rows.push('<li>筛选项： 开票单号、出餐单号、供应商编号：精准搜索</li>');
