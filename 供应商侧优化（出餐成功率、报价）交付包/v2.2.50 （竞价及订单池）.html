@@ -2995,11 +2995,17 @@
       transform: translateX(24px);
     }
 
-    .page-top-switch {
+    .page-top-switches {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 12px;
+    }
+
+    .page-top-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
       background: #fff;
       border-radius: 999px;
       box-shadow: 0 6px 18px rgba(18, 35, 58, 0.06);
@@ -3012,7 +3018,8 @@
       white-space: nowrap;
     }
 
-    .pc-sound-switch.on {
+    .pc-sound-switch.on,
+    .pc-pending-meal-switch.on {
       background: linear-gradient(135deg, #ff7a00, #ff9500);
     }
 
@@ -5187,9 +5194,15 @@
             <div>
               <h2 class="section-title">订单管理 - 订单列表</h2>
             </div>
-            <div class="page-top-switch">
-              <span class="page-top-switch-label">新订单提示：</span>
-              <button class="switch pc-sound-switch" id="pcSoundSwitch" type="button" data-action="toggle-pc-sound" aria-pressed="true"></button>
+            <div class="page-top-switches">
+              <div class="page-top-switch">
+                <span class="page-top-switch-label">新订单提示：</span>
+                <button class="switch pc-sound-switch" id="pcSoundSwitch" type="button" data-action="toggle-pc-sound" aria-pressed="true"></button>
+              </div>
+              <div class="page-top-switch">
+                <span class="page-top-switch-label">待出单订单提醒开关：</span>
+                <button class="switch pc-pending-meal-switch" id="pcPendingMealSwitch" type="button" data-action="toggle-pc-pending-meal" aria-pressed="true"></button>
+              </div>
             </div>
           </div>
           <div class="pc-new-arrival" id="pcNewArrival" data-action="refresh-pc-order" style="display: none;" hidden>
@@ -5250,8 +5263,10 @@
           </div>
           <div class="spec-prose">
             <p><strong>新增范围包括：</strong><span style="color: #ff4d4f;">一级供应商后台</span>。<span style="color:#3366ff;">挂有二级的一级供应商后台不能显示操作列的内容</span></p>
+            <p><strong>新订单页面、已报价页面的数据是实时推送的【小程序的也是一样的】</strong></p>
             <p><strong>页面的流转：</strong>未报价的订单在新订单页面，报价后直接进入已报价页面，倒计时继续，如果报价后倒计时结束直接进入待出单页面【不再进入已报价页面了】。</p>
-            <p><strong>新订单提示音开关：</strong>页面右上角显示“新订单提示：”开关图标，默认开启；点击开关关闭时弹出二次确认弹窗“确认要关闭提示音？关闭提示音可能会错过新订单”，可选择“暂不关闭”或“确认关闭”。</p>
+            <p><strong>待出单订单提醒开关：</strong>页面右上角显示“待出单订单提醒开关：”开关图标，默认开启；逻辑为“<strong style="color: #ff4d4f;">待出单中若有待出餐订单时，新订单即使开启也不进行提醒</strong>”。<strong>有待出餐订单进入时，网站右上角显示通知“有待出餐订单未处理”，左侧带音量图标，右侧带删除图标；语音响起时显示，持续 2s 后自动消失，也可点击删除图标手动关闭。关闭提示音后不再显示待出餐语音提醒。</strong></p>
+            <p><strong>新订单提示音开关：</strong>页面右上角显示“新订单提示：”开关图标，默认开启；点击开关切换时使用轻提示“提示音已开启 / 提示音已关闭”。</p>
             <p><strong>右上角语音提醒：</strong>有新订单进入时，网站右上角显示通知“守兔来新订单啦”，左侧带音量图标，右侧带删除图标；语音响起时显示，持续 2s 后自动消失，也可点击删除图标手动关闭。关闭提示音后不再显示新的语音提醒。</p>
             <p hidden><strong>站内新订单提醒：</strong>订单列表页面标题与筛选区之间显示红色提醒条“又有N笔新订单了，戳我立即刷新~”；点击提醒条后刷新订单列表并隐藏提醒条。若“新订单提示”开启，同时会有右上角语音提醒。</p>
       <p><strong>页面定位：</strong>供应商端【PC】 > 订单管理 > 订单列表，用于展示供应商的出餐订单，按“新订单/已报价/待出单/已完成/已失败/全部”切换 tab。</p>
@@ -5627,7 +5642,7 @@
                 </button>
               </div>
             </div>
-            <div class="mini-order-new-arrival" id="miniOrderNewArrival" data-action="refresh-mini-order" style="display: none;">
+            <div class="mini-order-new-arrival" id="miniOrderNewArrival" data-action="refresh-mini-order" style="display: none;" hidden>
               <span class="mini-order-new-arrival-speaker" aria-hidden="true">🔊</span>
               <span class="mini-order-new-arrival-text">又有2笔新订单了，戳我立即刷新~</span>
             </div>
@@ -5691,7 +5706,7 @@
             <p><strong>筛选：</strong>搜索按钮右侧显示筛选图标；点击后自下而上弹出半屏弹窗，弹窗内提供「商品品牌」下拉选择，选项取与供应商合作的品牌列表；点击「确定」后按所选品牌过滤当前 tab 订单列表，点击「重置」清空已选品牌。</p>
             <p><strong>新订单提醒：</strong>当有新的未报价订单进入时，在搜索筛选区与 tab 栏之间显示红色提醒条“又有N笔新订单了，戳我立即刷新~”；点击提醒条后刷新订单列表并隐藏提醒条。若“新订单提示音”开启，同时会有语音提醒“守兔来新订单啦”。</p>
             <p><strong>设置入口：</strong>小程序「工作台」页面「其他」区域新增「设置」入口；点击进入设置页面，可开启/关闭“新订单提示音”。</p>
-            <p><strong>提示音开关：</strong>设置页面中“新订单提示音”开关默认开启；关闭时弹出二次确认弹窗“确认要关闭提示音？关闭提示音可能会错过新订单”，可选择“暂不关闭”或“确认关闭”。</p>
+            <p><strong>提示音开关：</strong>设置页面中“新订单提示音”开关默认开启；点击开关切换时使用轻提示“提示音已开启 / 提示音已关闭”。</p>
             <p hidden><strong>待出单角标：</strong>底部「订单」导航与「待出单」tab 右上角显示待出单数量。</p>
           </div>
         </section>
@@ -5772,6 +5787,10 @@
                   <span class="mini-setting-label">新订单提示音</span>
                   <button class="switch mini-setting-switch" id="miniSoundSwitch" type="button" data-action="toggle-mini-sound" aria-pressed="true"></button>
                 </div>
+                <div class="mini-setting-item">
+                  <span class="mini-setting-label">待出单订单提醒</span>
+                  <button class="switch mini-setting-switch" id="miniPendingMealSwitch" type="button" data-action="toggle-mini-pending-meal" aria-pressed="true"></button>
+                </div>
               </div>
             </div>
             <div class="mini-order-bottom">
@@ -5803,7 +5822,8 @@
           </div>
           <div class="spec-prose">
             <p><strong>设置入口：</strong>从工作台「其他」区域点击「设置」进入。</p>
-            <p><strong>新订单提示音：</strong>开关默认开启；开启后，有新订单进入时会播放语音提醒“守兔来新订单啦”。关闭时弹出二次确认弹窗，确认后才生效。</p>
+            <p><strong>新订单提示音：</strong>开关默认开启；开启后，有新订单进入时会播放语音提醒“守兔来新订单啦”。点击开关切换时使用轻提示“提示音已开启 / 提示音已关闭”。</p>
+            <p><strong>待出单订单提醒：</strong>开关默认开启；逻辑为“进行中若有带出餐订单时，新订单不进行提醒”。</p>
           </div>
         </section>
       </section>
@@ -7363,9 +7383,12 @@
       miniOrderNewArrivalCount: 2,
       pcNewArrivalCount: 2,
       miniSoundEnabled: true,
+      pendingMealReminderEnabled: true,
+      miniPendingMealReminderEnabled: true,
       soundToastTimer: null,
       soundNotifications: [
-        { id: "sound-1", text: "守兔来新订单啦" }
+        { id: "sound-1", text: "守兔来新订单啦" },
+        { id: "sound-2", text: "有待出餐订单未处理" }
       ],
       miniQuoteRuleMode: "add",
       miniQuoteRuleEditOrderId: null,
@@ -8701,13 +8724,7 @@
       if (!tabs || !list) return;
       const newArrival = document.getElementById("miniOrderNewArrival");
       if (newArrival) {
-        const count = state.miniOrderNewArrivalCount;
-        if (count > 0) {
-          newArrival.querySelector(".mini-order-new-arrival-text").textContent = `又有${count}笔新订单了，戳我立即刷新~`;
-          newArrival.style.display = "flex";
-        } else {
-          newArrival.style.display = "none";
-        }
+        newArrival.style.display = "none";
       }
       const completedCount = supplierOrderRecords.filter((item) => item.tab === "bid-success").length;
       tabs.innerHTML = miniOrderTabConfig.map((tab) => {
@@ -8907,9 +8924,15 @@
 
     function renderMiniSettings() {
       const sw = document.getElementById("miniSoundSwitch");
-      if (!sw) return;
-      sw.classList.toggle("on", state.miniSoundEnabled);
-      sw.setAttribute("aria-pressed", String(state.miniSoundEnabled));
+      if (sw) {
+        sw.classList.toggle("on", state.miniSoundEnabled);
+        sw.setAttribute("aria-pressed", String(state.miniSoundEnabled));
+      }
+      const pendingSw = document.getElementById("miniPendingMealSwitch");
+      if (pendingSw) {
+        pendingSw.classList.toggle("on", state.miniPendingMealReminderEnabled);
+        pendingSw.setAttribute("aria-pressed", String(state.miniPendingMealReminderEnabled));
+      }
     }
 
     function renderSoundToggle() {
@@ -8917,6 +8940,13 @@
       if (!sw) return;
       sw.classList.toggle("on", state.miniSoundEnabled);
       sw.setAttribute("aria-pressed", String(state.miniSoundEnabled));
+    }
+
+    function renderPcPendingMealSwitch() {
+      const sw = document.getElementById("pcPendingMealSwitch");
+      if (!sw) return;
+      sw.classList.toggle("on", state.pendingMealReminderEnabled);
+      sw.setAttribute("aria-pressed", String(state.pendingMealReminderEnabled));
     }
 
     function renderSoundNotifications() {
@@ -10749,6 +10779,7 @@
       renderMiniBidRecord();
       renderMiniSettings();
       renderSoundToggle();
+      renderPcPendingMealSwitch();
       renderSoundNotifications();
       renderPcNewArrival();
       renderMiniQuoteProducts();
@@ -12208,13 +12239,19 @@
             showPageToast("订单列表已刷新");
           }
           if (action === "toggle-mini-sound" || action === "toggle-pc-sound") {
-            if (state.miniSoundEnabled) {
-              openModal("closeSoundModal");
-            } else {
-              state.miniSoundEnabled = true;
-              renderAll();
-              showPageToast("提示音已开启");
-            }
+            state.miniSoundEnabled = !state.miniSoundEnabled;
+            renderAll();
+            showPageToast(state.miniSoundEnabled ? "提示音已开启" : "提示音已关闭");
+          }
+          if (action === "toggle-pc-pending-meal") {
+            state.pendingMealReminderEnabled = !state.pendingMealReminderEnabled;
+            renderAll();
+            showPageToast(state.pendingMealReminderEnabled ? "待出单订单提醒已开启" : "待出单订单提醒已关闭");
+          }
+          if (action === "toggle-mini-pending-meal") {
+            state.miniPendingMealReminderEnabled = !state.miniPendingMealReminderEnabled;
+            renderAll();
+            showPageToast(state.miniPendingMealReminderEnabled ? "待出单订单提醒已开启" : "待出单订单提醒已关闭");
           }
           if (action === "dismiss-sound-toast") {
             const toastId = actionButton.dataset.soundToastId;
