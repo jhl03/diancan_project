@@ -1456,7 +1456,6 @@
       align-items: center;
       justify-content: center;
       gap: 5px;
-      cursor: pointer;
     }
 
     .mini-order-new-arrival-speaker {
@@ -5642,9 +5641,9 @@
                 </button>
               </div>
             </div>
-            <div class="mini-order-new-arrival" id="miniOrderNewArrival" data-action="refresh-mini-order" style="display: none;" hidden>
+            <div class="mini-order-new-arrival" id="miniOrderNewArrival">
               <span class="mini-order-new-arrival-speaker" aria-hidden="true">🔊</span>
-              <span class="mini-order-new-arrival-text">又有2笔新订单了，戳我立即刷新~</span>
+              <span class="mini-order-new-arrival-text">又有2笔新订单了，请到新订单页面查看</span>
             </div>
             <div class="mini-order-tabs" id="miniOrderTabs"></div>
             <div class="mini-order-list" id="miniOrderList"></div>
@@ -5704,7 +5703,9 @@
             <p hidden><strong>列表排序：</strong>「新订单」与「已报价」根据倒计时排序，短的在上面；「待出单」按竞价成功时间倒序；「已完成」按接单时间倒序。</p>
             <p style="color:#ff4d4f;"><strong>行内报价规则：</strong>点击“报价”按钮时校验：① 报价倒计时已结束（00:00:00）时提示“报价倒计时结束，不能添加报价”；② 报价金额必填，为空提示“请填写报价金额”；③ 报价金额必须为数字且不能为 0；④ 报价金额不能大于该商品最高限价；⑤ 报价金额小数位数按后台配置的“供应商报价金额保留小数”生效，不符合时提示“报价金额保留 N 位小数”。校验通过后订单进入「已报价」页面。</p>
             <p><strong>筛选：</strong>搜索按钮右侧显示筛选图标；点击后自下而上弹出半屏弹窗，弹窗内提供「商品品牌」下拉选择，选项取与供应商合作的品牌列表；点击「确定」后按所选品牌过滤当前 tab 订单列表，点击「重置」清空已选品牌。</p>
-            <p><strong>新订单提醒：</strong>当有新的未报价订单进入时，在搜索筛选区与 tab 栏之间显示红色提醒条“又有N笔新订单了，戳我立即刷新~”；点击提醒条后刷新订单列表并隐藏提醒条。若“新订单提示音”开启，同时会有语音提醒“守兔来新订单啦”。</p>
+            <p><strong>新订单提醒：</strong>当有新的未报价订单进入时，在搜索筛选区与 tab 栏之间显示红色提醒条“又有N笔新订单了，请到新订单页面查看”；点击提醒条后刷新订单列表并隐藏提醒条。若“新订单提示音”开启，同时会有语音提醒“守兔来新订单啦”。</p>
+            <p style="color:#4f7dff;"><strong>提醒条显示逻辑：</strong>进入「新订单」页面时，提醒条自动隐藏；在其它 tab 页面（如待出单、已报价等）时，若存在未读新订单则显示提醒条。提醒条中的数字“2”跟随新订单数量变化，当前未读新订单有几笔即显示为几，点击提醒条不再刷新订单列表。</p>
+            <p style="color:#10b981;"><strong>底部导航：</strong>点击底部「订单」导航时，默认优先进入「待出单」页面，方便供应商优先处理待出餐订单。</p>
             <p><strong>设置入口：</strong>小程序「工作台」页面「其他」区域新增「设置」入口；点击进入设置页面，可开启/关闭“新订单提示音”。</p>
             <p><strong>提示音开关：</strong>设置页面中“新订单提示音”开关默认开启；点击开关切换时使用轻提示“提示音已开启 / 提示音已关闭”。</p>
             <p hidden><strong>待出单角标：</strong>底部「订单」导航与「待出单」tab 右上角显示待出单数量。</p>
@@ -8724,7 +8725,13 @@
       if (!tabs || !list) return;
       const newArrival = document.getElementById("miniOrderNewArrival");
       if (newArrival) {
-        newArrival.style.display = "none";
+        const count = state.miniOrderNewArrivalCount;
+        if (count > 0 && state.miniOrderTab !== "handling") {
+          newArrival.querySelector(".mini-order-new-arrival-text").textContent = `又有${count}笔新订单了，请到新订单页面查看`;
+          newArrival.style.display = "flex";
+        } else {
+          newArrival.style.display = "none";
+        }
       }
       const completedCount = supplierOrderRecords.filter((item) => item.tab === "bid-success").length;
       tabs.innerHTML = miniOrderTabConfig.map((tab) => {
@@ -11394,6 +11401,9 @@
         const pageButton = event.target.closest("[data-page-target]");
         if (pageButton && !pageButton.classList.contains("disabled")) {
           state.currentPage = pageButton.dataset.pageTarget;
+          if (state.currentPage === "supplier-mini-order") {
+            state.miniOrderTab = "completed";
+          }
           renderAll();
         }
 
@@ -12148,6 +12158,9 @@
         const pageButton = event.target.closest("[data-page-target]");
         if (pageButton && !pageButton.classList.contains("disabled")) {
           state.currentPage = pageButton.dataset.pageTarget;
+          if (state.currentPage === "supplier-mini-order") {
+            state.miniOrderTab = "completed";
+          }
           renderAll();
         }
 
@@ -12227,11 +12240,6 @@
             renderMiniOrderFilterSheet();
             renderMiniOrderPage();
             showPageToast("筛选已更新");
-          }
-          if (action === "refresh-mini-order") {
-            state.miniOrderNewArrivalCount = 0;
-            renderMiniOrderPage();
-            showPageToast("订单列表已刷新");
           }
           if (action === "refresh-pc-order") {
             state.pcNewArrivalCount = 0;
