@@ -4493,6 +4493,23 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .quote-sync-tip {
+      margin: 0;
+      padding: 8px 10px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #0d7ea6;
+      background: #e6f7fb;
+      border-radius: 8px;
+    }
+
+    .quote-from-rule-tag {
+      font-size: 12px;
+      color: #0d7ea6;
+      font-weight: 400;
     }
 
     .quote-rule-line .field-label {
@@ -5297,7 +5314,12 @@
             <p class="spec-subline"><strong>操作：</strong>新订单 tab 仅当出餐方式为“人工”时展示行内报价输入框与“报价”按钮，否则操作列显示“-”；已报价 tab 仅当出餐方式为“人工”时显示“修改报价”按钮（包括新订单页面进入已报价页面的订单），否则显示“-”。</p>
             <p class="spec-subline"><strong>行内报价输入框：</strong>新订单 tab 操作列内展示，用于输入当前订单的报价金额。</p>
             <p class="spec-subline" style="color:#ff4d4f;"><strong>报价按钮：</strong>点击后校验：① 报价倒计时已结束时提示“报价倒计时结束，不能添加报价”；② 报价金额必填，为空提示“请填写报价金额”；③ 报价金额必须为数字且不能为 0；④ 报价金额不能大于该商品最高限价；⑤ 报价金额小数位数按后台配置的“供应商报价金额保留小数”生效。</p>
-            <p><strong>修改报价：</strong>已报价状态点击“修改报价”按钮后进入「编辑报价规则」页面，保存后同步更新报价金额。</p>
+            <p><strong>修改报价：</strong>已报价状态（出餐方式为“人工”）点击“修改报价”按钮后弹出「修改报价」弹窗，弹窗内容如下：</p>
+            <p class="spec-subline"><strong>原报价金额：</strong>取列表对应的报价金额，只读展示。</p>
+            <p class="spec-subline"><strong>新报价：</strong>输入框，限制与新增/修改报价金额输入框一致（必填、必须为数字且不为 0、不能大于最高限价、小数位数按后台“供应商报价金额保留小数”生效）。</p>
+            <p class="spec-subline"><strong>最高限价：</strong>取列表对应的最高限价，只读展示。</p>
+            <p class="spec-subline"><strong>规则同步：</strong>在商品报价页面已有的规则，修改后的金额会同步到已有的规则里面。</p>
+            <p class="spec-subline" style="color:#0d7ea6;"><strong>命中规则提示：</strong>当该报价规则命中商品报价页面的规则时，原报价金额右侧显示“（该报价金额来自商品报价规则页面）”。</p>
           </div>
         </section>
       </section>
@@ -6924,6 +6946,39 @@
     </div>
   </section>
 
+  <section class="modal" id="editQuoteAmountModal" aria-hidden="true">
+    <div class="modal-head">
+      <div>
+        <h2 class="modal-title">修改报价</h2>
+      </div>
+      <button class="close-btn" data-close-modal="editQuoteAmountModal" aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="quote-rule-form">
+        <p class="quote-sync-tip">若商品报价页面已有报价规则，修改报价金额时，会同步修改原报价规则的金额</p>
+        <div class="quote-rule-line">
+          <span class="field-label">原报价金额：</span>
+          <strong id="editQuoteOriginalAmount" style="font-weight:600;">-</strong>
+          <span class="quote-from-rule-tag" id="editQuoteFromRuleTag" style="display:none;">（该报价金额来自商品报价规则页面）</span>
+        </div>
+        <label class="field">
+          <span class="field-label required">新报价：</span>
+          <div class="quote-amount-row">
+            <input class="field-control" id="editQuoteNewAmount" inputmode="decimal" placeholder="请输入新报价">
+          </div>
+        </label>
+        <div class="quote-rule-line">
+          <span class="field-label">最高限价：</span>
+          <strong id="editQuoteMaxLimit" style="font-weight:600;">-</strong>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-close-modal="editQuoteAmountModal">取消</button>
+      <button class="btn btn-primary" id="saveEditQuoteAmount" type="button">确定</button>
+    </div>
+  </section>
+
   <section class="modal" id="miniPendingQuoteModal" aria-hidden="true">
     <div class="modal-head">
       <div>
@@ -7465,6 +7520,7 @@
         maxLimitPrice: "¥16.0",
         quoteAmount: "14.5",
         quoteRuleName: "瑞幸10选1",
+        quoteCountdown: "00:10:00",
         supplierName: "厦门优供",
         pickupCode: "A019",
         pickupQrCode: "查看二维码",
@@ -8369,7 +8425,7 @@
           return `
             <td class="${column.cellClass || ""}">
               <div class="supplier-order-action">
-                ${showEditBtn ? `<button class="link-btn" type="button" data-action="open-quote-rule-modal" data-id="${escapeHtml(item.id)}">修改报价</button>` : "-"}
+                ${showEditBtn ? `<button class="link-btn" type="button" data-action="open-edit-quote-amount-modal" data-id="${escapeHtml(item.id)}">修改报价</button>` : "-"}
               </div>
             </td>
           `;
@@ -10419,6 +10475,24 @@
       openModal("pendingQuoteModal");
     }
 
+    function openEditQuoteAmountModal(orderId = null) {
+      const order = supplierOrderRecords.find((item) => item.id === orderId);
+      const originalEl = document.getElementById("editQuoteOriginalAmount");
+      const maxLimitEl = document.getElementById("editQuoteMaxLimit");
+      const amountInput = document.getElementById("editQuoteNewAmount");
+      const fromRuleTag = document.getElementById("editQuoteFromRuleTag");
+      if (originalEl) originalEl.textContent = order ? (order.quoteAmount || "-") : "-";
+      if (maxLimitEl) maxLimitEl.textContent = order ? (order.maxLimitPrice || "-") : "-";
+      if (amountInput) amountInput.value = "";
+      if (fromRuleTag) {
+        const hasRule = order && order.quoteRuleName && order.quoteRuleName !== "-";
+        fromRuleTag.style.display = hasRule ? "inline" : "none";
+      }
+      state.activeQuoteRuleOrderId = orderId;
+      state.activePendingQuoteMaxLimit = order ? order.maxLimitPrice : "";
+      openModal("editQuoteAmountModal");
+    }
+
     function openMiniPendingQuoteModal(orderId = null) {
       const order = supplierOrderRecords.find((item) => item.id === orderId);
       const product = order ? order.productName : "";
@@ -12210,6 +12284,7 @@
           const id = actionButton.dataset.id;
           if (action === "handle-order") openDrawer(id);
           if (action === "open-quote-rule-modal") openBidFailedQuoteRuleModal(id);
+          if (action === "open-edit-quote-amount-modal") openEditQuoteAmountModal(id);
           if (action === "open-pending-quote-modal") openPendingQuoteModal(id);
           if (action === "open-mini-pending-quote") {
             openMiniPendingQuoteModal(id);
@@ -12470,6 +12545,50 @@
           }
           closeModal("pendingQuoteModal");
           showPageToast("报价已提交");
+          renderAll();
+        });
+      }
+      const saveEditQuoteAmountButton = document.getElementById("saveEditQuoteAmount");
+      if (saveEditQuoteAmountButton) {
+        saveEditQuoteAmountButton.addEventListener("click", () => {
+          const order = supplierOrderRecords.find((item) => item.id === state.activeQuoteRuleOrderId);
+          const amountInput = document.getElementById("editQuoteNewAmount");
+          const amountRaw = amountInput ? amountInput.value.trim() : "";
+          if (!amountRaw) {
+            showPageToast("请填写报价金额");
+            return;
+          }
+          const amountNum = parseFloat(amountRaw);
+          if (Number.isNaN(amountNum)) {
+            showPageToast("请填写正确的报价金额");
+            return;
+          }
+          if (amountNum === 0) {
+            showPageToast("不能为0");
+            return;
+          }
+          const maxLimitRaw = state.activePendingQuoteMaxLimit || (order ? order.maxLimitPrice : "") || "";
+          const maxLimitNum = parseFloat(String(maxLimitRaw).replace(/[^0-9.]/g, ""));
+          if (!Number.isNaN(maxLimitNum) && amountNum > maxLimitNum) {
+            showPageToast("报价金额不能大于最高限价");
+            return;
+          }
+          const digits = getQuoteRoundingDigits();
+          const decimalRegex = new RegExp(`^\\d+(\\.\\d{${digits}})?$`);
+          if (!decimalRegex.test(amountRaw)) {
+            showPageToast(`报价金额保留${digits}位小数`);
+            return;
+          }
+          if (order) {
+            const remaining = countdownToSeconds(order.quoteCountdown);
+            if (!Number.isFinite(remaining) || remaining <= 0) {
+              showPageToast("竞价倒计时结束，不能添加报价");
+              return;
+            }
+            order.quoteAmount = amountRaw;
+          }
+          closeModal("editQuoteAmountModal");
+          showPageToast("报价已修改");
           renderAll();
         });
       }
