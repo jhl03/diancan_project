@@ -5313,7 +5313,7 @@
             <p class="spec-subline"><strong>出餐方式：</strong>仅已报价 tab 展示，取当前订单的出餐方式，如“人工”“自动”。</p>
             <p class="spec-subline"><strong>操作：</strong>新订单 tab 仅当出餐方式为“人工”时展示行内报价输入框与“报价”按钮，否则操作列显示“-”；已报价 tab 仅当出餐方式为“人工”时显示“修改报价”按钮（包括新订单页面进入已报价页面的订单），否则显示“-”。</p>
             <p class="spec-subline"><strong>行内报价输入框：</strong>新订单 tab 操作列内展示，用于输入当前订单的报价金额。</p>
-            <p class="spec-subline" style="color:#ff4d4f;"><strong>报价按钮：</strong>点击后校验：① 报价倒计时已结束时提示“报价倒计时结束，不能添加报价”；② 报价金额必填，为空提示“请填写报价金额”；③ 报价金额必须为数字且不能为 0；④ 报价金额不能大于该商品最高限价；⑤ 报价金额小数位数按后台配置的“供应商报价金额保留小数”生效。</p>
+            <p class="spec-subline" style="color:#ff4d4f;"><strong>报价按钮：</strong>点击后校验：① 报价倒计时已结束时提示“报价倒计时结束，不能添加报价”；② 报价金额必填，为空提示“请填写报价金额”；③ 报价金额必须为数字且不能为 0；④ 报价金额不能大于该商品最高限价；⑤ 报价金额小数位数按后台配置的“供应商报价金额保留小数”生效；⑥ 点击按钮，校验该商品是否已经存在报价规则；若存在提示“该商品已存在报价规则，在已报价页面查看”。</p>
             <p><strong>修改报价：</strong>已报价状态（出餐方式为“人工”）点击“修改报价”按钮后弹出「修改报价」弹窗，弹窗内容如下：</p>
             <p class="spec-subline"><strong>原报价金额：</strong>取列表对应的报价金额，只读展示。</p>
             <p class="spec-subline"><strong>新报价：</strong>输入框，限制与新增/修改报价金额输入框一致（必填、必须为数字且不为 0、不能大于最高限价、小数位数按后台“供应商报价金额保留小数”生效）。</p>
@@ -5400,6 +5400,7 @@
             <p class="spec-subline"><strong>市场价：</strong>取后台配置的商品原价。</p>
             <p class="spec-subline"><strong>报价金额：</strong>取该供应商本次参与竞价时的报价。</p>
             <p class="spec-subline"><strong>成交价：</strong>取所有竞价表里面的最低报价；竞价记录中成交价始终存在，不为空。</p>
+            <p class="spec-subline" style="margin-left: 24px; color: #ff4d4f;"><strong>成交价小数规则：</strong>若报价金额配置了保留一位小数时，成交价的金额也保留一位小数，取数规则【舍掉第二位及之后的小数】。</p>
             <p class="spec-subline"><strong>报价规则名称：</strong>取当前命中的报价规则名称。</p>
             <p class="spec-subline"><strong>竞价成功时间：</strong>仅竞价成功 tab 展示实际成功时间，列表按该时间倒序；竞价失败 tab 不展示该字段。</p>
             <p class="spec-subline"><strong>竞价失败原因：</strong>仅竞价失败 tab 展示具体原因；竞价成功 tab 不展示该字段。</p>
