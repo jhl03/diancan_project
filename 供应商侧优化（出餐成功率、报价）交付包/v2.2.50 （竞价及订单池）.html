@@ -5381,9 +5381,34 @@
             <div style="background:#f7f9fc; border-left:3px solid #3366ff; padding:10px 12px; margin:8px 0; border-radius:6px;">
               <p style="margin:0 0 6px 0;"><strong>竞价记录包括：</strong>所有的出餐方式【人工、自动…】</p>
               <p style="margin:0 0 6px 0;"><strong>竞价记录页面数据源：</strong><br>例：第一轮：有A、B、C三个供应商竞价，A竞价成功，出餐失败，B、C竞价失败；<br>第二轮：有B、C、D、E四个供应商竞价，B竞价成功，出餐成功，C、D、E竞价失败；<br>以此类推，注意，最后竞价记录是A、B竞价成功，C、D、E竞价失败</p>
-              <p style="margin:0;"><strong>竞价失败原因：</strong><br>1. 超出接单配置时，原因为：超过最大接单数量：有出餐中订单<br>2. 比价失败时，原因为：金额原因：报价金额不是最低<br>3.价格相同随机分配时：订单价格相同，供应商随机分配，未被选中</p>
+              <p style="margin:0;"><strong>竞价失败原因：</strong><br>1. 超出接单配置时，原因为：超过最大接单数量<br>2. 比价失败时，原因为：报价金额不是最低<br>3. 价格相同随机分配时，原因为：订单价格相同，供应商随机分配，未被选中<br>4. 触发兜底规则时原因为：因订单流转超时，已自动指派兜底供应商----出餐方式为自动 / 超过最大接单数量----出餐方式为人工</p>
             </div>
-            <p><strong>字段口径：</strong>竞价记录页面展示商品名称、商品品牌、门店名称、店铺地址、市场价、报价金额、成交价、报价规则名称、竞价成功时间、竞价失败原因、竞价失败时间和操作。</p>
+            <div style="background:#fff7e6; border-left:4px solid #fa8c16; padding:12px 14px; margin:12px 0; border-radius:6px;">
+              <p style="margin:0 0 8px 0; color:#d46b08;"><strong>竞价失败原因显示逻辑：</strong></p>
+              <p style="margin:0; line-height:1.8;">
+                <strong>1. 竞价记录页面：</strong><br>
+                &nbsp;&nbsp;<strong>1.1 流转过程中，有供应商竞价成功，其他竞价失败的情况如下：</strong><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong>1.1.1</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数】 = 供应商报价，<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：订单价格相同，供应商随机分配，未被选中 / 超过最大接单数量<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong>1.1.2</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数】 ＜ 供应商报价，<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：报价金额不是最低<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong>1.1.3</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数】 ＞ 供应商报价，<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：因订单流转超时，已自动指派兜底供应商----出餐方式为自动 / 超过最大接单数量----出餐方式为人工<br><br>
+                &nbsp;&nbsp;<strong>1.2 流转过程中，没有供应商竞价成功，其他竞价失败的情况如下：</strong><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;前提：竞价失败页面 成交价取竞价表里面最低的<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong>1.2.1</strong> 成交价【取竞价表里面最低价，若配置了保留一位小数，报价舍掉第二位小数】 = 供应商报价，<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：订单价格相同，供应商随机分配，未被选中<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong>1.2.2</strong> 成交价【取竞价表里面最低价，若配置了保留一位小数，报价舍掉第二位小数】 ＜ 供应商报价，<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：报价金额不是最低<br><br>
+                &nbsp;&nbsp;<strong>1.3 流转过程中，有供应商竞价成功，但是没有出餐超过的，其他竞价失败的情况如下：</strong><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;前提：竞价失败页面 成交价取接单记录里面报价金额最低的<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong>1.3.1</strong> 成交价【取接单记录里面报价最低，若配置了保留一位小数，报价舍掉第二位小数】 = 供应商报价，<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：订单价格相同，供应商随机分配，未被选中<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong>1.3.2</strong> 成交价【取接单记录里面报价最低，若配置了保留一位小数，报价舍掉第二位小数】 ＜ 供应商报价，<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：报价金额不是最低
+              </p>
+            </div>
+            <p><strong>字段口径：</strong>竞价记录页面展示商品名称、商品品牌、门店名称、店铺地址、市场价、报价金额、报价规则名称、竞价成功时间、竞价失败原因、竞价失败时间和操作；其中成交价仅在竞价失败 tab 列表展示。</p>
             <p><strong>筛选项输入框逻辑：</strong></p>
             <p class="spec-subline"><strong>商品名称：</strong>支持按商品名称关键词下拉检索。</p>
             <p class="spec-subline"><strong>商品品牌：</strong>支持按品牌名称下拉检索。</p>
@@ -5399,7 +5424,7 @@
             <p class="spec-subline"><strong>店铺地址：</strong>取对应门店地址，过长时允许自动换行。</p>
             <p class="spec-subline"><strong>市场价：</strong>取后台配置的商品原价。</p>
             <p class="spec-subline"><strong>报价金额：</strong>取该供应商本次参与竞价时的报价。</p>
-            <p class="spec-subline"><strong>成交价：</strong>取所有竞价表里面的最低报价；竞价记录中成交价始终存在，不为空。</p>
+            <p class="spec-subline"><strong>成交价：</strong>在竞价失败原因显示逻辑里面查看具体取值。</p>
             <p class="spec-subline" style="margin-left: 24px; color: #ff4d4f;"><strong>成交价小数规则：</strong>若报价金额配置了保留一位小数时，成交价的金额也保留一位小数，取数规则【舍掉第二位及之后的小数】。</p>
             <p class="spec-subline"><strong>报价规则名称：</strong>取当前命中的报价规则名称。</p>
             <p class="spec-subline"><strong>竞价成功时间：</strong>仅竞价成功 tab 展示实际成功时间，列表按该时间倒序；竞价失败 tab 不展示该字段。</p>
@@ -8341,7 +8366,6 @@
       { key: "mealMethod", label: "出餐方式" },
       { key: "marketPrice", label: "市场价", cellClass: "is-money" },
       { key: "quoteAmount", label: "报价金额", cellClass: "is-money" },
-      { key: "dealPrice", label: "成交价", cellClass: "is-money" },
       { key: "quoteRuleName", label: "报价规则名称" },
       { key: "bidSuccessTime", label: "竞价成功时间" }
     ];
