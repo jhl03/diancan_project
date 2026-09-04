@@ -5170,6 +5170,7 @@
         <span class="nav-chevron">⌄</span>
       </button>
       <div class="nav-subtree nav-tree" id="supplier-order-tree">
+        <button class="nav-sub-item" data-page-target="supplier-new-order">新订单</button>
         <button class="nav-sub-item" data-page-target="supplier-order-list">订单列表</button>
         <button class="nav-sub-item" data-page-target="supplier-bid-record">竞价记录</button>
       </div>
@@ -5226,40 +5227,15 @@
             <span class="pc-new-arrival-text">又有2笔新订单了，戳我立即刷新~</span>
           </div>
           <div class="filters">
-            <div class="filter-row">
-              <label class="field">
-                <span class="field-label">出餐单号</span>
-                <input class="field-control" placeholder="请输入出餐单号">
-              </label>
-              <label class="field">
-                <span class="field-label">商品名称</span>
-                <input class="field-control" placeholder="请输入商品名称">
-              </label>
-              <label class="field">
-                <span class="field-label">商品品牌</span>
-                <input class="field-control" placeholder="请输入商品品牌">
-              </label>
-              <div class="hero-actions">
-                <button class="btn btn-primary">搜索</button>
-                <button class="btn btn-secondary">清空</button>
-              </div>
-            </div>
+            <p class="filter-hint" style="color:#666; padding: 12px 0; margin: 0;">筛选项与系统原有筛选项一致，没有改变</p>
             <div class="status-tabs" id="supplierOrderTabs">
-              <button class="status-tab" data-supplier-order-tab="pending">新订单</button>
-              <button class="status-tab" data-supplier-order-tab="processing">已报价</button>
               <button class="status-tab" data-supplier-order-tab="completed">
                 待出单
                 <span class="status-tab-badge" id="supplierOrderCompletedBadge" aria-label="待出单">0</span>
               </button>
               <button class="status-tab" data-supplier-order-tab="finished">已完成</button>
               <button class="status-tab" data-supplier-order-tab="failed">已失败</button>
-              <button class="status-tab" data-supplier-order-tab="all">
-                全部
-                <span class="status-tab-help" aria-label="提示" tabindex="0">
-                  ?
-                  <span class="status-tab-help-tip">全部页面数据不包括“新订单”、“已报价”页面的数据</span>
-                </span>
-              </button>
+              <button class="status-tab" data-supplier-order-tab="all">全部</button>
             </div>
           </div>
           <div class="table-shell">
@@ -5279,25 +5255,77 @@
           </div>
           <div class="spec-prose">
             <p><strong>新增范围包括：</strong><span style="color: #ff4d4f;">一级供应商后台</span>。<span style="color:#3366ff;">挂有二级的一级供应商后台不能显示操作列的内容</span></p>
-            <p><strong>新订单页面、已报价页面的数据是实时推送的【小程序的也是一样的】</strong></p>
-            <p><strong>页面的流转：</strong>未报价的订单在新订单页面，报价后直接进入已报价页面，倒计时继续，如果报价后倒计时结束直接进入待出单页面【不再进入已报价页面了】。</p>
             <p><strong>待出单订单提醒开关：</strong>页面右上角显示“待出单订单提醒开关：”开关图标，默认开启；逻辑为“<strong style="color: #ff4d4f;">待出单中若有待出餐订单时，新订单即使开启也不进行提醒</strong>”。<strong>有待出餐订单进入时，网站右上角显示通知“待出餐提醒，请及时处理”，左侧带音量图标，右侧带删除图标；语音响起时显示，持续 2s 后自动消失，也可点击删除图标手动关闭。关闭提示音后不再显示待出餐语音提醒。</strong></p>
             <p><strong>新订单提示音开关：</strong>页面右上角显示“新订单提示：”开关图标，默认开启；点击开关切换时使用轻提示“提示音已开启 / 提示音已关闭”。</p>
             <p><strong>右上角语音提醒：</strong>有新订单进入时，网站右上角显示通知“守兔来新订单啦”，左侧带音量图标，右侧带删除图标；语音响起时显示，持续 2s 后自动消失，也可点击删除图标手动关闭。关闭提示音后不再显示新的语音提醒。</p>
             <p hidden><strong>站内新订单提醒：</strong>订单列表页面标题与筛选区之间显示红色提醒条“又有N笔新订单了，戳我立即刷新~”；点击提醒条后刷新订单列表并隐藏提醒条。若“新订单提示”开启，同时会有右上角语音提醒。</p>
-      <p><strong>页面定位：</strong>供应商端【PC】 > 订单管理 > 订单列表，用于展示供应商的出餐订单，按“新订单/已报价/待出单/已完成/已失败/全部”切换 tab。</p>
-      <p><strong>新订单 tab：</strong>展示所有下单成功但尚未报价的订单。【新增的tab】</p>
-      <p><strong>已报价 tab：</strong>展示所有已报价、正在参与竞价的订单，字段与「新订单」tab 保持一致。【新增的tab】</p>
-      <p><strong>原tab名称“进行中”改为“待出单” 【小程序也是一样的】</strong></p>
-            <p><strong>列表排序：</strong>「新订单」与「已报价」tab 均根据倒计时排序，短的在上面。</p>
+            <p><strong>页面定位：</strong>供应商端【PC】 > 订单管理 > 订单列表，用于展示供应商的出餐订单，按“待出单/已完成/已失败/全部”切换 tab。</p>
+            <p><strong>原tab名称“进行中”改为“待出单” 【小程序也是一样的】</strong></p>
             <p><strong>待出单角标：</strong>「待出单」tab 右上角红字角标显示待出单订单数量，数量为 0 时隐藏。</p>
             <p><strong>筛选项输入框逻辑：</strong></p>
-            <p class="spec-subline" style="color:#ff4d4f;"><strong>筛选项：</strong>筛选项与系统原来的筛选项一致。</p>
-            <p class="spec-subline"><strong>出餐单号：</strong>支持按出餐单号精确查询。若在新订单、已报价页面搜索某些列表没有的字段，搜索之后，列表显示“暂无数据”。</p>
+            <p class="spec-subline" style="color:#ff4d4f;"><strong>筛选项：</strong>筛选项与系统原来的筛选项一致，没有改变。</p>
+            <p><strong>待出单页面数据说明：</strong>待出单页面的数据与之前进行中页面的数据是一样的，只是改了 tab 的名称。</p>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" data-page="supplier-new-order">
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">订单管理 - 新订单</h2>
+            </div>
+          </div>
+          <div class="pc-new-arrival" data-action="refresh-pc-order" style="display: none;" hidden>
+            <span class="pc-new-arrival-speaker" aria-hidden="true">🔊</span>
+            <span class="pc-new-arrival-text">又有2笔新订单了，戳我立即刷新~</span>
+          </div>
+          <div class="filters">
+            <div class="filter-row">
+              <label class="field">
+                <span class="field-label">商品品牌</span>
+                <input class="field-control" placeholder="请输入商品品牌">
+              </label>
+              <div class="hero-actions">
+                <button class="btn btn-primary">搜索</button>
+                <button class="btn btn-secondary">清空</button>
+              </div>
+            </div>
+            <div class="status-tabs" id="supplierNewOrderTabs">
+              <button class="status-tab" data-supplier-new-order-tab="pending">新订单</button>
+              <button class="status-tab" data-supplier-new-order-tab="processing">已报价</button>
+            </div>
+          </div>
+          <div class="table-shell">
+            <div class="table-wrap">
+              <table class="supplier-order-table">
+                <thead id="supplierNewOrderTableHead"></thead>
+                <tbody id="supplierNewOrderTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <section class="panel panel-inner" id="supplierNewOrderSpec" style="margin-top: 18px;">
+          <div class="section-head" style="padding: 0 0 18px;">
+            <div>
+              <h2 class="section-title">说明</h2>
+            </div>
+          </div>
+          <div class="spec-prose">
+            <p><strong>新增范围包括：</strong><span style="color: #ff4d4f;">一级供应商后台</span>。<span style="color:#3366ff;">挂有二级的一级供应商后台不能显示操作列的内容</span></p>
+            <p><strong>新订单页面、已报价页面的数据是实时推送的【小程序的也是一样的】</strong></p>
+            <p><strong>页面的流转：</strong>未报价的订单在新订单页面，报价后直接进入已报价页面，倒计时继续，如果报价后倒计时结束直接进入待出单页面【不再进入已报价页面了】。</p>
+            <p><strong>页面定位：</strong>供应商端【PC】 > 订单管理 > 新订单，用于展示供应商的新订单与已报价订单，按“新订单/已报价”切换 tab。</p>
+            <p><strong>新订单 tab：</strong>展示所有下单成功但尚未报价的订单。【新增的tab】</p>
+            <p><strong>已报价 tab：</strong>展示所有已报价、正在参与竞价的订单，字段与「新订单」tab 保持一致。【新增的tab】</p>
+            <p><strong>列表排序：</strong>「新订单」与「已报价」tab 均根据倒计时排序，短的在上面。</p>
+            <p><strong>筛选项输入框逻辑：</strong></p>
+            <p class="spec-subline" style="color:#ff4d4f;"><strong>筛选项：</strong>筛选项与系统原来的筛选项一致，但本页面不提供“出餐单号”筛选。</p>
+            <p class="spec-subline"><strong>商品名称：</strong>支持按商品名称关键词下拉检索。</p>
+            <p class="spec-subline"><strong>商品品牌：</strong>支持按品牌名称下拉检索。</p>
             <p><strong>列表字段的数据源与显示逻辑：</strong></p>
             <p class="spec-subline"><strong>新订单列表数据源：</strong>展示所有下单成功但尚未报价的订单（无报价金额）。</p>
             <p class="spec-subline"><strong>已报价列表数据源：</strong>展示所有已报价的订单，包括新订单页面报价后的订单【新订单页面进入的出餐方式默认手动，报价金额按照新订单页面输入的报价金额、报价规则显示“-”】其他字段与新订单页面的字段值是一样的。</p>
-            <p class="spec-subline"><strong>待出单列表数据源：</strong>待出单页面列表的字段与已出单页面列表的字段是一样的。</p>
             <p class="spec-subline"><strong>列表字段排序：</strong>报价编码、商品品牌、商品名称、商品SKU、报价倒计时/竞价倒计时、门店名称、店铺地址、市场价、最高限价、报价金额、报价规则。</p>
             <p class="spec-subline"><strong>报价编码：</strong>取数据库已有的报价编码。</p>
             <p class="spec-subline"><strong>商品品牌：</strong>取当前订单的商品品牌。</p>
@@ -5338,19 +5366,15 @@
           <div class="filters">
             <div class="filter-row">
               <label class="field">
-                <span class="field-label">商品名称</span>
-                <input class="field-control" placeholder="请输入商品名称">
-              </label>
-              <label class="field">
                 <span class="field-label">商品品牌</span>
                 <input class="field-control" placeholder="请输入商品品牌">
               </label>
               <label class="field field-range">
                 <span class="field-label">竞价时间</span>
                 <div class="range-control">
-                  <input type="date" aria-label="竞价开始日期">
+                  <input type="date" id="bidRecordStartDate" aria-label="竞价开始日期">
                   <span class="range-separator">至</span>
-                  <input type="date" aria-label="竞价结束日期">
+                  <input type="date" id="bidRecordEndDate" aria-label="竞价结束日期">
                 </div>
               </label>
               <div class="hero-actions">
@@ -5412,7 +5436,7 @@
             <p><strong>筛选项输入框逻辑：</strong></p>
             <p class="spec-subline"><strong>商品名称：</strong>支持按商品名称关键词下拉检索。</p>
             <p class="spec-subline"><strong>商品品牌：</strong>支持按品牌名称下拉检索。</p>
-            <p class="spec-subline"><strong>竞价时间：</strong>按开始时间和结束时间做区间筛选。</p>
+            <p class="spec-subline"><strong>竞价时间：</strong>按开始时间和结束时间做区间筛选，默认显示近一周（开始日期为今天往前推 7 天，结束日期为今天）。</p>
             <p class="spec-subline"><strong>搜索：</strong>按当前输入条件组合查询。</p>
             <p class="spec-subline"><strong>清空：</strong>恢复为空条件。</p>
             <p><strong>导出按钮：</strong>「搜索」「清空」按钮后方提供「导出」按钮，点击后导出当前 tab 列表所有内容（不含操作列）为 CSV 文件。异步导出</p>
@@ -7453,7 +7477,8 @@
       activeQuoteRuleOrderId: null,
       activePendingQuoteMaxLimit: null,
       activeProductQuoteId: null,
-      supplierOrderTab: "pending",
+      supplierOrderTab: "completed",
+      supplierNewOrderTab: "pending",
       bidRecordTab: "failed",
       miniBidRecordTab: "failed",
       miniOrderTab: "handling",
@@ -7485,6 +7510,7 @@
       "coupon-issue-list": { section: "客服本地生活工作台", current: "补偿券发放列表" },
       "h5": { section: "客服本地生活工作台", current: "关闭 H5 客服入口" },
       "supplier-order-list": { section: "供应商端", current: "订单列表" },
+      "supplier-new-order": { section: "供应商端", current: "新订单" },
       "supplier-bid-record": { section: "供应商端", current: "竞价记录" },
       "supplier-quote-products": { section: "供应商端", current: "可报价商品列表" },
       "supplier-mini-home": { section: "商家小程序端", current: "首页" },
@@ -7706,6 +7732,44 @@
         bidFailedTime: "-",
         quoteCountdown: "00:14:22",
         maxLimitPrice: "¥16.0"
+      },
+      {
+        id: "SO-003-P3",
+        tab: "pending",
+        quoteCode: "BJ202608190019",
+        thirdOrderNo: "MT202608190019",
+        mealOrderNo: "DC202608190019",
+        acceptRecordNo: "REC202608190019",
+        acceptTime: "-",
+        remainingMealTime: "-",
+        mealTime: "-",
+        settlementTime: "-",
+        mealStatus: "竞价中",
+        mealMethod: "人工",
+        productName: "伯牙绝弦",
+        productSku: "默认浓度/无奶油/冰/少甜/茉莉绿茶/大杯",
+        orderPlatform: "美团",
+        mealAccount: "-",
+        redeemLink: "-",
+        redeemCode: "-",
+        pickupRemark: "-",
+        settlementAmount: "-",
+        settlementStatus: "-",
+        storeName: "霸王茶姬-厦门-湾悦城店",
+        storeAddress: "湖里区日圆二里1号建发湾悦城B1",
+        productBrand: "霸王茶姬",
+        marketPrice: "¥18.0",
+        supplierName: "鹭岛供应链",
+        pickupCode: "-",
+        pickupQrCode: "-",
+        secondarySupplier: "-",
+        quoteAmount: "15.5",
+        dealPrice: "-",
+        quoteRuleName: "霸王茶姬10选1",
+        bidFailedReason: "-",
+        bidFailedTime: "-",
+        quoteCountdown: "00:09:38",
+        maxLimitPrice: "¥18.0"
       },
       {
         id: "SO-004",
@@ -8377,42 +8441,42 @@
       return parts[0] * 3600 + parts[1] * 60 + parts[2];
     }
 
-    function getSupplierOrderRows() {
+    function getSupplierOrderRows(tab = state.supplierOrderTab) {
       let rows;
-      if (state.supplierOrderTab === "all") {
+      if (tab === "all") {
         rows = supplierOrderRecords.filter((item) => item.tab !== "bid-failed");
-      } else if (state.supplierOrderTab === "pending") {
+      } else if (tab === "pending") {
         rows = supplierOrderRecords.filter((item) => item.tab === "pending" && (item.quoteAmount === "-" || !item.quoteAmount));
-      } else if (state.supplierOrderTab === "processing") {
+      } else if (tab === "processing") {
         rows = supplierOrderRecords.filter((item) => (item.tab === "pending" && item.quoteAmount && item.quoteAmount !== "-") || item.tab === "processing");
-      } else if (state.supplierOrderTab === "completed") {
+      } else if (tab === "completed") {
         rows = supplierOrderRecords.filter((item) => item.tab === "bid-success" || item.tab === "completed");
-      } else if (state.supplierOrderTab === "finished") {
+      } else if (tab === "finished") {
         rows = supplierOrderRecords.filter((item) => item.tab === "finished");
       } else {
-        rows = supplierOrderRecords.filter((item) => item.tab === state.supplierOrderTab);
+        rows = supplierOrderRecords.filter((item) => item.tab === tab);
       }
-      if (state.supplierOrderTab === "pending" || state.supplierOrderTab === "processing") {
+      if (tab === "pending" || tab === "processing") {
         rows = rows.slice().sort((a, b) => countdownToSeconds(a.quoteCountdown) - countdownToSeconds(b.quoteCountdown));
-      } else if (state.supplierOrderTab === "completed") {
+      } else if (tab === "completed") {
         rows = rows.slice().sort((a, b) => (b.bidSuccessTime || "").localeCompare(a.bidSuccessTime || ""));
-      } else if (state.supplierOrderTab === "finished") {
+      } else if (tab === "finished") {
         rows = rows.slice().sort((a, b) => (b.acceptTime || "").localeCompare(a.acceptTime || ""));
       }
       return rows;
     }
 
-    function getSupplierOrderTableSchema() {
-      if (state.supplierOrderTab === "pending") {
+    function getSupplierOrderTableSchema(tab = state.supplierOrderTab) {
+      if (tab === "pending") {
         return supplierOrderPendingSchema;
       }
-      if (state.supplierOrderTab === "processing") {
+      if (tab === "processing") {
         return supplierOrderProcessingSchema;
       }
-      if (state.supplierOrderTab === "completed") {
+      if (tab === "completed") {
         return supplierOrderCompletedSchema;
       }
-      if (state.supplierOrderTab === "finished") {
+      if (tab === "finished") {
         return supplierOrderFinishedSchema;
       }
       return supplierOrderBaseSchema;
@@ -8430,9 +8494,9 @@
       return "neutral";
     }
 
-    function renderSupplierOrderSpecialCell(item, column) {
+    function renderSupplierOrderSpecialCell(item, column, tab = state.supplierOrderTab) {
       if (column.key === "action") {
-        if (state.supplierOrderTab === "completed" || item.tab === "bid-success" || item.tab === "completed") {
+        if (tab === "completed" || item.tab === "bid-success" || item.tab === "completed") {
           return `
             <td class="${column.cellClass || ""}">
               <div class="supplier-order-action">
@@ -8442,7 +8506,7 @@
             </td>
           `;
         }
-        if (state.supplierOrderTab === "processing") {
+        if (tab === "processing") {
           const showEditBtn = item.mealMethod === "人工";
           return `
             <td class="${column.cellClass || ""}">
@@ -8452,7 +8516,7 @@
             </td>
           `;
         }
-        if (state.supplierOrderTab === "pending") {
+        if (tab === "pending") {
           return `
             <td class="${column.cellClass || ""}">
               <div class="supplier-order-quote-row">
@@ -8474,7 +8538,7 @@
         if (item.tab === "failed") {
           return `<td class="${column.cellClass || ""}">-</td>`;
         }
-        if (item.tab === "finished" || state.supplierOrderTab === "finished") {
+        if (item.tab === "finished" || tab === "finished") {
           return `
             <td class="${column.cellClass || ""}">
               <div class="supplier-order-action">
@@ -8562,6 +8626,41 @@
           <tr>
             ${schema.map((column) => {
               const specialCell = renderSupplierOrderSpecialCell(item, column);
+              if (specialCell) {
+                return specialCell;
+              }
+              return `<td class="${column.cellClass || ""}">${escapeHtml(item[column.key] || "-")}</td>`;
+            }).join("")}
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderSupplierNewOrder() {
+      const table = document.querySelector(".supplier-order-table");
+      const head = document.getElementById("supplierNewOrderTableHead");
+      const body = document.getElementById("supplierNewOrderTableBody");
+      if (!table || !head || !body) return;
+      table.classList.remove("is-bid-failed");
+      document.querySelectorAll("[data-supplier-new-order-tab]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.supplierNewOrderTab === state.supplierNewOrderTab);
+      });
+      const specPanel = document.getElementById("supplierNewOrderSpec");
+      if (specPanel) {
+        specPanel.style.display = "";
+      }
+      const schema = getSupplierOrderTableSchema(state.supplierNewOrderTab);
+      head.innerHTML = `
+        <tr>
+          ${schema.map((column) => `<th class="${column.cellClass || ""}">${escapeHtml(column.label)}</th>`).join("")}
+        </tr>
+      `;
+      const rows = getSupplierOrderRows(state.supplierNewOrderTab);
+      body.innerHTML = rows.map((item) => {
+        return `
+          <tr>
+            ${schema.map((column) => {
+              const specialCell = renderSupplierOrderSpecialCell(item, column, state.supplierNewOrderTab);
               if (specialCell) {
                 return specialCell;
               }
@@ -8847,7 +8946,7 @@
               `
               : `
                 <div class="mini-order-action-row">
-                  <button class="mini-order-btn" type="button" data-action="open-mini-quote-rule-page" data-mode="edit" data-id="${escapeHtml(item.id)}">修改报价</button>
+                  <button class="mini-order-btn" type="button" data-action="open-mini-quote-rule-page" data-mode="edit" data-id="${escapeHtml(item.id)}">修改报价金额</button>
                 </div>
               `)
             : `<div class="mini-order-action-row">-</div>`;
@@ -8995,8 +9094,8 @@
           <div class="mini-order-meta">
             <div>竞价成功时间：${escapeHtml(item.bidSuccessTime)}</div>
           </div>`}
-          <div class="mini-order-deal">成交价：<strong>${escapeHtml(item.dealPrice && item.dealPrice !== "-" ? item.dealPrice : "-")}</strong></div>
           ${isFailed ? `
+          <div class="mini-order-deal">成交价：<strong>${escapeHtml(item.dealPrice && item.dealPrice !== "-" ? item.dealPrice : "-")}</strong></div>
           <div class="mini-order-action-row">
             <button class="mini-order-btn" type="button" data-action="open-mini-quote-rule-page" data-mode="edit" data-id="${escapeHtml(item.id)}">编辑报价金额</button>
           </div>` : ""}
@@ -10874,6 +10973,7 @@
       renderStatusTabs();
       renderOrders();
       renderSupplierOrderList();
+      renderSupplierNewOrder();
       renderBidRecord();
       renderSupplierQuoteProducts();
       renderProductQuoteRows();
@@ -12266,6 +12366,12 @@
           renderSupplierOrderList();
         }
 
+        const supplierNewOrderTabButton = event.target.closest("[data-supplier-new-order-tab]");
+        if (supplierNewOrderTabButton) {
+          state.supplierNewOrderTab = supplierNewOrderTabButton.dataset.supplierNewOrderTab;
+          renderSupplierNewOrder();
+        }
+
         const bidRecordTabButton = event.target.closest("[data-bid-record-tab]");
         if (bidRecordTabButton) {
           state.bidRecordTab = bidRecordTabButton.dataset.bidRecordTab;
@@ -13025,6 +13131,16 @@
     updateCouponBrandSummary();
     updateCouponIssueRemarkCounter();
     syncFilterInputs();
+    (function setBidRecordDefaultDateRange() {
+      const end = new Date();
+      const start = new Date();
+      start.setDate(start.getDate() - 7);
+      const fmt = (d) => d.toISOString().slice(0, 10);
+      const startInput = document.getElementById("bidRecordStartDate");
+      const endInput = document.getElementById("bidRecordEndDate");
+      if (startInput) startInput.value = fmt(start);
+      if (endInput) endInput.value = fmt(end);
+    })();
     renderAll();
   </script>
 </body>
