@@ -3229,6 +3229,122 @@
       font-weight: 700;
     }
 
+    .export-center-table {
+      min-width: 100% !important;
+      table-layout: fixed;
+    }
+
+    .export-center-table th,
+    .export-center-table td {
+      padding: 14px 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .export-status-tag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .export-status-success {
+      color: #52c41a;
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+    }
+
+    .export-download-link {
+      color: #1890ff;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .export-download-link:hover {
+      color: #40a9ff;
+      text-decoration: underline;
+    }
+
+    .export-center-pagination {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      padding: 18px 24px 24px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .export-pager-total {
+      margin-right: 4px;
+    }
+
+    .export-pager-size {
+      height: 32px;
+      padding: 0 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(118, 136, 170, 0.25);
+      background: #fff;
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .export-pager-btn {
+      min-width: 32px;
+      height: 32px;
+      padding: 0 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(118, 136, 170, 0.25);
+      background: #fff;
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-grid;
+      place-items: center;
+    }
+
+    .export-pager-btn:hover:not(:disabled) {
+      border-color: #1890ff;
+      color: #1890ff;
+    }
+
+    .export-pager-btn.active {
+      background: #1890ff;
+      border-color: #1890ff;
+      color: #fff;
+    }
+
+    .export-pager-btn:disabled {
+      color: rgba(118, 136, 170, 0.45);
+      cursor: not-allowed;
+      background: #f5f5f5;
+    }
+
+    .export-pager-ellipsis {
+      min-width: 32px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .export-pager-jump,
+    .export-pager-unit {
+      color: var(--muted);
+    }
+
+    .export-pager-input {
+      width: 48px;
+      height: 32px;
+      padding: 0 6px;
+      border-radius: 6px;
+      border: 1px solid rgba(118, 136, 170, 0.25);
+      text-align: center;
+      font-size: 13px;
+      color: var(--text);
+    }
+
     .flow-layout {
       display: grid;
       grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
@@ -4445,6 +4561,26 @@
       white-space: nowrap;
     }
 
+    .system-tip-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 8px 0;
+    }
+
+    .system-tip-icon {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+    }
+
+    .system-tip-text {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #1f2937;
+      padding-top: 2px;
+    }
+
     #quoteRuleEditModal {
       width: min(1320px, calc(100vw - 32px));
     }
@@ -5174,6 +5310,10 @@
         <button class="nav-sub-item" data-page-target="supplier-order-list">订单列表</button>
         <button class="nav-sub-item" data-page-target="supplier-bid-record">竞价记录</button>
       </div>
+      <button class="nav-sub-item" data-page-target="export-center">
+        <span class="nav-icon">导</span>
+        <span class="nav-title">导出中心</span>
+      </button>
       <button class="nav-sub-item directory-toggle" type="button" data-tree-target="supplier-quote-tree" aria-expanded="true" hidden>
         <span class="nav-icon">价</span>
         <span class="nav-title">出价管理</span>
@@ -5255,7 +5395,7 @@
           </div>
           <div class="spec-prose">
             <p><strong>新增范围包括：</strong><span style="color: #ff4d4f;">一级供应商后台</span>。<span style="color:#3366ff;">挂有二级的一级供应商后台不能显示操作列的内容</span></p>
-            <p><strong>待出单订单提醒开关：</strong>页面右上角显示“待出单订单提醒开关：”开关图标，默认开启；逻辑为“<strong style="color: #ff4d4f;">待出单中若有待出餐订单时，新订单即使开启也不进行提醒</strong>”。<strong>有待出餐订单进入时，网站右上角显示通知“待出餐提醒，请及时处理”，左侧带音量图标，右侧带删除图标；语音响起时显示，持续 2s 后自动消失，也可点击删除图标手动关闭。关闭提示音后不再显示待出餐语音提醒。</strong></p>
+            <p><strong>待出单订单提醒开关：</strong>页面右上角显示“待出单订单提醒开关：”开关图标，默认开启；逻辑为“<strong style="color: #ff4d4f;">待出单中若有待出餐订单时，新订单即使开启也不进行语音提醒</strong>”。<strong>有待出餐订单进入时，网站右上角显示通知“待出餐提醒，请及时处理”，左侧带音量图标，右侧带删除图标；语音响起时显示，提示词显示的时间长一点，也可点击删除图标手动关闭。关闭提示音后不再显示待出餐语音提醒。</strong></p>
             <p><strong>新订单提示音开关：</strong>页面右上角显示“新订单提示：”开关图标，默认开启；点击开关切换时使用轻提示“提示音已开启 / 提示音已关闭”。</p>
             <p><strong>右上角语音提醒：</strong>有新订单进入时，网站右上角显示通知“守兔来新订单啦”，左侧带音量图标，右侧带删除图标；语音响起时显示，持续 2s 后自动消失，也可点击删除图标手动关闭。关闭提示音后不再显示新的语音提醒。</p>
             <p hidden><strong>站内新订单提醒：</strong>订单列表页面标题与筛选区之间显示红色提醒条“又有N笔新订单了，戳我立即刷新~”；点击提醒条后刷新订单列表并隐藏提醒条。若“新订单提示”开启，同时会有右上角语音提醒。</p>
@@ -5457,6 +5597,36 @@
             <p class="spec-subline"><strong>操作：</strong>竞价失败 tab 展示“修改报价金额”按钮；新订单页面报价的商品不显示“修改报价金额”按钮；竞价成功 tab 操作列不展示按钮，且最后一列不固定。</p>
             <p><strong>编辑报价规则页面：</strong>点击“编辑报价金额”后进入「编辑报价规则」页面，内容与供应商后台的商品报价页面的修改报价规则弹窗内容一致。点击“确定”后保存结果同步到出价管理--商品报价页面、点餐后台--商品报价页面、一级供应商的出餐管理--商品报价页面，以及对应的小程序端。</p>
           </div>
+        </section>
+      </section>
+
+      <section class="page" data-page="export-center">
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">导出</h2>
+            </div>
+          </div>
+          <div class="table-shell">
+            <div class="table-wrap">
+              <table class="export-center-table">
+                <thead id="exportCenterTableHead">
+                  <tr>
+                    <th style="width:70px;">序号</th>
+                    <th>文件名称</th>
+                    <th>文件类型</th>
+                    <th style="width:90px;">状态</th>
+                    <th>异常说明</th>
+                    <th>操作人</th>
+                    <th style="width:160px;">创建时间</th>
+                    <th style="width:80px;">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="exportCenterTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="export-center-pagination" id="exportCenterPagination"></div>
         </section>
       </section>
 
@@ -7066,6 +7236,30 @@
     </div>
   </section>
 
+  <section class="modal" id="systemTipModal" aria-hidden="true">
+    <div class="modal-head">
+      <div>
+        <h2 class="modal-title">系统提示</h2>
+      </div>
+      <button class="close-btn" data-close-modal="systemTipModal" aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="system-tip-content">
+        <div class="system-tip-icon">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="12" fill="#10B981"/>
+            <path d="M7 12.5L10.5 16L17 9.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="system-tip-text">异步导出成功，请前往导出中心查看。</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-close-modal="systemTipModal">取消</button>
+      <button class="btn btn-primary" id="confirmSystemTip" type="button">确定</button>
+    </div>
+  </section>
+
   <aside class="drawer" id="handleDrawer" aria-hidden="true">
     <div class="drawer-head handle-head">
       <div class="handle-title-row">
@@ -7512,6 +7706,7 @@
       "supplier-order-list": { section: "供应商端", current: "订单列表" },
       "supplier-new-order": { section: "供应商端", current: "新订单" },
       "supplier-bid-record": { section: "供应商端", current: "竞价记录" },
+      "export-center": { section: "供应商端", current: "导出中心" },
       "supplier-quote-products": { section: "供应商端", current: "可报价商品列表" },
       "supplier-mini-home": { section: "商家小程序端", current: "首页" },
       "supplier-mini-workbench": { section: "商家小程序端", current: "工作台" },
@@ -8072,6 +8267,19 @@
       { key: "completed", label: "待出单" },
       { key: "finished", label: "已完成" },
       { key: "all", label: "全部" }
+    ];
+
+    const exportCenterRecords = [
+      { id: "EC-001", seq: 3553, fileName: "H5券码", fileType: "H5券码", status: "已完成", errorMsg: "-", operator: "谢尚鹏", createdAt: "2026-09-04 11:31:35" },
+      { id: "EC-002", seq: 3552, fileName: "H5券码", fileType: "H5券码", status: "已完成", errorMsg: "-", operator: "谢尚鹏", createdAt: "2026-09-04 11:27:25" },
+      { id: "EC-003", seq: 3551, fileName: "销售订单列表", fileType: "销售订单列表", status: "已完成", errorMsg: "-", operator: "谢尚鹏", createdAt: "2026-09-04 11:15:43" },
+      { id: "EC-004", seq: 3549, fileName: "H5券码", fileType: "H5券码", status: "已完成", errorMsg: "-", operator: "若依", createdAt: "2026-09-03 11:23:24" },
+      { id: "EC-005", seq: 3548, fileName: "H5券码", fileType: "H5券码", status: "已完成", errorMsg: "-", operator: "若依", createdAt: "2026-09-03 11:17:47" },
+      { id: "EC-006", seq: 3547, fileName: "售后补贴流水", fileType: "售后补贴流水", status: "已完成", errorMsg: "-", operator: "若依", createdAt: "2026-09-02 14:25:05" },
+      { id: "EC-007", seq: 3546, fileName: "销售订单列表", fileType: "销售订单列表", status: "已完成", errorMsg: "-", operator: "邓啊红", createdAt: "2026-09-02 10:46:14" },
+      { id: "EC-008", seq: 3545, fileName: "H5券码", fileType: "H5券码", status: "已完成", errorMsg: "-", operator: "若依", createdAt: "2026-09-01 16:24:10" },
+      { id: "EC-009", seq: 3544, fileName: "H5券码", fileType: "H5券码", status: "已完成", errorMsg: "-", operator: "若依", createdAt: "2026-09-01 16:22:22" },
+      { id: "EC-010", seq: 3543, fileName: "售后补贴单", fileType: "售后补贴单", status: "已完成", errorMsg: "-", operator: "若依", createdAt: "2026-09-01 15:17:13" }
     ];
 
     const miniBidRecordTabConfig = [
@@ -8687,25 +8895,89 @@
     }
 
     function exportBidRecord() {
-      const rows = getBidRecordRows();
-      const exportSchema = getBidRecordSchema().filter((column) => column.key !== "action");
-      const headers = exportSchema.map((column) => column.label).join(",");
-      const lines = rows.map((item) => exportSchema.map((column) => {
-        let value = item[column.key] || "-";
-        if (String(value).includes(",")) value = `"${value}"`;
-        return value;
-      }).join(","));
-      const csv = "\ufeff" + [headers, ...lines].join("\n");
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `竞价记录-${state.bidRecordTab === "failed" ? "竞价失败" : "竞价成功"}-${new Date().toISOString().slice(0, 10)}.csv`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      showPageToast("导出成功");
+      const tabLabel = state.bidRecordTab === "failed" ? "竞价失败" : "竞价成功";
+      const now = new Date();
+      const createdAt = now.toISOString().slice(0, 19).replace("T", " ");
+      const newRecord = {
+        id: `EXP-${Date.now()}`,
+        seq: exportCenterRecords.length + 1,
+        fileName: `竞价记录-${tabLabel}-${now.toISOString().slice(0, 10)}`,
+        fileType: "CSV",
+        status: "已完成",
+        errorMsg: "-",
+        operator: "当前用户",
+        createdAt: createdAt
+      };
+      exportCenterRecords.unshift(newRecord);
+      exportCenterRecords.forEach((item, index) => {
+        item.seq = exportCenterRecords.length - index;
+      });
+      openModal("systemTipModal");
+    }
+
+    let exportCenterPageSize = 10;
+    let exportCenterPage = 1;
+
+    function renderExportCenter() {
+      const body = document.getElementById("exportCenterTableBody");
+      const pager = document.getElementById("exportCenterPagination");
+      if (!body) return;
+
+      const total = exportCenterRecords.length;
+      const totalPages = Math.max(1, Math.ceil(total / exportCenterPageSize));
+      const page = Math.min(exportCenterPage, totalPages);
+      const start = (page - 1) * exportCenterPageSize;
+      const rows = exportCenterRecords.slice(start, start + exportCenterPageSize);
+
+      body.innerHTML = rows.map((item) => `
+        <tr>
+          <td>${item.seq}</td>
+          <td>${escapeHtml(item.fileName)}</td>
+          <td>${escapeHtml(item.fileType)}</td>
+          <td><span class="export-status-tag export-status-success">${escapeHtml(item.status)}</span></td>
+          <td>${item.errorMsg === "-" ? "-" : escapeHtml(item.errorMsg)}</td>
+          <td>${escapeHtml(item.operator)}</td>
+          <td>${escapeHtml(item.createdAt)}</td>
+          <td><a class="export-download-link" href="javascript:void(0);" data-action="export-center-download" data-id="${escapeHtml(item.id)}">下载</a></td>
+        </tr>
+      `).join("");
+
+      if (pager) {
+        pager.innerHTML = renderExportCenterPager(total, page, totalPages);
+      }
+    }
+
+    function renderExportCenterPager(total, current, totalPages) {
+      let pagesHtml = "";
+      const showPages = [];
+      if (totalPages <= 7) {
+        for (let i = 1; i <= totalPages; i++) showPages.push(i);
+      } else {
+        showPages.push(1, 2, 3, 4, 5, 6, "...", totalPages);
+      }
+      showPages.forEach((p) => {
+        if (p === "...") {
+          pagesHtml += `<span class="export-pager-ellipsis">...</span>`;
+        } else if (p === current) {
+          pagesHtml += `<button class="export-pager-btn active" type="button" data-export-page="${p}">${p}</button>`;
+        } else {
+          pagesHtml += `<button class="export-pager-btn" type="button" data-export-page="${p}">${p}</button>`;
+        }
+      });
+      return `
+        <span class="export-pager-total">共 ${total} 条</span>
+        <select class="export-pager-size" data-export-page-size>
+          <option value="10" ${exportCenterPageSize === 10 ? "selected" : ""}>10条/页</option>
+          <option value="20" ${exportCenterPageSize === 20 ? "selected" : ""}>20条/页</option>
+          <option value="50" ${exportCenterPageSize === 50 ? "selected" : ""}>50条/页</option>
+        </select>
+        <button class="export-pager-btn export-pager-prev" type="button" data-export-page="prev" ${current === 1 ? "disabled" : ""}>＜</button>
+        ${pagesHtml}
+        <button class="export-pager-btn export-pager-next" type="button" data-export-page="next" ${current === totalPages ? "disabled" : ""}>＞</button>
+        <span class="export-pager-jump">前往</span>
+        <input class="export-pager-input" type="number" min="1" max="${totalPages}" value="${current}" data-export-page-input>
+        <span class="export-pager-unit">页</span>
+      `;
     }
 
     function renderBidRecord() {
@@ -10975,6 +11247,7 @@
       renderSupplierOrderList();
       renderSupplierNewOrder();
       renderBidRecord();
+      renderExportCenter();
       renderSupplierQuoteProducts();
       renderProductQuoteRows();
       renderMiniOrderPage();
@@ -12378,6 +12651,31 @@
           renderBidRecord();
         }
 
+        const exportPageButton = event.target.closest("[data-export-page]");
+        if (exportPageButton) {
+          const total = exportCenterRecords.length;
+          const totalPages = Math.max(1, Math.ceil(total / exportCenterPageSize));
+          let targetPage = exportCenterPage;
+          const action = exportPageButton.dataset.exportPage;
+          if (action === "prev") targetPage = Math.max(1, targetPage - 1);
+          else if (action === "next") targetPage = Math.min(totalPages, targetPage + 1);
+          else targetPage = parseInt(action, 10) || 1;
+          exportCenterPage = Math.max(1, Math.min(totalPages, targetPage));
+          renderExportCenter();
+        }
+
+        const exportPageSizeSelect = event.target.closest("[data-export-page-size]");
+        if (exportPageSizeSelect) {
+          exportCenterPageSize = parseInt(exportPageSizeSelect.value, 10) || 10;
+          exportCenterPage = 1;
+          renderExportCenter();
+        }
+
+        const exportDownloadLink = event.target.closest("[data-action=\"export-center-download\"]");
+        if (exportDownloadLink) {
+          showPageToast("下载成功");
+        }
+
         const miniOrderTabButton = event.target.closest("[data-mini-order-tab]");
         if (miniOrderTabButton) {
           state.miniOrderTab = miniOrderTabButton.dataset.miniOrderTab;
@@ -13067,6 +13365,14 @@
           showPageToast("提示音已关闭");
         });
       }
+      const confirmSystemTipBtn = document.getElementById("confirmSystemTip");
+      if (confirmSystemTipBtn) {
+        confirmSystemTipBtn.addEventListener("click", () => {
+          closeModal("systemTipModal");
+          state.currentPage = "export-center";
+          renderAll();
+        });
+      }
       document.getElementById("confirmDeleteCouponTemplate").addEventListener("click", () => {
         const index = couponTemplates.findIndex((item) => item.id === state.activeCouponTemplateId);
         if (index >= 0) couponTemplates.splice(index, 1);
@@ -13107,6 +13413,18 @@
       document.addEventListener("click", (event) => {
         if (!event.target.closest("#couponBrandPicker")) {
           toggleCouponBrandPanel(false);
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.target.matches("[data-export-page-input]") && event.key === "Enter") {
+          event.preventDefault();
+          const total = exportCenterRecords.length;
+          const totalPages = Math.max(1, Math.ceil(total / exportCenterPageSize));
+          let targetPage = parseInt(event.target.value, 10) || 1;
+          targetPage = Math.max(1, Math.min(totalPages, targetPage));
+          exportCenterPage = targetPage;
+          renderExportCenter();
         }
       });
     }
