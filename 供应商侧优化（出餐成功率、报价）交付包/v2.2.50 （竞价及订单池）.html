@@ -548,6 +548,21 @@
       padding: 22px 24px 0;
     }
 
+    .section-head-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-top: 2px;
+    }
+
+    .export-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      padding: 16px 24px 0;
+    }
+
     .section-title {
       margin: 0;
       font-size: 22px;
@@ -5607,6 +5622,9 @@
               <h2 class="section-title">导出</h2>
             </div>
           </div>
+          <div class="export-toolbar">
+            <button class="btn btn-secondary btn-sm" type="button" id="refreshExportCenter" data-action="refresh-export-center">刷新</button>
+          </div>
           <div class="table-shell">
             <div class="table-wrap">
               <table class="export-center-table">
@@ -8918,6 +8936,12 @@
     let exportCenterPageSize = 10;
     let exportCenterPage = 1;
 
+    function maskOperator(name) {
+      const first = String(name || "").trim().charAt(0);
+      if (!first) return "-";
+      return `${first}XXX`;
+    }
+
     function renderExportCenter() {
       const body = document.getElementById("exportCenterTableBody");
       const pager = document.getElementById("exportCenterPagination");
@@ -8936,7 +8960,7 @@
           <td>${escapeHtml(item.fileType)}</td>
           <td><span class="export-status-tag export-status-success">${escapeHtml(item.status)}</span></td>
           <td>${item.errorMsg === "-" ? "-" : escapeHtml(item.errorMsg)}</td>
-          <td>${escapeHtml(item.operator)}</td>
+          <td>${escapeHtml(maskOperator(item.operator))}</td>
           <td>${escapeHtml(item.createdAt)}</td>
           <td><a class="export-download-link" href="javascript:void(0);" data-action="export-center-download" data-id="${escapeHtml(item.id)}">下载</a></td>
         </tr>
@@ -12746,6 +12770,11 @@
             state.pcNewArrivalCount = 0;
             renderPcNewArrival();
             showPageToast("订单列表已刷新");
+          }
+          if (action === "refresh-export-center") {
+            exportCenterPage = 1;
+            renderExportCenter();
+            showPageToast("刷新成功");
           }
           if (action === "toggle-mini-sound" || action === "toggle-pc-sound") {
             state.miniSoundEnabled = !state.miniSoundEnabled;
