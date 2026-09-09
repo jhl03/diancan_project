@@ -5414,15 +5414,6 @@
     <div class="nav-subtree nav-tree" id="backend-ops-tree" data-page-node-id="DxPPLpRaEtQ50jkpa2f7Pr">
           <button class="nav-sub-item" data-page-target="supplier-quote-rounding-v2" data-page-node-id="7T1YZmJ0fZUQl0jjdoU2Rb">系统配置项</button>
     </div>
-    <!-- 暂时隐藏：商品管理目录 + 商品报价子项（需重新显示请删除本注释 + 下面两处 nav-hidden 类） -->
-    <button class="nav-item directory-toggle nav-hidden" type="button" data-tree-target="backend-product-tree" aria-expanded="true" hidden data-page-node-id="uOX8ePYoZC0u32B5NxJFQL">
-      <span class="nav-icon" data-page-node-id="OAQZcjrx8ZBiMEI3Ipzxwn">商</span>
-      <span class="nav-title" data-page-node-id="c7hyxjnoP6TDj4ZEUn8Ujc">商品管理</span>
-      <span class="nav-chevron" data-page-node-id="mtDcri9M1vM6Td5eYSujlB">⌄</span>
-    </button>
-    <div class="nav-subtree nav-tree nav-hidden" id="backend-product-tree" hidden data-page-node-id="yih8jJGRgtdfuFMWHqlCyy">
-      <button class="nav-sub-item" data-page-target="backend-product-quote" data-page-node-id="moP2EGeueZEdww2PgXb2Dx">商品报价</button>
-    </div>
   </div>
   <div class="nav-group" data-page-node-id="ytK2slVBK1PGQJ3y6dsHBW">
     <span class="nav-label" data-page-node-id="4FjsZtRnrEOFJsSuZKBQXQ">供应商端</span>
@@ -5495,6 +5486,25 @@
                 <tbody id="newOrderTableBody" data-page-node-id="1JoQwZLdgd7TKxnBZGKo8k"></tbody>
               </table>
             </div>
+          </div>
+        </section>
+        <section class="panel panel-inner" id="newOrderSpec" style="margin-top: 18px;" data-page-node-id="NEWorderSpec01Ab">
+          <div class="section-head" style="padding: 0 0 18px;" data-page-node-id="NEWorderSpec02Cd">
+            <div data-page-node-id="NEWorderSpec03Ef">
+              <h2 class="section-title" data-page-node-id="NEWorderSpec04Gh">说明</h2>
+            </div>
+          </div>
+          <div class="spec-prose" data-page-node-id="NEWorderSpec05Ij">
+            <p data-page-node-id="NEWorderSpec06Kl"><strong data-page-node-id="NEWorderSpec07Mn">触发 “人工超时未处理暂停报价权限” 配置时</strong></p>
+            <p data-page-node-id="NEWorderSpec08Op"><strong data-page-node-id="NEWorderSpec09Qr">编辑逻辑：</strong></p>
+            <p style="padding-left:24px;" data-page-node-id="NEWorderSpec10St">生效含义：与一级一致</p>
+            <p data-page-node-id="NEWorderSpec11Uv"><strong data-page-node-id="NEWorderSpec12Wx">注意：</strong></p>
+            <p style="padding-left:24px;" data-page-node-id="NEWorderSpec13Yz">1. 对所有超时未处理的人工报价状态开启的系统自动关闭，到达配置的关闭报价时间后，<span style="color:#3366ff;">【每一次系统的自动关闭都会进行公众号提醒】</span></p>
+            <p style="padding-left:24px;" data-page-node-id="NEWorderSpec14Aa">2. 第三次开启后，如果第四次还是超时未处理，<span style="color:#3366ff;">【中间没有出餐成功的情况下】</span>，按照时间停止报价时间最长的生效；若有一次出餐成功，在超时未处理，从第一个设置的开始停止报价配置生效。配置有效时间是当天，过了当天解除不能开启报价状态/新增报价状态的限制</p>
+            <p style="padding-left:24px;" data-page-node-id="NEWorderSpec15Bb">3. 系统自动报价关闭后，未到解除报价权限的时间</p>
+            <p style="padding-left:24px;" data-page-node-id="NEWorderSpec16Cc">4. 若第一个关闭报价时长设置 5 分钟，第二次关闭 10 分钟，在第一次关闭时间时间内，第二个订单也超时未处理，那么，按照当前时间加上第二次的关闭时长作为整个关闭时长，过了这个关闭时长人工可以操作开启报价权限</p>
+            <p style="padding-left:24px;" data-page-node-id="NEWorderSpec17Dd">5. 若被限制报价权限后，点击新增规则按钮/修改规则按钮<span style="color:#3366ff;">【包括修改报价金额按钮】</span>/开启报价权限/新订单tab的报价按钮，都会提示“您因订单超时未处理已被限制报价权限，具体信息查看公众号”</p>
+            <p style="padding-left:24px;color:#ff4d4f;" data-page-node-id="NEWorderSpec18Ee">6.若二级供应商触发暂停报价规则时，暂停这个触发规则这个供应商的出餐方式为人工的报价权限</p>
           </div>
         </section>
       </section>
@@ -6186,140 +6196,6 @@
         </div>
       </section>
 
-      <section class="page" data-page="backend-product-quote" data-page-node-id="SGogXUnhGW3EIStAQ8BgQ0">
-        <section class="panel" data-page-node-id="8CDBPf0BZVlSlzWXaptSS7">
-          <div class="section-head" data-page-node-id="qSOTZunqZBfxVQoYVwgH5V">
-            <div data-page-node-id="sJhVMWPcUjaa0nRTqu8RGk">
-              <h2 class="section-title" data-page-node-id="ark2TG2JBxl9G74OSX9ZkW">商品管理 - 商品报价</h2>
-            </div>
-          </div>
-          <div class="filters" data-page-node-id="vv4NZEmFQPp1oOAFE8iMeD">
-            <div class="filter-row" data-page-node-id="gB1GTi0Yz6eCx0R5p3IPfv">
-              <label class="field" data-page-node-id="DI7AdcOcsZGOzxnLA4Cp0P">
-                <span class="field-label" data-page-node-id="joWnV19wydisqbwbpRMia5">选择品牌</span>
-                <select class="field-control" id="productQuoteBrandFilter" data-page-node-id="4gYJrF96eHnv5VWdYq9Nby">
-                  <option value="" data-page-node-id="THx3YF1qAx0oVquII9YKND">全部品牌</option>
-                  <option value="瑞幸" data-page-node-id="jWj6QuCepzeRTKatVhm0l5">瑞幸</option>
-                  <option value="霸王茶姬" data-page-node-id="rlLjdH1eFUbOzOCfYXjN1A">霸王茶姬</option>
-                </select>
-              </label>
-              <label class="field" data-page-node-id="kBeRFGlVg2GxdBNnPKoAX6">
-                <span class="field-label" data-page-node-id="h1x7ctAivSwZTTl4Rg0dsO">报价规则</span>
-                <input class="field-control" id="productQuoteRuleFilter" placeholder="请输入报价规则" data-page-node-id="Oj9OC8PPJtkuA6BclNpGa4">
-              </label>
-              <label class="field" data-page-node-id="piQTDiiRVMngBrG0HAsJSg">
-                <span class="field-label" data-page-node-id="8o64Gmfc2Hc5R77Zg8qPgD">商品名称</span>
-                <input class="field-control" id="productQuoteNameFilter" placeholder="请输入商品名称" data-page-node-id="nofrzdBghOKXzlFGNB7xdC">
-              </label>
-              <label class="field" data-page-node-id="tAXDCrjjD5LIBt3KoLOt6S">
-                <span class="field-label" data-page-node-id="dlXtKksSG3Rn3mfiUMeMwW">选择供应商</span>
-                <select class="field-control" id="productQuoteSupplierFilter" data-page-node-id="JuyhBL7m4N7aPieUKPLsRG">
-                  <option value="" data-page-node-id="irWkauSQGp69XPa0ZKIEoG">全部供应商</option>
-                  <option value="刘洋" data-page-node-id="VBUZsn9lDD2G7ukJJFUjGh">刘洋</option>
-                  <option value="苏州市相城区X理部茶部（小…" data-page-node-id="fOGkwdZWBuRRB5467WX8FF">苏州市相城区X理部茶部（小…</option>
-                </select>
-              </label>
-              <label class="field" data-page-node-id="Va4qIYvjQ3tReRliAZqyBf">
-                <span class="field-label" data-page-node-id="tgdBBi9hltPsjdkql8lahw">选择出餐方式</span>
-                <select class="field-control" id="productQuoteMethodFilter" data-page-node-id="OXncw77WyVDYuMzH08GZE5">
-                  <option value="" data-page-node-id="oOaIP9XErecOPbwCexqOsw">全部出餐方式</option>
-                  <option value="人工" data-page-node-id="PmkWnUaBzeKCGzliN8HNYs">人工</option>
-                  <option value="自动" data-page-node-id="EVSgwMYyzGEeDQoggE6hJr">自动</option>
-                </select>
-              </label>
-              <label class="field" data-page-node-id="laEklGNSiTqkrxwFDjjzaR">
-                <span class="field-label" data-page-node-id="VuAMS2oOOkupwCQpAF1gLW">选择状态</span>
-                <select class="field-control" id="productQuoteStatusFilter" data-page-node-id="7fjPDQGOe1Cv72ZVKtAl6X">
-                  <option value="" data-page-node-id="NudzrKcV9zpbg0Yvt6e5Ra">全部状态</option>
-                  <option value="开启" data-page-node-id="urz4HhBzhaePv30AZ2WyWR">开启</option>
-                  <option value="关闭" data-page-node-id="JNygTlcNz5pk7STTTLlEDG">关闭</option>
-                </select>
-              </label>
-              <label class="field field-range product-quote-time-range" data-page-node-id="A02oxH9BsCRb5pVzm365hu">
-                <span class="field-label" style="color:#f50a0a;" data-page-node-id="XNj8xE9rf2aCmCOeSkckgJ">报价时间</span>
-                <div class="range-control product-quote-time-row" data-page-node-id="daGnrlng1juELbXRAuWWkU">
-                  <input type="text" class="product-quote-time-input" id="productQuoteTimeStartFilter" readonly placeholder="创建报价规则开始日期" aria-label="创建报价规则开始日期" data-page-node-id="XxGl21D5H3SHYsOaCLv2PA">
-                  <input type="time" class="product-quote-time-input product-quote-time-time" id="productQuoteTimeStartTime" step="1" aria-label="开始时间" data-page-node-id="xtEqRpmVD6D48ZMJUNz0IC">
-                  <span class="range-separator range-arrow" data-page-node-id="9kEjpBGtgjUZ6HWgOALvjM">›</span>
-                  <input type="text" class="product-quote-time-input" id="productQuoteTimeEndFilter" readonly placeholder="创建报价规则结束日期" aria-label="创建报价规则结束日期" data-page-node-id="mHsCSm6AAXQu8A7KyIsTok">
-                  <input type="time" class="product-quote-time-input product-quote-time-time" id="productQuoteTimeEndTime" step="1" aria-label="结束时间" data-page-node-id="vL2Zzb51ndgwTMhvfe4h8v">
-                  <div class="date-range-pop" id="productQuoteDateRangePop" hidden data-page-node-id="7Wn4OSqx5Qh61BHVtzwOji">
-                    <div class="date-range-months" data-page-node-id="IxsJ4b4Z26mFFybVVddfAC">
-                      <div class="date-range-month" data-page-node-id="tOTACD92HASkkbFB7NjkdR">
-                        <div class="date-range-head" data-page-node-id="NCRVvCAurwcCnmVmODHFxk">
-                          <button type="button" class="date-range-nav date-range-nav--year" id="productQuoteRangePrevYear" aria-label="上一年" data-page-node-id="yNMsZIAJBDth7G8MfRJGXW">«</button>
-                          <button type="button" class="date-range-nav date-range-nav--month" id="productQuoteRangePrevMonth" aria-label="上一个月" data-page-node-id="4oVeqfHo3hddlCF4uJ6SCz">‹</button>
-                          <span class="date-range-title" id="productQuoteRangeTitleLeft" data-page-node-id="JrmBMR0yFYnYyMl3jjmCim"></span>
-                        </div>
-                        <div class="date-range-week" data-page-node-id="EnxBOeFHxvNn33x48aIVv7">
-                          <span data-page-node-id="qgEFH30isBz5dkwxZdcjJJ">日</span><span data-page-node-id="LR29TPSy707KQgZAr1mGa6">一</span><span data-page-node-id="mGpkyM2dpLzZZMeZKv6cFE">二</span><span data-page-node-id="KoEmPTnhiTwPQdRXGeQCgH">三</span><span data-page-node-id="VvHvlPYn20VT9B6fHOV5KF">四</span><span data-page-node-id="kXMQb6tZXP9nAOkxIcLAog">五</span><span data-page-node-id="M6iOxZm0kcJwNkI0SreoNU">六</span>
-                        </div>
-                        <div class="date-range-grid" id="productQuoteRangeGridLeft" data-page-node-id="AEpBDihXwEo7zaDF6kKfNA"></div>
-                      </div>
-                      <div class="date-range-month" data-page-node-id="8csBHZkTRvZCxyenKc74Jz">
-                        <div class="date-range-head" data-page-node-id="HrTG7aTTTHSlsjG6izqM7s">
-                          <span class="date-range-title" id="productQuoteRangeTitleRight" data-page-node-id="tYnoAkhYfGIwvjj30O5FF5"></span>
-                          <button type="button" class="date-range-nav date-range-nav--month" id="productQuoteRangeNextMonth" aria-label="下一个月" data-page-node-id="RZi41ugeQFD8Geu00i7KD7">›</button>
-                          <button type="button" class="date-range-nav date-range-nav--year" id="productQuoteRangeNextYear" aria-label="下一年" data-page-node-id="O0gxBcV6ln2pbo6MIJ2k4p">»</button>
-                        </div>
-                        <div class="date-range-week" data-page-node-id="9k3C8HGs8mTirBh9qluEnj">
-                          <span data-page-node-id="EwDChesD4QSdWdgGuhlRzI">日</span><span data-page-node-id="BP7NaRyzAXzZjKRJgg98q8">一</span><span data-page-node-id="PJOwaKgJBgcz41NhlFOIMY">二</span><span data-page-node-id="sQXVKEjHEMjgZFRYWAuG8b">三</span><span data-page-node-id="eLFPUeAAmkrhu0aL7eetcR">四</span><span data-page-node-id="vmDVesDaxvJj6EAtwyqCga">五</span><span data-page-node-id="7TWZumVSdFDresIDNqtm3a">六</span>
-                        </div>
-                        <div class="date-range-grid" id="productQuoteRangeGridRight" data-page-node-id="vtsEgBP7hRym9auFbzyCix"></div>
-                      </div>
-                    </div>
-                    <div class="date-range-foot" data-page-node-id="mxTSOxIFWXglqML3ADG5YO">
-                      <span class="date-range-summary" id="productQuoteRangeSummary" data-page-node-id="YJ4yGyoAPLvWpqLdvpJIsC">未选择</span>
-                      <div class="date-range-foot-actions" data-page-node-id="ZB4wNm8x4YNHkIi6QDYlpO">
-                        <button type="button" class="btn btn-secondary" id="productQuoteRangeClear" data-page-node-id="VnFg0dnNykGL2cjEpAyozG">清空</button>
-                        <button type="button" class="btn btn-primary" id="productQuoteRangeConfirm" data-page-node-id="IUfnKFqKMqbxP4yBe6XtFu">确定</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </label>
-              <div class="hero-actions" data-page-node-id="5YM3PQu0xtHS1lH4ZGGNSO">
-                <button class="btn btn-primary" id="searchProductQuote" type="button" data-page-node-id="hdpA4KuJndQAcxIFIY4kg6">搜索</button>
-                <button class="btn btn-secondary" id="resetProductQuote" type="button" data-page-node-id="5VAxSTilPxkKBhMtZvpuwp">重置</button>
-                <button class="btn btn-secondary" id="exportProductQuote" type="button" style="color:#f50a0a;" data-page-node-id="v0hNBTbJ1X7kBzJRJ2vn1O">导出</button>
-              </div>
-            </div>
-          </div>
-          <div class="table-shell" data-page-node-id="SSNNrlpZp1fHGdGt0vS0Rm">
-            <div class="table-wrap" data-page-node-id="NLswJthZjefjHGyRrT5gNB">
-              <table class="product-quote-table" data-page-node-id="q98juhGSDJvrRP7ZxZRFIU">
-                <thead data-page-node-id="bOMTCg4sqoz6yiHLnIRXNf">
-                  <tr data-page-node-id="eVzTO8m9Y9pmGzHKpat7G5">
-                    <th data-page-node-id="ajuyfCMaKIGkuxAzljN6s1">ID</th>
-                    <th data-page-node-id="BAnpqAwlqf4CFSNAGaeF3N">商品品牌</th>
-                    <th data-page-node-id="RCy3lSk9VE28q5axQDn5lg">报价规则</th>
-                    <th data-page-node-id="DPibi4LNLijWvJhk4FJRwe">报价商品</th>
-                    <th data-page-node-id="nEHuJa1njmswW2NvDihBBD">可出餐城市</th>
-                    <th data-page-node-id="VOlgTqS3NToqiKsSwng7Cr">报价时间</th>
-                    <th data-page-node-id="2tyAyjguePLtp31d10RwqL">报价金额</th>
-                    <th data-page-node-id="voUY4RB2pzamg5HhvDr1cv">出餐方式</th>
-                    <th data-page-node-id="55Zq0JafRnksgerOMXAV4h">状态</th>
-                    <th data-page-node-id="ajoyqVnPVMxu4XgyPZEmuy">供应商名称</th>
-                    <th data-page-node-id="DdAazbmvxVYI3AJBTx7pR2">操作</th>
-                  </tr>
-                </thead>
-                <tbody id="productQuoteBody" data-page-node-id="VfycAEIdiEaa0dreVKnpsM"></tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-        <section class="panel panel-inner" style="margin-top: 18px;" data-page-node-id="RG3TWegtwg50aawzP3VCCV">
-          <div class="section-head" style="padding: 0 0 18px;" data-page-node-id="qC4KyeWI8lF2stD2PiUWQs">
-            <div data-page-node-id="MTTMIVyHbGVgeRDiHLvCzl">
-              <h2 class="section-title" data-page-node-id="PGJUzrBFjLoCB3CB7LoPpc">说明</h2>
-            </div>
-          </div>
-          <div class="spec-prose" data-page-node-id="ADAOelWpC51Px9rnizJQUz">
-            <p data-page-node-id="uU3hheskyJdPLlwr8Il6Hy"><span style="color:#f50a0a;" data-page-node-id="wxkgQ2PSMCb9vjdqBEh8pT">导出按钮</span>：点击后触发<span style="color:#3366ff;" data-page-node-id="shF7NSvXnfB8zjXh4IQWp2">异步导出</span>，导出该页面的所有字段（按当前筛选条件，命中几条导几条；未筛选则导出全量）。点击后<span style="color:#ff4d4f;" data-page-node-id="8aSVjGiYp3kVQ5LACfG9pP">直接提示「导出成功」</span>并自动下载 CSV 文件，<span style="color:#3366ff;" data-page-node-id="yWnFm26XnEA8OmLRLdfLn4">不显示「导出中…」、不禁用按钮</span>。导出过程中可继续操作页面查询/筛选。可以根据任意筛选项进行导出。</p>
-            <p data-page-node-id="dHNkRkb1r5Bm5kCjLnYMkI"><span style="color:#f50a0a;" data-page-node-id="2DkMS2cIEotepfbgXxkehR">报价时间筛选</span>：可以根据该筛选项导出对应时间段的数据。</p>
-          </div>
-        </section>
-      </section>
 
       
     </main>
@@ -7449,7 +7325,6 @@
       "supplier-quote-rounding-v2": { section: "点餐后台-运营管理", current: "系统配置项" },
       "overview": { section: "原型说明", current: "需求背景" },
       "backend-requirement-background": { section: "点餐后台", current: "需求背景" },
-      "backend-product-quote": { section: "点餐后台-商品管理", current: "商品报价" }
     };
 
     const supplierOrderTabConfig = [
