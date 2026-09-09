@@ -1299,6 +1299,16 @@ body.codex-bundle-editable .codex-edit-toolbar{display:none!important;}
     align-items: start;
   }
 
+  .bundle-page[data-page="mini-hall"] .mini-order-content,
+  .bundle-page[data-page="mini-after-sale"] .mini-order-content {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .bundle-page[data-page="mini-hall"] .mini-order-thumb,
+  .bundle-page[data-page="mini-after-sale"] .mini-order-thumb {
+    display: none !important;
+  }
+
   .mini-order-thumb {
     width: 86px;
     height: 86px;
@@ -2162,7 +2172,7 @@ body.codex-bundle-editable .codex-edit-toolbar{display:none!important;}
               <div class="text" spellcheck="false"><strong>售后补贴单结算时间说明</strong></div>
               
     <ul class="note-list text" spellcheck="false">
-      <li class="" style="display: none;" spellcheck="false">供应商上传发票后，过了配置的时间进行结算</li><li spellcheck="false">输入框 逻辑：</li><li class="" spellcheck="false">输入框默认为12且单位为小时，必填</li><li class="" spellcheck="false">输入范围1~200的整数</li><li spellcheck="false">编辑 交互逻辑与上面配置的编辑逻辑一致</li><li spellcheck="false">编辑后，点击保存及生效【对设置后上传成功的售后单生效】</li><li spellcheck="false">点击保存按钮时，校验上传倒计时 是否小于未上传提醒时间【注意单位要换算】，若小于，提示“上传倒计时配置的时间应大于未上传提醒配置的时间”</li>
+      <li class="" style="display: none;" spellcheck="false">供应商上传发票后，过了配置的时间进行结算</li><li spellcheck="false">输入框 逻辑：</li><li class="" spellcheck="false">输入框默认为12且单位为小时，必填</li><li class="" spellcheck="false">输入范围1~200的整数</li><li spellcheck="false">编辑 交互逻辑与上面配置的编辑逻辑一致</li><li spellcheck="false">编辑后，点击保存及生效【对设置后上传成功的售后单生效】</li>
     </ul>
   
             </div>
@@ -14201,7 +14211,6 @@ function syncSupplierTabs() {
       '    <div class="mini-order-deadline text" data-mini-hall-countdown="' + miniHallEscapeHtml(card.id) + '" spellcheck="false">' + miniHallEscapeHtml(formatCountdownText(card.remainingSeconds)) + "</div>",
       "  </div>",
       '  <div class="mini-order-content">',
-      '    <div class="mini-order-thumb text" spellcheck="false">商品图</div>',
       '    <div class="mini-order-detail-col">',
       '      <div class="mini-order-meta text" spellcheck="false">商品：' + miniHallEscapeHtml(card.product) + "</div>",
       '      <div class="mini-order-meta text" spellcheck="false">用户支付：' + miniHallEscapeHtml(card.paid) + "</div>",
@@ -16306,7 +16315,7 @@ function syncSupplierTabs() {
     var disabled = remaining <= 0;
     return '<div class="mini-order-card order-card ax_default mini-hall-order-card flow-fix-mini-runtime" data-runtime-mini-order="' + escapeHtml(order.orderId) + '">' +
       '<div class="mini-order-top"><div class="mini-order-store text" spellcheck="false">' + escapeHtml(order.store) + '</div><div class="mini-order-deadline text" spellcheck="false">' + escapeHtml("已创建：" + (disabled ? "倒计时结束" : formatCountdown(remaining))) + '</div></div>' +
-      '<div class="mini-order-content"><div class="mini-order-thumb text" spellcheck="false">商品图</div><div class="mini-order-detail-col"><div class="mini-order-meta text" spellcheck="false">商品：' + escapeHtml(order.product) + '</div><div class="mini-order-meta text" spellcheck="false">用户支付：' + escapeHtml(order.paid) + '</div><div class="mini-order-meta text" spellcheck="false">补贴金额：<span class="mini-order-highlight">' + escapeHtml(order.subsidy) + ' 元</span></div></div></div>' +
+      '<div class="mini-order-content"><div class="mini-order-detail-col"><div class="mini-order-meta text" spellcheck="false">商品：' + escapeHtml(order.product) + '</div><div class="mini-order-meta text" spellcheck="false">用户支付：' + escapeHtml(order.paid) + '</div><div class="mini-order-meta text" spellcheck="false">补贴金额：<span class="mini-order-highlight">' + escapeHtml(order.subsidy) + ' 元</span></div></div></div>' +
       '<div class="mini-order-actions"><div class="ghost-btn ax_default mini-grab-trigger flow-fix-mini-claim" data-runtime-mini-claim="' + escapeHtml(order.orderId) + '" style="background:' + (disabled ? '#94a3b8' : '#1d4ed8') + ';border-color:' + (disabled ? '#94a3b8' : '#1d4ed8') + ';"><div class="text" spellcheck="false" style="color:#fff;">' + (disabled ? '已超时' : '立即抢单') + '</div></div></div>' +
       '</div>';
   }
@@ -16343,7 +16352,7 @@ function syncSupplierTabs() {
     return '<div class="mini-order-card order-card ax_default mini-after-sale-list-card flow-fix-mini-runtime" data-runtime-mini-order="' + escapeHtml(order.orderId) + '">' +
       '<div class="mini-order-top"><div class="mini-order-store text" spellcheck="false">' + escapeHtml(order.store) + '</div><div class="mini-order-deadline text' + (status === "processing" ? '' : ' hidden') + '" spellcheck="false">' + escapeHtml(status === "processing" ? deadlineText : "") + '</div></div>' +
       '<div class="mini-order-subhead"><div class="mini-order-subtext text" spellcheck="false">订单号：' + escapeHtml(order.orderId) + '</div><div class="mini-order-state-pill text" spellcheck="false">' + escapeHtml(stateText) + '</div></div>' +
-      '<div class="mini-order-content"><div class="mini-order-thumb text" spellcheck="false">商品图</div><div class="mini-order-detail-col"><div class="mini-order-meta text" spellcheck="false">商品品牌：' + escapeHtml(order.brand) + '</div><div class="mini-order-meta text" spellcheck="false">商品名称：' + escapeHtml(order.product) + '</div><div class="mini-order-meta text" spellcheck="false">用户支付：' + escapeHtml(order.paid) + '</div><div class="mini-order-meta text" spellcheck="false">补贴金额：<span class="mini-order-highlight">' + escapeHtml(order.subsidy) + ' 元</span></div></div></div>' +
+      '<div class="mini-order-content"><div class="mini-order-detail-col"><div class="mini-order-meta text" spellcheck="false">商品品牌：' + escapeHtml(order.brand) + '</div><div class="mini-order-meta text" spellcheck="false">商品名称：' + escapeHtml(order.product) + '</div><div class="mini-order-meta text" spellcheck="false">用户支付：' + escapeHtml(order.paid) + '</div><div class="mini-order-meta text" spellcheck="false">补贴金额：<span class="mini-order-highlight">' + escapeHtml(order.subsidy) + ' 元</span></div></div></div>' +
       actionHtml +
       '</div>';
   }
@@ -18604,10 +18613,10 @@ function syncSupplierTabs() {
                 <td>数据源：后台驳回原因</td>
                 <td>数据源：最近一次上传时间</td>
                 <td>数据源：后台系统配置项配置的“赔付金额”</td>
-                <td>点击按钮，弹出弹窗</td>
+                <td>查看发票文件按钮：点击后弹出“下载发票文件”弹窗</td>
               </tr>
               <tr>
-                <td>6928014816062569567</td><td>2026-07-17 15:14:49</td><td>已驳回</td><td>井井井</td><td>9.99</td><td>椰青冰萃美式</td><td>瑞幸-广州</td><td>瑞幸</td><td>抬头不合规</td><td>2026-07-18 10:01:49</td><td>1.5</td><td><div class="sa-clean-op-group is-vertical"><button type="button" class="sa-clean-op-btn is-primary" data-clean-action="reupload" onclick="return window.__SUPPLIER_CLEAN_OPEN_ACTION__&&window.__SUPPLIER_CLEAN_OPEN_ACTION__('reupload',this);">重新上传</button><button type="button" class="sa-clean-op-btn" data-clean-action="download" onclick="return window.__SUPPLIER_CLEAN_OPEN_ACTION__&&window.__SUPPLIER_CLEAN_OPEN_ACTION__('download',this);">下载</button></div></td>
+                <td>6928014816062569567</td><td>2026-07-17 15:14:49</td><td>已驳回</td><td>井井井</td><td>9.99</td><td>椰青冰萃美式</td><td>瑞幸-广州</td><td>瑞幸</td><td>抬头不合规</td><td>2026-07-18 10:01:49</td><td>1.5</td><td><div class="sa-clean-op-group is-vertical"><button type="button" class="sa-clean-op-btn is-primary" data-clean-action="reupload" onclick="return window.__SUPPLIER_CLEAN_OPEN_ACTION__&&window.__SUPPLIER_CLEAN_OPEN_ACTION__('reupload',this);">重新上传</button><button type="button" class="sa-clean-op-btn" data-clean-action="download" onclick="return window.__SUPPLIER_CLEAN_OPEN_ACTION__&&window.__SUPPLIER_CLEAN_OPEN_ACTION__('download',this);">查看发票文件</button></div></td>
               </tr>
             </tbody>
           </table>
@@ -18678,13 +18687,13 @@ function syncSupplierTabs() {
                 <td>数据源：发票文件上传成功时间</td>
                 <td>数据源：后台系统配置项配置的“赔付金额”</td>
                 <td>打款成功：“已赔付” / 没有打款：“未赔付”</td>
-                <td>下载按钮：点击后在浏览器下载上一次上传的发票文件【下载的是最新的文件】</td>
+                <td>查看发票文件按钮：点击后弹出“下载发票文件”弹窗；点击文件后的下载按钮，在浏览器新窗口查看对应发票文件</td>
               </tr>
               <tr>
-                <td>6928014816062569567</td><td>2026-07-17 15:14:49</td><td>已上传</td><td>井井井</td><td>9.99</td><td>椰青冰萃美式</td><td>瑞幸-广州</td><td>瑞幸</td><td>2026-07-18 15:14:49</td><td>1.5</td><td>已赔付</td><td><div class="sa-clean-op-group"><button type="button" class="sa-clean-op-btn" data-clean-action="download" onclick="return window.__SUPPLIER_CLEAN_OPEN_ACTION__&&window.__SUPPLIER_CLEAN_OPEN_ACTION__('download',this);">下载</button></div></td>
+                <td>6928014816062569567</td><td>2026-07-17 15:14:49</td><td>已上传</td><td>井井井</td><td>9.99</td><td>椰青冰萃美式</td><td>瑞幸-广州</td><td>瑞幸</td><td>2026-07-18 15:14:49</td><td>1.5</td><td>已赔付</td><td><div class="sa-clean-op-group"><button type="button" class="sa-clean-op-btn" data-clean-action="download" onclick="return window.__SUPPLIER_CLEAN_OPEN_ACTION__&&window.__SUPPLIER_CLEAN_OPEN_ACTION__('download',this);">查看发票文件</button></div></td>
               </tr>
               <tr>
-                <td>6928014816062569588</td><td>2026-07-18 11:26:08</td><td>已上传</td><td>井井井</td><td>19.90</td><td>生椰拿铁</td><td>瑞幸-深圳</td><td>瑞幸</td><td>2026-07-18 16:03:21</td><td>1.5</td><td>已赔付</td><td><div class="sa-clean-op-group"><button type="button" class="sa-clean-op-btn" data-clean-action="download" onclick="return window.__SUPPLIER_CLEAN_OPEN_ACTION__&&window.__SUPPLIER_CLEAN_OPEN_ACTION__('download',this);">下载</button></div></td>
+                <td>6928014816062569588</td><td>2026-07-18 11:26:08</td><td>已上传</td><td>井井井</td><td>19.90</td><td>生椰拿铁</td><td>瑞幸-深圳</td><td>瑞幸</td><td>2026-07-18 16:03:21</td><td>1.5</td><td>已赔付</td><td><div class="sa-clean-op-group"><button type="button" class="sa-clean-op-btn" data-clean-action="download" onclick="return window.__SUPPLIER_CLEAN_OPEN_ACTION__&&window.__SUPPLIER_CLEAN_OPEN_ACTION__('download',this);">查看发票文件</button></div></td>
               </tr>
             </tbody>
           </table>
@@ -18927,11 +18936,17 @@ function syncSupplierTabs() {
     };
 
     window.__SUPPLIER_CLEAN_OPEN_ACTION__ = function (action, trigger) {
-      if (action === "download") {
-        showToast("文件下载，在浏览器查看");
-        return false;
-      }
       openModal(action, trigger && trigger.closest ? trigger.closest("tr") : null);
+      return false;
+    };
+
+    window.__SUPPLIER_CLEAN_VIEW_INVOICE_FILE__ = function (fileName) {
+      var previewMap = {
+        "invoice_2078015550131081901_20260718_152031.pdf": "./invoice_2078015550131081901_20260718_152031_preview.html",
+        "invoice_2078015550131081901_20260717_184213.pdf": "./invoice_2078015550131081901_20260717_184213_preview.html"
+      };
+      var previewUrl = previewMap[String(fileName || "").trim()];
+      if (previewUrl) window.open(previewUrl, "_blank", "noopener,noreferrer");
       return false;
     };
 
@@ -18963,6 +18978,9 @@ function syncSupplierTabs() {
       modalRow = row || null;
       modalSelectedFile = "";
       modalSelectedTime = "";
+      Array.prototype.forEach.call(page.querySelectorAll(".sa-clean-modal-actions [data-clean-close]"), function (button) {
+        button.style.display = action === "download" ? "none" : "";
+      });
       if (fileInput) fileInput.value = "";
       if (action === "upload") {
         var uploadCells = row ? row.querySelectorAll("td") : [];
@@ -18983,9 +19001,21 @@ function syncSupplierTabs() {
         modalBody.innerHTML = buildUploadModalHtml(reuploadTitle, "-", reuploadAmount);
         confirmBtn.textContent = "确定";
       } else if (action === "download") {
-        modalTitle.textContent = "下载发票";
-        modalBody.innerHTML = "<p>将下载最近一次上传成功的发票文件。</p><p>文件名示例：invoice_20260718_151449.pdf</p><p>上传时间：2026-07-18 15:14:49</p>";
-        confirmBtn.textContent = "下载";
+        modalTitle.textContent = "下载发票文件";
+        modalBody.innerHTML =
+          '<div style="display:grid;gap:14px;">' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 18px;border:1px solid #cfe0ff;border-radius:18px;background:#fff;">' +
+          '<strong style="color:#111827;font:700 17px/1.5 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;word-break:break-all;">invoice_2078015550131081901_20260718_152031.pdf</strong>' +
+          '<span style="color:#718096;font:500 15px/1.4 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;white-space:nowrap;">2026-07-18 15:20:31</span>' +
+          '<button type="button" class="sa-clean-btn" style="min-width:76px;height:34px;padding:0 14px;" onclick="return window.__SUPPLIER_CLEAN_VIEW_INVOICE_FILE__&&window.__SUPPLIER_CLEAN_VIEW_INVOICE_FILE__(\'invoice_2078015550131081901_20260718_152031.pdf\');">下载</button>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 18px;border:1px solid #cfe0ff;border-radius:18px;background:#fff;">' +
+          '<strong style="color:#111827;font:700 17px/1.5 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;word-break:break-all;">invoice_2078015550131081901_20260717_184213.pdf</strong>' +
+          '<span style="color:#718096;font:500 15px/1.4 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;white-space:nowrap;">2026-07-18 15:20:31</span>' +
+          '<button type="button" class="sa-clean-btn" style="min-width:76px;height:34px;padding:0 14px;" onclick="return window.__SUPPLIER_CLEAN_VIEW_INVOICE_FILE__&&window.__SUPPLIER_CLEAN_VIEW_INVOICE_FILE__(\'invoice_2078015550131081901_20260717_184213.pdf\');">下载</button>' +
+          '</div>' +
+          '</div>';
+        confirmBtn.textContent = "关闭";
       } else if (action === "extend") {
         modalTitle.textContent = "延长上传时间";
         modalBody.innerHTML = '<div style="margin:0 0 12px;padding:12px 14px;border-radius:14px;background:#f8fbff;border:1px solid #dbe7fb;color:#44526b;font:600 13px/1.7 \'Segoe UI\',\'PingFang SC\',\'Microsoft YaHei\',sans-serif;">距离处理倒计时剩余10分钟，不能延长上传时间</div><div style="margin-top:12px;"><select data-clean-extend-select style="width:100%;height:44px;border:1px solid #cbd5e1;border-radius:12px;padding:0 12px;background:#f8fafc;color:#0f172a;font:600 14px/1 \'Segoe UI\',\'PingFang SC\',\'Microsoft YaHei\',sans-serif;"><option value=\"\">请选择延长上传时间</option><option value=\"2\">2天</option><option value=\"3\">3天</option><option value=\"5\">5天</option><option value=\"7\">7天</option></select></div>';
@@ -19015,7 +19045,7 @@ function syncSupplierTabs() {
         if (typeof event.stopPropagation === "function") event.stopPropagation();
         var action = actionBtn.getAttribute("data-clean-action");
         if (action === "download") {
-          showToast("文件下载，在浏览器查看");
+          openModal("download", actionBtn.closest("tr"));
           return;
         }
         if (action === "resync") {
@@ -19028,7 +19058,7 @@ function syncSupplierTabs() {
               syncCell.innerHTML = '<div class="sa-clean-sync"><div class="sa-clean-sync-status is-success">同步成功</div></div>';
             }
             if (opCell) {
-              opCell.innerHTML = '<div class="sa-clean-op-group"><button type="button" class="sa-clean-op-btn" data-clean-action="download">下载</button></div>';
+              opCell.innerHTML = '<div class="sa-clean-op-group"><button type="button" class="sa-clean-op-btn" data-clean-action="download">查看发票文件</button></div>';
             }
             row.setAttribute("data-clean-sync-result", "success");
           }
@@ -20737,6 +20767,13 @@ function syncSupplierTabs() {
       var receiveDesc = findStatCardByTitle(descSection, "接单倒计时说明");
       if (receiveDesc) receiveDesc.style.setProperty("display", "none", "important");
       var settlementDesc = findStatCardByTitle(descSection, "售后补贴单结算时间说明");
+      if (settlementDesc) {
+        Array.prototype.forEach.call(settlementDesc.querySelectorAll(".note-list li"), function (item) {
+          if ((item.textContent || "").indexOf("点击保存按钮时，校验上传倒计时 是否小于未上传提醒时间") > -1) {
+            item.remove();
+          }
+        });
+      }
       if (settlementDesc && !descSection.querySelector('[data-reminder-desc="1"]')) {
         var reminderDesc = settlementDesc.cloneNode(true);
         reminderDesc.setAttribute("data-reminder-desc", "1");
@@ -22050,7 +22087,7 @@ function syncSupplierTabs() {
       '<div class="mini-order-card order-card ax_default mini-after-sale-list-card" data-order-id="' + escapeMiniAfterSale(item.id) + '">',
       '  <div class="mini-order-top"><div class="mini-order-store text" spellcheck="false">' + escapeMiniAfterSale(item.store) + '</div><div class="' + deadlineClass + '" spellcheck="false">' + escapeMiniAfterSale(deadline) + '</div></div>',
       '  <div class="mini-order-subhead"><div class="mini-order-subtext text" spellcheck="false">补贴单号：' + escapeMiniAfterSale(item.orderNo) + '</div><div class="mini-order-state-pill text" spellcheck="false">' + escapeMiniAfterSale(item.state) + '</div></div>',
-      '  <div class="mini-order-content"><div class="mini-order-thumb mini-after-sale-thumb-open text" data-order-id="' + escapeMiniAfterSale(item.id) + '" spellcheck="false">商品图</div><div class="mini-order-detail-col"><div class="mini-order-meta text" spellcheck="false">商品品牌：' + escapeMiniAfterSale(item.brand) + '</div><div class="mini-order-meta text" spellcheck="false">商品名称：' + escapeMiniAfterSale(item.product) + '</div><div class="mini-order-meta text" spellcheck="false">用户支付：' + escapeMiniAfterSale(item.paid) + '</div><div class="mini-order-meta text" spellcheck="false">补贴金额：<span class="mini-order-highlight">' + escapeMiniAfterSale(item.subsidy) + ' 元</span></div></div></div>',
+      '  <div class="mini-order-content"><div class="mini-order-detail-col"><div class="mini-order-meta text" spellcheck="false">商品品牌：' + escapeMiniAfterSale(item.brand) + '</div><div class="mini-order-meta text" spellcheck="false">商品名称：' + escapeMiniAfterSale(item.product) + '</div><div class="mini-order-meta text" spellcheck="false">用户支付：' + escapeMiniAfterSale(item.paid) + '</div><div class="mini-order-meta text" spellcheck="false">补贴金额：<span class="mini-order-highlight">' + escapeMiniAfterSale(item.subsidy) + ' 元</span></div></div></div>',
       rejectHtml,
       actionsHtml,
       '</div>'
@@ -23238,8 +23275,8 @@ function syncSupplierTabs() {
       [
         '数据源：该订单对应的出餐成功的出餐单号；<div>显示逻辑：若订单非出餐成功，显示“-”</div>',
         '数据源：系统自动创建16位编号，格式为BT+14位数字。',
-        '数据源：系统配置里面设置的上传倒计时；<div>【倒计时最好实时的】；该倒计时与供应商端相同补贴单号的倒计时一样；倒计时结束全部归零</div><div>列表排序：按倒计时升序排；</div>',
-        '数据源：该订单，客服同步到列表的时间',
+        '数据源：系统配置里面设置的上传倒计时；<div>【倒计时最好实时的】；该倒计时与供应商端相同补贴单号的倒计时一样；倒计时结束全部归零</div>',
+        '数据源：该订单，客服同步到列表的时间<div>列表排序：按添加时间正序排序</div>',
         '订单状态见“状态机”',
         '数据源：该订单对应的商品名称',
         '数据源：该订单对应的商品品牌',
@@ -23728,8 +23765,7 @@ function syncSupplierTabs() {
         '    <div class="mini-order-store text" spellcheck="false">' + miniHallCleanEscape(card.store) + '</div>',
         '    <div class="mini-order-deadline text" data-mini-hall-countdown-live="' + miniHallCleanEscape(card.id) + '" spellcheck="false">已创建：' + miniHallCleanEscape(miniHallCleanFormatCountdown(card.elapsedSeconds)) + '</div>',
         '  </div>',
-        '  <div class="mini-order-content">',
-        '    <div class="mini-order-thumb text" spellcheck="false">商品图</div>',
+      '  <div class="mini-order-content">',
         '    <div class="mini-order-detail-col">',
         '      <div class="mini-order-meta text" spellcheck="false">商品：' + miniHallCleanEscape(card.product) + '</div>',
         '      <div class="mini-order-meta text" spellcheck="false">用户支付：' + miniHallCleanEscape(card.paid) + '</div>',
@@ -23761,7 +23797,7 @@ function syncSupplierTabs() {
       '.bundle-page[data-page="mini-hall"] .c-mini-hall-card{padding:12px!important;border-radius:18px!important;}',
       '.bundle-page[data-page="mini-hall"] .c-mini-hall-card .mini-order-store{font-size:15px!important;}',
       '.bundle-page[data-page="mini-hall"] .c-mini-hall-card .mini-order-deadline{font-size:11px!important;}',
-      '.bundle-page[data-page="mini-hall"] .c-mini-hall-card .mini-order-content{grid-template-columns:72px minmax(0,1fr)!important;gap:10px!important;margin-top:8px!important;}',
+      '.bundle-page[data-page="mini-hall"] .c-mini-hall-card .mini-order-content{grid-template-columns:minmax(0,1fr)!important;gap:10px!important;margin-top:8px!important;}',
       '.bundle-page[data-page="mini-hall"] .c-mini-hall-card .mini-order-thumb{width:72px!important;height:72px!important;border-radius:14px!important;font-size:12px!important;}',
       '.bundle-page[data-page="mini-hall"] .c-mini-hall-card .mini-order-meta{margin-top:4px!important;font-size:12px!important;line-height:1.55!important;}',
       '.bundle-page[data-page="mini-hall"] .c-mini-hall-card .mini-order-actions{margin-top:10px!important;}',
@@ -24108,6 +24144,49 @@ function syncSupplierTabs() {
   }, true);
   document.addEventListener('click', function () {
     window.setTimeout(bindMiniAfterSaleFilePreview, 0);
+  }, true);
+})();
+</script>
+<script>
+(function () {
+  function updateInvoiceRequestProcessingNote() {
+    var page = document.querySelector('.bundle-page[data-page="invoice-request-list"]');
+    if (!page) return;
+    Array.prototype.forEach.call(page.querySelectorAll("table"), function (table) {
+      var headerRow = table.querySelector("thead tr:first-child");
+      var descRow = table.querySelector("thead tr.desc-row");
+      if (!headerRow || !descRow) return;
+      var headers = Array.prototype.map.call(headerRow.children, function (cell) {
+        return (cell.textContent || "").trim();
+      });
+      var countdownIndex = headers.indexOf("处理倒计时");
+      var addedIndex = headers.indexOf("添加时间");
+      if (countdownIndex === -1 || addedIndex === -1) return;
+      var countdownCell = descRow.children[countdownIndex];
+      var addedCell = descRow.children[addedIndex];
+      if (countdownCell) {
+        countdownCell.innerHTML = countdownCell.innerHTML
+          .split("<div>列表排序：按倒计时升序排；</div>").join("")
+          .replace("列表排序：按倒计时升序排；", "");
+      }
+      if (addedCell && (addedCell.textContent || "").indexOf("列表排序：按添加时间正序排序") === -1) {
+        addedCell.innerHTML += '<div>列表排序：按添加时间正序排序</div>';
+      }
+    });
+  }
+
+  function scheduleInvoiceRequestProcessingNote() {
+    [0, 80, 220, 500, 900].forEach(function (delay) {
+      window.setTimeout(updateInvoiceRequestProcessingNote, delay);
+    });
+  }
+
+  scheduleInvoiceRequestProcessingNote();
+  window.addEventListener("load", scheduleInvoiceRequestProcessingNote);
+  window.addEventListener("pageshow", scheduleInvoiceRequestProcessingNote);
+  window.addEventListener("hashchange", scheduleInvoiceRequestProcessingNote);
+  document.addEventListener("click", function () {
+    scheduleInvoiceRequestProcessingNote();
   }, true);
 })();
 </script>
