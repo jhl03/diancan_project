@@ -1636,19 +1636,12 @@
 
     .mini-order-tab-badge {
       position: absolute;
-      top: -6px;
-      right: -8px;
-      min-width: 14px;
-      height: 14px;
-      padding: 0 4px;
-      border-radius: 7px;
+      top: -4px;
+      right: -6px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
       background: linear-gradient(135deg, #ff4d4f, #ff7875);
-      color: #fff;
-      font-size: 9px;
-      font-weight: 800;
-      line-height: 14px;
-      text-align: center;
-      white-space: nowrap;
       z-index: 1;
     }
 
@@ -1928,19 +1921,13 @@
 
     .mini-order-nav-badge {
       position: absolute;
-      top: 0;
-      right: 4px;
-      min-width: 14px;
-      height: 14px;
-      padding: 0 4px;
-      border-radius: 7px;
+      top: 2px;
+      right: 8px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
       background: linear-gradient(135deg, #ff4d4f, #ff7875);
-      color: #fff;
-      font-size: 9px;
-      font-weight: 800;
-      line-height: 14px;
-      text-align: center;
-      white-space: nowrap;
+      z-index: 1;
     }
 
     .mini-quote-update-bar {
@@ -5559,6 +5546,8 @@
           <div class="spec-prose" data-page-node-id="OmxZ288QqSSzxDvqeScCho">
             <p data-page-node-id="1HYAEgfCK1SfEDG2FAaL1I"><strong data-page-node-id="Zr19ga9MMKWRVPl0pDRnyO">新增范围包括：</strong><span style="color: #ff4d4f;" data-page-node-id="kGZnsD7Hwb221wGcH1C8ct">一级供应商后台</span>。<span style="color:#3366ff;" data-page-node-id="V1U1NfHXh24ApFZ8m4dsb0">挂有二级的一级供应商后台不能显示操作列的内容</span></p>
             <p data-page-node-id="9Xx9AHQ3Dl5VeqybVGei2Z"><strong data-page-node-id="iWpOku225fd3lHocj70d3w">页面定位：</strong>供应商端【PC】 > 订单管理 > 竞价记录，用于展示供应商参与竞价的订单，按「竞价失败」「竞价成功」两个 tab 切换查看。</p>
+            <p data-page-node-id="9Xx9AHQ3Dl5VeqybVGei2Z-quote-min" style="color:#ff4d4f;"><strong data-page-node-id="iWpOku225fd3lHocj70d3w-quote-min">报价金额下限调整：</strong>更改报价金额输入框的下限值为0.1，报价金额输入框需 ≥0.1；</p>
+            <p data-page-node-id="9Xx9AHQ3Dl5VeqybVGei2Z-quote-scope" style="color:#ff4d4f;"><strong data-page-node-id="iWpOku225fd3lHocj70d3w-quote-scope">更改范围：</strong>新增/修改报价规则弹窗【包括竞价失败页面的修改报价金额弹窗】、新订单tab、已报价tab的 报价金额输入框。</p>
             <div style="background:#f7f9fc; border-left:3px solid #3366ff; padding:10px 12px; margin:8px 0; border-radius:6px;" data-page-node-id="c2zxhq3X3Yyp5r4dGe1cgG">
               <p style="margin:0 0 6px 0;" data-page-node-id="nFB4EdCRNMEqg0KpdABHza"><strong data-page-node-id="h0ds3jrbapBXRPVEBsD3Oq">竞价记录包括：</strong>所有的出餐方式【人工、自动…】</p>
               <p style="margin:0 0 6px 0;" data-page-node-id="avsVU5c80Y1kXJYKDljYNS"><strong data-page-node-id="smXMcNQwjvcdDWAOWB4iqw">竞价记录页面数据源：</strong><br data-page-node-id="O81YGHZ3ZWP1hqmZf36y4B">例：第一轮：有A、B、C三个供应商竞价，A竞价成功，出餐失败，B、C竞价失败；<br data-page-node-id="MF9NXULeFMN5ht6qQfunZH">第二轮：有B、C、D、E四个供应商竞价，B竞价成功，出餐成功，C、D、E竞价失败；<br data-page-node-id="2thQbvAlysMXONrTuiwtJ3">以此类推，注意，最后竞价记录是A、B竞价成功，C、D、E竞价失败</p>
@@ -5569,23 +5558,23 @@
               <p style="margin:0; line-height:1.8;" data-page-node-id="8SofOJ7sfD25cK7guyV1F7">
                 <strong data-page-node-id="E7kTI2PxctEZbSG0rlHFOK">1. 竞价记录页面：</strong><br data-page-node-id="5G3hmPCZcwrCYXxGEbJB32">
                 &nbsp;&nbsp;<strong data-page-node-id="vhidcDH5QKH6uosYYj9Bkg">1.1 流转过程中，有供应商竞价成功，其他竞价失败的情况如下：</strong><br data-page-node-id="MNbYqcs3i6qewjJ1Mh67t3">
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="GnqVCUcqLIt7Zv6V3mgW82">1.1.1</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数】 = 供应商报价，<br data-page-node-id="F55YvR3Z1SBXSrR7ZFNXkg">
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="GnqVCUcqLIt7Zv6V3mgW82">1.1.1</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 = 供应商报价，<br data-page-node-id="F55YvR3Z1SBXSrR7ZFNXkg">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：订单价格相同，供应商随机分配，未被选中 / 超过最大接单数量<br data-page-node-id="JZPR1SL2T4z8YaBzRn3bFh">
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="GQPeHfm1DZNbst6QsGo5tH">1.1.2</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数】 ＜ 供应商报价，<br data-page-node-id="tC1ckWrbPWRegJvFnAALPS">
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="GQPeHfm1DZNbst6QsGo5tH">1.1.2</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 ＜ 供应商报价，<br data-page-node-id="tC1ckWrbPWRegJvFnAALPS">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：报价金额不是最低<br data-page-node-id="O6hJRGe37KQEWSgGDUREdh">
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="LCq42t7ypWjnpk9D6xX7n4">1.1.3</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数】 ＞ 供应商报价，<br data-page-node-id="thFmnKEO7q7LCqAtXkqzJ8">
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="LCq42t7ypWjnpk9D6xX7n4">1.1.3</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 ＞ 供应商报价，<br data-page-node-id="thFmnKEO7q7LCqAtXkqzJ8">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：因订单流转超时，已自动指派兜底供应商----出餐方式为自动 / 超过最大接单数量----出餐方式为人工<br data-page-node-id="BhILQJR5fKVumhrzSTknBJ"><br data-page-node-id="atEvoaWl5AtH07ljhu12x2">
                 &nbsp;&nbsp;<strong data-page-node-id="bY1CPbfdRtD571EVENillp">1.2 流转过程中，没有供应商竞价成功，其他竞价失败的情况如下：</strong><br data-page-node-id="L3WXnhdUSiGpHMhk2yGXkE">
                 &nbsp;&nbsp;&nbsp;&nbsp;前提：竞价失败页面 成交价取竞价表里面最低的<br data-page-node-id="Stpeq0tyLixxfbOOuK2hYo">
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="3QeG6ocPSv27yLvhOlcBRq">1.2.1</strong> 成交价【取竞价表里面最低价，若配置了保留一位小数，报价舍掉第二位小数】 = 供应商报价，<br data-page-node-id="zpZviw7GQAmsEmYZRKc7oF">
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="3QeG6ocPSv27yLvhOlcBRq">1.2.1</strong> 成交价【取竞价表里面最低价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 = 供应商报价，<br data-page-node-id="zpZviw7GQAmsEmYZRKc7oF">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：订单价格相同，供应商随机分配，未被选中<br data-page-node-id="Z3RPk23b8kDn1kHCAPE6NU">
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="FooFHO8ZeAythwrF8HavOi">1.2.2</strong> 成交价【取竞价表里面最低价，若配置了保留一位小数，报价舍掉第二位小数】 ＜ 供应商报价，<br data-page-node-id="86fsolSRW1AvyHqwSieI7b">
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="FooFHO8ZeAythwrF8HavOi">1.2.2</strong> 成交价【取竞价表里面最低价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 ＜ 供应商报价，<br data-page-node-id="86fsolSRW1AvyHqwSieI7b">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：报价金额不是最低<br data-page-node-id="GH9LJVeV169fkPlcRnnf8a"><br data-page-node-id="ejQPgqqCrQcGWOHzeHGVa4">
                 &nbsp;&nbsp;<strong data-page-node-id="hBBCGjCIyBdH7meAIEXWB0">1.3 流转过程中，有供应商竞价成功，但是没有出餐超过的，其他竞价失败的情况如下：</strong><br data-page-node-id="7nJN68uFo6yB02DKLBmkRM">
                 &nbsp;&nbsp;&nbsp;&nbsp;前提：竞价失败页面 成交价取接单记录里面报价金额最低的<br data-page-node-id="Kel52hRckNWmx00lt9XbI7">
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="mg3HxDtc42gfbP21tULRiP">1.3.1</strong> 成交价【取接单记录里面报价最低，若配置了保留一位小数，报价舍掉第二位小数】 = 供应商报价，<br data-page-node-id="vRMdXR2IGdZDLEjcRAJ5x0">
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="mg3HxDtc42gfbP21tULRiP">1.3.1</strong> 成交价【取接单记录里面报价最低，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 = 供应商报价，<br data-page-node-id="vRMdXR2IGdZDLEjcRAJ5x0">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：订单价格相同，供应商随机分配，未被选中<br data-page-node-id="kD6F0tKYjM0ltwbTVOnjGR">
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="pme6mMeglCrpejAl5rFHB2">1.3.2</strong> 成交价【取接单记录里面报价最低，若配置了保留一位小数，报价舍掉第二位小数】 ＜ 供应商报价，<br data-page-node-id="pQqEbtdYVFLRNP4dAXHLFa">
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="pme6mMeglCrpejAl5rFHB2">1.3.2</strong> 成交价【取接单记录里面报价最低，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 ＜ 供应商报价，<br data-page-node-id="pQqEbtdYVFLRNP4dAXHLFa">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：报价金额不是最低
               </p>
             </div>
@@ -9208,11 +9197,16 @@
           newArrival.style.display = "none";
         }
       }
-      const completedCount = supplierOrderRecords.filter((item) => item.tab === "bid-success").length;
+      const hasNewOrder = state.miniOrderNewArrivalCount > 0;
+      const isOnOrderPage = state.currentPage === "supplier-mini-order";
+      const isOnPendingTab = isOnOrderPage && state.miniOrderTab === "completed";
+      const showOrderNavBadge = hasNewOrder && !isOnPendingTab;
+      const showPendingTabBadge = hasNewOrder && isOnOrderPage && !isOnPendingTab;
+
       tabs.innerHTML = miniOrderTabConfig.map((tab) => {
         const isCompleted = tab.key === "completed";
-        const badge = isCompleted && completedCount > 0
-          ? `<span class="mini-order-tab-badge">${completedCount > 99 ? "99+" : completedCount}</span>`
+        const badge = isCompleted && showPendingTabBadge
+          ? `<span class="mini-order-tab-badge"></span>`
           : "";
         return `
           <button class="mini-order-tab ${state.miniOrderTab === tab.key ? "active" : ""}" type="button" data-mini-order-tab="${tab.key}">
@@ -9225,8 +9219,8 @@
         pendingBadge.style.display = "none";
       }
       document.querySelectorAll("[data-order-nav-badge]").forEach((badge) => {
-        badge.textContent = completedCount > 99 ? "99+" : String(completedCount);
-        badge.style.display = completedCount > 0 ? "" : "none";
+        badge.textContent = "";
+        badge.style.display = showOrderNavBadge ? "" : "none";
       });
       const rows = getMiniOrderRows();
       if (state.miniOrderTab === "handling" || state.miniOrderTab === "processing") {
