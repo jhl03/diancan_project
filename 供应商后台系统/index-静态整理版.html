@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>点餐供应商管理系统原型</title>
+  <style>
+    :root {
+      --side: #304156;
+      --side-deep: #263445;
+      --side-active: #263f5f;
+      --blue: #409eff;
+      --green: #67c23a;
+      --orange: #e6a23c;
+      --red: #f56c6c;
+      --text: #303133;
+      --muted: #909399;
+      --line: #ebeef5;
+      --bg: #f3f6fb;
+      --card: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      font-size: 14px;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+    }
+
+    .sidebar {
+      background: var(--side);
+      color: #bfcbd9;
+      min-height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow: auto;
+    }
+
+    .brand {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 18px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      background: var(--side-deep);
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #409eff, #36cfc9);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .menu-group-title {
+      padding: 16px 18px 8px;
+      color: #7f90a5;
+      font-size: 12px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+      padding: 0 18px;
+      cursor: pointer;
+      user-select: none;
+      border-left: 3px solid transparent;
+    }
+
+    .menu-icon {
+      width: 18px;
+      height: 18px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 3px;
+      background: rgba(255,255,255,.08);
+      color: #9fc8ff;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .menu-item:hover { color: #fff; background: #2b3a4d; }
+    .menu-item.active {
+      color: #fff;
+      background: var(--side-active);
+      border-left-color: var(--blue);
+    }
+
+    .main {
+      min-width: 980px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .breadcrumb {
+      color: #606266;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #606266;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #ecf5ff;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .tabs {
+      height: 38px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      padding: 0 12px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fff;
+      color: #606266;
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+
+    .tab.active {
+      color: var(--blue);
+      border-color: #b3d8ff;
+      background: #ecf5ff;
+    }
+
+    .content {
+      padding: 16px;
+    }
+
+    .page-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .source-note {
+      display: none;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(160px, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .metric {
+      background: var(--card);
+      border-radius: 4px;
+      padding: 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+
+    .metric-label { color: var(--muted); margin-bottom: 10px; }
+    .metric-value { font-size: 26px; font-weight: 700; }
+    .metric small { margin-left: 8px; color: var(--green); font-size: 12px; }
+
+    .panel {
+      background: var(--card);
+      border-radius: 4px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+      margin-bottom: 14px;
+    }
+
+    .query {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .field {
+      width: 180px;
+      height: 32px;
+      border: 1px solid #dcdfe6;
+      border-radius: 4px;
+      background: #fff;
+      color: #606266;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+    }
+
+    .field.wide { width: 260px; }
+    .field.range { width: 300px; }
+
+    .btn {
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 4px;
+      border: 1px solid #dcdfe6;
+      background: #fff;
+      color: #606266;
+      cursor: pointer;
+    }
+
+    .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .btn.success { background: var(--green); border-color: var(--green); color: #fff; }
+    .btn.warning { background: var(--orange); border-color: var(--orange); color: #fff; }
+    .btn.danger { background: var(--red); border-color: var(--red); color: #fff; }
+    .btn.text { border: 0; color: var(--blue); background: transparent; padding: 0 5px; }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1100px;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 11px 12px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #f8f8f9;
+      color: #606266;
+      font-weight: 600;
+    }
+
+    tr:hover td { background: #f5f7fa; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      border: 1px solid #d9ecff;
+      color: var(--blue);
+      background: #ecf5ff;
+    }
+
+    .tag.green { color: #529b2e; background: #f0f9eb; border-color: #e1f3d8; }
+    .tag.orange { color: #b88230; background: #fdf6ec; border-color: #faecd8; }
+    .tag.red { color: #c45656; background: #fef0f0; border-color: #fde2e2; }
+    .tag.gray { color: #73767a; background: #f4f4f5; border-color: #e9e9eb; }
+
+    .pager {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      align-items: center;
+      color: #606266;
+      padding-top: 14px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 10px;
+      color: #606266;
+    }
+
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.35);
+      z-index: 20;
+    }
+
+    .modal-mask.show { display: flex; }
+
+    .modal {
+      width: 680px;
+      background: #fff;
+      border-radius: 5px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.25);
+    }
+
+    .modal-head {
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--line);
+      font-weight: 600;
+    }
+
+    .modal-body {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .input {
+      height: 34px;
+      border: 1px solid #dcdfe6;
+      border-radius: 4px;
+      padding: 0 10px;
+      color: #606266;
+    }
+
+    textarea.input {
+      height: 86px;
+      padding: 8px 10px;
+      resize: none;
+    }
+
+    .modal-foot {
+      padding: 12px 18px 18px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { position: static; min-height: auto; }
+      .main { min-width: 0; }
+      .cards { grid-template-columns: 1fr 1fr; }
+      .split { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">餐</span><span>点餐供应商管理系统</span></div>
+      <div id="menu"></div>
+    </aside>
+    <section class="main">
+      <header class="topbar">
+        <div class="breadcrumb"><span>首页</span><span>/</span><strong id="crumb">首页</strong></div>
+        <div class="user"><span>消息 3</span><span class="tag">供应商角色视图</span><span>供应商管理员</span><span class="avatar">供</span></div>
+      </header>
+      <nav class="tabs"><span class="tab active">首页</span><span class="tab" id="tabTitle">供应商工作台</span></nav>
+      <main class="content" id="content"></main>
+    </section>
+  </div>
+
+  <div class="modal-mask" id="modal">
+    <div class="modal">
+      <div class="modal-head"><span id="modalTitle">操作</span><button class="btn text" onclick="closeModal()">关闭</button></div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-foot"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" onclick="closeModal()">确定</button></div>
+    </div>
+  </div>
+
+  <script>
+    const menus = [
+      { group: "首页", items: [{ key: "dashboard", name: "首页", icon: "首" }] },
+      { group: "出价管理", items: [
+        { key: "quotation", name: "商品报价", icon: "价" }
+      ] },
+      { group: "订单管理", items: [
+        { key: "order-list", name: "订单列表", icon: "单" },
+        { key: "compensation", name: "补偿单列表", icon: "补" },
+        { key: "after-sale-subsidy", name: "售后补贴单", icon: "售" },
+        { key: "order-record", name: "接单记录", icon: "接" }
+      ] },
+      { group: "品牌账号管理", items: [
+        { key: "account-list", name: "瑞幸品牌账号", icon: "账" },
+        { key: "all-coupon", name: "瑞幸兑换券列表", icon: "券" }
+      ] },
+      { group: "账户管理", items: [
+        { key: "withdraw-record", name: "提现记录", icon: "¥" },
+        { key: "withdraw-account", name: "提现账户", icon: "户" },
+        { key: "settlement-record", name: "结算记录", icon: "结" },
+        { key: "settlement-entity", name: "结算主体", icon: "主" }
+      ] },
+      { group: "自动发货", items: [
+        { key: "auto-list", name: "H5链接仓库", icon: "链" },
+        { key: "auto-detail", name: "H5链接明细", icon: "明" }
+      ] }
+    ];
+
+    const pages = {
+      dashboard: {
+        title: "供应商工作台",
+        source: "基于 src/views/index.vue 和供应商后台路由汇总",
+        filters: [],
+        columns: ["待出餐订单", "处理中补偿单", "可提现金额", "有效H5链接"],
+        rows: [
+          ["126", "8", "¥28,640.32", "3,420"],
+          ["今日新增 32", "超时预警 2", "本月结算 ¥153,800.00", "即将失效 18"]
+        ],
+        dashboard: true
+      },
+      quotation: {
+        title: "商品报价",
+        source: "src/router/quotation.js, src/views/quotation/list/index.vue",
+        filters: ["选择品牌", "请输入报价规则", "请输入商品名称", "选择出餐方式"],
+        actions: ["新增报价", "导出"],
+        columns: ["报价规则", "商品名称", "商品品牌", "出餐方式", "成本价", "售卖价", "状态", "操作"],
+        rows: [
+          ["瑞幸早餐时段规则", "生椰拿铁", "瑞幸咖啡", "自动出餐", "¥13.50", "¥18.90", "启用", "编辑 删除"],
+          ["麦当劳午餐套餐规则", "麦辣鸡腿堡套餐", "麦当劳", "手工出餐", "¥24.00", "¥32.00", "启用", "编辑 删除"],
+          ["肯德基工作日规则", "香辣鸡腿堡套餐", "肯德基", "自动出餐", "¥25.50", "¥35.00", "停用", "编辑 启用"]
+        ]
+      },
+      "order-list": {
+        title: "订单列表",
+        source: "src/router/order.js, src/views/order/list/index.vue",
+        filters: ["请输入出餐订单", "请输入商品名称", "选择品牌", "选择出餐状态", "下单开始时间 - 下单结束时间"],
+        actions: ["导出订单", "批量刷新"],
+        columns: ["出餐订单", "出餐状态", "商品名称", "下单平台", "出餐帐号", "兑换链接", "兑换码", "取餐备注", "结算金额", "结算状态", "门店名称", "商品品牌", "供应商名称", "操作"],
+        rows: [
+          ["DC202609110001", "待出餐", "生椰拿铁", "惠生活", "138****9088", "-", "-", "少冰", "¥13.50", "待结算", "瑞幸咖啡北京示范店", "瑞幸咖啡", "上海示例供应商", "手工出餐 取消出餐"],
+          ["DC202609110002", "已出餐", "麦辣鸡腿堡套餐", "惠生活", "156****2290", "https://demo.link", "A9K2", "到店取餐", "¥24.00", "已结算", "麦当劳厦门软件园店", "麦当劳", "厦门供应商", "查看"],
+          ["DC202609110003", "出餐失败", "香辣鸡腿堡套餐", "惠生活", "189****7821", "-", "-", "用户催单", "¥25.50", "未结算", "肯德基湖滨店", "肯德基", "通用供应商", "重新出餐"]
+        ]
+      },
+      compensation: {
+        title: "补偿单列表",
+        source: "src/views/order/compensation/index.vue",
+        filters: ["用户支付左区间", "用户支付右区间", "补贴金额左区间", "补贴金额右区间"],
+        actions: ["批量处理"],
+        columns: ["门店所在城市", "已创建时长", "商品名称", "用户支付", "商品品牌", "补贴金额", "操作"],
+        rows: [
+          ["北京", "00:12:41", "生椰拿铁", "¥18.90", "瑞幸咖啡", "¥3.00", "处理"],
+          ["上海", "01:24:09", "麦辣鸡腿堡套餐", "¥32.00", "麦当劳", "¥5.50", "处理"]
+        ]
+      },
+      "after-sale-subsidy": {
+        title: "售后补贴单",
+        source: "src/views/order/after-sale-subsidy/index.vue",
+        filters: ["补贴单号", "供应商", "上传状态", "创建时间"],
+        actions: ["上传发票", "延长上传时间"],
+        columns: ["补贴单号", "供应商", "发票抬头", "税号", "开票金额", "上传状态", "剩余上传时间", "操作"],
+        rows: [
+          ["BT20260911001", "上海示例供应商", "上海示例科技有限公司", "91310000DEMO", "¥860.00", "待上传", "2天 03:21", "上传发票 延长"],
+          ["BT20260910018", "厦门供应商", "厦门示例商贸有限公司", "91350200DEMO", "¥1,240.00", "已上传", "-", "查看"]
+        ]
+      },
+      "order-record": {
+        title: "接单记录",
+        source: "src/views/order/record/index.vue",
+        filters: ["请输入供应商接单编号", "请输入出餐订单", "选择品牌", "选择供应商", "选择出餐状态", "接单开始时间 - 接单结束时间"],
+        actions: ["导出"],
+        columns: ["接单记录编号", "供应商接单编号", "出餐订单", "出餐状态", "出餐时间", "接单时间", "结算状态", "结算时间", "结算金额", "商品名称", "门店名称"],
+        rows: [
+          ["JS20260911001", "SUB20260911001", "DC202609110001", "处理中", "-", "2026-09-11 10:08:12", "待结算", "-", "¥13.50", "生椰拿铁", "瑞幸咖啡北京示范店"],
+          ["JS20260910022", "SUB20260910022", "DC202609100118", "已完成", "2026-09-10 12:30:22", "2026-09-10 12:18:40", "已结算", "2026-09-11 02:00:00", "¥24.00", "麦辣鸡腿堡套餐", "麦当劳厦门软件园店"]
+        ]
+      },
+      "account-list": {
+        title: "瑞幸品牌账号",
+        source: "src/views/account/list/index.vue",
+        filters: ["请输入账号", "选择账号状态", "选择城市"],
+        actions: ["新增账号", "登录", "设置备注"],
+        columns: ["账号", "状态", "每日最高单量", "今日已用单量", "限定城市", "备注", "更新时间", "操作"],
+        rows: [
+          ["138****9088", "正常", "80", "34", "北京", "主力账号", "2026-09-11 09:20:00", "登录 设置最高单量 限定城市"],
+          ["156****2290", "停用", "50", "0", "厦门", "备用账号", "2026-09-10 18:42:00", "启用 设置备注"]
+        ]
+      },
+      "all-coupon": {
+        title: "瑞幸兑换券列表",
+        source: "src/views/account/all-coupon/index.vue",
+        filters: ["券状态", "是否设置成本价", "券码/套餐ID", "券名/套餐名称", "可兑换商品", "所属账号", "备注", "生效开始时间"],
+        actions: ["设置成本价", "设置可兑换商品", "设置备注"],
+        columns: ["券名/套餐名称", "券码/套餐ID", "所属账号", "券状态", "可兑换商品", "成本价", "生效开始时间", "生效结束时间", "备注", "关联订单", "操作"],
+        rows: [
+          ["瑞幸29元套餐券", "LK-29001", "138****9088", "未使用", "生椰拿铁/拿铁", "¥13.50", "2026-09-01", "2026-09-30", "热销券", "-", "设置成本价 设置商品"],
+          ["瑞幸早餐券", "LK-BF002", "156****2290", "已使用", "美式咖啡", "¥8.00", "2026-09-01", "2026-09-15", "-", "DC202609100118", "查看"]
+        ]
+      },
+      "withdraw-record": {
+        title: "提现记录",
+        source: "src/views/finance/withdraw-record/index.vue",
+        filters: ["提现单号", "提现状态", "申请时间"],
+        actions: ["余额提现"],
+        columns: ["提现单号", "提现账户", "提现金额", "手续费", "到账金额", "提现方式", "提现状态", "申请时间", "操作"],
+        rows: [
+          ["TX20260911001", "招商银行 尾号 8899", "¥5,000.00", "¥5.00", "¥4,995.00", "银行卡", "处理中", "2026-09-11 10:12:00", "查看"],
+          ["TX20260909007", "支付宝 138****9088", "¥2,300.00", "¥2.30", "¥2,297.70", "支付宝", "成功", "2026-09-09 16:40:00", "查看"]
+        ]
+      },
+      "withdraw-account": {
+        title: "提现账户",
+        source: "src/views/finance/withdraw-account/index.vue",
+        filters: ["账户名称", "账户类型"],
+        actions: ["新增提现账户"],
+        columns: ["账户名称", "账户类型", "开户行", "账号", "状态", "创建时间", "操作"],
+        rows: [
+          ["上海示例科技有限公司", "银行卡", "招商银行上海分行", "****8899", "启用", "2026-08-20", "编辑 停用"],
+          ["示例支付宝", "支付宝", "-", "138****9088", "启用", "2026-08-22", "编辑 停用"]
+        ]
+      },
+      "settlement-record": {
+        title: "结算记录",
+        source: "src/views/finance/settlement-record/index.vue",
+        filters: ["结算单号", "所属供应商", "结算状态", "结算时间"],
+        actions: ["导出"],
+        columns: ["结算单号", "所属供应商", "订单数量", "结算金额", "结算状态", "结算时间", "操作"],
+        rows: [
+          ["JS20260911001", "上海示例供应商", "238", "¥12,860.00", "待结算", "-", "查看明细"],
+          ["JS20260910008", "厦门供应商", "126", "¥8,920.00", "已结算", "2026-09-11 02:00:00", "查看明细"]
+        ]
+      },
+      "settlement-entity": {
+        title: "结算主体",
+        source: "src/views/finance/settlement-entity/index.vue",
+        filters: ["供应商主体类型", "企业名称/姓名", "合作品牌"],
+        actions: ["新增结算主体"],
+        columns: ["主体类型", "企业名称/姓名", "统一社会信用代码/身份证", "联系电话", "合作品牌", "资料状态", "操作"],
+        rows: [
+          ["企业", "上海示例科技有限公司", "91310000DEMO", "138****9088", "瑞幸咖啡/麦当劳", "已完善", "编辑"],
+          ["个人", "张三", "310***********001X", "156****2290", "肯德基", "待完善", "编辑"]
+        ]
+      },
+      "auto-list": {
+        title: "H5链接仓库",
+        source: "src/views/auto/list/index.vue",
+        filters: ["请输入链接模板名称", "选择状态", "选择链接平台"],
+        actions: ["新增链接模板", "添加H5链接"],
+        columns: ["链接模板名称", "模板编码", "使用规则", "状态", "创建时间", "剩余数量", "总数量", "链接平台", "操作"],
+        rows: [
+          ["瑞幸兑换链接模板", "LK-H5-001", "每个链接仅可核销一次", "启用", "2026-09-01", "860", "1000", "瑞幸", "添加链接 查看明细"],
+          ["麦当劳券码模板", "MCD-H5-002", "有效期内自动匹配", "启用", "2026-09-05", "320", "500", "麦当劳", "添加链接 查看明细"]
+        ]
+      },
+      "auto-detail": {
+        title: "H5链接明细",
+        source: "src/views/auto/detail/index.vue",
+        filters: ["请输入链接模板名称", "请输入H5链接", "选择状态", "选择链接平台", "失效开始时间 - 失效结束时间"],
+        actions: ["导出"],
+        columns: ["链接模板名称", "使用规则", "使用状态", "添加时间", "H5链接", "链接平台", "券码来源", "使用时间", "失效日期", "关联出餐订单", "关联接单记录编号"],
+        rows: [
+          ["瑞幸兑换链接模板", "单次核销", "未使用", "2026-09-11 09:00:00", "https://demo.h5/lk/001", "瑞幸", "批量导入", "-", "2026-09-30", "-", "-"],
+          ["瑞幸兑换链接模板", "单次核销", "已使用", "2026-09-10 12:00:00", "https://demo.h5/lk/088", "瑞幸", "批量导入", "2026-09-11 10:22:00", "2026-09-30", "DC202609110002", "SUB20260911001"]
+        ]
+      }
+    };
+
+    function renderMenu(activeKey) {
+      const el = document.getElementById("menu");
+      el.innerHTML = menus.map(group => `
+        <div class="menu-group-title">${group.group}</div>
+        ${group.items.map(item => `
+          <div class="menu-item ${item.key === activeKey ? "active" : ""}" data-key="${item.key}">
+            <span class="menu-icon">${item.icon}</span><span>${item.name}</span>
+          </div>
+        `).join("")}
+      `).join("");
+      el.querySelectorAll(".menu-item").forEach(item => {
+        item.addEventListener("click", () => renderPage(item.dataset.key));
+      });
+    }
+
+    function statusTag(value) {
+      const text = String(value);
+      let type = "";
+      if (text.includes("启用") || text.includes("正常") || text.includes("成功") || text.includes("已结算") || text.includes("已上传") || text.includes("营业")) type = "green";
+      if (text.includes("待") || text.includes("处理中") || text.includes("未使用")) type = "orange";
+      if (text.includes("失败") || text.includes("停用")) type = "red";
+      if (text === "-") type = "gray";
+      return `<span class="tag ${type}">${text}</span>`;
+    }
+
+    function renderTable(page) {
+      return `
+        <div class="table-wrap">
+          <table>
+            <thead><tr>${page.columns.map(col => `<th>${col}</th>`).join("")}</tr></thead>
+            <tbody>
+              ${page.rows.map(row => `<tr>${row.map((cell, index) => {
+                const col = page.columns[index] || "";
+                if (col.includes("状态") || ["启用", "停用", "正常", "成功", "待结算", "已结算", "待上传", "已上传", "未使用", "已使用", "处理中", "待出餐", "已出餐", "出餐失败"].includes(String(cell))) {
+                  return `<td>${statusTag(cell)}</td>`;
+                }
+                if (col === "操作") {
+                  return `<td>${String(cell).split(" ").map(action => `<button class="btn text" onclick="openModal('${action}')">${action}</button>`).join("")}</td>`;
+                }
+                return `<td>${cell}</td>`;
+              }).join("")}</tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+        <div class="pager"><span>共 ${page.rows.length * 37} 条</span><button class="btn">上一页</button><button class="btn primary">1</button><button class="btn">2</button><button class="btn">下一页</button></div>
+      `;
+    }
+
+    function renderDashboard(page) {
+      return `
+        <div class="cards">
+          <div class="metric"><div class="metric-label">待出餐订单</div><div class="metric-value">126 <small>+32 今日</small></div></div>
+          <div class="metric"><div class="metric-label">处理中补偿单</div><div class="metric-value">8 <small>2 超时</small></div></div>
+          <div class="metric"><div class="metric-label">可提现金额</div><div class="metric-value">¥28,640</div></div>
+          <div class="metric"><div class="metric-label">有效 H5 链接</div><div class="metric-value">3,420 <small>18 即将失效</small></div></div>
+        </div>
+        <div class="split">
+          <div class="panel">
+            <h1 style="font-size:16px;margin-bottom:14px;">今日订单趋势</h1>
+            <div style="height:260px;display:flex;align-items:end;gap:18px;padding:20px;border:1px solid var(--line);background:linear-gradient(180deg,#fff,#f8fbff);">
+              ${[46, 78, 66, 104, 92, 136, 118, 150, 126, 168, 142, 190].map((h, i) => `<div title="${i + 8}:00" style="width:42px;height:${h}px;background:linear-gradient(180deg,#79bbff,#409eff);border-radius:6px 6px 0 0;"></div>`).join("")}
+            </div>
+          </div>
+          <div class="panel">
+            <h1 style="font-size:16px;margin-bottom:14px;">待办动态</h1>
+            <div class="timeline">
+              <div class="timeline-item"><strong>10:32</strong><span>新订单进入待出餐队列，品牌：瑞幸咖啡</span></div>
+              <div class="timeline-item"><strong>10:18</strong><span>补偿单超时预警，请处理用户支付差额</span></div>
+              <div class="timeline-item"><strong>09:50</strong><span>H5链接仓库新增 300 条链接</span></div>
+              <div class="timeline-item"><strong>09:20</strong><span>提现申请 TX20260911001 已提交</span></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPage(key) {
+      const page = pages[key] || pages.dashboard;
+      renderMenu(key);
+      document.getElementById("crumb").textContent = page.title;
+      document.getElementById("tabTitle").textContent = page.title;
+      const content = document.getElementById("content");
+      const query = page.filters && page.filters.length ? `
+        <div class="panel">
+          <div class="query">
+            ${page.filters.map(text => `<div class="field ${text.includes("时间") ? "range" : ""}">${text}</div>`).join("")}
+            <button class="btn primary">搜索</button>
+            <button class="btn">重置</button>
+          </div>
+        </div>
+      ` : "";
+      const toolbar = page.actions && page.actions.length ? `<div class="toolbar">${page.actions.map((action, index) => `<button class="btn ${index === 0 ? "primary" : ""}" onclick="openModal('${action}')">${action}</button>`).join("")}</div>` : "";
+      content.innerHTML = `
+        <div class="page-head">
+          <h1>${page.title}</h1>
+          <span class="source-note">${page.source}</span>
+        </div>
+        ${page.dashboard ? renderDashboard(page) : `${query}<div class="panel">${toolbar}${renderTable(page)}</div>`}
+      `;
+    }
+
+    function openModal(action) {
+      const modal = document.getElementById("modal");
+      document.getElementById("modalTitle").textContent = action;
+      const isMeal = action.includes("手工出餐") || action.includes("重新出餐");
+      const isWithdraw = action.includes("余额提现");
+      const isLink = action.includes("链接") || action.includes("模板");
+      document.getElementById("modalBody").innerHTML = `
+        <div class="form-row"><label>${isLink ? "链接模板名称" : isWithdraw ? "提现账户" : isMeal ? "出餐手机尾号" : "名称"}</label><input class="input" value="${isLink ? "瑞幸兑换链接模板" : isWithdraw ? "招商银行 尾号 8899" : isMeal ? "9088" : "示例内容"}"></div>
+        <div class="form-row"><label>${isLink ? "链接平台" : isWithdraw ? "提现金额" : isMeal ? "取餐码" : "状态"}</label><input class="input" value="${isLink ? "瑞幸" : isWithdraw ? "5000.00" : isMeal ? "A9K2 / B7Q1" : "启用"}"></div>
+        <div class="form-row"><label>${isLink ? "H5链接明细" : "备注"}</label><textarea class="input">${isLink ? "https://demo.h5/lk/001\nhttps://demo.h5/lk/002" : "本地原型示例，可在后续迭代中改为真实字段。"}</textarea></div>
+      `;
+      modal.classList.add("show");
+    }
+
+    function closeModal() {
+      document.getElementById("modal").classList.remove("show");
+    }
+
+    renderPage("dashboard");
+  </script>
+</body>
+</html>

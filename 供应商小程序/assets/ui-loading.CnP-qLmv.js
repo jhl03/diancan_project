@@ -1,0 +1,1 @@
+import{_ as a,o as s,c as n,w as o,a as c,V as t,g as i}from"./index-DxnVKKXM.js";const e=a({},[["render",function(a,e){const d=t,r=i;return s(),n(r,{class:"hn-loading"},{default:o((()=>[c(d,{class:"icon",src:"https://dine-static.lingdianhaowu.com/icon/loading.gif",mode:"aspectFit"})])),_:1})}],["__scopeId","data-v-74b51c3e"]]);export{e as U};

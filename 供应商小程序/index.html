@@ -1,0 +1,97 @@
+<!doctype html>
+<html build-time="2026-09-14 14:11:20">
+  <head>
+    <script>
+      (function () {
+        if (/\/index\.html$/i.test(window.location.pathname)) {
+          window.location.replace(window.location.pathname.replace(/index\.html$/i, "") + window.location.search + window.location.hash);
+          return;
+        }
+        var basePath = window.location.pathname.endsWith("/")
+          ? window.location.pathname
+          : window.location.pathname.replace(/\/[^/]*$/, "/");
+        document.write('<base href="' + basePath + '">');
+      })();
+    </script>
+    <link rel="stylesheet" href="./assets/uni.bb011db1.css">
+
+    <meta charset="UTF-8" />
+    <meta content="telephone=yes" name="format-detection" />
+    <link
+      href="./assets/favicon-DzzfXlzJ.ico"
+      rel="shortcut icon"
+      type="image/x-icon"
+    />
+    <script>
+      var coverSupport =
+        'CSS' in window &&
+        typeof CSS.supports === 'function' &&
+        (CSS.supports('top: env(a)') || CSS.supports('top: constant(a)'))
+      document.write(
+        '<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' +
+          (coverSupport ? ', viewport-fit=cover' : '') +
+          '" />',
+      )
+    </script>
+    <title>守兔点餐</title>
+    <script>
+      // Local prototype only: seed a demo supplier account so the source pages
+      // open directly without requiring the production login service.
+      try {
+        if (!localStorage.getItem('user')) {
+          localStorage.setItem(
+            'user',
+            JSON.stringify({
+              userInfo: {
+                avatarUrl: null,
+                id: 'supplier-demo-001',
+                nickName: '演示供应商',
+                phone: '13800138000',
+                stUid: 'st-demo-001',
+                token: 'prototype-token',
+                systems: {},
+                cooperationMode: 0,
+                domain: 'https://prototype.local',
+              },
+              location: {
+                cityCode: '350200',
+                cityName: '厦门',
+                detailAddress: '福建省厦门市集美区银江路',
+                latitude: 24.57591,
+                longitude: 118.09728,
+                timestamp: Date.now(),
+              },
+              currentLocation: {
+                cityCode: '350200',
+                cityName: '厦门',
+                detailAddress: '福建省厦门市集美区银江路',
+                latitude: 24.57591,
+                longitude: 118.09728,
+                timestamp: Date.now(),
+              },
+            }),
+          )
+        }
+      } catch (error) {
+        console.warn('Unable to seed local prototype account', error)
+      }
+    </script>
+    <!--preload-links-->
+    <!--app-context-->
+    <script src="./local-prototype-review.js?v=20260916-mini-after-sale-select-all-fix"></script>
+    <script type="module" crossorigin src="./assets/index-DxnVKKXM.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-D3VCFVVr.css">
+  </head>
+
+  <body>
+    <div id="app"><!--app-html--></div>
+
+    <!--uniapp sdk-->
+    <script
+      src="https://im.taototo.cn/file/js/uni.webview.1.5.6.js"
+      type="module"
+    ></script>
+  </body>
+</html>
+
+

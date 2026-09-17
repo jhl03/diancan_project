@@ -1,0 +1,1 @@
+const a={1:{label:"成功",type:"success"},2:{label:"失败",type:"danger"},3:{label:"处理中",type:"info"}},e={1:"用户支付",2:"供应商提现"},s={1:"流入",2:"流出"},l={wx_mini:"微信小程序支付",hj_balance:"汇聚余额提现"},n={0:{label:"提现中",type:"warning"},1:{label:"提现成功",type:"success"},2:{label:"提现失败",type:"danger"}},t={1:"对公账户",0:"对私账户"};export{t as A,s as F,l as P,e as T,n as W,a};

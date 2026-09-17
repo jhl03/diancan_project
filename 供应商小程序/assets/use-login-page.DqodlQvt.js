@@ -1,0 +1,1 @@
+import{j as e,K as n,aU as o,A as r}from"./index-DxnVKKXM.js";function t(t=!0){const i=e(),s=()=>{if(!i.isLogined){const e=o(),n=e[e.length-1],t=n?`/${n.route}`:"";return r({url:`/pages/login/index?redirect=${encodeURIComponent(t)}`}),!1}return!0};return t&&n((()=>{s()})),{checkLogin:s}}export{t as u};
