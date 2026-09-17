@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>正在打开原型页面</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        color: #213047;
+        background: #f3f7fb;
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      }
+
+      .card {
+        width: min(520px, calc(100% - 32px));
+        padding: 28px;
+        border-radius: 22px;
+        background: #fff;
+        box-shadow: 0 20px 60px rgba(54, 92, 138, 0.16);
+        text-align: center;
+      }
+
+      a {
+        color: #2b7eff;
+      }
+    </style>
+    <script>
+      (function () {
+        var path = decodeURIComponent(window.location.pathname);
+        var base = "/diancan_project/";
+        var target = "";
+
+        if (path.indexOf("/供应商后台系统/") >= 0) {
+          target = base + "供应商后台系统/?prototypeRoute=afterSaleSubsidy";
+        } else if (path.indexOf("/供应商小程序/") >= 0) {
+          target = base + "供应商小程序/?prototypeRoute=afterSaleSubsidy";
+        } else {
+          target = base + "index.html";
+        }
+
+        window.location.replace(target + (target.indexOf("?") >= 0 ? "&" : "?") + "v=20260917-404-fallback");
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="card">
+      <h1>正在跳转到原型页面</h1>
+      <p>如果没有自动跳转，请返回交付包入口重新打开。</p>
+      <p><a href="/diancan_project/index.html">打开交付包入口</a></p>
+    </div>
+  </body>
+</html>
