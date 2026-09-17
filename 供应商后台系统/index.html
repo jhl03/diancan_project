@@ -10,6 +10,13 @@
         var basePath = window.location.pathname.endsWith("/")
           ? window.location.pathname
           : window.location.pathname.replace(/\/[^/]*$/, "/");
+        var routeMap = {
+          afterSaleSubsidy: "order/after-sale-subsidy"
+        };
+        var prototypeRoute = new URLSearchParams(window.location.search).get("prototypeRoute");
+        if (prototypeRoute && routeMap[prototypeRoute]) {
+          window.history.replaceState(null, "", basePath + routeMap[prototypeRoute] + window.location.search + window.location.hash);
+        }
         document.write('<base href="' + basePath + '">');
       })();
     </script>
