@@ -864,6 +864,8 @@
       `;
       form.insertBefore(field, form.firstElementChild || null);
     }
+    const label = field.querySelector(".prototype-compensation-user-filter-label");
+    if (label) label.classList.add("prototype-review-red");
 
     const counts = new Map();
     document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
