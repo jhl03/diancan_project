@@ -1,4 +1,19 @@
 (function () {
+  (function openRequestedRoute() {
+    const params = new URLSearchParams(window.location.search);
+    const routeMap = {
+      afterSalesList: "/order/after-sales-list",
+      invoiceList: "/order/invoice-list",
+    };
+    const requested = routeMap[params.get("prototypeRoute")];
+    const base = document.querySelector("base")?.getAttribute("href") || "/";
+    if (!requested || window.location.pathname.includes(requested)) return;
+    const routeQuery = new URLSearchParams(params);
+    routeQuery.delete("prototypeRoute");
+    const next = `${base.replace(/\/?$/, "/")}${requested.replace(/^\//, "")}${routeQuery.toString() ? `?${routeQuery}` : ""}${window.location.hash}`;
+    window.history.replaceState({}, "", next);
+  })();
+
   const RED = "#f56c6c";
   const MARK = "data-prototype-review-key";
 
