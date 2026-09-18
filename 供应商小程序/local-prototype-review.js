@@ -593,7 +593,7 @@
     "/subpkg-invoice/compensation": {
       title: "本页改动说明：补偿单列表",
       items: [
-        ["用户名称", "显示在商品信息下方，格式为“用户名称：用户实际名称”；数据源取该工单发票抬头。"],
+        ["用户名称", "显示在商品信息下方，格式为“用户名称：用户实际名称”；数据源取该工单发票抬头，并与供应商后台补偿单列表保持同一组演示数据。"],
         ["卡片选择", "每个卡片支持单选；每个 Tab 有全选框，可选中当前 Tab 下全部可见卡片。"],
         ["筛选图标", "点击右上角筛选图标，从底部弹出筛选表单；金额区间最小值不能大于最大值。"],
         ["一键抢单", "点击后直接展示提示，不再弹出筛选弹窗；提示沿用批量接单信息。"],
@@ -684,10 +684,11 @@
     const value = text || "";
     if (value.includes("肯德基")) return "厦门肯德基有限公司";
     if (value.includes("麦当劳")) return "金拱门（中国）有限公司";
-    if (value.includes("38元") || value.includes("厦门")) return "上海云朵互动科技有限公司";
-    if (value.includes("瑞幸")) return "厦门晨星信息科技有限公司";
+    if (value.includes("瑞幸")) return "瑞幸咖啡（中国）有限公司";
     return "该工单发票抬头";
   }
+
+  const demoAfterSaleDeadlines = new Map();
 
   function createInfoRow(baseRow, label, value, key) {
     const row = document.createElement("uni-view");
@@ -756,6 +757,7 @@
       row.before(createInfoRow(row, "抬头类型", value, "invoice-title-type"));
     });
     document.querySelectorAll(".subsidy-card").forEach(createAfterSaleInvoiceRows);
+    refreshAfterSaleCountdowns();
     patchAfterSaleMergeUpload();
   }
 
@@ -785,8 +787,31 @@
     return `${fallback || "after-sale"}-${index}`;
   }
 
+  function formatAfterSaleCountdown(milliseconds) {
+    const seconds = Math.max(1, Math.floor(milliseconds / 1000));
+    const days = Math.floor(seconds / 86400);
+    const hours = Math.floor((seconds % 86400) / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const rest = seconds % 60;
+    return `${days}天${hours}时${minutes}分${rest}秒`;
+  }
+
+  function refreshAfterSaleCountdowns() {
+    if (!isAfterSaleProcessingTab()) return;
+    document.querySelectorAll(".subsidy-card").forEach((card, index) => {
+      const id = getAfterSaleCardId(card, index);
+      if (!demoAfterSaleDeadlines.has(id)) {
+        demoAfterSaleDeadlines.set(id, Date.now() + (index + 1) * 24 * 60 * 60 * 1000);
+      }
+      const countdown = card.querySelector(".countdown");
+      if (countdown) {
+        countdown.textContent = `上传倒计时：${formatAfterSaleCountdown(demoAfterSaleDeadlines.get(id) - Date.now())}`;
+      }
+    });
+  }
+
   function isExpiredAfterSaleCard(card) {
-    return textOf(card).includes("已结束");
+    return !isAfterSaleProcessingTab() && textOf(card).includes("已结束");
   }
 
   function normalizeAmount(value) {

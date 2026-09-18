@@ -269,6 +269,27 @@
         background: #409eff;
         color: #fff;
       }
+      .prototype-compensation-user-filter {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-right: 12px;
+        color: #606266;
+        vertical-align: middle;
+      }
+      .prototype-compensation-user-filter-label {
+        white-space: nowrap;
+      }
+      .prototype-compensation-user-filter-select {
+        min-width: 250px;
+        height: 32px;
+        padding: 0 10px;
+        border: 1px solid #dcdfe6;
+        border-radius: 4px;
+        background: #fff;
+        color: #606266;
+        outline: none;
+      }
     `;
     document.head.appendChild(style);
   }
@@ -290,7 +311,7 @@
     "/order/compensation": {
       title: "本页改动说明：补偿单列表",
       items: [
-        ["用户名称", "新增红字字段，显示在商品名称右侧；数据源取该工单的发票抬头。"],
+        ["用户名称", "新增红字字段，显示在商品名称右侧；数据源取该工单的发票抬头。筛选区同步新增“用户名称”筛选项，选项从当前列表已有用户名称去重生成，并按“用户名称（数量）”展示数量；选择后只展示对应用户名称的工单，切换分页或点击重置后恢复当前列表的全部数据。"],
       ],
       notes: [],
     },
@@ -396,8 +417,7 @@
     const value = text || "";
     if (value.includes("肯德基")) return "厦门肯德基有限公司";
     if (value.includes("麦当劳")) return "金拱门（中国）有限公司";
-    if (value.includes("38元") || value.includes("厦门")) return "上海云朵互动科技有限公司";
-    if (value.includes("瑞幸")) return "厦门晨星信息科技有限公司";
+    if (value.includes("瑞幸")) return "瑞幸咖啡（中国）有限公司";
     return "该工单发票抬头";
   }
 
@@ -550,7 +570,7 @@
   }
 
   function isExpiredAfterSaleRow(row) {
-    return textOf(row).includes("已结束");
+    return !isProcessingTabActive() && textOf(row).includes("已结束");
   }
 
   function normalizeAmount(value) {
@@ -803,6 +823,69 @@
     patchColumnByHeader("商品名称", "用户名称", "compensation-user-name", "after", (_row, productCell) =>
       guessUserName(textOf(productCell)),
     );
+    patchCompensationUserNameFilter();
+  }
+
+  function compensationUserNameFromRow(row) {
+    const cell = row.querySelector(`td[${MARK}="compensation-user-name"]`);
+    return textOf(cell) || guessUserName(textOf(row));
+  }
+
+  function applyCompensationUserNameFilter(value) {
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const matched = !value || compensationUserNameFromRow(row) === value;
+      row.style.display = matched ? "" : "none";
+    });
+  }
+
+  function patchCompensationUserNameFilter() {
+    const form = document.querySelector(".search-form") || document.querySelector(".el-form");
+    if (!form) return;
+
+    let field = form.querySelector(".prototype-compensation-user-filter");
+    if (!field) {
+      field = document.createElement("div");
+      field.className = "prototype-compensation-user-filter";
+      field.innerHTML = `
+        <span class="prototype-compensation-user-filter-label">用户名称</span>
+        <select class="prototype-compensation-user-filter-select" aria-label="用户名称"></select>
+      `;
+      form.insertBefore(field, form.firstElementChild || null);
+    }
+
+    const counts = new Map();
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const name = compensationUserNameFromRow(row);
+      if (name) counts.set(name, (counts.get(name) || 0) + 1);
+    });
+    const options = Array.from(counts.entries()).sort(([left], [right]) => left.localeCompare(right, "zh-CN"));
+    const signature = JSON.stringify(options);
+    const select = field.querySelector("select");
+    const currentValue = select.value;
+    if (field.dataset.prototypeOptions !== signature) {
+      field.dataset.prototypeOptions = signature;
+      select.innerHTML = [
+        '<option value="">全部用户名称</option>',
+        ...options.map(([name, count]) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}（${count}）</option>`),
+      ].join("");
+    }
+    if (options.some(([name]) => name === currentValue)) select.value = currentValue;
+    else select.value = "";
+    if (select.dataset.prototypeBound !== "true") {
+      select.dataset.prototypeBound = "true";
+      select.addEventListener("change", () => applyCompensationUserNameFilter(select.value));
+    }
+    const resetButton = Array.from(form.querySelectorAll("button")).find((button) => textOf(button).includes("重置"));
+    if (resetButton && resetButton.dataset.prototypeUserFilterResetBound !== "true") {
+      resetButton.dataset.prototypeUserFilterResetBound = "true";
+      resetButton.addEventListener("click", () => {
+        window.setTimeout(() => {
+          select.value = "";
+          applyCompensationUserNameFilter("");
+        }, 0);
+      });
+    }
+    applyCompensationUserNameFilter(select.value);
   }
 
   let timer = 0;

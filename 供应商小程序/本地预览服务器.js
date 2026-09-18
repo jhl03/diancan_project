@@ -6,6 +6,13 @@ const { URL } = require('node:url')
 const root = __dirname
 const port = Number(process.env.PORT || 8776)
 
+function demoDeadline(days, hour, minute) {
+  const deadline = new Date()
+  deadline.setDate(deadline.getDate() + days)
+  deadline.setHours(hour, minute, 0, 0)
+  return deadline.toISOString().slice(0, 19).replace('T', ' ')
+}
+
 const state = {
   quotation: [
     {
@@ -148,6 +155,8 @@ const state = {
         productName: '瑞幸咖啡 29元饮品券',
         userPayAmount: 22.8,
         subsidyAmount: 3.2,
+        invoiceTitle: '瑞幸咖啡（中国）有限公司',
+        taxpayerNo: '91110108MA01DEMO01',
       },
       {
         id: 9102,
@@ -160,6 +169,8 @@ const state = {
         productName: '肯德基 50元代金券',
         userPayAmount: 46.9,
         subsidyAmount: 5.6,
+        invoiceTitle: '厦门肯德基有限公司',
+        taxpayerNo: '91350200MA01DEMO02',
       },
       {
         id: 9103,
@@ -172,6 +183,8 @@ const state = {
         productName: '麦当劳 38元套餐券',
         userPayAmount: 34.8,
         subsidyAmount: 4.2,
+        invoiceTitle: '金拱门（中国）有限公司',
+        taxpayerNo: '91110000MA01DEMO03',
       },
       {
         id: 9104,
@@ -184,6 +197,8 @@ const state = {
         productName: '瑞幸咖啡 38元套餐券',
         userPayAmount: 26.6,
         subsidyAmount: 2.8,
+        invoiceTitle: '瑞幸咖啡（中国）有限公司',
+        taxpayerNo: '91110108MA01DEMO01',
       },
     ],
     subsidy: [
@@ -200,7 +215,7 @@ const state = {
         subsidyAmount: 2.6,
         invoiceTitle: '瑞幸咖啡（中国）有限公司',
         taxpayerNo: '91110108MA01DEMO01',
-        deadlineAt: '2026-09-15 18:00:00',
+        deadlineAt: demoDeadline(1, 18, 0),
         orderTime: '2026-09-14 09:05:00',
         latestUploadedAt: '',
         rejectReasonMessage: '',
@@ -222,7 +237,7 @@ const state = {
         subsidyAmount: 4.8,
         invoiceTitle: '厦门肯德基有限公司',
         taxpayerNo: '91350200MA01DEMO02',
-        deadlineAt: '2026-09-16 12:00:00',
+        deadlineAt: demoDeadline(2, 12, 0),
         orderTime: '2026-09-14 08:35:00',
         latestUploadedAt: '',
         rejectReasonMessage: '',
@@ -244,7 +259,7 @@ const state = {
         subsidyAmount: 4.2,
         invoiceTitle: '瑞幸咖啡（中国）有限公司',
         taxpayerNo: '91110108MA01DEMO01',
-        deadlineAt: '2026-09-16 18:30:00',
+        deadlineAt: demoDeadline(1, 18, 30),
         orderTime: '2026-09-15 09:15:00',
         latestUploadedAt: '',
         rejectReasonMessage: '',
@@ -266,7 +281,7 @@ const state = {
         subsidyAmount: 3.5,
         invoiceTitle: '金拱门（中国）有限公司',
         taxpayerNo: '91110000MA01DEMO03',
-        deadlineAt: '2026-09-17 10:00:00',
+        deadlineAt: demoDeadline(2, 10, 0),
         orderTime: '2026-09-15 10:20:00',
         latestUploadedAt: '',
         rejectReasonMessage: '',
@@ -288,7 +303,7 @@ const state = {
         subsidyAmount: 3.9,
         invoiceTitle: '厦门肯德基有限公司',
         taxpayerNo: '91350200MA01DEMO02',
-        deadlineAt: '2026-09-17 15:20:00',
+        deadlineAt: demoDeadline(2, 15, 20),
         orderTime: '2026-09-15 11:05:00',
         latestUploadedAt: '',
         rejectReasonMessage: '',
@@ -419,12 +434,6 @@ function filterRecords(records, query, keys) {
 }
 
 function filterInvoiceRecords(records, query = {}, tab = '') {
-  const compensationTitles = {
-    9101: '厦门晨星信息科技有限公司',
-    9102: '厦门肯德基有限公司',
-    9103: '金拱门（中国）有限公司',
-    9104: '上海云朵互动科技有限公司',
-  }
   return records.filter((item) => {
     if (tab && item.tab !== tab) return false
     if (query.brandCode && item.brandCode !== query.brandCode) return false
@@ -440,7 +449,7 @@ function filterInvoiceRecords(records, query = {}, tab = '') {
     if (query.subsidyAmountMax !== undefined && query.subsidyAmountMax !== '' && subsidyAmount > Number(query.subsidyAmountMax)) return false
     return true
   }).map((item) => {
-    const invoiceTitle = item.invoiceTitle || compensationTitles[item.id] || '--'
+    const invoiceTitle = item.invoiceTitle || '--'
     return {
       ...item,
       invoiceTitle,
