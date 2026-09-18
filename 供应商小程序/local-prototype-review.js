@@ -1,4 +1,14 @@
 (function () {
+  function routeCompensationDemo() {
+    const route = new URLSearchParams(window.location.search).get("prototypeRoute");
+    const marker = "/供应商小程序/";
+    if (route !== "compensation" || !window.location.pathname.includes(marker) || window.location.pathname.includes("/subpkg-invoice/compensation")) return;
+    const target = `${window.location.pathname.slice(0, window.location.pathname.indexOf(marker) + marker.length)}subpkg-invoice/compensation`;
+    window.history.replaceState(window.history.state, "", target);
+  }
+
+  routeCompensationDemo();
+
   const RED = "#f56c6c";
   const MARK = "data-prototype-review-key";
 

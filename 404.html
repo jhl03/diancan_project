@@ -34,8 +34,12 @@
         var base = "/diancan_project/";
         var target = "";
 
-        if (path.indexOf("/供应商后台系统/") >= 0) {
+        if (path.indexOf("/供应商后台系统/") >= 0 && path.indexOf("/order/compensation") >= 0) {
+          target = base + "供应商后台系统/?prototypeRoute=compensation";
+        } else if (path.indexOf("/供应商后台系统/") >= 0) {
           target = base + "供应商后台系统/?prototypeRoute=afterSaleSubsidy";
+        } else if (path.indexOf("/供应商小程序/") >= 0 && path.indexOf("/subpkg-invoice/compensation") >= 0) {
+          target = base + "供应商小程序/?prototypeRoute=compensation";
         } else if (path.indexOf("/供应商小程序/") >= 0) {
           target = base + "供应商小程序/?prototypeRoute=afterSaleSubsidy";
         } else if (path.indexOf("/点餐后台系统/") >= 0) {
