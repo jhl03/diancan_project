@@ -2,8 +2,10 @@
   function routeCompensationDemo() {
     const route = new URLSearchParams(window.location.search).get("prototypeRoute");
     const marker = "/供应商小程序/";
-    if (route !== "compensation" || !window.location.pathname.includes(marker) || window.location.pathname.includes("/subpkg-invoice/compensation")) return;
-    const target = `${window.location.pathname.slice(0, window.location.pathname.indexOf(marker) + marker.length)}subpkg-invoice/compensation`;
+    const pathname = decodeURIComponent(window.location.pathname);
+    if (route !== "compensation" || !pathname.includes(marker) || pathname.includes("/subpkg-invoice/compensation")) return;
+    const base = new URL(".", window.location.href).pathname;
+    const target = `${base}subpkg-invoice/compensation`;
     window.history.replaceState(window.history.state, "", target);
   }
 
