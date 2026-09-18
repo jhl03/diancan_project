@@ -607,7 +607,7 @@
       items: [
         ["用户名称", "显示在商品信息下方，格式为“用户名称：用户实际名称”；数据源取该工单发票抬头，并与供应商后台补偿单列表保持同一组演示数据。"],
         ["卡片选择", "每个卡片支持单选；每个 Tab 有全选框，可选中当前 Tab 下全部可见卡片。"],
-        ["筛选图标", "点击右上角筛选图标，从底部弹出筛选表单；金额区间最小值不能大于最大值。"],
+        ["筛选图标", "点击右上角筛选图标，从底部弹出筛选表单；新增红字筛选项“用户名称”，位置在“商品品牌”下方，选项从当前补偿单列表已有用户名称去重生成，并按“用户名称（数量）”展示数量；选择后只展示对应用户名称的卡片，点击重置恢复全部卡片；金额区间最小值不能大于最大值。"],
         ["一键抢单", "点击后直接展示提示，不再弹出筛选弹窗；提示沿用批量接单信息。"],
       ],
       notes: [
@@ -725,11 +725,11 @@
 
   function createAfterSaleInvoiceRow(baseRow, label, value) {
     const row = document.createElement("uni-view");
-    row.className = baseRow.className || "info-row";
+    row.className = `${baseRow.className || "info-row"} prototype-review-red`;
     row.setAttribute(MARK, "after-sale-invoice-field");
     row.innerHTML = `
-      <uni-text class="info-label"><span>${escapeHtml(label)}：</span></uni-text>
-      <uni-text class="info-value"><span>${escapeHtml(value)}</span></uni-text>
+      <uni-text class="info-label prototype-review-red"><span>${escapeHtml(label)}：</span></uni-text>
+      <uni-text class="info-value prototype-review-red"><span>${escapeHtml(value)}</span></uni-text>
     `;
     return row;
   }
@@ -1062,6 +1062,7 @@
   const filterState = {
     count: "5",
     brand: "全部品牌",
+    userName: "全部用户名称",
     subsidyMin: "",
     subsidyMax: "",
     userPayMin: "",
@@ -1091,6 +1092,23 @@
     if (title.includes("肯德基")) return "肯德基";
     if (title.includes("麦当劳")) return "麦当劳";
     return "全部品牌";
+  }
+
+  function getUserNameFromCard(card) {
+    const row = Array.from(card.querySelectorAll(".info-row")).find((item) =>
+      textOf(item).includes("用户名称"),
+    );
+    if (row) return textOf(row).replace(/^用户名称\s*[:：]\s*/, "").trim();
+    return guessUserName(textOf(card));
+  }
+
+  function getCompensationUserNameOptions() {
+    const counts = new Map();
+    document.querySelectorAll(".compensation-card").forEach((card) => {
+      const name = getUserNameFromCard(card);
+      if (name) counts.set(name, (counts.get(name) || 0) + 1);
+    });
+    return Array.from(counts.entries()).sort(([left], [right]) => left.localeCompare(right, "zh-CN"));
   }
 
   function hideImmediateClaimButtons(card) {
@@ -1217,6 +1235,7 @@
     if (old) old.remove();
     const shouldShowBrand = isAllCompensationTab();
     if (!shouldShowBrand) filterState.brand = "全部品牌";
+    const userNameOptions = getCompensationUserNameOptions();
     const mask = document.createElement("uni-view");
     mask.className = "prototype-filter-mask";
     mask.innerHTML = `
@@ -1238,6 +1257,13 @@
               ${["全部品牌", "瑞幸咖啡", "肯德基", "麦当劳"].map((item) => `<option value="${item}" ${filterState.brand === item ? "selected" : ""}>${escapeHtml(item)}</option>`).join("")}
             </select>
           </uni-view>` : ""}
+          <uni-view class="prototype-filter-item" aria-label="用户名称筛选项">
+            <uni-view class="prototype-filter-label prototype-review-red">用户名称</uni-view>
+            <select class="prototype-filter-select-native" data-field="userName" aria-label="用户名称">
+              <option value="全部用户名称" ${filterState.userName === "全部用户名称" ? "selected" : ""}>全部用户名称</option>
+              ${userNameOptions.map(([name, count]) => `<option value="${escapeHtml(name)}" ${filterState.userName === name ? "selected" : ""}>${escapeHtml(name)}（${count}）</option>`).join("")}
+            </select>
+          </uni-view>
           <uni-view class="prototype-filter-item">
             <uni-view class="prototype-filter-label">补贴金额区间</uni-view>
             <uni-view class="prototype-filter-range">
@@ -1266,6 +1292,7 @@
     mask.querySelector(".prototype-filter-reset").addEventListener("click", () => {
       filterState.count = "5";
       filterState.brand = "全部品牌";
+      filterState.userName = "全部用户名称";
       filterState.subsidyMin = "";
       filterState.subsidyMax = "";
       filterState.userPayMin = "";
@@ -1276,8 +1303,10 @@
     mask.querySelector(".prototype-filter-confirm").addEventListener("click", () => {
       const countSelect = mask.querySelector('[data-field="count"]');
       const brandSelect = mask.querySelector('[data-field="brand"]');
+      const userNameSelect = mask.querySelector('[data-field="userName"]');
       filterState.count = countSelect ? countSelect.value : "5";
       filterState.brand = brandSelect ? brandSelect.value : "全部品牌";
+      filterState.userName = userNameSelect ? userNameSelect.value : "全部用户名称";
       ["subsidyMin", "subsidyMax", "userPayMin", "userPayMax"].forEach((field) => {
         const input = mask.querySelector(`[data-field="${field}"]`);
         filterState[field] = input ? input.value.replace(/[^\d.]/g, "") : "";
@@ -1324,6 +1353,7 @@
       <uni-view class="prototype-claim-toast-title">一键抢单提示</uni-view>
       <uni-view class="prototype-claim-toast-line">批量接单数量：${escapeHtml(filterState.count)}单</uni-view>
       <uni-view class="prototype-claim-toast-line">商品品牌：${escapeHtml(filterState.brand)}</uni-view>
+      <uni-view class="prototype-claim-toast-line">用户名称：${escapeHtml(filterState.userName)}</uni-view>
       <uni-view class="prototype-claim-toast-line">补贴金额区间：${escapeHtml(rangeText(filterState.subsidyMin, filterState.subsidyMax))}</uni-view>
       <uni-view class="prototype-claim-toast-line">用户支付金额区间：${escapeHtml(rangeText(filterState.userPayMin, filterState.userPayMax))}</uni-view>
       <uni-view class="prototype-claim-toast-line">当前已选择：${selectedCount}张卡片</uni-view>
@@ -1360,11 +1390,12 @@
     const cards = Array.from(document.querySelectorAll(".compensation-card"));
     cards.forEach((card) => {
       const brandMatch = filterState.brand === "全部品牌" || getBrandFromCard(card) === filterState.brand;
+      const userNameMatch = filterState.userName === "全部用户名称" || getUserNameFromCard(card) === filterState.userName;
       const subsidy = getAmountFromCard(card, "补贴金额");
       const userPay = getAmountFromCard(card, "用户支付");
       const amountMatch = inRange(subsidy, filterState.subsidyMin, filterState.subsidyMax) &&
         inRange(userPay, filterState.userPayMin, filterState.userPayMax);
-      card.style.display = brandMatch && amountMatch ? "" : "none";
+      card.style.display = brandMatch && userNameMatch && amountMatch ? "" : "none";
     });
     syncSelectAllControl();
   }

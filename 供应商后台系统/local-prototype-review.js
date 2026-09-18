@@ -859,7 +859,7 @@
       field = document.createElement("div");
       field.className = "prototype-compensation-user-filter";
       field.innerHTML = `
-        <span class="prototype-compensation-user-filter-label">用户名称</span>
+        <span class="prototype-compensation-user-filter-label prototype-review-red">用户名称</span>
         <select class="prototype-compensation-user-filter-select" aria-label="用户名称"></select>
       `;
       form.insertBefore(field, form.firstElementChild || null);
