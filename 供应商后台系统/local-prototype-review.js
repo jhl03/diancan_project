@@ -323,7 +323,7 @@
     "/order/compensation": {
       title: "本页改动说明：补偿单列表",
       items: [
-        ["用户名称", "新增红字字段，显示在商品名称右侧；数据源取该工单的发票抬头。筛选区同步新增“用户名称”筛选项，选项从当前列表已有用户名称去重生成，并按“用户名称（数量）”展示数量；选择后只展示对应用户名称的工单，切换分页或点击重置后恢复当前列表的全部数据。"],
+        ["用户名称", "新增红字字段，显示在商品名称右侧；数据源取该工单的发票抬头。筛选区同步新增“用户名称”筛选项，选项从当前列表已有用户名称去重生成，并按“用户名称（数量）”展示数量；枚举值按照名称数量倒序排列，数量最大的显示在最上方，数量相同则按用户名称升序排列；选择后只展示对应用户名称的工单，切换分页或点击重置后恢复当前列表的全部数据。"],
       ],
       notes: [],
     },
@@ -872,7 +872,9 @@
       const name = compensationUserNameFromRow(row);
       if (name) counts.set(name, (counts.get(name) || 0) + 1);
     });
-    const options = Array.from(counts.entries()).sort(([left], [right]) => left.localeCompare(right, "zh-CN"));
+    const options = Array.from(counts.entries()).sort(([leftName, leftCount], [rightName, rightCount]) =>
+      rightCount - leftCount || leftName.localeCompare(rightName, "zh-CN"),
+    );
     const signature = JSON.stringify(options);
     const select = field.querySelector("select");
     const currentValue = select.value;
