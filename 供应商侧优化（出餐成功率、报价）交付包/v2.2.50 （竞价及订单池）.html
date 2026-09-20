@@ -5557,25 +5557,25 @@
               <p style="margin:0 0 8px 0; color:#d46b08;" data-page-node-id="NmKBDH5r5MVzrSZ80OzvXB"><strong data-page-node-id="d9Ge1TvJH8D27fP09PyM7S">竞价失败原因显示逻辑：</strong></p>
               <p style="margin:0; line-height:1.8;" data-page-node-id="8SofOJ7sfD25cK7guyV1F7">
                 <strong data-page-node-id="E7kTI2PxctEZbSG0rlHFOK">1. 竞价记录页面：</strong><br data-page-node-id="5G3hmPCZcwrCYXxGEbJB32">
-                &nbsp;&nbsp;<strong data-page-node-id="vhidcDH5QKH6uosYYj9Bkg">1.1 流转过程中，有供应商竞价成功，其他竞价失败的情况如下：</strong><br data-page-node-id="MNbYqcs3i6qewjJ1Mh67t3">
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="GnqVCUcqLIt7Zv6V3mgW82">1.1.1</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 = 供应商报价，<br data-page-node-id="F55YvR3Z1SBXSrR7ZFNXkg">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：订单价格相同，供应商随机分配，未被选中 / 超过最大接单数量<br data-page-node-id="JZPR1SL2T4z8YaBzRn3bFh">
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="GQPeHfm1DZNbst6QsGo5tH">1.1.2</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 ＜ 供应商报价，<br data-page-node-id="tC1ckWrbPWRegJvFnAALPS">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：报价金额不是最低<br data-page-node-id="O6hJRGe37KQEWSgGDUREdh">
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="LCq42t7ypWjnpk9D6xX7n4">1.1.3</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 ＞ 供应商报价，<br data-page-node-id="thFmnKEO7q7LCqAtXkqzJ8">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：因订单流转超时，已自动指派兜底供应商----出餐方式为自动 / 超过最大接单数量----出餐方式为人工<br data-page-node-id="BhILQJR5fKVumhrzSTknBJ"><br data-page-node-id="atEvoaWl5AtH07ljhu12x2">
-                &nbsp;&nbsp;<strong data-page-node-id="bY1CPbfdRtD571EVENillp">1.2 流转过程中，没有供应商竞价成功，其他竞价失败的情况如下：</strong><br data-page-node-id="L3WXnhdUSiGpHMhk2yGXkE">
-                &nbsp;&nbsp;&nbsp;&nbsp;前提：竞价失败页面 成交价取竞价表里面最低的<br data-page-node-id="Stpeq0tyLixxfbOOuK2hYo">
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="3QeG6ocPSv27yLvhOlcBRq">1.2.1</strong> 成交价【取竞价表里面最低价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 = 供应商报价，<br data-page-node-id="zpZviw7GQAmsEmYZRKc7oF">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：订单价格相同，供应商随机分配，未被选中<br data-page-node-id="Z3RPk23b8kDn1kHCAPE6NU">
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="FooFHO8ZeAythwrF8HavOi">1.2.2</strong> 成交价【取竞价表里面最低价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 ＜ 供应商报价，<br data-page-node-id="86fsolSRW1AvyHqwSieI7b">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：报价金额不是最低<br data-page-node-id="GH9LJVeV169fkPlcRnnf8a"><br data-page-node-id="ejQPgqqCrQcGWOHzeHGVa4">
-                &nbsp;&nbsp;<strong data-page-node-id="hBBCGjCIyBdH7meAIEXWB0">1.3 流转过程中，有供应商竞价成功，但是没有出餐超过的，其他竞价失败的情况如下：</strong><br data-page-node-id="7nJN68uFo6yB02DKLBmkRM">
-                &nbsp;&nbsp;&nbsp;&nbsp;前提：竞价失败页面 成交价取接单记录里面报价金额最低的<br data-page-node-id="Kel52hRckNWmx00lt9XbI7">
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="mg3HxDtc42gfbP21tULRiP">1.3.1</strong> 成交价【取接单记录里面报价最低，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 = 供应商报价，<br data-page-node-id="vRMdXR2IGdZDLEjcRAJ5x0">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：订单价格相同，供应商随机分配，未被选中<br data-page-node-id="kD6F0tKYjM0ltwbTVOnjGR">
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong data-page-node-id="pme6mMeglCrpejAl5rFHB2">1.3.2</strong> 成交价【取接单记录里面报价最低，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 ＜ 供应商报价，<br data-page-node-id="pQqEbtdYVFLRNP4dAXHLFa">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;竞价原因：报价金额不是最低
+                  <strong data-page-node-id="vhidcDH5QKH6uosYYj9Bkg">1.1 流转过程中，有供应商竞价成功，其他竞价失败的情况如下：</strong><br data-page-node-id="MNbYqcs3i6qewjJ1Mh67t3">
+                    <strong data-page-node-id="GnqVCUcqLIt7Zv6V3mgW82">1.1.1</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 = 供应商报价，<br data-page-node-id="F55YvR3Z1SBXSrR7ZFNXkg">
+                            竞价原因：订单价格相同，供应商随机分配，未被选中 / 超过最大接单数量<br data-page-node-id="JZPR1SL2T4z8YaBzRn3bFh">
+                    <strong data-page-node-id="GQPeHfm1DZNbst6QsGo5tH">1.1.2</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 ＜ 供应商报价，<br data-page-node-id="tC1ckWrbPWRegJvFnAALPS">
+                            竞价原因：报价金额不是最低<br data-page-node-id="O6hJRGe37KQEWSgGDUREdh">
+                    <strong data-page-node-id="LCq42t7ypWjnpk9D6xX7n4">1.1.3</strong> 成交价【取中标供应商的报价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 ＞ 供应商报价，<br data-page-node-id="thFmnKEO7q7LCqAtXkqzJ8">
+                            竞价原因：因订单流转超时，已自动指派兜底供应商<br data-page-node-id="BhILQJR5fKVumhrzSTknBJ"><br data-page-node-id="atEvoaWl5AtH07ljhu12x2">
+                  <strong data-page-node-id="bY1CPbfdRtD571EVENillp">1.2 流转过程中，没有供应商竞价成功，其他竞价失败的情况如下：</strong><br data-page-node-id="L3WXnhdUSiGpHMhk2yGXkE">
+                    前提：竞价失败页面 成交价取竞价表里面最低的<br data-page-node-id="Stpeq0tyLixxfbOOuK2hYo">
+                    <strong data-page-node-id="3QeG6ocPSv27yLvhOlcBRq">1.2.1</strong> 成交价【取竞价表里面最低价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 = 供应商报价，<br data-page-node-id="zpZviw7GQAmsEmYZRKc7oF">
+                            竞价原因：订单价格相同，供应商随机分配，未被选中<br data-page-node-id="Z3RPk23b8kDn1kHCAPE6NU">
+                    <strong data-page-node-id="FooFHO8ZeAythwrF8HavOi">1.2.2</strong> 成交价【取竞价表里面最低价，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 ＜ 供应商报价，<br data-page-node-id="86fsolSRW1AvyHqwSieI7b">
+                            竞价原因：报价金额不是最低<br data-page-node-id="GH9LJVeV169fkPlcRnnf8a"><br data-page-node-id="ejQPgqqCrQcGWOHzeHGVa4">
+                  <strong data-page-node-id="hBBCGjCIyBdH7meAIEXWB0">1.3 流转过程中，有供应商竞价成功，但是没有出餐超过的，其他竞价失败的情况如下：</strong><br data-page-node-id="7nJN68uFo6yB02DKLBmkRM">
+                    前提：竞价失败页面 成交价取接单记录里面报价金额最低的<br data-page-node-id="Kel52hRckNWmx00lt9XbI7">
+                    <strong data-page-node-id="mg3HxDtc42gfbP21tULRiP">1.3.1</strong> 成交价【取接单记录里面报价最低，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 = 供应商报价，<br data-page-node-id="vRMdXR2IGdZDLEjcRAJ5x0">
+                            竞价原因：订单价格相同，供应商随机分配，未被选中<br data-page-node-id="kD6F0tKYjM0ltwbTVOnjGR">
+                    <strong data-page-node-id="pme6mMeglCrpejAl5rFHB2">1.3.2</strong> 成交价【取接单记录里面报价最低，若配置了保留一位小数，报价舍掉第二位小数，并且舍掉第二位及之后的小数，值为0.0时，成交价取0.1】 ＜ 供应商报价，<br data-page-node-id="pQqEbtdYVFLRNP4dAXHLFa">
+                            竞价原因：报价金额不是最低
               </p>
             </div>
             <p data-page-node-id="eGiePWhxpPCTtEyKnq1ddl"><strong data-page-node-id="WBZYA1aLxZ0SPhUBBy6GS2">字段口径：</strong>竞价记录页面展示商品名称、商品品牌、门店名称、店铺地址、市场价、报价金额、报价规则名称、竞价成功时间、竞价失败原因、竞价失败时间和操作；其中成交价仅在竞价失败 tab 列表展示。</p>
