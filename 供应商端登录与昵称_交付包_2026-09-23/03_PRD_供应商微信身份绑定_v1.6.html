@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD｜供应商微信身份绑定</title>
+<style>
+  :root{
+    --ink:#1A1A1A;
+    --ink-2:#4A4A4A;
+    --ink-3:#8A8A8A;
+    --line:#E4E6EA;
+    --line-2:#F1F2F4;
+    --brand:#1B4E8C;
+    --brand-bg:#EEF3FA;
+    --warn:#C0392B;
+    --warn-bg:#FDF2F1;
+    --ok:#1F7A4D;
+    --ok-bg:#EFF7F2;
+    --amber:#8A5A00;
+    --amber-bg:#FDF6E8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;padding:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    color:var(--ink);background:#F6F7F9;
+    font-size:14px;line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:920px;margin:0 auto;padding:48px 24px 96px;}
+
+  .doc-head{border-bottom:2px solid var(--brand);padding-bottom:20px;margin-bottom:8px;}
+  .doc-head h1{font-size:26px;font-weight:600;margin:0 0 6px;letter-spacing:.5px;color:var(--brand);}
+  .doc-head .sub{font-size:14px;color:var(--ink-2);}
+  .meta{display:flex;flex-wrap:wrap;gap:0;margin:0 0 40px;border:1px solid var(--line);border-top:none;background:#fff;}
+  .meta div{flex:1 1 180px;padding:10px 16px;border-right:1px solid var(--line);font-size:13px;color:var(--ink-2);}
+  .meta div:last-child{border-right:none;}
+  .meta b{color:var(--ink);font-weight:500;}
+
+  h2{font-size:18px;font-weight:600;margin:44px 0 14px;padding-left:12px;border-left:4px solid var(--brand);}
+  h3{font-size:15px;font-weight:600;margin:30px 0 10px;color:var(--brand);}
+  h4{font-size:14px;font-weight:600;margin:20px 0 8px;color:var(--ink);}
+  p{margin:8px 0;color:var(--ink-2);}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin:14px 0;}
+  .card.fn{border-top:3px solid var(--brand);}
+
+  .fn-head{display:flex;flex-wrap:wrap;gap:8px 18px;padding-bottom:12px;margin-bottom:14px;border-bottom:1px dashed var(--line);font-size:13px;color:var(--ink-2);}
+  .fn-head span b{color:var(--ink);font-weight:500;}
+
+  .mod{margin:16px 0;}
+  .mod-title{font-weight:600;color:var(--ink);font-size:14px;margin-bottom:6px;}
+  ul.tree{list-style:none;margin:0;padding:0;}
+  ul.tree li{position:relative;padding-left:22px;margin:5px 0;color:var(--ink-2);}
+  ul.tree li::before{position:absolute;left:4px;top:0;font-size:11px;line-height:1.9;}
+  ul.tree>li.lv1::before{content:"●";color:var(--brand);}
+  ul.tree>li.lv1>.lv2{padding-left:20px;}
+  ul.tree li.lv2::before{content:"○";color:var(--ink-3);left:8px;}
+  ul.tree li.lv3::before{content:"■";color:var(--ink-3);font-size:9px;left:9px;}
+  ul.tree li.lv3{color:var(--ink-3);font-size:13px;}
+
+  .k{display:inline-block;background:var(--brand-bg);color:var(--brand);border-radius:4px;padding:0 6px;font-size:13px;font-weight:500;margin:0 2px;}
+  .red{color:var(--warn);background:var(--warn-bg);border-radius:4px;padding:0 6px;font-size:13px;}
+  .red-note{color:var(--warn);font-size:12px;border:1px solid #F2C9C4;background:var(--warn-bg);border-radius:4px;padding:1px 6px;margin-left:4px;}
+  .ok-note{color:var(--ok);background:var(--ok-bg);border-radius:4px;padding:0 6px;font-size:13px;}
+  .amber-note{color:var(--amber);background:var(--amber-bg);border-radius:4px;padding:0 6px;font-size:13px;}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;background:#fff;}
+  th{background:var(--brand-bg);color:var(--brand);font-weight:600;text-align:left;padding:9px 12px;border:1px solid var(--line);white-space:nowrap;}
+  td{padding:9px 12px;border:1px solid var(--line);color:var(--ink-2);vertical-align:top;}
+  td b{color:var(--ink);font-weight:500;}
+
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0;}
+  .flow .st{background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;font-size:13px;color:var(--ink);}
+  .flow .ar{color:var(--ink-3);font-size:13px;}
+  .flow .st.hi{border-color:var(--brand);background:var(--brand-bg);color:var(--brand);font-weight:500;}
+  .flow .st.end{border-color:#BFD9C8;background:var(--ok-bg);color:var(--ok);}
+
+  .note{background:var(--warn-bg);border-left:3px solid var(--warn);padding:12px 16px;border-radius:0 6px 6px 0;margin:14px 0;font-size:13px;color:var(--ink-2);}
+  .note b{color:var(--warn);}
+  .tip{background:var(--brand-bg);border-left:3px solid var(--brand);padding:12px 16px;border-radius:0 6px 6px 0;margin:14px 0;font-size:13px;color:var(--ink-2);}
+
+  .toc{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 22px;font-size:13px;column-count:2;column-gap:32px;}
+  .toc a{color:var(--ink-2);text-decoration:none;display:block;padding:3px 0;}
+  .toc a:hover{color:var(--brand);}
+  .toc a.c1{font-weight:500;color:var(--ink);}
+  .toc a.c2{padding-left:14px;}
+
+  footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3);text-align:center;}
+
+  @media print{
+    body{background:#fff;font-size:12px;}
+    .page{max-width:none;padding:0;}
+    .card{break-inside:avoid;}
+    h2{break-after:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="doc-head">
+    <h1>供应商微信身份绑定 · 产品需求文档</h1>
+    <div class="sub">Supplier WeChat Identity Binding — PRD v1.6</div>
+  </div>
+  <div class="meta">
+    <div><b>项目</b>　供应商端小程序</div>
+    <div><b>版本</b>　v1.6</div>
+    <div><b>日期</b>　2026-09-18（末次修订 2026-09-23）</div>
+    <div><b>状态</b>　待评审</div>
+    <div><b>范围</b>　供应商端 + 运营后台</div>
+    <div><b>关联文档</b>　《PRD_供应商端登录_2026-09-22》—— 登录页、手机号账号定位、启动登录态判定以该文档为准；本文档描述身份绑定与昵称规则</div>
+  </div>
+
+  <div class="tip" style="margin:20px 0 8px;">
+    <b>修订记录</b>　v1.0（2026-09-18）首版　·　v1.1（2026-09-23）：① 统一「空昵称」展示口径（区分 C 端引导态与只读兜底态）② 修正昵称保存的空值校验规则（由「兜底不报错」改为「拦截提示」）③ 补昵称输入框研发硬约束与真机验收要求 ④ 我的页身份区显示层级对齐真实页面（账号名称在上、微信昵称在下）⑤ 补「供应商账号」「绑定方式」两个术语枚举 ⑥ 适用范围更新为已确认的企业微信客户群场景 ⑦ 埋点补「昵称填充率」、验收标准补 6 条昵称相关条目 ⑧ 待确认事项由 6 项扩至 9 项<br>
+    <b>v1.2（2026-09-23 产品拍板）</b>　① 弹层优先级定稿：进首页时<b>身份确认弹层优先</b>，昵称引导条延后，待确认 Q9 关闭　② <b>昵称变更日志补接口</b>：新增 <span class="k">GET /internal/binding/nickname-log</span>，并入售后反查详情，待确认 Q7 关闭　③ 引导条用简版文案，「昵称请与售后群昵称保持一致」提示下沉至填写层　④ 待确认事项由 9 项回落至 6 项<br>
+    <b>v1.4（2026-09-23 产品追加）</b>　① 手机号授权面板多号码能力与未命中提示文案归属登录 PRD v1.4，本档不重复定义<br>
+    <b>v1.5（2026-09-23 产品编辑模式手改）</b>　① <b>填写层标题定稿</b>：统一为 <span class="k">【完善微信昵称】/【更新微信昵称】</span>　② <b>弹层说明文案定稿为简版</b>：资料为空时 <span class="k">【用于处理售后时，在售后群内找到你。微信不会自动提供昵称，需点「使用微信昵称」或手动填写】</span>　③ <b>字数口径与界面实现对齐</b>：由【已输入/30】改为 <span class="k">【当前字数/30】</span>（如 0/30）　④ 顶部引导条文案定稿见《PRD_供应商端登录_2026-09-22》功能块七 v1.5<br>
+    <b>v1.6（2026-09-23 产品拍板）</b>　① <b>采集字段范围精简为昵称一项</b>：5.5 填写层仅保留昵称输入，「我的」页圆形占位按 5.4 两态展示，隐私指引只声明昵称，接口只保留 <span class="k">POST /api/wx/profile/nickname</span>　② 本文档与《PRD_供应商端登录_2026-09-22》v1.6、并排原型三者同步
+  </div>
+
+  <div class="toc">
+    <a class="c1" href="#s1">一、需求背景与目标</a>
+    <a class="c1" href="#s2">二、术语定义</a>
+    <a class="c1" href="#s3">三、角色与使用场景</a>
+    <a class="c1" href="#s4">四、全局规范</a>
+    <a class="c1" href="#s5">五、功能需求</a>
+    <a class="c2" href="#f1">5.1 静默登录与身份识别</a>
+    <a class="c2" href="#f2">5.2 身份确认弹层</a>
+    <a class="c2" href="#f3">5.3 待确认状态提示</a>
+    <a class="c2" href="#f4">5.4 我的页面</a>
+    <a class="c2" href="#f5">5.5 微信资料采集（昵称）</a>
+    <a class="c2" href="#f6">5.6 绑定审核列表</a>
+    <a class="c2" href="#f7">5.7 售后反查</a>
+    <a class="c1" href="#s6">六、绑定状态机</a>
+    <a class="c1" href="#s7">七、异常场景清单</a>
+    <a class="c1" href="#s8">八、埋点与度量</a>
+    <a class="c1" href="#s9">九、验收标准</a>
+    <a class="c1" href="#s10">十、待确认事项</a>
+  </div>
+
+  <h2 id="s1">一、需求背景与目标</h2>
+  <div class="card">
+    <p><b>背景。</b>供应商目前以微信群为主要沟通阵地，在群内以微信昵称示人，不提供企业实名。当发生售后争议时，客服从客户口述的微信昵称出发，无法在系统内定位到对应的供应商档案，只能人工在群成员里翻找、逐张订单比对，定位一次平均耗时较长，且存在匹配到错误供应商的风险。</p>
+    <p><b>目标。</b>建立「供应商微信身份 ↔ 系统供应商档案」的稳定绑定关系，使客服拿到任意一条微信侧线索（昵称、群昵称、订单）即可反查到唯一的供应商档案。</p>
+    <p><b>核心设计原则。</b>让供应商只做「点一下」这一个动作，不要求其填写任何实名信息；绑定关系以平台级稳定标识为主键，昵称仅作为缩小候选范围与人工核对的辅助线索。</p>
+    <div class="note"><b>适用范围：</b>本需求成立于<b>企业微信客户群</b>场景（已确认）——企微侧可获取外部客户标识与群昵称。普通微信群不向第三方开放成员列表与昵称，若存在使用普通微信群的供应商，需另行走「运营后台人工关联」流程，不在本 PRD 范围内。</div>
+    <div class="note"><b>与登录环节的衔接：</b>用户打开小程序后，先执行登录态判定（已绑定则静默放行，未绑定则展示登录页完成账号定位），再执行本文档 5.1 的身份识别。登录页形态、手机号账号定位规则见《PRD_供应商端登录_2026-09-22》。<b>注意：进入首页后的自动弹层存在两处来源</b>——本文档 5.2 的身份确认弹层与登录 PRD 的昵称引导条，二者不得同时弹出，优先级待确认（见登录 PRD 功能块七）。</div>
+  </div>
+
+  <h2 id="s2">二、术语定义</h2>
+  <table>
+    <tr><th>术语</th><th>定义</th><th>本文档中的角色</th></tr>
+    <tr><td><b>统一身份标识</b></td><td>同一微信用户在同一开放平台主体下的全局唯一标识</td><td>绑定的<b>首选主键</b></td></tr>
+    <tr><td><b>小程序身份标识</b></td><td>同一微信用户在同一小程序内的唯一标识</td><td>降级主键，用于历史数据兼容</td></tr>
+    <tr><td><b>企微客户标识</b></td><td>企业微信为每个外部客户分配的唯一标识</td><td>企微侧关联主键</td></tr>
+    <tr><td><b>群昵称</b></td><td>客户在该企业微信客户群内显示的昵称</td><td>仅用于<b>缩小候选范围</b>与人工核对，不参与自动匹配</td></tr>
+    <tr><td><b>绑定关系</b></td><td>一条「微信身份 → 供应商档案」的映射记录</td><td>核心业务数据</td></tr>
+    <tr><td><b>主身份</b></td><td>一个供应商名下多条绑定记录中被设为默认的那一条</td><td>用于多微信号场景的默认登录身份</td></tr>
+    <tr><td><b>供应商账号</b></td><td>系统内承载业务数据（订单、报价、余额）的账号主体，其名称来自供应商档案，即「我的」页第一行展示的名称</td><td>只读展示，<b>不提供修改入口</b></td></tr>
+    <tr><td><b>绑定方式</b></td><td>产生该条绑定记录的来源，枚举三类：<b>① 标识自动匹配</b>（身份标识命中企微客户）／<b>② 候选匹配</b>（群昵称模糊比对后由用户点选 + 运营确认）／<b>③ 人工指定</b>（客服或运营后台手动关联）</td><td>审核列表与售后反查的展示字段</td></tr>
+  </table>
+
+  <h2 id="s3">三、角色与使用场景</h2>
+  <table>
+    <tr><th>角色</th><th>核心诉求</th><th>主要场景</th></tr>
+    <tr><td><b>供应商</b></td><td>不填实名也能用系统；换微信名不影响使用</td><td>首次进入小程序、日常接单、查看订单</td></tr>
+    <tr><td><b>运营人员</b></td><td>批量确认绑定关系，处理异常绑定</td><td>每日审核绑定申请、修正错误绑定</td></tr>
+    <tr><td><b>客服</b></td><td>用客户口述的昵称秒查供应商档案</td><td>售后工单处理、订单归属确认</td></tr>
+  </table>
+
+  <h2 id="s4">四、全局规范</h2>
+  <div class="card">
+    <h4>4.1 空数据统一规则</h4>
+    <ul class="tree">
+      <li class="lv1">所有模块无数据、无记录、无内容时，统一兜底显示 <span class="k">【-】</span></li>
+      <li class="lv1">昵称类字段为空时，<b>按展示位置分两类处理，不得混用</b></li>
+      <li class="lv2">C 端「我的」页等<b>可编辑位置</b>：展示引导态，文案见 5.4（不展示【微信用户】，否则用户不知道该去设置）</li>
+      <li class="lv2">后台审核列表、售后反查等<b>只读展示位置</b>：兜底展示 <span class="k">【微信用户】</span></li>
+      <li class="lv2">任何位置均不得展示空白、null 或 undefined</li>
+    </ul>
+    <h4>4.2 名称匹配规则</h4>
+    <ul class="tree">
+      <li class="lv1">通过供应商编号匹配供应商名称，匹配不到时展示 <span class="red">【供应商信息异常，请联系运营】</span><span class="red-note">红字展示</span></li>
+      <li class="lv1">绑定关系失效时，页面身份区展示 <span class="red">【绑定已失效，请重新确认身份】</span><span class="red-note">红字展示</span></li>
+    </ul>
+    <h4>4.3 操作记录规则</h4>
+    <ul class="tree">
+      <li class="lv1">所有涉及绑定关系的操作，固定记录 <b>操作人名称 + 操作时间</b>，多条记录按时间倒序展示</li>
+    </ul>
+    <h4>4.4 标识安全规则</h4>
+    <ul class="tree">
+      <li class="lv1">统一身份标识、企微客户标识仅在服务端存储与传递</li>
+      <li class="lv1">任何页面、接口响应、客户端日志中不得出现完整标识；后台如需展示，统一做中段脱敏</li>
+      <li class="lv1"><b>昵称</b>属于用户个人信息，须在用户隐私保护指引中<b>声明</b>后方可采集；<b>未声明即静默失效</b>（运行时不报错、界面上无提示），联调时必须核对（详见 5.5 采集规则）</li>
+    </ul>
+  </div>
+
+  <h2 id="s5">五、功能需求</h2>
+
+  <div class="card fn" id="f1">
+    <div class="fn-head"><span><b>功能名称</b>　静默登录与身份识别</span><span><b>菜单路径</b>　小程序启动即触发 / 全站</span><span><b>接口地址</b>　POST /api/wx/login</span></div>
+
+    <div class="mod">
+      <div class="mod-title">数据源：</div>
+      <ul class="tree">
+        <li class="lv1">登录凭证来自小程序端登录接口返回的临时凭证，由服务端换取用户身份标识</li>
+        <li class="lv1">绑定关系来自「供应商绑定关系」数据，按身份标识读取</li>
+        <li class="lv1">企微侧身份来自「企微客户镜像」与「企微客户群成员」两份同步数据</li>
+        <li class="lv1">供应商名称取自「供应商档案」数据，按供应商编号匹配</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">显示逻辑：</div>
+      <ul class="tree">
+        <li class="lv1">识别过程不展示任何界面，用户全程无感知，首屏直接渲染</li>
+        <li class="lv1">识别结果按四类分流处理</li>
+        <li class="lv2">已绑定：直接进入首页，无任何弹层、提示、动效</li>
+        <li class="lv2">待确认：进入首页，顶部固定展示待确认横条</li>
+        <li class="lv2">未绑定且有候选：进入首页，自动弹出身份确认弹层</li>
+        <li class="lv2">未绑定且无候选：进入首页，自动弹出身份确认弹层并落至搜索态</li>
+        <li class="lv1">请求未返回前，首屏展示骨架屏</li>
+        <li class="lv3">超过 3 秒未返回，底部展示轻提示 <span class="k">【网络较慢，正在重试】</span>，3 秒后自动重试一次</li>
+        <li class="lv3">重试仍失败，展示 <span class="red">【网络异常，请检查网络后重试】</span><span class="red-note">红字展示</span>，提供【重新加载】按钮</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">交互逻辑：</div>
+      <ul class="tree">
+        <li class="lv1">前置条件：完成登录态判定后触发（已绑定用户由登录环节直接放行，未绑定用户先经登录页完成账号定位，见《PRD_供应商端登录_2026-09-22》功能块一）</li>
+        <li class="lv1">已绑定用户不做任何打断，直接放行至首页</li>
+        <li class="lv1">识别失败不阻断使用，用户仍可浏览公开页面；仅在发起需身份的操作时再次引导</li>
+        <li class="lv1">同一会话内识别只执行一次，页面切换不重复请求</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">状态机：</div>
+      <ul class="tree">
+        <li class="lv1">状态集合：未识别 / 已绑定 / 待确认 / 未绑定</li>
+        <li class="lv1">未识别 → 已绑定：识别结果命中唯一有效绑定关系</li>
+        <li class="lv1">未识别 → 待确认：命中一条待复核的绑定记录</li>
+        <li class="lv1">未识别 → 未绑定：无任何命中</li>
+        <li class="lv1">已绑定 → 已失效：供应商解约、账号停用</li>
+        <li class="lv1">已失效 → 未绑定：用户重新发起身份确认</li>
+        <li class="lv3">待确认 可被运营驳回，回退至 未绑定；驳回为可重复动作</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">补充注意事项：</div>
+      <ul class="tree">
+        <li class="lv1">统一身份标识缺失时（微信账号未与开放平台主体关联）自动降级为小程序身份标识匹配，不报错、不阻断</li>
+        <li class="lv1">识别不可作为页面加载的阻塞条件，识别超时也必须保证首屏可用</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card fn" id="f2">
+    <div class="fn-head"><span><b>功能名称</b>　身份确认弹层</span><span><b>菜单路径</b>　首页 / 底部半屏弹层</span><span><b>接口地址</b>　POST /api/wx/binding/confirm</span></div>
+
+    <div class="mod">
+      <div class="mod-title">数据源：</div>
+      <ul class="tree">
+        <li class="lv1">候选供应商列表由服务端根据群昵称、企微备注与供应商档案名称做模糊比对后返回，最多 3 条</li>
+        <li class="lv2">匹配依据优先级：供应商简称 &gt; 供应商全称</li>
+        <li class="lv2">候选按匹配度由高到低排序</li>
+        <li class="lv1">搜索态数据来自供应商档案，按输入关键词实时检索</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">显示逻辑：</div>
+      <ul class="tree">
+        <li class="lv1">底部半屏弹层，自下而上滑入；含标题、说明文案、候选列表、搜索入口、主按钮</li>
+        <li class="lv1">标题固定文案 <span class="k">【请确认你的供应商身份】</span></li>
+        <li class="lv1">说明文案固定文案 <span class="k">【仅用于售后时核对订单归属，不会展示给客户】</span></li>
+        <li class="lv1">候选列表每行展示：供应商名称 + 匹配度标识（高 / 中 / 低）</li>
+        <li class="lv1">无候选时，列表区展示 <span class="k">【未找到匹配的供应商，请搜索名称】</span></li>
+        <li class="lv1">搜索结果为空时，展示 <span class="red">【未搜索到该供应商，请联系运营开通】</span><span class="red-note">红字展示</span></li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">交互逻辑：</div>
+      <ul class="tree">
+        <li class="lv1">点击候选项：选中态高亮，主按钮由不可点变为可点</li>
+        <li class="lv1">前置校验：未选中任何候选时，主按钮置灰不可点</li>
+        <li class="lv1">点击【确认】后提交绑定申请，成功则关闭弹层并跳转待确认态</li>
+        <li class="lv2">提交成功提示 <span class="k">【已提交，等待运营确认】</span></li>
+        <li class="lv2">提交失败提示 <span class="red">【提交失败：网络异常】</span><span class="red-note">红字展示</span>，弹层不关闭，允许重试</li>
+        <li class="lv1">点击遮罩或右上角关闭，弹层下滑收起，首页正常可用</li>
+        <li class="lv1">关闭后本次会话不再自动弹出，可在「我的」页手动唤起</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">补充注意事项：</div>
+      <ul class="tree">
+        <li class="lv1">弹层<b>不得</b>要求用户手动输入供应商实名，只允许「点选候选」或「关键词搜索后点选」两种方式</li>
+        <li class="lv1">弹层<b>不得</b>遮挡底部核心操作区域后无限停留，必须提供关闭入口</li>
+        <li class="lv1">明确告知用途，不得使用「不确认将无法使用系统」等强制性措辞</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card fn" id="f3">
+    <div class="fn-head"><span><b>功能名称</b>　待确认状态提示</span><span><b>菜单路径</b>　全站顶部横条 + 我的页</span><span><b>接口地址</b>　GET /api/wx/binding/current</span></div>
+
+    <div class="mod">
+      <div class="mod-title">数据源：</div>
+      <ul class="tree">
+        <li class="lv1">绑定记录状态来自「供应商绑定关系」数据</li>
+        <li class="lv1">审核进度文案由系统按状态生成</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">显示逻辑：</div>
+      <ul class="tree">
+        <li class="lv1">待确认期间，全站顶部固定展示横条 <span class="amber-note">【身份待运营确认，确认后即可接单】</span>，不可关闭</li>
+        <li class="lv1">「我的」页身份区展示所选供应商名称，右侧展示状态标签 <span class="amber-note">【待确认】</span></li>
+        <li class="lv1">状态标签配色与文案一一对应</li>
+        <li class="lv2">待确认：橙色，文案 <span class="k">【待确认】</span></li>
+        <li class="lv2">已绑定：绿色，文案 <span class="k">【已绑定】</span></li>
+        <li class="lv2">已失效：红色，文案 <span class="red">【已失效】</span><span class="red-note">红字展示</span></li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">交互逻辑：</div>
+      <ul class="tree">
+        <li class="lv1">待确认期间，不阻断浏览，但涉及接单、报价等业务动作时拦截，提示 <span class="k">【身份确认后可操作】</span></li>
+        <li class="lv1">支持手动刷新状态：点击横条右侧【刷新】重新查询</li>
+        <li class="lv2">刷新中按钮置灰并展示加载态，防重复点击</li>
+        <li class="lv1">状态变更为已绑定时，横条自动消失并轻提示 <span class="k">【身份已确认】</span></li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">状态机：</div>
+      <ul class="tree">
+        <li class="lv1">状态集合：未绑定 / 待确认 / 已绑定 / 已失效</li>
+        <li class="lv1">未绑定 → 待确认：用户提交绑定申请</li>
+        <li class="lv1">待确认 → 已绑定：运营审核通过</li>
+        <li class="lv1">待确认 → 未绑定：运营审核驳回（可重复触发）</li>
+        <li class="lv1">已绑定 → 已失效：供应商解约或运营手动解绑</li>
+        <li class="lv1">已失效 → 未绑定：用户重新发起身份确认</li>
+        <li class="lv3">状态流转必须记录操作人与操作时间，驳回原因必填</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card fn" id="f4">
+    <div class="fn-head"><span><b>功能名称</b>　我的页面（身份区）</span><span><b>菜单路径</b>　小程序 / 我的</span><span><b>接口地址</b>　GET /api/wx/binding/current</span></div>
+
+    <div class="mod">
+      <div class="mod-title">数据源：</div>
+      <ul class="tree">
+        <li class="lv1">微信昵称来自用户主动填写，非接口自动获取；填写后需点【保存】才入库（详见下方采集规则）</li>
+        <li class="lv1">供应商账号名称来自「供应商绑定关系」关联的「供应商档案」，本页只读展示</li>
+        <li class="lv1">绑定状态来自绑定关系记录，以状态标签形式展示</li>
+        <li class="lv1">绑定时间、绑定方式<b>不在本页展示</b>，仅供后台审核列表（5.6）与售后反查（5.7）使用</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">显示逻辑：</div>
+      <ul class="tree">
+        <li class="lv1">身份区自上而下展示：圆形占位、<b>供应商账号名称</b>（主字，只读）、<b>微信昵称</b>（次字，行尾带 ✎ 图标）、绑定状态标签</li>
+        <li class="lv2">第一行为供应商账号名称，第二行为微信昵称，两行职责分离、不得合并</li>
+        <li class="lv1">昵称未填写时，第二行改为引导态 <span class="k">【微信昵称未设置，影响售后对接 · 点击完善 ✎】</span>（橙色，整行可点）</li>
+        <li class="lv1">昵称完整展示，<b>不做截断、不做省略</b>；超出容器宽度时自动换行（长昵称占满多行也全部展示）</li>
+        <li class="lv1"><b>圆形占位规则（两态）</b>，不得展示空白圆圈：</li>
+        <li class="lv2">① 昵称已填写 → 蓝底圆形 + <b>供应商账号名称首字</b>（如「测试环境--井惠琳」取「测」）</li>
+        <li class="lv2">② 昵称为空 → 橙色虚线圆形 + 居中「待」字，与第二行的橙色引导态配套出现</li>
+        <li class="lv1">昵称换行时，末尾的 ✎ 图标对齐<b>首行</b>文字，不随文本下沉</li>
+        <li class="lv1">绑定状态标签配色与文案一一对应：待确认（橙）、已绑定（绿）、已失效（红）</li>
+        <li class="lv1">绑定供应商名称匹配不到时展示 <span class="red">【供应商信息异常，请联系运营】</span><span class="red-note">红字展示</span></li>
+        <li class="lv1">未绑定用户身份区展示 <span class="k">【未绑定供应商】</span>，并提供【去绑定】入口</li>
+        <li class="lv1">身份区下方提供操作入口：<b>【切换身份】</b>（仅当该供应商名下存在多条绑定记录时展示）、<b>【解绑】</b>（已绑定态展示）</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">交互逻辑：</div>
+      <ul class="tree">
+        <li class="lv1">点击昵称行末尾的 <b>✎ 图标</b>：打开填写层进行更新</li>
+        <li class="lv2">填写层标题按状态区分：资料为空时显示【完善微信昵称】；已有值时显示【更新微信昵称】（v1.5 定稿）</li>
+        <li class="lv2"><b>本页</b>圆形占位与供应商账号名称行<b>不响应点击</b>，编辑入口仅 ✎ 图标一处，避免用户查看资料时误触编辑</li>
+        <li class="lv2">昵称为空时改由橙色提示行承担入口（整行可点），文案【微信昵称未设置，影响售后对接 · 点击完善 ✎】</li>
+        <li class="lv1">变更日志<b>仅后台可查</b>：C 端填写层与「我的」页均不展示日志入口，客服侧通过后台查阅历史昵称</li>
+        <li class="lv1">点击【切换身份】：仅当该供应商名下存在多条绑定记录时展示，点击后弹出身份选择列表</li>
+        <li class="lv2">切换后当前身份标识更新，主身份标记同步变更</li>
+        <li class="lv1">点击【解绑】：二次确认后提交解绑申请，提示 <span class="k">【解绑申请已提交，等待运营处理】</span></li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">补充注意事项：</div>
+      <ul class="tree">
+        <li class="lv1">昵称仅作展示与人工核对，<b>绝不可</b>作为绑定匹配的主键或唯一标识</li>
+        <li class="lv1">昵称允许用户修改为任意内容，需做特殊字符转义后再展示；<b>展示侧不做长度截断</b>（含 emoji、符号），按原文完整换行输出</li>
+        <li class="lv1"><b>不做更新提醒</b>：昵称变更不推送、不弹窗、不加过期标记，是否更新由用户自行决定；产品侧仅保证入口常驻可见</li>
+        <li class="lv1">供应商账号名称来自后台档案，本页只读展示，<b>不提供修改入口</b>；与微信昵称分两行呈现，职责分离</li>
+        <li class="lv1">客户端不得展示任何完整身份标识</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card fn" id="f5">
+    <div class="fn-head"><span><b>功能名称</b>　微信资料采集（昵称）</span><span><b>菜单路径</b>　我的页 / 昵称行 ✎ ；登录后落地页顶部引导条（仅资料为空时）</span><span><b>接口地址</b>　POST /api/wx/profile/nickname</span></div>
+
+    <div class="mod">
+      <div class="mod-title">数据源：</div>
+      <ul class="tree">
+        <li class="lv1">昵称来源于用户在小程序内的主动填写，平台不提供接口自动读取</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">显示逻辑：</div>
+      <ul class="tree">
+        <li class="lv1">填写层结构自上而下：标题、说明文案、昵称输入框（右侧「使用微信昵称」入口）、实时计数、用途提示框、【保存】按钮</li>
+        <li class="lv1">标题按状态区分：【完善微信昵称】（资料为空）/【更新微信昵称】（已有值）（v1.5 定稿）</li>
+        <li class="lv1">输入框下方固定展示引导文案 <span class="k">【点击键盘上方的「使用微信昵称」可一键填入】</span></li>
+        <li class="lv1">计数展示在输入框右下角，格式固定为 <span class="k">【当前字数/30】</span>（如 0/30，<b>不展示「剩余可输入字数」</b>，两种口径不得混用）（v1.5 定稿）</li>
+        <li class="lv1">说明文案按状态两段：资料为空 → <span class="k">【用于处理售后时，在售后群内找到你。微信不会自动提供昵称，需点「使用微信昵称」或手动填写】</span>（v1.5 定稿）；已有值 → <span class="k">【改了微信名，点一下重新获取再保存即可同步；进小程序不会自动更新】</span></li>
+        <li class="lv1">用户跳过未填写时，「我的」页昵称位展示引导态（见 5.4），<span class="red">不展示【微信用户】</span>；仅在后台只读位置兜底展示【微信用户】</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">交互逻辑：</div>
+      <ul class="tree">
+        <li class="lv1"><b>获取昵称</b>：点击输入框聚焦后，键盘上方出现「使用微信昵称」入口，用户点击才完成填充，也可直接手动输入</li>
+        <li class="lv2"><b>未点【保存】就关层</b>：昵称草稿保留，下次进入不丢失</li>
+        <li class="lv1">提交时机：<b>仅点击【保存】按钮时提交</b>；输入框失焦<b>不自动提交</b>（避免用户误触空白区域触发空值拦截）</li>
+        <li class="lv1">前置校验：</li>
+        <li class="lv2">昵称为空（含仅空格）→ <b>拦截提交</b>，<span class="red">红字【请输入微信昵称】</span>，输入框保持聚焦，不写库、不关层</li>
+        <li class="lv2">昵称与当前值相同 → 提示 <span class="k">【昵称没有变化】</span>，<b>不写变更日志</b>，不关层</li>
+        <li class="lv2"><b>昵称为必填项</b>：空值一律拦截，不允许清空提交</li>
+        <li class="lv2"><b>存储维度</b>：昵称按「绑定关系」各账号独立存储（微信 × 供应商账号）</li>
+        <li class="lv2">包含表情、特殊符号时做转义后入库</li>
+        <li class="lv2">长度上限 30 个字符（按字符计数，emoji 计 1），达到上限后不再允许输入，计数变红提示，不做静默丢弃</li>
+        <li class="lv1">保存成功：提示 <span class="k">【保存成功】</span>，关层并刷新「我的」页<b>昵称与圆形占位</b>；写一条变更日志（旧值 / 新值 / 时间，仅后台可查）；顶部昵称引导条同步消失</li>
+        <li class="lv1">填写层内点【取消】或点遮罩关闭：不写入，已填草稿保留在输入框，下次进入不丢失</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">状态机：</div>
+      <ul class="tree">
+        <li class="lv1">状态集合：资料为空（昵称为空）/ 昵称已设置</li>
+        <li class="lv1">昵称为空 → 昵称已设置：保存成功的唯一出口；昵称一旦设置即进入「已设置」态</li>
+        <li class="lv1">昵称已设置 → 昵称已设置：更新为不同值，写新日志</li>
+        <li class="lv3">不存在「已设置 → 空」的流转：系统不提供清空昵称的操作，空值一律拦截</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">补充注意事项：</div>
+      <ul class="tree">
+        <li class="lv1"><b>研发硬约束（不可协商）：</b>昵称输入框必须为可聚焦的 <span class="k">input type="nickname"</span>，<b>禁止设置 readonly 或 disabled</b> —— readonly 输入框无法聚焦，将直接导致昵称填充能力失效</li>
+        <li class="lv2">回调返回的是<b>临时文件路径</b>，须<b>立即上传至自有存储</b>并落库；不得直接存储微信侧链接（会过期失效）</li>
+        <li class="lv1">「使用微信昵称」工具条由微信客户端在真机渲染，<b>产品无法自定义样式、也无法程序化触发</b>；基础库需 2.21.2 以上，开发者工具与模拟器不可见，验收必须在真机进行</li>
+        <li class="lv1">采集前必须在用户隐私保护指引中<b>声明昵称</b>的收集目的，未声明的采集会被平台拦截（运行时报错、无界面提示）；<b>未声明即静默失效</b></li>
+        <li class="lv1">用户跳过采集是本场景的<b>常态</b>而非异常，所有下游展示都必须有兜底</li>
+        <li class="lv1">昵称的修改<b>不影响</b>已建立的绑定关系</li>
+        <li class="lv1"><b>更新频率策略：不做任何系统侧提醒。</b>不推送、不弹窗、不做“名称已过期”黄点或红点标记，更新完全由用户主动发起——用户自己改了微信名后，自行进入小程序点击更新入口完成同步</li>
+        <li class="lv1">唯一更新路径：我的页昵称行 ✎ → 填写层 → 点「使用微信昵称」→ <b>保存</b>。缺「保存」则不入库，仅停留在输入框</li>
+        <li class="lv1"><span class="red">进入小程序不会自动同步昵称。</span>小程序启动只做静默登录（换身份标识），微信不提供昵称读取接口、也不推送变更事件，因此“进小程序即自动更新”不具备技术可行性，需求与话术中均不得如此描述</li>
+        <li class="lv1">该能力的失败是<b>静默的</b>：未声明隐私指引、readonly 输入框、基础库版本不足，三种情况都不报错但都不生效，联调时必须逐项排查</li>
+        <li class="lv1"><b>「昵称请与售后群昵称保持一致」的提示固定在填写层内</b>（用途提示框），承担「为什么要一致」的解释；顶部引导条只保留一句提醒（文案见登录 PRD 功能块七 v1.5 定稿），<b>不得把多句说明塞进引导条</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card fn" id="f6">
+    <div class="fn-head"><span><b>功能名称</b>　绑定审核列表</span><span><b>菜单路径</b>　运营后台 / 供应商管理 / 绑定审核</span><span><b>接口地址</b>　POST /internal/binding/list　POST /internal/binding/review</span></div>
+
+    <div class="mod">
+      <div class="mod-title">数据源：</div>
+      <ul class="tree">
+        <li class="lv1">列表数据来自「供应商绑定关系」中状态为待确认的记录</li>
+        <li class="lv1">候选匹配信息来自系统模糊比对结果与企微群昵称快照</li>
+        <li class="lv1">操作人来自后台登录账号</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">显示逻辑：</div>
+      <ul class="tree">
+        <li class="lv1">列表字段：申请时间、微信昵称、群昵称、申请绑定的供应商、系统匹配度、绑定方式、操作</li>
+        <li class="lv1">系统匹配度以标签形式展示：高 / 中 / 低；匹配度低于阈值的行以橙色底纹标识</li>
+        <li class="lv1">同一供应商被多个微信身份申请绑定时，按供应商聚合展示申请数量</li>
+        <li class="lv1">默认按申请时间倒序排列</li>
+        <li class="lv1">空列表展示 <span class="k">【暂无待确认的绑定申请】</span></li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">交互逻辑：</div>
+      <ul class="tree">
+        <li class="lv1">提供筛选条件：申请时间范围、绑定方式、匹配度、供应商名称关键词</li>
+        <li class="lv1">点击【通过】：校验通过后将该记录流转为已绑定，提示 <span class="k">【已通过】</span></li>
+        <li class="lv1">点击【驳回】：弹出驳回原因输入框，原因为必填</li>
+        <li class="lv2">驳回原因未填写时禁止提交，提示 <span class="red">【请填写驳回原因】</span><span class="red-note">红字展示</span></li>
+        <li class="lv2">提交成功后该记录流转为未绑定，提示 <span class="k">【已驳回】</span></li>
+        <li class="lv1">支持批量通过，但仅允许对匹配度为「高」的记录批量操作</li>
+        <li class="lv1">支持列表手动刷新，刷新时保留历史操作记录，不清空已产生的业务数据</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">补充注意事项：</div>
+      <ul class="tree">
+        <li class="lv1">昵称匹配结果<b>不得</b>自动通过，必须经人工确认；匹配错误会使售后追责方向反转</li>
+        <li class="lv1">同一微信身份被申请绑定到多个供应商时，允许并存但只能有一条为主身份，主身份冲突时需人工裁决</li>
+        <li class="lv1">所有审核动作必须留痕，记录操作人与操作时间</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card fn" id="f7">
+    <div class="fn-head"><span><b>功能名称</b>　售后反查</span><span><b>菜单路径</b>　运营后台 / 售后服务 / 供应商反查</span><span><b>接口地址</b>　GET /internal/supplier/lookup　·　<span class="k">GET /internal/binding/nickname-log</span>（v1.2 新增）</span></div>
+
+    <div class="mod">
+      <div class="mod-title">数据源：</div>
+      <ul class="tree">
+        <li class="lv1">检索关键词由客服手动输入，支持微信昵称、群昵称、订单号三类</li>
+        <li class="lv1">结果来自绑定关系与供应商档案的关联查询</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">显示逻辑：</div>
+      <ul class="tree">
+        <li class="lv1">搜索框固定提示文案 <span class="k">【输入微信昵称、群昵称或订单号】</span></li>
+        <li class="lv1">结果列表字段：微信昵称、群昵称、供应商名称、绑定状态、绑定时间、历史关联订单数</li>
+        <li class="lv1">无结果时展示 <span class="red">【未找到匹配的供应商，请尝试其他关键词】</span><span class="red-note">红字展示</span></li>
+        <li class="lv1">命中多条结果时，按绑定状态排序：已绑定在前，待确认、已失效依次在后</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">交互逻辑：</div>
+      <ul class="tree">
+        <li class="lv1">输入关键词后回车或点击【搜索】触发查询，支持模糊匹配</li>
+        <li class="lv1">点击结果行展开详情：该身份的完整绑定记录、操作留痕、关联订单列表、<b>昵称变更记录</b>（旧值 / 新值 / 时间，按时间倒序）</li>
+        <li class="lv2">昵称变更记录由 <span class="k">GET /internal/binding/nickname-log</span> 提供（v1.2 新增），支持按身份标识或供应商编号查询</li>
+        <li class="lv2">用途：供应商改过微信名后，客服仍能用<b>历史昵称</b>反查到同一档案</li>
+        <li class="lv1">点击【关联供应商】：用于纠正错误绑定，弹出供应商选择框，选定后原绑定记录置为已失效并新建绑定</li>
+        <li class="lv1">点击【查看订单】：跳转订单列表页并按该供应商筛选</li>
+      </ul>
+    </div>
+
+    <div class="mod">
+      <div class="mod-title">补充注意事项：</div>
+      <ul class="tree">
+        <li class="lv1">反查结果的展示以昵称为主入口，但底层匹配始终走身份标识，昵称仅用于缩小结果集</li>
+        <li class="lv1">供应商更名、微信改名均不影响反查结果，反查依据为已建立的绑定关系</li>
+        <li class="lv1"><b>检索范围须覆盖历史昵称</b>：客户口述的是供应商<b>改名前</b>的昵称时，也要能命中同一档案（依赖昵称变更日志），否则改过名的供应商会查不到</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 id="s6">六、绑定状态机</h2>
+  <div class="card">
+    <div class="flow">
+      <span class="st">未绑定</span><span class="ar">→ 用户提交申请 →</span>
+      <span class="st hi">待确认</span><span class="ar">→ 运营通过 →</span>
+      <span class="st end">已绑定</span><span class="ar">→ 解约 / 手动解绑 →</span>
+      <span class="st">已失效</span>
+    </div>
+    <table>
+      <tr><th>状态</th><th>触发条件</th><th>可逆性</th><th>异常兜底</th></tr>
+      <tr><td><b>未绑定</b></td><td>无任何有效绑定记录</td><td>—</td><td>允许浏览，拦截业务动作</td></tr>
+      <tr><td><b>待确认</b></td><td>用户提交绑定申请</td><td>可被驳回，回退至未绑定，可重复触发</td><td>超过 7 天未审核自动提醒运营，不自动通过</td></tr>
+      <tr><td><b>已绑定</b></td><td>运营审核通过</td><td>可被解绑，转为已失效</td><td>—</td></tr>
+      <tr><td><b>已失效</b></td><td>供应商解约、运营手动解绑、身份变更</td><td>可重新发起确认，转为未绑定</td><td>页面展示红字提示，引导重新确认</td></tr>
+    </table>
+    <div class="note"><b>红线：</b>任何状态下，系统<b>不得</b>依据昵称自动完成绑定。昵称只能产生「候选」，绑定必须经过用户点选 + 人工确认两道关卡。</div>
+  </div>
+
+  <h2 id="s7">七、异常场景清单</h2>
+  <table>
+    <tr><th>场景</th><th>系统处理</th><th>用户感知</th></tr>
+    <tr><td>供应商修改微信昵称</td><td>不影响绑定关系，反查仍可命中</td><td>无感知</td></tr>
+    <tr><td>一个老板管理多家供应商</td><td>允许多条绑定记录，主身份可切换</td><td>我的页出现【切换身份】</td></tr>
+    <tr><td>一家供应商多个微信号</td><td>同一供应商编号下允许多条记录</td><td>无感知</td></tr>
+    <tr><td>统一身份标识缺失</td><td>降级为小程序身份标识匹配</td><td>无感知</td></tr>
+    <tr><td>两个候选匹配度接近</td><td>不自动绑定，挂待确认由运营裁决</td><td>见候选列表，需自行点选</td></tr>
+    <tr><td>非供应商误入</td><td>无候选时引导搜索，仍无则提示联系运营</td><td>红字提示，可关闭弹层继续浏览</td></tr>
+    <tr><td>绑定后供应商被停用</td><td>绑定关系置为已失效</td><td>顶部横条红字提示重新确认</td></tr>
+    <tr><td>重复提交绑定申请</td><td>同身份同供应商的待确认记录去重，不产生多条</td><td>提示【已提交，等待运营确认】</td></tr>
+  </table>
+
+  <h2 id="s8">八、埋点与度量</h2>
+  <table>
+    <tr><th>指标</th><th>定义</th><th>目标</th></tr>
+    <tr><td><b>自动绑定率</b></td><td>进入小程序后无需任何确认即完成绑定的供应商占比</td><td>尽可能高，体现主链路健康度</td></tr>
+    <tr><td><b>确认弹层转化率</b></td><td>弹层出现后完成点选提交的比例</td><td>用于评估候选质量与文案</td></tr>
+    <tr><td><b>一次通过率</b></td><td>待确认记录中首次审核即通过的比例</td><td>反映模糊匹配阈值是否合理</td></tr>
+    <tr><td><b>反查命中率</b></td><td>客服发起反查并直接得到唯一结果的比例</td><td>核心业务价值指标</td></tr>
+    <tr><td><b>昵称填充率</b></td><td>绑定成功且已填写微信昵称的供应商占比</td><td>决定售后 @ 人能否落地；因该能力依赖用户主动填写且平台无任何自动通道，需持续观测</td></tr>
+  </table>
+  <p>关键埋点：登录识别结果分布、弹层曝光与点选、候选点击位置、搜索关键词、审核通过 / 驳回、反查关键词与结果数、昵称引导条曝光与点击、昵称填写层保存成功率。</p>
+
+  <h2 id="s9">九、验收标准</h2>
+  <div class="card">
+    <ul class="tree">
+      <li class="lv1">已绑定的供应商再次进入小程序，无任何弹层与提示，直接进入首页</li>
+      <li class="lv1">未绑定的供应商首次进入，3 秒内看到身份确认弹层，且列表中存在正确候选</li>
+      <li class="lv1">弹层内不存在任何要求填写供应商实名的输入项</li>
+      <li class="lv1">未选中候选时主按钮置灰不可点，点击不产生任何提交；搜索无结果时展示引导文案且不产生提交</li>
+      <li class="lv1">提交绑定申请后，顶部出现待确认横条，业务动作被正确拦截</li>
+      <li class="lv1">运营驳回后，用户侧状态回到未绑定，可再次发起确认</li>
+      <li class="lv1">客服以微信昵称反查，能在一次搜索内定位到唯一供应商档案</li>
+      <li class="lv1">供应商修改微信昵称后，反查结果不发生变化</li>
+      <li class="lv1">任意页面、接口响应与客户端日志中均不出现完整身份标识</li>
+      <li class="lv1">网络异常、接口超时场景下，首屏仍可用，且给出明确的重试入口</li>
+      <li class="lv1">昵称<b>为空</b>时，「我的」页昵称行展示引导态（不展示【微信用户】），圆形占位转「待」态，顶部引导条出现</li>
+      <li class="lv1">昵称留空点击【保存】被拦截并提示，不写库、不关层；同名保存提示「昵称没有变化」且不写日志</li>
+      <li class="lv1">超长昵称（含 emoji）在「我的」页<b>完整换行展示</b>，不出现省略号、不溢出容器，✎ 图标对齐首行</li>
+      <li class="lv1">在真机上点击输入框时键盘上方出现「使用微信昵称」，点击后完成填入；「我的」页第一行供应商账号名称始终保持不变</li>
+      <li class="lv1">C 端任何位置均不出现变更日志入口；后台可按供应商查阅昵称历史（旧值 / 新值 / 时间）</li>
+      <li class="lv1">圆形占位两态显示正确：① 昵称已填 → 蓝底账号名称首字；② 昵称为空 → 橙色虚线「待」。任何情况下不出现空白圆圈</li>
+      <li class="lv1">隐私指引中昵称<b>已声明</b>；移除后，该能力在真机上静默失效（用于回归自检）</li>
+      <li class="lv1">客服在售后反查详情中可查看该身份的<b>昵称变更记录</b>；用供应商改名前后的任意昵称检索，均能命中同一档案</li>
+      <li class="lv1">进入首页时若同时命中身份确认弹层与昵称引导条，<b>只弹身份确认弹层</b>；绑定完成或用户关闭后，昵称引导条才出现</li>
+    </ul>
+  </div>
+
+  <h2 id="s10">十、待确认事项</h2>
+  <table>
+    <tr><th>编号</th><th>事项</th><th>需确认方</th></tr>
+    <tr><td>Q1</td><td>小程序主体是否已与企业微信挂在同一开放平台账号下（<b>研发需先验证</b>，不通则整条自动绑定链路降级）</td><td>研发 / 微信开放平台</td></tr>
+    <tr><td>Q2</td><td>企微客户详情接口是否返回统一身份标识（需企业认证且客户为微信用户）——<b>建议先调一次接口验证</b></td><td>研发 / 企业微信</td></tr>
+    <tr><td>Q3</td><td>企业微信客户群成员接口能否取到群昵称字段，是否有频次与历史群限制 ——<b>建议先调一次接口验证</b></td><td>研发 / 企业微信</td></tr>
+    <tr><td>Q4</td><td>模糊匹配阈值取值，建议 0.4 起步并在一期观察一次通过率后调整</td><td>产品 / 算法</td></tr>
+    <tr><td>Q5</td><td>供应商使用普通微信群的场景（已确认主场景为企微客户群），是否仍需单独设计人工关联流程</td><td>产品 / 运营</td></tr>
+    <tr><td>Q6</td><td>供应商解约时绑定关系的失效策略：立即失效还是保留历史可查</td><td>产品 / 运营</td></tr>
+  </table>
+  <div class="tip" style="margin-top:14px;">
+    <b>v1.2 已拍板（原 Q7 / Q9 关闭）：</b>① <b>昵称变更日志补接口</b> <span class="k">GET /internal/binding/nickname-log</span>，并入售后反查详情；② 进首页时<b>身份确认弹层优先</b>于昵称引导条，二者不同时弹出。以上两项已写入对应功能块与验收标准，不再列入待确认。<br>
+  </div>
+
+  <footer>供应商微信身份绑定 PRD v1.6　·　2026-09-18 初版 / 2026-09-23 修订（v1.1 复核 · v1.2 拍板 · v1.3 追加 · v1.4 追加 · v1.5 手改 · v1.6 精简）　·　待评审</footer>
+</div>
+</body>
+</html>

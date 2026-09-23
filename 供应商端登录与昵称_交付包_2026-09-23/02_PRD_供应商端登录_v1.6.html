@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD_供应商端登录_v1.6_2026-09-23</title>
+<style>
+  body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:#2b2b2b;background:#f7f8fa;margin:0;padding:32px 16px;}
+  .doc{max-width:860px;margin:0 auto;background:#fff;border-radius:12px;padding:40px 48px;box-shadow:0 2px 12px rgba(0,0,0,.06);}
+  h1{font-size:24px;border-bottom:2px solid #1B4E8C;padding-bottom:12px;margin-top:0;}
+  h2{font-size:19px;color:#1B4E8C;margin-top:44px;border-left:4px solid #1B4E8C;padding-left:10px;}
+  h3{font-size:15px;color:#555;margin-top:26px;}
+  .meta{color:#888;font-size:13px;line-height:1.9;background:#f2f6fb;border-radius:8px;padding:12px 16px;margin:16px 0;}
+  .meta b{color:#1B4E8C;}
+  .block{margin-bottom:8px;line-height:1.9;font-size:14px;}
+  .lv1{margin:10px 0 4px;}
+  .lv2{margin:4px 0 4px 22px;}
+  .lv3{margin:2px 0 2px 44px;color:#555;}
+  .hl{color:#1B4E8C;font-weight:600;}
+  .red{color:#E34D59;font-weight:600;}
+  .k{background:#EEF3FA;color:#1B4E8C;border-radius:4px;padding:0 6px;font-weight:500;}
+  .todo{background:#FFF7E8;border-left:4px solid #E6A23C;padding:12px 16px;border-radius:6px;margin-top:12px;font-size:13px;line-height:2;}
+  .todo b{color:#B88230;}
+  .chg{background:#F2FBF5;border-left:4px solid #1F7A4D;padding:12px 16px;border-radius:6px;margin:16px 0 8px;font-size:13px;line-height:1.9;}
+  .chg b{color:#1F7A4D;}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13px;}
+  th,td{border:1px solid #E5E6EB;padding:8px 12px;text-align:left;line-height:1.7;}
+  th{background:#F2F6FB;color:#1B4E8C;}
+</style>
+</head>
+<body>
+<div class="doc">
+
+<h1>供应商端小程序 · 登录 PRD</h1>
+<div class="meta">
+菜单路径：小程序启动 → 登录态判定 → 登录页（未登录时）<br>
+功能范围：启动与登录态判定、登录页框架、手机号快捷登录、账号密码登录、注册入口、隐私与协议、登录后的微信昵称引导<br>
+版本基线：喜乐点餐商家 v2.2.42.2（以 2026-09-22 登录页截图为准）<br>
+文档日期：<b>2026-09-23（v1.6）</b>　·　初版 2026-09-22（v1.0）　·　v1.1 ~ v1.5 同为 2026-09-23<br>
+关联文档：《PRD_供应商微信身份绑定_2026-09-18》—— 身份识别与绑定关系、昵称采集规则的完整定义以该文档为准；本文档只描述登录环节，两者功能块编号需对照阅读<br>
+原型交付：《供应商端-原型+关键PRD.html》—— 左侧可点原型 + 右侧关键 PRD 并排，随原型状态自动切换，供评审走查
+</div>
+
+<div class="chg">
+<b>v1.6 修订摘要（2026-09-23 产品拍板，以此为准）</b><br>
+1. <b>采集字段范围精简</b>：功能块六声明清单只保留<b>手机号 + 昵称</b>两项；功能块七填写层只采集昵称<br>
+2. 「我的」页圆形占位改为<b>两态</b>：已填昵称 → 账号名称首字；未填 → 橙色虚线「待」（规则见身份绑定 PRD 5.4）<br>
+3. 原型（左栏弹层、我的页）、原型右栏说明、身份绑定 PRD 已同步更新
+</div>
+
+<div class="chg">
+<b>v1.5 修订摘要（2026-09-23 产品编辑模式手改，以此为准）</b><br>
+1. <b>引导条文案定稿替换</b>：由「完善微信昵称，售后群才能 @ 到你 · 去设置 ›」改为 <span class="k">【完善微信昵称，在售后时可以根据昵称@到你】</span>（右侧【去设置】、最右【×】可关闭）。新文案的落点是「售后时能 @ 到你」，<b>不再出现「售后群」字样</b>（功能块七）<br>
+2. 「昵称请与售后群昵称保持一致」的说明仍<b>只放在填写层</b>（用途提示框），引导条只承载这一句提醒<br>
+3. 原型（左栏实际文案）、原型右栏说明、身份绑定 PRD 5.5 引用同步替换为上述定稿文案
+</div>
+
+<div class="chg">
+<b>v1.4 修订摘要（2026-09-23 产品追加）</b><br>
+1. <b>未命中文案定稿</b>：手机号未命中任何账号 → 提示<span class="k">【该手机号没有注册供应商账号】</span>，替换原「未开通供应商账号，请联系对接商务」（功能块三）<br>
+2. <b>手机号授权面板多号码</b>：面板可展示微信用户添加的多个手机号（含「上次提供」标记与「管理号码」入口），列表由微信客户端渲染、开发者只接收最终选定号码（功能块三数据源）<br>
+3. 面板按钮文案对齐微信客户端：【拒绝】→【不允许】
+</div>
+
+<div class="chg">
+<b>v1.3 修订摘要（2026-09-23 产品追加）</b><br>
+1. 登录环节本身不采集昵称（登录只负责账号定位与身份标识）；昵称在登录成功后的填写层内完成<br>
+2. 待确认事项维持 5 项，无新增
+</div>
+
+<div class="chg">
+<b>v1.2 修订摘要（2026-09-23 产品拍板）</b><br>
+1. <b>引导条文案定稿为简版</b>：【完善微信昵称，售后群才能 @ 到你 · 去设置 ›】<span class="k">该文案已被 v1.5 替换，见文首 v1.5 摘要</span>；「昵称请与售后群昵称保持一致」的提示下沉至填写层，引导条不得承载长句说明<br>
+2. <b>弹层优先级定稿</b>：进首页时同时命中「未绑定需确认身份」与「昵称为空需引导」，<b>身份确认弹层优先</b>，昵称引导条延后至绑定完成或弹层关闭后展示（原【待确认】项已关闭）<br>
+3. <b>昵称变更日志补接口</b>：新增 <span class="k">GET /internal/binding/nickname-log</span>，并入售后反查详情（详见身份绑定 PRD 5.7）<br>
+4. 待确认事项由 7 项减至 5 项
+</div>
+
+<div class="chg">
+<b>v1.1 修订摘要（2026-09-23）</b><br>
+1. 新增「一、启动与登录态判定」功能块 —— 原文档未定义「进小程序先静默判定、再决定是否跳登录页」这一步，研发易误理解为「启动即展示登录页」<br>
+2. 全文术语「微信名称」统一为<b>「微信昵称」</b>，与身份绑定 PRD 及用户口径一致<br>
+3. 新增「六、隐私与协议」，把声明字段清单（手机号 + 昵称）集中在一处<br>
+4. 功能块七补充研发硬约束（昵称输入框类型、真机限制）与「引导条与身份确认弹层的触发优先级」<br>
+5. 功能块编号整体顺延：原一~六 → 现二~七，文中交叉引用同步更新
+</div>
+
+<h2>一、启动与登录态判定</h2>
+
+<h3>数据源：</h3>
+<div class="block lv1">● 登录凭证：小程序启动时静默获取的临时凭证，由服务端换取用户身份标识（无界面、无弹窗）</div>
+<div class="block lv1">● 登录态：本地缓存的会话凭证 + 服务端校验结果</div>
+<div class="block lv1">● 绑定关系：按身份标识读取「供应商绑定关系」数据</div>
+
+<h3>显示逻辑：</h3>
+<div class="block lv1">● 判定阶段<b>不展示任何界面</b>，用户全程无感知</div>
+<div class="block lv2">○ 已绑定且登录态有效 → <b>跳过登录页</b>，直接进入首页</div>
+<div class="block lv2">○ 未绑定 或 登录态失效 → 展示登录页</div>
+<div class="block lv2">○ 判定未返回前展示启动占位（骨架屏 / 品牌页），<span class="red">不得出现白屏</span></div>
+<div class="block lv3">■ 超过 3 秒未返回 → 底部轻提示 <span class="k">【网络较慢，正在重试】</span>，3 秒后自动重试一次</div>
+<div class="block lv3">■ 重试仍失败 → <span class="red">【网络异常，请检查网络后重试】</span>，提供【重新加载】按钮</div>
+
+<h3>交互逻辑：</h3>
+<div class="block lv1">● 前置条件：无。用户打开小程序即触发，不依赖任何用户主动操作</div>
+<div class="block lv1">● 判定不阻断首屏：判定期间登录页可正常展示，用户可先阅读页面内容</div>
+<div class="block lv1">● 同一会话内只判定一次，页面切换不重复请求</div>
+
+<h3>状态机：</h3>
+<div class="block lv1">● 状态集合：未判定 / 已登录 / 未登录</div>
+<div class="block lv2">○ 未判定 → 已登录：命中有效绑定关系</div>
+<div class="block lv2">○ 未判定 → 未登录：无有效绑定关系</div>
+<div class="block lv2">○ 已登录 → 未登录：用户主动退出登录（「我的」页触发）或登录态过期</div>
+<div class="block lv2">○ 未登录 → 已登录：功能块三 / 功能块四 登录成功</div>
+
+<h3>补充注意事项：</h3>
+<div class="block lv1">● 微信授权仅能提供身份标识，<b>不提供手机号</b>；本系统以手机号定位供应商账号，因此首次进入需走功能块三完成账号定位</div>
+<div class="block lv1">● 判定失败不阻断浏览，仅在用户发起需身份的操作时再次引导登录</div>
+<div class="block lv1">● 本块的身份识别结论（已绑定 / 待确认 / 未绑定）与身份绑定 PRD 功能块 5.1 为同一套逻辑，不重复实现</div>
+
+<h2>二、登录页（页面框架）</h2>
+
+<h3>数据源：</h3>
+<div class="block lv1">● 页面为静态框架，不请求业务数据</div>
+<div class="block lv2">○ 仅底部版本号读取全局配置（当前【v2.2.42.2】），版本号随发版自动更新，不硬编码</div>
+
+<h3>显示逻辑：</h3>
+<div class="block lv1">● 页面自上而下依次为：导航区（左上返回箭头 + 居中标题【登录】）、品牌区（品牌 logo + 名称【喜乐点餐商家】居中）、主按钮【手机号快捷登录】（蓝色渐变、圆角胶囊、白字）、次按钮【账号密码登录】（浅灰底、深色字）、文字链【没账号去注册】（蓝色、右对齐）、协议行（空心圆复选框 + 【勾选即代表同意《隐私政策》】，协议名蓝色可点）、底部固定灰字说明与版本号</div>
+<div class="block lv2">○ 复选框<b>默认不勾选</b>，每次进入登录页重置为未勾选</div>
+<div class="block lv2">○ 底部说明固定文案：【喜乐点餐商家端小程序为喜乐点餐供应商内部工具，仅限我司合作供应商进行登录。】置灰展示</div>
+<div class="block lv3">■ 品牌区、按钮文案均为固定内容，无空值兜底场景</div>
+
+<h3>交互逻辑：</h3>
+<div class="block lv1">● 点击返回箭头：返回上一页；无上一页时退出小程序</div>
+<div class="block lv1">● 点击《隐私政策》：新开协议页（H5 web-view 或内置页面），不影响登录页状态</div>
+<div class="block lv1">● 点击【手机号快捷登录】：进入功能块三</div>
+<div class="block lv1">● 点击【账号密码登录】：进入功能块四</div>
+<div class="block lv1">● 点击【没账号去注册】：进入功能块五</div>
+
+<h3>补充注意事项：</h3>
+<div class="block lv1">● 手机号授权仅允许由用户点击主按钮触发，<b>禁止进入小程序自动调起</b>（平台新规硬性要求）</div>
+<div class="block lv1">● 本页不提供「微信一键登录」入口：微信授权仅能获取身份标识，无法获取手机号；本系统以手机号定位供应商账号，微信一键登录无业务价值</div>
+
+<h2>三、手机号快捷登录（主路径）</h2>
+
+<h3>数据源：</h3>
+<div class="block lv1">● 手机号：微信原生手机号授权面板返回（用户最终选定的手机号）</div>
+<div class="block lv2">○ <b>面板可展示多个手机号（v1.4）</b>：微信用户在「微信 > 发现 > 小程序 > 个人中心」添加过多个手机号时，授权面板会全部列出，最近提供过的带「上次提供」标记，底部有「管理号码」入口（跳转上述个人中心，可添加手机号）。<b>面板的号码列表、排序与样式均由微信客户端渲染</b>，开发者无法控制内容，只接收用户最终选定的号码</div>
+<div class="block lv1">● 供应商账号：服务端按手机号匹配供应商账号列表</div>
+<div class="block lv1">● 微信标识：启动阶段静默获取的身份标识（规则见功能块一），无界面</div>
+
+<h3>显示逻辑：</h3>
+<div class="block lv1">● 登录成功 → 进入该手机号对应供应商账号的主页</div>
+<div class="block lv2">○ 该手机号命中<b>多个</b>供应商账号 → 进入账号选择页，列表展示全部账号（供应商账号名称 + 账号状态），选中后进入对应账号</div>
+<div class="block lv2">○ 该手机号未命中任何账号 → <span class="red">提示【该手机号没有注册供应商账号】</span>，停留登录页（v1.4 定稿文案，替换原「未开通供应商账号，请联系对接商务」）</div>
+<div class="block lv2">○ 账号被停用 / 审核中 → <span class="red">红字【账号暂不可用：具体原因】</span></div>
+
+<h3>交互逻辑：</h3>
+<div class="block lv1">● 点击【手机号快捷登录】前置校验：</div>
+<div class="block lv2">○ 未勾选协议 → 拦截，<span class="red">红字【请先阅读并同意《隐私政策》】</span>，不调起授权面板</div>
+<div class="block lv2">○ 已勾选 → 调起微信原生手机号授权面板</div>
+<div class="block lv3">■ 用户点【允许】→ 拿到手机号 → 服务端执行匹配（见显示逻辑三分支）</div>
+<div class="block lv3">■ 用户点【不允许】→ 面板关闭，停留登录页，<b>不弹错误提示</b>（用户主动拒绝不算异常）</div>
+<div class="block lv1">● 登录成功：服务端建立绑定关系（身份标识 ↔ 供应商账号 ↔ 手机号），写登录日志（账号 + 时间）</div>
+<div class="block lv1">● 已绑定用户再次进入小程序：由功能块一按绑定关系<b>静默登录</b>直接进主页，不再弹授权面板、不停留登录页</div>
+
+<h3>状态机：</h3>
+<div class="block lv1">● 全部业务状态：未登录 → 授权中 → 登录成功 / 登录失败</div>
+<div class="block lv2">○ 未登录 → 授权中：点击主按钮且协议已勾选</div>
+<div class="block lv2">○ 授权中 → 未登录：用户点【不允许】或关闭面板（可重新触发，无次数限制）</div>
+<div class="block lv2">○ 授权中 → 登录成功：手机号命中有效账号</div>
+<div class="block lv2">○ 授权中 → 登录失败：网络异常或服务端错误，<span class="red">红字【登录失败，请重试】</span>，回未登录态可重试</div>
+<div class="block lv3">■ 登录成功为终态，本次会话不可回退；退出登录由「我的」页入口触发，回未登录态</div>
+
+<h3>补充注意事项：</h3>
+<div class="block lv1">● 一个微信可绑定多个供应商账号：绑定关系按「微信 × 账号」多条存储，各账号的微信昵称等资料<b>独立存储</b>，切换账号后昵称随之切换</div>
+<div class="block lv1">● 用户微信换绑手机号：不影响已建立的绑定关系（主键为身份标识），手机号仅作首次定位与联系方式</div>
+<div class="block lv1">● 非供应商微信误入本端：未命中任何账号 → 走注册申请流程（功能块五），不暴露任何供应商数据</div>
+
+<h2>四、账号密码登录（辅助路径）</h2>
+
+<h3>数据源：</h3>
+<div class="block lv1">● 账号、密码：用户手动输入；服务端校验</div>
+<div class="block lv1">● 微信标识：启动阶段静默获取的身份标识（无界面、无弹窗），仅用于登录成功后建立绑定关系</div>
+
+<h3>显示逻辑：</h3>
+<div class="block lv1">● 页面元素：账号输入框（占位【请输入手机号】）、密码输入框（占位【请输入密码】，密文展示 + 可见性切换图标）、主按钮【登录】、文字链【忘记密码】</div>
+<div class="block lv2">○ 账号或密码为空时主按钮置灰，不可点击</div>
+
+<h3>交互逻辑：</h3>
+<div class="block lv1">● 点击【登录】：</div>
+<div class="block lv2">○ 校验通过 → 登录成功，流转同功能块三（含多账号选择）</div>
+<div class="block lv2">○ 账号或密码错误 → <span class="red">红字【账号或密码错误】</span>，不区分具体是哪项错误</div>
+<div class="block lv2">○ 连续错误达 5 次 → 锁定 15 分钟，<span class="red">红字【错误次数过多，请 15 分钟后重试】</span>，期间登录按钮置灰并显示剩余时间</div>
+<div class="block lv1">● 点击【忘记密码】：进入手机号验证码重置流程</div>
+
+<h3>补充注意事项：</h3>
+<div class="block lv1">● 本路径<b>不调起微信手机号授权面板</b>：账号身份由账号密码确定，手机号读取账号档案中的注册手机号；微信手机号授权仅服务于「手机号快捷登录」路径</div>
+<div class="block lv1">● 登录成功后静默绑定身份标识 ↔ 供应商账号（无弹窗）：此后该微信再次进入小程序可按绑定关系静默登录，无需重复输密码</div>
+<div class="block lv1">● 该路径服务于多店铺商户等需要独立账号体系的场景，与手机号快捷登录进入<b>同一套</b>供应商账号，两者登录后数据完全一致</div>
+<div class="block lv1">● 本路径进入的账号，其微信昵称槽位<b>默认为空</b>（用户从未填写过），进入「我的」页时按功能块七展示引导条，需用户手动完善 —— 不自动获取、不弹微信授权</div>
+
+<h2>五、注册入口（没账号去注册）</h2>
+
+<h3>数据源：</h3>
+<div class="block lv1">● 注册信息：用户手动输入；账号开通结果：后台审核</div>
+
+<h3>显示逻辑：</h3>
+<div class="block lv1">● 跳转注册页；提交后页面提示【注册申请已提交，等待审核】，审核结果通过短信 / 群通知告知</div>
+
+<h3>交互逻辑：</h3>
+<div class="block lv1">● 提交注册 → 生成待审核账号，状态为【审核中】，此状态下登录按功能块三「账号暂不可用」处理</div>
+
+<h3>补充注意事项：</h3>
+<div class="block lv1">● 本端为内部工具，<b>注册不等于开通</b>：需运营审核通过后才可登录。注册页是否采用邀请制（仅商务开通链接可注册）待确认，见文末待确认事项</div>
+
+<h2>六、隐私与协议</h2>
+
+<h3>数据源：</h3>
+<div class="block lv1">● 协议文本：法务提供，H5 页面承载</div>
+
+<h3>显示逻辑：</h3>
+<div class="block lv1">● 复选框默认不勾选；《隐私政策》为蓝色可点文字</div>
+
+<h3>交互逻辑：</h3>
+<div class="block lv1">● 点击复选框：勾选 / 取消勾选，实时切换</div>
+<div class="block lv1">● 未勾选时点击任一登录按钮：拦截并提示（文案见功能块三），<b>不静默失败</b></div>
+
+<h3>补充注意事项：</h3>
+<div class="block lv1">● 微信后台《用户隐私保护指引》须同步声明以下字段，<b>声明项须与实际采集一一对应</b>，未声明的采集在真机被直接拦截（运行时报错、无界面提示）：</div>
+<div class="block lv2">○ <b>手机号</b> —— 用于账号定位与订单通知（否则手机号授权面板无法调起）</div>
+<div class="block lv2">○ <b>昵称</b> —— 用于售后群内核对对接人（否则「使用微信昵称」能力失效）</div>
+<div class="block lv1">● 声明用途不得超出实际使用范围（例如声明「仅用于订单通知」，即不得用于营销触达）</div>
+
+<h2>七、登录后的微信昵称引导</h2>
+
+<h3>数据源：</h3>
+<div class="block lv1">● 微信昵称：用户主动填写（`input type="nickname"`），微信不提供任何自动获取接口</div>
+<div class="block lv1">● 存储维度：昵称按「绑定关系」存（微信 × 供应商账号），各账号独立；采集规则与校验细则见身份绑定 PRD 功能块 5.5</div>
+
+<h3>显示逻辑：</h3>
+<div class="block lv1">● 登录成功进入主页后，若当前账号的微信昵称为空 → 页面顶部展示<b>无遮罩引导条</b>：<span class="k">【完善微信昵称，在售后时可以根据昵称@到你】</span> + 【去设置】+ 最右【×】，可关闭（v1.5 定稿文案）</div>
+<div class="block lv2">○ 昵称已设置 → 不展示引导条</div>
+<div class="block lv2">○ 昵称未设置且未处理时，「我的」页昵称位展示引导态（规则见身份绑定 PRD 功能块 5.4），<span class="red">禁止展示空白或 undefined</span></div>
+<div class="block lv2">○ 引导条出现时机为落地页渲染完成后，不阻塞首屏操作</div>
+
+<h3>交互逻辑：</h3>
+<div class="block lv1">● 点击引导条【去设置】→ 展开填写层（昵称输入框 + 「使用微信昵称」辅助入口）</div>
+<div class="block lv2">○ 保存空值 → 拦截，<span class="red">红字【请输入微信昵称】</span></div>
+<div class="block lv2">○ 保存成功 → <span class="k">【保存成功】</span>，写变更日志（旧值 / 新值 / 时间，<b>仅后台可查，C 端不展示入口</b>），引导条消失</div>
+<div class="block lv2">○ 点击关闭或「稍后再说」→ 本次会话不再弹，入口保留在「我的」页昵称行 ✎</div>
+
+<h3>补充注意事项：</h3>
+<div class="block lv1">● 引导条文案<b>以 v1.5 定稿为准</b>（见显示逻辑首条），只承载这一句提醒；「为什么要与售后群昵称保持一致」的解释<b>由填写层承担</b>，引导条不得承载多句说明</div>
+<div class="block lv1">● 登录成功后<b>不叠加自定义弹层</b>：手机号登录已消耗一次微信原生面板，再弹层即 5 秒两弹窗，流失率高</div>
+<div class="block lv1">● 昵称输入框必须为可编辑的 `input type="nickname"`，<b>禁止设置 readonly / disabled</b>；「使用微信昵称」工具条由微信真机渲染，仅在真机出现（基础库 2.21.2+），开发者工具与模拟器不可见</div>
+<div class="block lv1">● 微信昵称仅作展示与售后 @ 核对辅助，<b>禁止作为账号匹配键</b>；填写层固定提示【昵称请与售后群昵称保持一致】</div>
+<div class="block lv1"><b>与身份确认弹层（5.2）的触发优先级（v1.2 定稿）：</b>登录成功进入首页时，若同时命中「未绑定需确认身份」与「昵称为空需引导」，二者<b>不得同时弹出</b>。<b>规则：优先弹身份确认弹层；昵称引导条延后至绑定完成或用户关闭弹层后再展示</b></div>
+
+<h2>待确认事项</h2>
+<div class="todo">
+<b>以下 5 项需产品 / 业务拍板后补充进对应功能块：</b><br>
+1. 注册是否采用邀请制（商务开通链接 / 邀请码），还是开放自注册 + 审核 —— 影响功能块五<br>
+2. 账号密码连续错误锁定阈值（当前按 5 次 / 15 分钟）—— 影响功能块四<br>
+3. 《隐私政策》H5 链接是否已上线、法务文本是否定稿 —— 影响功能块六<br>
+4. 多供应商账号选择页的样式与默认账号规则（最近登录优先？）—— 影响功能块三<br>
+5. 登录态有效期与重新登录触发条件（7 天 / 30 天？过期后走静默还是回登录页）—— 影响功能块一状态机
+</div>
+
+<div class="chg">
+<b>v1.2 已拍板关闭的原待确认项：</b><br>
+· <s>身份确认弹层与昵称引导条的触发优先级</s> → <b>身份确认优先，二者不同时弹出</b>（功能块七）
+</div>
+
+</div>
+</body>
+</html>

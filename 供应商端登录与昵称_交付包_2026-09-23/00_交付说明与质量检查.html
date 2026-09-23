@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>交付说明与质量检查_供应商端登录与昵称_2026-09-23</title>
+<style>
+  body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:#2b2b2b;background:#f7f8fa;margin:0;padding:32px 16px;}
+  .doc{max-width:880px;margin:0 auto;background:#fff;border-radius:12px;padding:40px 48px;box-shadow:0 2px 12px rgba(0,0,0,.06);}
+  h1{font-size:24px;border-bottom:2px solid #1B4E8C;padding-bottom:12px;margin-top:0;}
+  h2{font-size:19px;color:#1B4E8C;margin-top:42px;border-left:4px solid #1B4E8C;padding-left:10px;}
+  h3{font-size:15px;color:#555;margin-top:24px;}
+  .meta{color:#888;font-size:13px;line-height:1.9;background:#f2f6fb;border-radius:8px;padding:12px 16px;margin:16px 0;}
+  .meta b{color:#1B4E8C;}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13px;}
+  th,td{border:1px solid #E5E6EB;padding:8px 12px;text-align:left;line-height:1.7;vertical-align:top;}
+  th{background:#F2F6FB;color:#1B4E8C;font-weight:600;}
+  code{background:#EEF3FA;color:#1B4E8C;border-radius:4px;padding:1px 6px;font-family:Consolas,Menlo,monospace;font-size:12.5px;}
+  .ok{color:#1F7A4D;font-weight:600;}
+  .warn{color:#B88230;font-weight:600;}
+  .pass{background:#F2FBF5;border-left:4px solid #1F7A4D;padding:12px 16px;border-radius:6px;margin:16px 0 8px;font-size:13px;line-height:1.9;}
+  .pass b{color:#1F7A4D;}
+  .todo{background:#FFF7E8;border-left:4px solid #E6A23C;padding:12px 16px;border-radius:6px;margin-top:12px;font-size:13px;line-height:2;}
+  .todo b{color:#B88230;}
+  .note{font-size:12.5px;color:#8a8f99;line-height:1.9;margin-top:8px;}
+  ul{padding-left:22px;line-height:1.95;font-size:13.5px;}
+  li{margin:3px 0;}
+  .foot{margin-top:46px;padding-top:16px;border-top:1px solid #EEE;color:#A6ADB8;font-size:12px;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="doc">
+
+<h1>交付说明与质量检查</h1>
+
+<div class="meta">
+  <b>项目</b>　喜乐点餐 · 供应商端小程序<br>
+  <b>交付范围</b>　启动与登录 → 我的页微信昵称完善（含手机号快捷登录、账号密码登录、✎ 编辑弹窗、多号码授权面板）<br>
+  <b>交付日期</b>　2026-09-23　·　<b>交付包版本</b>　第 2 版（对应在线走查链接 v2）<br>
+  <b>在线走查</b>　https://www.htmlcode.fun/s/xile-supplier-proto/v/2
+</div>
+
+<h2>一、交付清单</h2>
+<table>
+  <tr><th style="width:44px">编号</th><th style="width:290px">文件</th><th>内容说明</th><th style="width:62px">版本</th></tr>
+  <tr>
+    <td>01</td>
+    <td><code>01_原型+关键PRD并排走查稿.html</code></td>
+    <td><b>主交付物。</b>左侧为可点击原型（登录页 / 账号密码登录半屏层 / 我的页 / ✎ 昵称填写层 / 手机号授权面板），右侧为随状态联动的关键 PRD —— 共 <b>12 张卡片、60 条字段行</b>，按「新增 / 数据源 / 交互逻辑 / 显示逻辑 / 校验规则 / 存储规则 / 声明清单 / 异常与边界 / 研发硬约束 / 能力边界 / 未覆盖」等字段呈现；硬约束红底、未覆盖黄底。</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td>02</td>
+    <td><code>02_PRD_供应商端登录_v1.6.html</code></td>
+    <td>启动与登录态判定、登录页框架、手机号快捷登录、账号密码登录、注册入口、隐私与协议、登录后的微信昵称引导。</td>
+    <td><b>v1.6</b></td>
+  </tr>
+  <tr>
+    <td>03</td>
+    <td><code>03_PRD_供应商微信身份绑定_v1.6.html</code></td>
+    <td>我的页身份区结构、昵称展示与存储全局规则、✎ 填写层交互与校验、昵称变更日志、售后反查、绑定状态机、验收标准与埋点。</td>
+    <td><b>v1.6</b></td>
+  </tr>
+  <tr>
+    <td>04</td>
+    <td><code>04_原型点击链路自检.js</code></td>
+    <td>12 条点击链路的自动化自检脚本（最小 DOM 环境驱动，无需浏览器）。改完原型后可随时重跑，确认交互未断裂。</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td>05</td>
+    <td><code>05_在线走查链接.txt</code></td>
+    <td>在线走查地址（可手机直接打开），含各历史版本入口。</td>
+    <td>—</td>
+  </tr>
+</table>
+
+<h2>二、质量检查结果</h2>
+
+<div class="pass">
+<b>结论：全部通过。</b>三份交付物结构完整、脚本可运行、12 条点击链路 100% 通过，无残留标注与历史能力痕迹。
+</div>
+
+<table>
+  <tr><th style="width:150px">检查项</th><th style="width:290px">检查方法</th><th>结果</th></tr>
+  <tr><td>HTML 标签配平</td><td>div / span / ul / li / table / tr / td / th / button / b / p / a / svg / style / script 逐标签比对开闭计数</td><td><span class="ok">通过</span>　三份文件均无未闭合标签</td></tr>
+  <tr><td>JS 语法</td><td>提取全部 <code>&lt;script&gt;</code> 段做编译校验</td><td><span class="ok">通过</span>　无语法错误</td></tr>
+  <tr><td>脚本引用完整性</td><td>提取脚本内 <code>$('id')</code> 引用，与文件内实际 id 比对</td><td><span class="ok">通过</span>　28 个引用，缺失 0</td></tr>
+  <tr><td>交互分支完整性</td><td>提取 <code>data-act</code> 分支名，查找对应节点</td><td><span class="ok">通过</span>　26 个分支，均有对应节点</td></tr>
+  <tr><td>元素 id 唯一性</td><td>全文 id 去重比对</td><td><span class="ok">通过</span>　36 个 id，无重复</td></tr>
+  <tr><td>初始态归位</td><td>检查静态 class 定格情况</td><td><span class="ok">通过</span>　默认落登录页；协议框未勾；遮罩与半屏层无 <code>show</code>；右栏停在登录 PRD</td></tr>
+  <tr><td>点击链路自检</td><td>运行 <code>04_原型点击链路自检.js</code></td><td><span class="ok">通过 12 / 12</span></td></tr>
+  <tr><td>历史能力清除</td><td>全文检索「头像」</td><td><span class="ok">通过</span>　0 处（原型与两份 PRD 均清零）</td></tr>
+  <tr><td>编辑器残留</td><td>检索空 <code>style=""</code>、空字段行、空容器</td><td><span class="ok">通过</span>　0 处</td></tr>
+  <tr><td>字段行完整性</td><td>检查右栏 60 条字段行是否有「删了内容只剩字段名」</td><td><span class="ok">通过</span>　无空值字段行</td></tr>
+</table>
+
+<h2>三、原型交互覆盖（12 条自检链路）</h2>
+<table>
+  <tr><th style="width:44px">序号</th><th>链路</th><th style="width:66px">结果</th></tr>
+  <tr><td>1</td><td>点【账号密码登录】→ 半屏层弹出，右侧 PRD 切到「账号密码登录」</td><td class="ok">通过</td></tr>
+  <tr><td>2</td><td>输入账号密码 → 点【登录】→ 关闭半屏层并进入「我的页」</td><td class="ok">通过</td></tr>
+  <tr><td>3</td><td>空账号点【登录】→ 拦截并提示，不关层</td><td class="ok">通过</td></tr>
+  <tr><td>4</td><td>我的页 ✎ → 填写层 → 输入 → 保存 → 提示成功并写入</td><td class="ok">通过</td></tr>
+  <tr><td>5</td><td>昵称留空保存 → 拦截</td><td class="ok">通过</td></tr>
+  <tr><td>6</td><td>填写层输入后点【取消】关层 → 再打开草稿还在；保存后重开显示已保存值</td><td class="ok">通过</td></tr>
+  <tr><td>7</td><td>账号密码登录后，我的页圆形占位为橙色「待」态；填完昵称保存后转账号名称首字</td><td class="ok">通过</td></tr>
+  <tr><td>8</td><td>昵称跟原来一样 → 提示「昵称没有变化」且不关层；改成新值 → 保存成功</td><td class="ok">通过</td></tr>
+  <tr><td>9</td><td>手机号登录后，圆形占位为账号名称首字（不带橙色待态）</td><td class="ok">通过</td></tr>
+  <tr><td>10</td><td>勾协议 → 手机号快捷登录 → 允许 → 进「我的页」</td><td class="ok">通过</td></tr>
+  <tr><td>11</td><td>授权面板多号码：选未注册号码 → 允许 → 提示未注册，停留登录页</td><td class="ok">通过</td></tr>
+  <tr><td>12</td><td>退出登录 → 确认 → 回到登录页</td><td class="ok">通过</td></tr>
+</table>
+
+<h2>四、口径定稿速查</h2>
+<table>
+  <tr><th style="width:190px">位置</th><th>定稿文案 / 规则</th></tr>
+  <tr><td>我的页顶部引导条</td><td>完善微信昵称，在售后时可以根据昵称@到你　（按钮：去设置）</td></tr>
+  <tr><td>编辑弹层标题</td><td>资料为空 → <b>完善微信昵称</b>；已有值 → <b>更新微信昵称</b></td></tr>
+  <tr><td>编辑弹层说明句</td><td>用于处理售后时，在售后群内找到你【昵称要与售后群的昵称一致】。</td></tr>
+  <tr><td>字数计数</td><td>输入框右下角，格式为「当前字数/30」（如 0/30），不展示「剩余可输入」</td></tr>
+  <tr><td>昵称留空保存</td><td>拦截并提示「请输入微信昵称」，不关层</td></tr>
+  <tr><td>昵称与原值相同</td><td>提示「昵称没有变化」，不关层</td></tr>
+  <tr><td>保存成功</td><td>toast「保存成功」，关层并写回我的页</td></tr>
+  <tr><td>一键带入昵称</td><td>点输入框后，键盘上方出现「使用微信昵称」，点一下填入（微信真机绘制，样式不可改）</td></tr>
+  <tr><td>手机号未命中</td><td>提示「该手机号没有注册供应商账号」，停留登录页</td></tr>
+  <tr><td>我的页圆形占位</td><td>两态：已填昵称 → 蓝底账号名称首字；未填 → 橙色虚线「待」</td></tr>
+  <tr><td>隐私声明清单</td><td>仅 手机号 + 昵称 两项（昵称须在上线前《用户隐私保护指引》中声明）</td></tr>
+  <tr><td>昵称更新路径</td><td>唯一路径：✎ → 编辑弹窗 → 点「使用微信昵称」→ 保存。进小程序<b>不会</b>自动同步，需求与话术均不得如此表述</td></tr>
+</table>
+
+<h2>五、待确认项</h2>
+<div class="todo">
+<b>① 右栏「七、登录后顶部那条引导条」疑似缺一条研发硬约束</b><br>
+上一版（在线 v1）该卡片含一条红底硬约束：<b>「登录成功后不要再自己加弹窗 —— 手机号登录已经用过一次微信弹窗，紧接着再弹就成了 5 秒两个弹窗」</b>。本版该处只剩空行，疑为编辑器重存时吞行。<br>
+<b>当前处理</b>：未擅自补回，保持文件现状。<br>
+<b>待你确认</b>：需要补回 / 确认删除，说一声即可出 v3。
+</div>
+<div class="note">
+说明：本次编辑模式手改已全部落盘并归位，除上述一处外，未发现其他节点丢失（已用上一版逐面板比对：节点 id、字段行、文案三层核对）。
+</div>
+
+<h2>六、复核方式</h2>
+<ul>
+  <li><b>在线走查（推荐）</b>：浏览器 / 手机打开 <code>https://www.htmlcode.fun/s/xile-supplier-proto/v/2</code>；主链接 <code>https://www.htmlcode.fun/s/xile-supplier-proto</code> 始终指向最新版，历史版本可用 <code>/v/1</code> 回看。</li>
+  <li><b>本地查看</b>：直接用浏览器打开 <code>01_原型+关键PRD并排走查稿.html</code>，单文件自包含，无需服务器与网络。</li>
+  <li><b>交互自检</b>：在本目录执行 <code>node 04_原型点击链路自检.js</code>（需 Node 环境），输出 12 条链路结果；全部显示 ✓ 即为通过。</li>
+  <li><b>PRD 阅读</b>：<code>02</code> / <code>03</code> 两份 PRD 为独立完整文档，可单独分发研发；每份开头的「修订摘要」记录了本轮的字段口径变更。</li>
+</ul>
+
+<div class="foot">
+喜乐点餐 · 供应商端小程序　|　交付包生成于 2026-09-23　|　主交付物《01_原型+关键PRD并排走查稿.html》为唯一有效版本，此前工作区内的早期迭代原型均已被其取代。
+</div>
+
+</div>
+</body>
+</html>
