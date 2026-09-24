@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="uRfsgTvs0QnEBSsAiyYgtP" data-dm-ref="1"><head data-page-node-id="y6tfWDlXAFetsJqysQ3nL3">
+<meta charset="UTF-8" data-page-node-id="UjA3iu9WVoDYmX0YcZnSul">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="4yUkCfnDDbyAzMn4JbO0fh">
+<title>供应商端 · 登录 → 我的页 ｜ 原型 + 关键 PRD</title>
+<style>
+  :root{
+    --blue:#5B7BF0; --blue-lt:#8FB0FA; --blue-deep:#3D5EDB;
+    --ink:#2B2F36; --grey:#8A9099; --line:#EEF0F4; --bg1:#E9EEF8; --bg2:#F6F8FC;
+    --green:#07C160; --orange:#E6A23C; --red:#E34D59;
+    --doc:#1B4E8C; --doc-bg:#EEF3FA;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#E5E8EF;color:var(--ink);
+    display:flex;gap:30px;align-items:flex-start;justify-content:center;padding:28px 20px;flex-wrap:wrap;}
+
+  /* ---------- 手机框 ---------- */
+  .phone{width:390px;height:844px;background:linear-gradient(175deg,var(--bg1) 0%,var(--bg2) 38%,#FFFFFF 70%);
+    border-radius:44px;box-shadow:0 18px 50px rgba(40,60,120,.18);position:relative;overflow:hidden;flex-shrink:0;border:1px solid #fff;}
+  .statusbar{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:13px;font-weight:600;color:#333;}
+  .capsule{position:absolute;top:52px;right:16px;width:86px;height:30px;border:1px solid rgba(0,0,0,.08);background:rgba(255,255,255,.7);border-radius:15px;display:flex;align-items:center;justify-content:center;gap:10px;color:#555;font-size:12px;z-index:5;}
+  .capsule i{width:17px;height:17px;border:1.4px solid #777;border-radius:50%;display:inline-block;position:relative;}
+  .capsule i::after{content:'';position:absolute;inset:4.5px;background:#777;border-radius:50%;}
+
+  .page{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .25s, transform .25s;transform:translateX(24px);overflow:hidden;}
+  .page.on{opacity:1;pointer-events:auto;transform:translateX(0);}
+
+  /* ================= 登录页 ================= */
+  #pageLogin{background:linear-gradient(175deg,var(--bg1) 0%,var(--bg2) 40%,#FFFFFF 75%);}
+  .nav{display:flex;align-items:center;height:44px;margin-top:44px;padding:0 16px;position:relative;}
+  .nav .bk{font-size:20px;color:#3A3F47;cursor:pointer;padding:4px 8px;}
+  .nav .ttl{position:absolute;left:50%;transform:translateX(-50%);font-size:16.5px;font-weight:600;}
+  .brand{display:flex;flex-direction:column;align-items:center;margin-top:84px;}
+  .logo{width:76px;height:76px;border-radius:38px;background:linear-gradient(135deg,#6C8CF8,#9FBCFC);
+    display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;color:#fff;letter-spacing:2px;
+    box-shadow:0 8px 22px rgba(91,123,240,.28);}
+  .brand .bn{margin-top:14px;font-size:17px;font-weight:600;color:var(--ink);}
+  .lbtns{margin:74px 30px 0;display:flex;flex-direction:column;gap:14px;}
+  .lbtn{height:48px;border-radius:24px;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:0;}
+  .lbtn.grad{background:linear-gradient(90deg,#6C8CF8,#9FBCFC);color:#fff;font-weight:600;box-shadow:0 6px 16px rgba(91,123,240,.25);}
+  .lbtn.grad:active{filter:brightness(.96);}
+  .lbtn.ghost{background:#F5F6FA;color:var(--ink);}
+  .reglink{text-align:right;margin:16px 32px 0;font-size:13px;color:var(--blue);cursor:pointer;}
+  .agree{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:26px;font-size:12px;color:#8A9099;}
+  .cbox{width:16px;height:16px;border-radius:50%;border:1.4px solid #C4CAD4;cursor:pointer;flex-shrink:0;position:relative;transition:all .15s;}
+  .cbox.on{background:var(--green);border-color:var(--green);}
+  .cbox.on::after{content:'';position:absolute;left:4.5px;top:1.5px;width:4px;height:8px;border:solid #fff;border-width:0 1.6px 1.6px 0;transform:rotate(45deg);}
+  .agree a{color:var(--blue);text-decoration:none;cursor:pointer;}
+  .lfoot{position:absolute;bottom:40px;left:0;right:0;text-align:center;font-size:11px;color:#C4C9D4;line-height:1.9;padding:0 44px;}
+  .lfoot .ver{margin-top:2px;}
+
+  /* ================= 我的页 ================= */
+  #pageMine{background:linear-gradient(175deg,var(--bg1) 0%,var(--bg2) 38%,#FFFFFF 70%);}
+
+  .guidebar{margin:56px 16px 0;background:#FFF7E8;border:1px solid #F3DDB3;border-radius:12px;padding:10px 12px;
+    display:none;align-items:center;gap:8px;font-size:12.5px;color:#8A6116;line-height:1.6;}
+  .guidebar.show{display:flex;}
+  .guidebar .go{margin-left:auto;color:var(--blue);font-weight:600;cursor:pointer;white-space:nowrap;}
+  .guidebar .x{color:#C0A468;cursor:pointer;padding:0 4px;font-size:14px;}
+
+  .uarea{display:flex;align-items:center;gap:14px;padding:26px 22px 20px;border-radius:14px;}
+  .uinfo{flex:1;min-width:0;}
+  .avatar{width:64px;height:64px;border-radius:50%;background:#DDE5F5;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;position:relative;}
+  /* 圆形占位两态：已填昵称 → 账号名称首字；未填 → 橙色虚线「待」 */
+  .avatar .zi{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;color:#fff;background:var(--blue);}
+  .avatar.warn{background:#FDF3E3;border:1.6px dashed var(--orange);}
+  .avatar.warn .zi{display:none;}
+  .avatar.warn::after{content:'待';font-size:18px;color:var(--orange);font-weight:600;}
+  .uname{font-size:19px;font-weight:600;color:var(--ink);line-height:1.4;word-break:break-word;overflow-wrap:anywhere;}
+  .unick{font-size:12.5px;color:#8A9099;margin-top:4px;display:flex;align-items:flex-start;}
+  .unick-txt{flex:1;min-width:0;line-height:1.6;word-break:break-word;overflow-wrap:anywhere;white-space:normal;}
+  .edit-ic{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;margin-left:5px;margin-top:1px;
+    border-radius:6px;cursor:pointer;color:var(--blue);background:#EEF2FE;transition:background .15s;flex-shrink:0;align-self:flex-start;}
+  .edit-ic:hover{background:#DCE6FD;}
+  .edit-ic svg{width:11px;height:11px;}
+  .uhint{font-size:11.5px;color:var(--orange);margin-top:4px;display:none;cursor:pointer;line-height:1.6;word-break:break-word;}
+  .uarrow{margin-left:auto;color:#C2C8D2;font-size:16px;}
+
+  .card-mine{background:#fff;border-radius:18px;margin:8px 16px;padding:18px 18px 16px;box-shadow:0 4px 18px rgba(120,140,190,.08);}
+  .card-mine .t{font-size:13px;color:#6E7684;}
+  .card-mine .amt{font-size:32px;font-weight:700;margin:6px 0 14px;letter-spacing:.5px;}
+  .split{display:flex;font-size:12px;color:#8A9099;}
+  .split .col{flex:1;text-align:center;}
+  .split .col b{display:block;font-size:16px;color:var(--ink);margin-top:5px;font-weight:600;}
+  .btnrow{display:flex;gap:12px;margin-top:16px;}
+  .btn{flex:1;height:42px;border-radius:21px;font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:0;}
+  .btn.grad{background:linear-gradient(90deg,#7BA0F8,#A9C4FB);color:#fff;font-weight:600;}
+  .btn.ghost{background:#F5F6FA;color:var(--ink);}
+
+  .logout{background:#fff;border-radius:18px;margin:14px 16px;padding:16px 18px;display:flex;align-items:center;gap:10px;font-size:15px;cursor:pointer;}
+  .logout:active{background:#F7F8FB;}
+  .logout .ic{width:20px;height:20px;border:1.6px solid #5B6472;border-radius:6px;position:relative;}
+  .logout .ic::after{content:'';position:absolute;right:3px;top:3px;width:6px;height:12px;border:1.6px solid #5B6472;border-left:0;border-radius:0 3px 3px 0;}
+  .logout .ar{margin-left:auto;color:#C2C8D2;font-size:15px;}
+
+  .foot{position:absolute;bottom:96px;left:0;right:0;text-align:center;font-size:11px;color:#C4C9D4;line-height:1.8;padding:0 40px;}
+
+  .tabbar{position:absolute;bottom:0;left:0;right:0;height:82px;background:#fff;border-top:1px solid var(--line);
+    display:flex;padding:8px 6px 0;z-index:4;}
+  .tab{flex:1;text-align:center;font-size:10.5px;color:#9AA1AC;cursor:pointer;}
+  .tab .ico{width:22px;height:22px;margin:0 auto 3px;border-radius:6px;background:#D9DEE8;}
+  .tab.on{color:var(--blue);font-weight:600;}
+  .tab.on .ico{background:var(--blue);}
+  .homebar{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:#D8DCE4;z-index:5;}
+
+  /* ---------- 半屏层 / 面板 ---------- */
+  .mask{position:absolute;inset:0;background:rgba(20,24,34,.45);opacity:0;pointer-events:none;transition:opacity .22s;z-index:20;}
+  .mask.show{opacity:1;pointer-events:auto;}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;transform:translateY(105%);
+    transition:transform .26s ease;z-index:21;padding:16px 18px 30px;}
+  .sheet.show{transform:translateY(0);}
+  .sh{display:flex;align-items:center;margin-bottom:4px;}
+  .sh b{font-size:16.5px;}
+  .sh .x{margin-left:auto;color:#A6ADB8;font-size:20px;cursor:pointer;padding:2px 6px;}
+  .sb .lbl{font-size:12.5px;color:#8A9099;margin:8px 0 10px;line-height:1.6;}
+  .field{display:flex;align-items:center;border:1.4px solid #E3E7EF;border-radius:12px;padding:0 6px 0 14px;height:48px;background:#FAFBFD;}
+  .field.focus{border-color:var(--blue);background:#fff;}
+  .field input{flex:1;border:0;outline:0;background:transparent;font-size:15px;height:100%;min-width:0;}
+  .field .pick{flex-shrink:0;font-size:12px;color:var(--blue);background:#EEF2FE;border-radius:14px;padding:6px 11px;cursor:pointer;margin-left:8px;}
+  .cnt{text-align:right;font-size:11px;color:#B4BAC4;margin-top:5px;}
+  .warnbox{background:#FFF7E8;border-radius:10px;padding:10px 12px;font-size:11.5px;color:#8A6116;line-height:1.7;margin-top:12px;}
+  .forgot{text-align:right;font-size:12.5px;color:var(--blue);margin-top:12px;cursor:pointer;}
+  .btn.green{width:100%;height:46px;border-radius:23px;background:var(--blue);color:#fff;font-size:16px;font-weight:600;margin-top:16px;border:0;cursor:pointer;}
+  .btn.green:active{background:var(--blue-deep);}
+
+  /* 微信原生手机号面板（L2 · 唯一一次授权） */
+  .wxpanel{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:30;display:none;align-items:flex-end;}
+  .wxpanel.show{display:flex;}
+  .wxcard{width:100%;background:#F4F5F7;border-radius:20px 20px 0 0;padding:14px 16px 34px;animation:up .26s ease;}
+  @keyframes up{from{transform:translateY(60%);}to{transform:translateY(0);}}
+  .wbar{width:36px;height:5px;border-radius:3px;background:#D5D8DE;margin:0 auto 12px;}
+  .wttl{text-align:center;font-size:16px;font-weight:600;color:#111;}
+  .wsub{text-align:center;font-size:12px;color:#9A9FA6;margin:4px 0 14px;line-height:1.6;}
+  .wphone{background:#fff;border-radius:14px;padding:16px 14px;text-align:center;margin-bottom:8px;cursor:pointer;border:2px solid transparent;}
+  .wphone .num{font-size:22px;font-weight:700;letter-spacing:1px;}
+  .wphone .cap{font-size:11.5px;color:#9A9FA6;margin-top:6px;}
+  .wphone .last{display:inline-block;font-size:11px;color:#07C160;margin-top:4px;}
+  .wphone.sel{border-color:#07C160;}
+  .wmanage{font-size:13px;color:#576B95;text-align:center;padding:12px 0 4px;cursor:pointer;}
+  .wbtns{display:flex;gap:10px;margin-top:6px;}
+  .wbtn{flex:1;height:44px;border-radius:22px;font-size:15.5px;border:0;cursor:pointer;}
+  .wbtn.ok{background:#07C160;color:#fff;font-weight:600;}
+  .wbtn.no{background:#fff;color:#646566;}
+
+  /* 微信填写昵称面板（L2 · 填写，非授权） */
+  .wxrow{background:#fff;border-radius:14px;padding:15px 16px;display:flex;align-items:center;font-size:15px;cursor:pointer;margin-bottom:10px;}
+  .wxrow .v{margin-left:auto;color:#9A9FA6;font-size:14px;max-width:62%;text-align:right;line-height:1.5;word-break:break-word;overflow-wrap:anywhere;}
+  .wxrow .v.got{color:#111;}
+  .wxuse{background:#fff;border-radius:14px;padding:15px 16px;text-align:center;font-size:15px;color:var(--green);font-weight:600;cursor:pointer;margin-bottom:10px;}
+  .wxuse.done{color:#B8BCC2;font-weight:400;}
+  .wcancel{width:100%;height:44px;border-radius:10px;border:0;background:#fff;color:#646566;font-size:16px;cursor:pointer;margin-top:2px;}
+  .wkeyboard{background:#E9EBEE;margin:14px -16px -34px;padding:10px 16px 40px;}
+  .wkb-hint{font-size:11.5px;color:#8A9099;text-align:center;margin-bottom:8px;}
+  .wkb-row{display:flex;gap:6px;}
+  .wkb{flex:1;height:40px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;color:#333;cursor:pointer;}
+
+  /* 退出确认 */
+  .dlg{position:absolute;left:70px;right:70px;top:340px;background:#fff;border-radius:16px;z-index:31;padding:24px 20px 0;text-align:center;display:none;}
+  .dlg.show{display:block;}
+  .dlg p{font-size:15.5px;font-weight:600;}
+  .dlg .sub{font-size:12.5px;color:#8A9099;font-weight:400;margin-top:8px;line-height:1.6;}
+  .dlg .row{display:flex;border-top:1px solid var(--line);margin-top:20px;}
+  .dlg .row span{flex:1;padding:13px 0;font-size:15px;cursor:pointer;}
+  .dlg .row span:first-child{border-right:1px solid var(--line);color:#8A9099;}
+  .dlg .row span:last-child{color:var(--red);font-weight:600;}
+
+  .toast{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);background:rgba(0,0,0,.78);color:#fff;
+    font-size:13px;padding:10px 17px;border-radius:9px;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s;
+    max-width:76%;text-align:center;line-height:1.5;}
+  .toast.show{opacity:1;}
+
+  /* ---------- 右侧：关键 PRD ---------- */
+  .side{position:relative;width:600px;max-width:calc(100vw - 470px);min-width:400px;height:844px;overflow-y:auto;
+    padding:0 10px 0 0;scrollbar-width:thin;scrollbar-color:#C3CAD6 transparent;}
+  .side::-webkit-scrollbar{width:7px;}
+  .side::-webkit-scrollbar-thumb{background:#C3CAD6;border-radius:4px;}
+  .side h1{font-size:19px;margin-bottom:4px;}
+  .side .sub{font-size:12.5px;color:#8A9099;margin-bottom:12px;line-height:1.7;}
+  .steps{display:flex;gap:4px;margin-bottom:12px;}
+  .step{flex:1;background:#fff;border-radius:10px;padding:8px 4px;text-align:center;font-size:11px;color:#8A9099;cursor:pointer;border:1.4px solid #E9EDF4;line-height:1.5;}
+  .step b{display:block;font-size:12.5px;color:var(--ink);margin-bottom:2px;}
+  .step.cur{border-color:var(--blue);color:var(--blue);}
+  .step.cur b{color:var(--blue);}
+  .chips{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+  .chip{padding:7px 15px;border-radius:18px;background:#fff;font-size:12.5px;cursor:pointer;border:1.4px solid #E3E7EF;color:#6E7684;}
+  .chip.on{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600;}
+  .syncbar{background:#EEF3FA;border-radius:10px;padding:9px 13px;font-size:12px;color:#5A6B85;line-height:1.6;margin-bottom:4px;}
+  .syncbar b{color:var(--doc);}
+  .fieldset{display:block;font-size:11.5px;color:#98A2B4;margin:14px 0 -4px;letter-spacing:.5px;}
+
+  .prd{display:none;}
+  .prd.on{display:block;}
+
+  .pcard{background:#fff;border-radius:14px;padding:15px 18px 14px;box-shadow:0 2px 10px rgba(0,0,0,.05);margin-top:12px;}
+  .pcard .pch{display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px dashed #E9EDF4;margin-bottom:9px;}
+  .pcard .pch b{font-size:13.5px;color:var(--doc);line-height:1.5;}
+  .pcard .src{margin-left:auto;font-size:10.5px;color:#7C8698;background:#F1F4FA;border-radius:10px;padding:2px 8px;white-space:nowrap;flex-shrink:0;}
+  .pl{list-style:none;margin:0;padding:0;}
+  .pl li{position:relative;padding-left:14px;font-size:12.5px;line-height:1.8;color:#4A5568;margin:4px 0;}
+  .pl li::before{content:'';position:absolute;left:4px;top:9px;width:4px;height:4px;border-radius:50%;background:#B9C6DE;}
+  .pl li b{color:#2B2F36;}
+  .pl li .red{color:var(--red);font-weight:600;}
+  .pl li .k{background:var(--doc-bg);color:var(--doc);border-radius:4px;padding:0 5px;}
+  .pl li .tg{display:inline-block;font-size:10.5px;border-radius:9px;padding:1px 7px;margin-left:4px;vertical-align:1px;}
+  .tg.ok{color:#1F7A4D;background:#EFF7F2;}
+  .tg.no{color:#8A6116;background:#FDF6E8;}
+  .pcard table{border-collapse:collapse;width:100%;font-size:12px;margin-top:8px;}
+  .pcard th,.pcard td{border:1px solid #EDEFF3;padding:6px 9px;text-align:left;line-height:1.65;color:#4A5568;}
+  .pcard th{background:#F5F7FC;color:#4A5568;font-weight:600;}
+  .gap{margin-top:10px;font-size:11.5px;color:#8A6116;background:#FFF7E8;border-radius:8px;padding:8px 11px;line-height:1.75;}
+  .gap b{color:#B88230;}
+  .hard{margin-top:10px;font-size:11.5px;color:#A33;background:#FDF2F1;border-radius:8px;padding:8px 11px;line-height:1.75;}
+  .hard b{color:#C0392B;}
+  .pcard .sub2{font-size:12px;color:#7C8698;margin:8px 0 0;line-height:1.7;}
+  .replay{display:inline-block;margin:14px 0 4px;padding:8px 18px;border-radius:18px;background:var(--blue);color:#fff;font-size:13px;cursor:pointer;font-weight:600;}
+
+  /* ---------- PRD 字段化排版（新增 / 数据源 / 交互逻辑 / 显示逻辑 …） ---------- */
+  .fb{display:flex;gap:9px;font-size:12.5px;line-height:1.8;color:#4A5568;margin:7px 0;}
+  .fb .fk{flex:0 0 74px;height:20px;line-height:20px;margin-top:2px;text-align:center;font-size:11px;font-weight:600;color:#1B4E8C;background:#EEF3FA;border-radius:5px;letter-spacing:.3px;}
+  .fb .fv{flex:1;min-width:0;word-break:break-word;overflow-wrap:anywhere;}
+  .fb .fv b{color:#2B2F36;}
+  .fb .fv .k{background:#EEF3FA;color:#1B4E8C;border-radius:4px;padding:0 5px;}
+  .fb .fv .red{color:#E34D59;font-weight:600;}
+  .fb .fv .tg{display:inline-block;font-size:10.5px;border-radius:9px;padding:1px 7px;margin-left:4px;vertical-align:1px;}
+  .fb .fv table{margin:6px 0 2px;}
+  .fb.warnbg{background:#FFF7E8;border-radius:8px;padding:7px 10px;}
+  .fb.warnbg .fk{color:#B88230;background:#FBEED2;}
+  .fb.hardbg{background:#FDF2F1;border-radius:8px;padding:7px 10px;}
+  .fb.hardbg .fk{color:#C0392B;background:#FBE3E1;}
+  .pcard .fb:last-child{margin-bottom:2px;}
+
+</style>
+<style id="__dm_no_drag_style__">* { -webkit-user-drag: none !important; }</style><style id="__dm_bindable_badge_style__">[data-sp-bindable="database"]{outline:1px dashed #0088ff;outline-offset:2px;border-radius:4px;}[data-sp-bindable="database"] *{pointer-events:none !important;transition:none !important;animation:none !important;}[data-sp-bindable="database"]{transition:none !important;animation:none !important;}</style></head>
+<body data-page-node-id="uqHx4hnRF43qxPE5scVYSC">
+
+<!-- ================= 左：原型 ================= -->
+<div class="phone" id="phone" data-page-node-id="FQYmYrpLBMkLY7lnwh0OX7">
+
+  <!-- ============ 登录页 ============ -->
+  <div class="page on" id="pageLogin" data-page-node-id="EKE4hMse782L29C8jj95ib">
+    <div class="statusbar" data-page-node-id="Zh3S55PxHCRDs1k44NwoNN"><span data-page-node-id="VY5qmuCElM50wxYNcetY9M">09:19</span><span data-page-node-id="VbQAf23Vyls5xLFYh6rxcw">5G⁺ 57</span></div>
+    <div class="nav" data-page-node-id="G2PL9bHGOYa6dqvFvc7IPA"><span class="bk" data-act="navBack" data-page-node-id="G2we8avpNPxEsKAosEBKNJ">‹</span><span class="ttl" data-page-node-id="fAKzL3pHqAUDBYmkO5oTAN">登录</span></div>
+    <div class="brand" data-page-node-id="L2GP4TZbfBI1iAv92K1ge3">
+      <div class="logo" data-page-node-id="CwKgqbco1Y2fwAA3jUEPf4">喜乐</div>
+      <div class="bn" data-page-node-id="aoLBKOL2FNmyEUatvbOvpp">喜乐点餐商家</div>
+    </div>
+    <div class="lbtns" data-page-node-id="YFCGu3QQBs4fxZWeH5Rdv0">
+      <button class="lbtn grad" data-act="phoneLogin" data-page-node-id="PhkOLWgE3JUCQQ469iNZ1Y">手机号快捷登录</button>
+      <button class="lbtn ghost" data-act="pwdLogin" data-page-node-id="8aQ33a89bKKjCGSLgLJVSF">账号密码登录</button>
+    </div>
+    <div class="reglink" data-act="reg" data-page-node-id="F6FkjZxbJQc3KAb8ReHWii">没账号去注册</div>
+    <div class="agree" data-page-node-id="0oorZElbt9yg3L3MhKAlHm">
+      <span class="cbox" id="cbox" data-act="agree" data-page-node-id="FQWwS2hDRpBJKLO2F9VNAz"></span>
+      <span data-page-node-id="g5T5xNSVHHxOTTbQ9uEbUD">勾选即代表同意<a data-act="privacy" data-page-node-id="WQ9tXtmYHbA7LrMXbQHmip">《隐私政策》</a></span>
+    </div>
+    <div class="lfoot" data-page-node-id="hxk3cuR2k2Y96ecDW6uFJs">
+      喜乐点餐商家端小程序为喜乐点餐供应商内部工具，仅限我司合作供应商进行登录。
+      <div class="ver" data-page-node-id="bOmeGJT7kiNpXnktOlBkhG">v2.2.42.2</div>
+    </div>
+  </div>
+
+  <!-- ============ 我的页 ============ -->
+  <div class="page" id="pageMine" data-page-node-id="jkkAoeXq33PRFb3dlGFpX6">
+    <div class="statusbar" data-page-node-id="cwnxo7YGp9we7HGpppGFXW"><span data-page-node-id="7rxbYfw1DMhzrXCOcx1Zaj">09:19</span><span data-page-node-id="8nhmZvDEKwFeVw4vvu3NvO">5G⁺ 57</span></div>
+
+    <div class="guidebar" id="guidebar" data-page-node-id="gDSsWntx29NwQWMaQR73SH">
+      <span data-page-node-id="nQDcwg2JHpwAJBCLoOrGwE">完善微信昵称，在售后时可以根据昵称@到你​​</span>
+      <span class="go" data-act="openNick" data-page-node-id="aIHcVzzD17RMiapFyYoyFs">去设置</span>
+      <span class="x" data-act="closeGuide" data-page-node-id="EipKYOozAOHG831VHR2ugY">×</span>
+    </div>
+
+    <div class="uarea unset" id="uarea" data-page-node-id="qXTkGTolGuYODeJv4BURWo">
+      <div class="avatar warn" id="avatar" data-page-node-id="KkJNjsjOiFghDZq0SZ1sTt"><span class="zi" id="zi" data-page-node-id="FTIMzwLETtYVRcWUWp1c7o">测</span></div>
+      <div class="uinfo" data-page-node-id="xEGGbRDJKTDDPXPGjlJehf">
+        <div class="uname" id="uname" data-page-node-id="51Bw0cqyyEZ0Y16vbVQZBR">测试环境--井惠琳</div>
+        <div class="unick" id="unick" data-page-node-id="yc7BBBffJBweEkosnGTz4W" style="display: none;">
+          <span class="unick-txt" data-page-node-id="NdxgiNNupJPfwsP8DXXLZ9">微信昵称：<span id="unickVal" data-page-node-id="IfdpTtOtPKSUgCg0T4xvwW">井惠琳</span></span>
+          <span class="edit-ic" data-act="openNick" title="修改微信昵称" data-page-node-id="FYMQgutLynNkWZVLO2g3HH">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="lFO6DRwI7vD3fOEBVkFuW2"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" data-page-node-id="4CnulQbeAF5I8jMj7FWTaK"></path></svg>
+          </span>
+        </div>
+        <div class="uhint" data-act="openNick" data-page-node-id="JHHHaSKcwP4T8t1Kt2Vapr">微信昵称未设置，影响售后对接 · 点击完善 ✎</div>
+      </div>
+      
+    </div>
+
+    <div class="card-mine" data-page-node-id="FKGOcFoOZmFGAwVsKSWExP">
+      <div class="t" data-page-node-id="3lmO2x0DDEDcAQlaPnMR8Y">账户余额</div>
+      <div class="amt" data-page-node-id="N875WKqBFbfNxdx9fA4vcP">22.82</div>
+      <div class="split" data-page-node-id="mtuoHbrNAS0Ou7L3wZHywx">
+        <div class="col" data-page-node-id="keHY7mGOovgNeNIBcyUjwb">可提现现金（元）<b data-page-node-id="kpvVP2mbFyNTRXY9mgr3Kw">22.82</b></div>
+        <div class="col" data-page-node-id="0LdZ3jCg5YcaUffaPTFNqB">冻结金额（元）<b data-page-node-id="mZ6eROUY1UBuCmeoRToK1u">0</b></div>
+      </div>
+      <div class="btnrow" data-page-node-id="sUXugr6VwquP6reTJWGy1I">
+        <button class="btn grad" data-act="withdraw" data-page-node-id="JimfpTnmRiAjnzxgq7KbMc">立即提现</button>
+        <button class="btn ghost" data-act="withdrawLog" data-page-node-id="HiyXLAmVchjPfezIgTFGza">提现记录</button>
+      </div>
+    </div>
+
+    <div class="logout" data-act="logout" data-page-node-id="9bp4nS3wyuEbkh1d1KYB2G"><span class="ic" data-page-node-id="xFiy8VXBMlFrZbbDj0HGHF"></span>退出登录<span class="ar" data-page-node-id="B7DGDVlZFuEIXe6LJm55pH">›</span></div>
+
+    <div class="foot" data-page-node-id="8AGBJCYQzNLovoxTXz3uUh">喜乐点餐商家端小程序为喜乐点餐供应商内部工具，仅限我司合作供应商进行登录。</div>
+
+    <div class="tabbar" data-page-node-id="6eO5kEj1KGBShx6GeKupXz">
+      <div class="tab" data-page-node-id="300TXtkeWWgjwcghA7nswM"><div class="ico" data-page-node-id="Fy8boEEeYQTCJCaCOnPXoJ"></div>首页</div>
+      <div class="tab" data-page-node-id="VZAvzf7XF3XBnzmHMMky8D"><div class="ico" data-page-node-id="Q5yxpy1Z9zuGbBtjnDLcCZ"></div>工作台</div>
+      <div class="tab" data-page-node-id="bAnmVgPBXVUunEZtz0Gvx2"><div class="ico" data-page-node-id="IzjNDHL9Nsq3rAMotBxoxU"></div>订单</div>
+      <div class="tab on" data-page-node-id="PT8SHKtq8kQfinh8xhPMHM"><div class="ico" data-page-node-id="Kt35JFOcJXyBBufPAEvxih"></div>我的</div>
+    </div>
+  </div>
+
+  <div class="capsule" data-page-node-id="gONwlZqLCiqyC677dUjN5t"><span data-page-node-id="fZJgQHdlpZcGuSsZHo1hye">•••</span><i data-page-node-id="Zu1hsrZ1uWIjqeBXFLvTlW"></i></div>
+  <div class="homebar" data-page-node-id="pfEW4KlvYsppnD1gJmwQuY"></div>
+
+  <div class="mask" id="mask" data-page-node-id="3QBa9pzOVrwxVQZvLAVMhp"></div>
+
+  <!-- L1 账号密码登录层 -->
+  <div class="sheet" id="shPwd" data-page-node-id="PdzElqxbsCuNUcsyHpnNjp">
+    <div class="sh" data-page-node-id="2RJP3c2lbZhMgHgDY8QtD1"><b data-page-node-id="4cD1F5PQoirbeGxL7EMgxw">账号密码登录</b><span class="x" data-act="closeSheet" data-page-node-id="nsELDyBIXT8O6DA8FHgbHv">×</span></div>
+    <div class="sb" data-page-node-id="KtNASyvC9GSvrDsv5B0PsQ">
+      <div class="field" data-page-node-id="EDRksv8LhnueqnaGGogxzz"><input id="accInput" type="text" maxlength="11" placeholder="请输入手机号" data-page-node-id="lGmDTZbomSkj1HmvdCf7A8"></div>
+      <div class="field" style="margin-top:10px;" data-page-node-id="a8HwrNvf81UimbQGyjcmib">
+        <input id="pwdInput" type="password" placeholder="请输入密码" data-page-node-id="gLru1Ft1bvrjoCvuvdsBqk">
+        <span class="pick" data-act="togglePwd" id="pwdPick" data-page-node-id="h7cfUDkJkK6YESJLKwn3bi">显示</span>
+      </div>
+      <button class="btn green" data-act="pwdSubmit" style="margin-top:18px;" data-page-node-id="3vuRHLtEpjqvFGEWy8QKEm">登录</button>
+      <p class="forgot" data-act="forgot" data-page-node-id="ON8vTW0kPavnjOB1ZjyMb1">忘记密码</p>
+      <p style="font-size:11.5px;color:#B4BAC4;text-align:center;margin-top:10px;line-height:1.7;" data-page-node-id="qFSrTaISB7l6VagvfENFsU">演示：任意账号密码可登录 · 此路径不调起微信授权，昵称为空需手动完善</p>
+    </div>
+  </div>
+
+  <!-- L1 微信昵称填写层 -->
+  <div class="sheet" id="shNick" data-page-node-id="xpelQiq9y8xGIlcq2u8p90">
+    <div class="sh" data-page-node-id="e66sahQwdWqRAJZcO55xKf"><b id="shNickTitle" data-page-node-id="u7Qtl1K1Qg2s3gmKn3jXSP">完善微信昵称</b><span class="x" data-act="closeSheet" data-page-node-id="YR7Y4w7EzdaiR7QaVFqpqv">×</span></div>
+    <div class="sb" data-page-node-id="il2lLACBS2AlVQfSvkImHj">
+      <p class="lbl" id="shNickDesc" data-page-node-id="AYBebI5wCDvMRAOUVJLUdc">用于处理售后时，在售后群内找到你【昵称要与售后群的昵称一致】。</p>
+      <div class="field" id="field" data-page-node-id="9ZXWSjthNjKi1YaEDMU0kT">
+        <!-- 真实实现：input type="nickname"，禁止 readonly / disabled -->
+        <input id="nickInput" type="text" maxlength="30" placeholder="请输入微信昵称" data-page-node-id="O1f8KF8dDsn8gyzHpyZtrV">
+        <span class="pick" data-act="openWx" data-page-node-id="oFhmA8taMuYeR70jaXqAiz">使用微信昵称</span>
+      </div>
+      <div class="cnt" data-page-node-id="Xo2pq0zc5fGV9F3ESNBEkJ"><span id="cnt" data-page-node-id="2DIlpHHHhM0ep7gGT70gvk">0</span>/30</div>
+      
+      <button class="btn green" data-act="save" data-page-node-id="zxpCcyi92uqpnHJl8ZuGQB">保存</button>
+    </div>
+  </div>
+
+  <!-- L2 微信原生手机号面板（全流程唯一一次授权弹窗） -->
+  <div class="wxpanel" id="phonePanel" data-page-node-id="kUHSVhBTiFo5rus7yKNFv3">
+    <div class="wxcard" data-page-node-id="vnujE5CEsUwYZF5T90svbH">
+      <div class="wbar" data-page-node-id="NpsdjAyog3hH1gV9sIYmDF"></div>
+      <div class="wttl" data-page-node-id="dRwCNYje7bXVgJ1104qMkZ">微信手机号快捷登录</div>
+      <div class="wsub" data-page-node-id="bPf562w97rRzQTC6G0GpgF">「喜乐点餐商家」申请获取你的手机号<br data-page-node-id="bbHZRGsTCXD9G9F4Sp2xFl">用于登录供应商账号</div>
+      <div class="wphone sel" data-act="pickPhone" data-num="a" data-page-node-id="Nk7NAKt3H3VyOU7VGLncJD">
+        <div class="num" data-page-node-id="B2B3gF1BhUG8H3sO7zOXOJ">193****2486</div>
+        <div class="last" data-page-node-id="5Q38gAIunDEGc6DXY1P78d">上次提供</div>
+      </div>
+      <div class="wphone" data-act="pickPhone" data-num="b" data-page-node-id="Nk7NAKt3H3VyOU7VGLncJD2">
+        <div class="num" data-page-node-id="B2B3gF1BhUG8H3sO7zOXOJ2">151****9939</div>
+      </div>
+      <div class="wmanage" data-act="managePhone" data-page-node-id="Nk7Mng1">管理号码</div>
+      <div class="wbtns" data-page-node-id="ln6oiIWcgXh0vz1xAuvQ5f">
+        <button class="wbtn no" data-act="phoneDeny" data-page-node-id="DtSceEYYWsOWyNyBMh9fLD">不允许</button>
+        <button class="wbtn ok" data-act="phoneAllow" data-page-node-id="I0bvl7dXlMeyBAM9H5DD2A">允许</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- L2 微信填写昵称面板（填写，非授权） -->
+  <div class="wxpanel" id="wxpanel" data-page-node-id="6JkCT3wEGfCDYrz17aD3e4">
+    <div class="wxcard" data-page-node-id="UpqzA5xrHoqjBspmOAntO5">
+      <div class="wbar" data-page-node-id="9BGwKjsEpCqkCg6homMIt0"></div>
+      <div class="wttl" data-page-node-id="kWHvwFqE6rIrzlgSkuLWtC">微信 · 填写昵称</div>
+      <div class="wsub" data-page-node-id="DinOAwcPZKxDgUP2FSlWHT">键盘上方工具条 · 使用微信昵称</div>
+      <div class="wxrow" data-act="wxUse" data-page-node-id="guE8lZNpw53c9B03QASX17"><span data-page-node-id="PTYhK5UzzPfmFW8uiVu5c0">昵称</span><span class="v got" id="wxNickVal" data-page-node-id="zV6fXZxpiNiurTbiwPynxn">井惠琳</span></div>
+      <div class="wxuse done" data-act="wxUse" id="wxUse" data-page-node-id="JVwyWJnOHDzU6SpxGPumMQ">已获取微信昵称 ✓</div>
+      <div class="wbtns" data-page-node-id="XCOHC9w0KmLfoQJV5UWOli">
+        <button class="wbtn no wcancel" data-act="wxCancel" data-page-node-id="lCFoE7wUgrSQYtGR6MJAvi">取消</button>
+        <button class="wbtn ok" id="wxConfirm" data-act="wxConfirm" data-page-node-id="WaENDdhm8PUQ4COPYBJNNl">确认</button>
+      </div>
+      <div class="wkeyboard" data-page-node-id="56fqDs2nnPcEZRKXYPZ0AB">
+        <div class="wkb-hint" data-page-node-id="UWTk9hKdLaLquSPkwDqOqB">↑ 键盘上方工具条（真机由微信渲染，样式不可自定义）</div>
+        <div class="wkb-row" data-page-node-id="97LUBgxagegTanZVjfzOeg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 退出确认 -->
+  <div class="dlg" id="dlg" data-page-node-id="RoMteCq3EWgquvmvDAgEH4">
+    <p data-page-node-id="H2dI59xDra6AeqOv2wsll9">退出登录？</p>
+    <div class="sub" data-page-node-id="HoCvQm5t5hoYPGzFjIAV2N">退出后需重新登录才能查看余额与接单</div>
+    <div class="row" data-page-node-id="zTtTALSRRj38FEmdgBU3RG"><span data-act="logoutNo" data-page-node-id="ANyFGN9Gagl2eN5LxbF0o0">取消</span><span data-act="logoutYes" data-page-node-id="OcjzPEE4GMVD2ag0aWwPjH">退出</span></div>
+  </div>
+
+  <div class="toast" id="toast" data-page-node-id="mSgCqmlThBOknSfipNZexX"></div>
+</div>
+
+<!-- ================= 右：关键 PRD ================= -->
+<div class="side" id="side" data-page-node-id="RisaEYd66xRkngibQPFmlr">
+  <h1 data-page-node-id="iiB2rWHaHWkksozRlKlSg9">供应商端 · 登录 → 我的页</h1>
+
+  <div class="steps" data-page-node-id="bBwGCIYt3v4G2PnaP4p2ts">
+    <div class="step cur" data-page="login" data-page-node-id="GPA7Z7qkLMgcRzZgrvxlU6"><b data-page-node-id="7wBgIpvuxOnGQU4F1c1fIQ">① 登录页</b>勾协议 · 手机号授权</div>
+    <div class="step" data-page="mine" data-page-node-id="GRC3M3c7eNcB7ERkaulmiw"><b data-page-node-id="Hhy7pi2GhG8X11LB90kh5P">② 我的页</b>两行身份 · ✎ 完善昵称</div>
+    <div class="step" data-page="replay" data-page-node-id="W8kXBzfPhMFOCUMdAURL6y"><b data-page-node-id="Qxgg8CcXBUw1L9TjRUsxH6">③ 重播</b>回到登录页</div>
+  </div>
+
+  <div class="chips" data-page-node-id="emcf2qqqQDpybiSkvrkq6L">
+    <span class="chip on" data-scene="set" data-page-node-id="81p4Ytb4NI3xHZTipy3R5i">手机号登录后 · 昵称已获取</span>
+    <span class="chip" data-scene="unset" data-page-node-id="gO1mj3lH5wTJ7xRDpNrAeG">账号密码登录后 · 昵称为空</span>
+    <span class="chip" data-scene="long" data-page-node-id="YzWm738YIKGCmnhKbrJtBN">超长昵称 · 自动换行</span>
+  </div>
+
+  <div class="hint" data-page-node-id="41GYHF4RjmqtvfECFkfoHn">左：可点原型　｜　右：这个状态下必须遵守的规则（大白话版）。点原型任意元素，右边自动跟到对应说明。</div>
+
+  <!-- ========== 登录页 ========== -->
+  <div class="prd on" id="prd-login" data-page-node-id="FwmdZ4Wi2mwVG3erOzbjJl">
+    
+
+    
+
+    
+
+    
+
+    <div class="pcard" data-page-node-id="renxNgqygT5Fd7f9TvN1Mq">
+      <div class="pch" data-page-node-id="vOkWdGLpQmXM7Uo7To3GTb"><b data-page-node-id="RB3ny9FeCzT6ORy9sZV4Tg">一、手机号授权弹窗什么时候弹​</b><span class="src" data-page-node-id="gEAa5qKKjWdCHjncdGSDKC">登录 PRD 功能块三</span></div>
+      <div class="fb" data-page-node-id="Pbrp7hu3uk4YdTDHoQDhrO"><div class="fk" data-page-node-id="YGzx4Vqjm4cip7FYB2HYKU">新增</div><div class="fv" data-page-node-id="OcAHaE5tOO4qKG1vD1bQuK">没勾协议不让登录；授权弹窗的触发规矩。</div></div>
+      <div class="fb" data-page-node-id="W9VwA5t0T2SPOdawNwP8Wo"><div class="fk" data-page-node-id="4RVQiBP3GQKfzLtJ6yjvsu">交互逻辑</div><div class="fv" data-page-node-id="LuTwlyHIME2d1c9gKPZurl">没勾协议就点登录 → 拦下来，<b data-page-node-id="R0YhGj2T8TJt1DmCQr65s3">微信授权面板不许弹</b>；勾了 → 才弹微信的手机号授权面板。</div></div>
+      <div class="fb" data-page-node-id="FLtZyr39ydlG7ZHk10KkyA"><div class="fk" data-page-node-id="EFr4jx3icdEfUEYenfATnB">显示逻辑</div><div class="fv" data-page-node-id="EJsMeM0bydxRL3smw0dPsx">拦截时红字【请先阅读并同意《隐私政策》】，不能点了没反应。<span class="tg ok" data-page-node-id="eCHosRTujOkaM29BlEZhEl">原型已还原</span></div></div>
+      
+      <div class="fb" data-page-node-id="Ceq6A9jY4tdp596t0BcKbG"><div class="fk" data-page-node-id="n4ANmHCZKAxQND7Xzbf1hu">异常与边界</div><div class="fv" data-page-node-id="Ato3Cy7AWja6Fl5zalPHZS">面板点【不允许】→ 面板关掉、留在登录页、<b data-page-node-id="ilocGmVtSNpiBM5GW4tW1u">不弹错误提示</b>——用户自己拒绝的不算出错。<span class="tg ok" data-page-node-id="5tjGLR6kCc9DNZFGyabeN9">原型已还原</span></div></div>
+    </div>
+
+    <div class="pcard" data-page-node-id="w2bmv5HSI5XMrvzwup6VjA">
+      <div class="pch" data-page-node-id="GgjFnUU3Mzblgep12aYxdz"><b data-page-node-id="Tc2fXVVEeNbmUhC6xwvFlL">二、手机号查到查不到，怎么办​</b><span class="src" data-page-node-id="2tebQQaJhcRWydZZgMxoBi">登录 PRD 功能块三</span></div>
+      <div class="fb" data-page-node-id="RNPp9WOA69nTlhxGVtxjiY"><div class="fk" data-page-node-id="SbSDxSMPKvLl5XDW9oFduu">数据源</div><div class="fv" data-page-node-id="EwsaUjMtpx0KpNU2SkeVXL">拿手机号去供应商账号档案里查（账号名称、账号状态、注册手机号）。</div></div>
+      <div class="fb" data-page-node-id="5E8cuscPPR8caAIa2sYLiB"><div class="fk" data-page-node-id="C44T1Q4qSM7cMbs6ICDfgv">命中结果</div><div class="fv" data-page-node-id="IVMhz8bn4buTq3N2EMIYJy">
+        <table data-page-node-id="nvYpU5IR2g4ZO3aIdVOVfH">
+          <tbody data-page-node-id="OvzNXDKnl8o6oP57wA4Z58"><tr data-page-node-id="OypCMsexSGeOK31vB5FnUI"><th style="width:34%" data-page-node-id="EUZo8KxKyDtqxwwUdfBZwQ">查的情况</th><th data-page-node-id="eHKxGalujVV95wDi45d6Ww">系统怎么办</th></tr>
+          <tr data-page-node-id="4dlBBhoSxPIko1v3qTsEUW"><td data-page-node-id="DSL1rXW8xI56zAl7G7mXQI"><b data-page-node-id="tpfirpMDUzcz0kIiWforQR">查到 1 个账号</b></td><td data-page-node-id="ILwe65lyGVCWe8hU3auiVy">直接进这个账号</td></tr>
+          <tr data-page-node-id="On2noXsufaEiQfkVLqsrng"><td data-page-node-id="1eIK6PNimm1PGztjGJSpFO"><b data-page-node-id="yJBoBUzh15uaLs8Xp7Rdrr">查到多个账号</b></td><td data-page-node-id="A4Ng3PneZAzlj6u82tPZoM">给个账号选择页让用户挑，挑哪个进哪个</td></tr>
+          <tr data-page-node-id="wlJTpf27UTCn3bUEcmvV0E"><td data-page-node-id="iR6VnH0Sz9cErFmBUXEWwR"><b data-page-node-id="0SM7yE5vOENTHC6c42DpRD">查不到</b></td><td data-page-node-id="yGcAaIxYOn7KJVI1maHhvp"><span class="red" data-page-node-id="5SyRY52nkMwDIMBF0gzdC9">提示【该手机号没有注册供应商账号】</span>，留在登录页（v1.4 定稿文案）</td></tr>
+          <tr data-page-node-id="BAFUoEYQLuAUPnZFtHi8wH"><td data-page-node-id="vFyPHG6zFQNngrqerEgRdP"><b data-page-node-id="QFPBroHlxa10HtAwp7uXPR">账号停用 / 审核中</b></td><td data-page-node-id="QpKxK4Gv8Yns4Pl3Rh5aqQ"><span class="red" data-page-node-id="3qPGLvJ7S6CVrGfqxPGcQ1">红字【账号暂不可用：具体原因】</span></td></tr>
+          </tbody></table>
+      </div></div>
+      <div class="fb" data-page-node-id="3udjExPsGgYEijL5HuLZ0n"><div class="fk" data-page-node-id="wyt084m8xTlRRjrHm0WyKD">交互逻辑</div><div class="fv" data-page-node-id="4sr1FY0icrlgKyfCsylL86">登录成功就记下"这个微信 ↔ 这个账号 ↔ 这个手机号"，以后再进来直接进主页，不再弹面板、不停登录页。</div></div>
+      <div class="fb" data-page-node-id="GOboJBzndo6wANeQ4IeMe5"><div class="fk" data-page-node-id="6WJCXAUexAgl7dy6jjk1YW">存储规则</div><div class="fv" data-page-node-id="4CyfnkaMhg4z1CfCNHyWdS">一个微信可以绑多个供应商账号，每个账号的微信昵称<b data-page-node-id="uNmHraboMz7XKXZDMTyA8z">分开各存各的</b>，切账号昵称也跟着换。</div></div>
+      <div class="fb" data-page-node-id="CoICHBns8nL2gUTetEsS5H"><div class="fk" data-page-node-id="BsbOnxf3FJ6E9pVdfIBbeQ">显示逻辑</div><div class="fv" data-page-node-id="Am5kEvzfthUApAmmp4kPLY"><b data-page-node-id="oHlzqDGTu9xv9KEKv1LQO6">授权面板能显示多个手机号（v1.4）</b>：用户加过几个号就列几个，最近用过的带绿色「上次提供」，底部有「管理号码」入口（跳微信"发现 &gt; 小程序 &gt; 个人中心"，那里能加手机号）。<span class="tg ok" data-page-node-id="xVwTruqQpbXj9tnwx86VUt">原型已还原</span><br data-page-node-id="yxhM3cjQGjJqSTdo7l38AF">点哪个号哪个高亮，点【允许】就用这个号登录。注意：<b data-page-node-id="5MS7ipLpHNOyI5mlOQxtnA">这个面板长什么样是微信说了算</b>，我们改不了里面显示什么，只能拿到用户最后选的那个号。</div></div>
+      <div class="fb warnbg" data-page-node-id="x1D2NZpmHO5QUNI9tQlPSQ"><div class="fk" data-page-node-id="Y4vuwqHKeOEJZ9OsVhiBKE">未覆盖</div><div class="fv" data-page-node-id="RFEBSEC5QAl2UepW40zsKg">账号选择页、账号停用分支没做进原型。查不到的提示已经做了——在授权面板选第二个号码 151****9939 点【允许】就能看到。</div></div>
+    </div>
+
+    
+  </div>
+
+  <!-- ========== 账号密码登录 ========== -->
+  <div class="prd" id="prd-pwd" data-page-node-id="NtCQ8AgPbPVL3gHH1nHKsF">
+    <span class="fieldset" data-page-node-id="M5AzD8aeG2irdbR9b5mMZv">— 账号密码登录（辅助路径）—</span>
+
+    <div class="pcard" data-page-node-id="pQnP4AXCVLQV4WoU4ky9f0">
+      <div class="pch" data-page-node-id="DHjbnoUpxoFdFz4hlJRRmH"><b data-page-node-id="0dfJPlffvNJdPXLYhfrusa">四、账号密码登录怎么玩</b><span class="src" data-page-node-id="G6N5seLOGjv82WrA9fBCTk">登录 PRD 功能块四</span></div>
+      <div class="fb" data-page-node-id="SxMZWQ6GDZkRqFMKdUmUkf"><div class="fk" data-page-node-id="UfS4Z2Ig3xQ2Rs31cfMWPF">新增</div><div class="fv" data-page-node-id="gqvCu4ZABD38RvfFsv00eA">给不方便用手机号快捷登录的供应商，留一条账号密码登录的路。</div></div>
+      <div class="fb" data-page-node-id="C4Ri8Cjo1EZf0TVX0cxRXd"><div class="fk" data-page-node-id="Z0iDwobH1RNaLKsS5TVPcT">显示逻辑</div><div class="fv" data-page-node-id="V9Eg56JITTEeyDCmxfO9hN">页面上有：账号输入框（提示"请输入手机号"）、密码框（打码 + 能切换明文）、【登录】按钮、【忘记密码】。<span class="tg ok" data-page-node-id="hjRHNwkenUMCSJlmJD7B9E">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="QdKLenHpSwpe8kzr3wDuCw"><div class="fk" data-page-node-id="fqUCs9MeElzZEn925n9neL">校验规则</div><div class="fv" data-page-node-id="f9TIZe3whD3ZpaKo0iQHVQ">① 账号或密码没填 → <b data-page-node-id="14s3JK1R09a8k4BKv9ZY1k">按钮置灰点不了</b>（原型为了好演示，改成能点 + 提示拦截）<span class="tg no" data-page-node-id="DBB8NCVl4BXyzIYb1Y2b2K">原型有差异</span><br data-page-node-id="yfvGzAhgxyv3huMTQebzmV">② 账号或密码错 → 红字【账号或密码错误】，<b data-page-node-id="WQCCAeyTSVD4xoaxozufIo">不说具体哪个错</b>（防人瞎猜密码）<br data-page-node-id="5ZGAYqar8swFOwHNCaM1ZC">③ 连错 5 次 → 锁 15 分钟，红字【错误次数过多，请 15 分钟后重试】，按钮置灰显示倒计时</div></div>
+      <div class="fb" data-page-node-id="L0JFCjIT2PB1DoelzIBMTj"><div class="fk" data-page-node-id="SHY4s42Wi9uIU2gws4LXDP">交互逻辑</div><div class="fv" data-page-node-id="yEs20z3Wu4GW63GvJNL2ew">【忘记密码】→ 走手机验证码重置；重置好之后登录，后面的流程跟手机号登录一模一样（包括多个账号让用户挑）。</div></div>
+      <div class="fb warnbg" data-page-node-id="HcIfHZxPchalVFbNWGIMrP"><div class="fk" data-page-node-id="7Br4D7AQlAnU7E20pFn9CQ">未覆盖</div><div class="fv" data-page-node-id="xBHZa1Fpqyz71JueK4mPq1">按钮置灰、错误锁定、忘记密码流程——原型里随便输什么都能登录。</div></div>
+    </div>
+
+    <div class="pcard" data-page-node-id="8tAro0zmxHZP0PhvgWGepm">
+      <div class="pch" data-page-node-id="F8VggRE2LJnAhC0C7liGp9"><b data-page-node-id="WsSlUBiH9UW8u0utJntM36">四、这条路跟微信授权的关系</b><span class="src" data-page-node-id="hcUPVLS0c42hxCZbGQwhAE">登录 PRD 功能块四</span></div>
+      <div class="fb" data-page-node-id="FcHrBEx3UUuL9OY1rNCAvh"><div class="fk" data-page-node-id="DR7t461cm1qx1cIQzGxM0b">数据源</div><div class="fv" data-page-node-id="Xohrj4sFMhHRGn5mpx2MPB">账号是谁由账号密码说了算；手机号读后台档案里的<b data-page-node-id="53ggDUXnN2X5wB4pNOeojH">注册手机号</b>；微信那边只是悄悄拿个身份标识。</div></div>
+      <div class="fb" data-page-node-id="x0QXM9713JnsvnHMFfYufw"><div class="fk" data-page-node-id="nTowC2zUGBOqKYOpTfPoTG">交互逻辑</div><div class="fv" data-page-node-id="x5SM9ROQsjYkshFIHMssEx">这条路<b data-page-node-id="o5McArdGFIYmIgIB0DvPDW">不弹微信授权面板</b>（那个面板只给手机号快捷登录用）；登录成功后悄悄记下绑定关系，不弹任何窗。以后这个微信再进来，直接进主页，不用再输密码。<span class="tg ok" data-page-node-id="5NRTYeKp0vM0OtkENZOiSt">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="wAeXAEVE4IEvTGhmBZFubj"><div class="fk" data-page-node-id="uPOI1ejFs5MqT8Jru3qwwd">显示逻辑</div><div class="fv" data-page-node-id="UlaBiKWtcMUTRL00kshU3B">跟手机号登录进的是<b data-page-node-id="tOdfmYc8dyhKwPCOrKffZB">同一套</b>账号，数据完全一样。区别只有一点：这条路进来的账号，微信昵称<b data-page-node-id="AegI2FYtqWUQMzRRBaIMCL">是空的</b>（用户没填过）→ 进"我的"页会出引导条。<span class="tg ok" data-page-node-id="bPBgi60m8QxBfGZcCNrgRj">原型已还原</span></div></div>
+      <div class="fb hardbg" data-page-node-id="tru34iVzBfIHdwaK7BURb4"><div class="fk" data-page-node-id="y0Tw8p8BEr4wa0crR7BLWe">研发硬约束</div><div class="fv" data-page-node-id="hvAdhwe29jDJ6r2C3IFfBE">昵称是空的不许自动去拿、不许弹微信授权，必须用户自己动手填。</div></div>
+    </div>
+  </div>
+
+  <!-- ========== 我的页 ========== -->
+  <div class="prd" id="prd-mine" data-page-node-id="rVjUA5zoLdUDpgFQ3nlCq5">
+    <span class="fieldset" data-page-node-id="y3fXUhynlnu8p3T4tEW8ql">— 我的页 · 身份区 —</span>
+
+    <div class="pcard" data-page-node-id="JycXdRh2M5fGcr8qrBWXF5">
+      <div class="pch" data-page-node-id="BvcbyBUZsxUiQd0Z5xs3uK"><b data-page-node-id="qvRq1dEsKc9qPrtyI12w8y">5.4 我的页身份区 · 两行结构</b><span class="src" data-page-node-id="0F4QsumdLlvQlcmFdHGWoX">身份绑定 PRD 5.4</span></div>
+      <div class="fb" data-page-node-id="sP5tWSHIpgKIdDfzyTGozX"><div class="fk" data-page-node-id="6pW7hzFz0E4P707oaPLy4v">新增</div><div class="fv" data-page-node-id="Elm1X8FcIAPPQ75BhisgBR">身份区分两行显示；加上微信昵称；能编辑的地方<b data-page-node-id="NT5EHQw4FQl43YSyVfvWHG">只有 ✎ 一处</b>。</div></div>
+      <div class="fb" data-page-node-id="l3fS7QrGgJZzV5G66Qap3s"><div class="fk" data-page-node-id="ZyZsBJhkYGUWgIAR06Li2V">数据源</div><div class="fv" data-page-node-id="wRDboZdpi7pU04kcUhclZv">第一行（账号名称）← 后台供应商档案里的，<b data-page-node-id="WWplFJ6ScK5Wj1Lr40Z7Bn">只读</b>；第二行（微信昵称）← 用户自己填的、存在绑定关系上。</div></div>
+      <div class="fb" data-page-node-id="Jt1uZeTWxKF3t53NT9UbEw"><div class="fk" data-page-node-id="OseQU7juaFTj0ngWOxi1z3">显示逻辑</div><div class="fv" data-page-node-id="WXcINVVH8G8aqFJgEhdZUL">从上到下：<b data-page-node-id="9q8z2MpfCJ0rJyxyBcI67j">供应商账号名称</b>（第一行、主字）→ <b data-page-node-id="BsSg247YUIo64XG4P2DdTy">微信昵称</b>（第二行、次字）。<span class="tg ok" data-page-node-id="fyHYo36z8ybaT1Q3pUPkFB">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="BXRuvyFsiYPthfvSNQyrik"><div class="fk" data-page-node-id="l7tDKnzQClcIZlubVXDCja">显示逻辑</div><div class="fv" data-page-node-id="FfzWzVeWThqGP7nkCHpVtv">昵称没填 → 第二行显示橙色的 <span class="k" data-page-node-id="kuJ5hViXjNlSaetZfct5PZ">【微信昵称未设置，影响售后对接 · 点击完善 ✎】</span>，整行都能点。<span class="tg ok" data-page-node-id="C4zHYVs5Gai38dtdxabPyR">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="XFrGGiFCwYKKJr3Ulhqr4Z"><div class="fk" data-page-node-id="exCNnuckLNJxw0dHDWIwBz">显示逻辑</div><div class="fv" data-page-node-id="6frw1iDj98D4p7xFfkK7Se">昵称多长都完整显示，<b data-page-node-id="u6lM0D0jAM64pJKakEAxKT">不砍、不加省略号</b>，太长就换行全露出来；换行时 ✎ 图标跟第一行文字对齐，不掉到最后一行。</div></div>
+      <div class="fb" data-page-node-id="7EHkXtDWMzGizGlyWxXYFQ"><div class="fk" data-page-node-id="VVFZiQnoyBOU9XNTN4qI6B">交互逻辑</div><div class="fv" data-page-node-id="oPnwtpiEJ3jsQtzsLYlqWH">这页能编辑的只有 ✎ 一处。点击编辑按钮，弹出弹窗（这个弹窗长什么样、怎么开关，见下一张卡）。<span class="tg ok" data-page-node-id="bFraV7yY6Qtqdisx05DHRd">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="Hq5oCz6hwgURtcowzUC8yF"><div class="fk" data-page-node-id="FMP7QMQvF68bjNHed5HGCh">校验规则</div><div class="fv" data-page-node-id="qVLdyANKJQ4ZCFhvIoUQK1">第一行是账号名、第二行是微信昵称，各管各的<b data-page-node-id="cBwLmlOEhurWK6CduIQjAn">不能合一起</b>；账号名称只能看不能改。<span class="tg ok" data-page-node-id="5yTQ0c7vYHVvXpqlTnbmTq">原型已还原</span></div></div>
+    </div>
+
+    <div class="pcard" data-page-node-id="322amvi5uZt53n7FdFoKjy">
+      <div class="pch" data-page-node-id="pKBVLxnjkCDJ0DAkrlTLPq"><b data-page-node-id="uWniBPaxqJMH7B9fTTvfe0">✎ 编辑弹窗 · 怎么开、长什么样、怎么关</b><span class="src" data-page-node-id="NUBOq5QqCLuPm4qFCFXf9w">身份绑定 PRD 5.5</span></div>
+      <div class="fb" data-page-node-id="woOrqKr01kgbhs6B02xKEB"><div class="fk" data-page-node-id="VxQCTAqLfwg89lrOwJg27c">新增</div><div class="fv" data-page-node-id="t7XO6MsFdNFLZP3rQRJczi">专门讲"点 ✎ 之后弹出的那个编辑弹窗"——它是整个资料完善的唯一入口，之前缺一张专门说明的卡。</div></div>
+      <div class="fb" data-page-node-id="AFDax2BcY6nKboPXG6Ic2K"><div class="fk" data-page-node-id="B9hIZu9onkoKpcURalE2QA">交互逻辑</div><div class="fv" data-page-node-id="YYpeAHqRWwxCpzsNhgwUvg"><b data-page-node-id="pYIXjTIxbDKq1JcsrG9JQZ">怎么打开</b>：一共三个口——① 昵称行右边的 ✎ 图标；② 昵称为空时第二行的橙色引导行（整行可点）；③ 顶部引导条的【去设置】。账号名称点了没反应（防手滑）。<span class="tg ok" data-page-node-id="6VviIHrQWuoW5jrxtgRvuG">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="cNVMmck90oOvW0FTspvPRU"><div class="fk" data-page-node-id="rGvKrgPyknfzWy0yllFL0P">显示逻辑</div><div class="fv" data-page-node-id="x3keoPMPBsCNBEDjJngRtx"><b data-page-node-id="COlcDFYmeEVoaosxAXHMXP">弹窗长什么样</b>：从屏幕下方升起的<b data-page-node-id="FyRghEOlzIIuOP4SlFQmJi">半屏弹层</b>，背后页面变暗。内容从上到下：标题（没填过叫【完善微信昵称】，填过叫【更新微信昵称】）→ 一句说明 → 昵称输入框（右侧「使用微信昵称」）→ 字数计数 → 用途提示框 → 【保存】。<span class="tg ok" data-page-node-id="Sw4C3YCIzeCYFnHviH4fem">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="Dk9cmdzq9jBsJkZio6qg9I"><div class="fk" data-page-node-id="6hUihGu1dsSeb5JsAsDoif">交互逻辑</div><div class="fv" data-page-node-id="TuEAwcDGJ4aF4bFhRFsMSy"><b data-page-node-id="yxAUubF8mSwC3CALG9HB8c">怎么关、关了会怎样</b>：点【取消】或点旁边变暗的区域 → 弹窗关掉，<b data-page-node-id="P57lIJ5EFVDx5watIYSjjm">填了一半的先留着不丢</b>，下次打开还在；只有点【保存】才真正写进去。<span class="tg ok" data-page-node-id="LqKph4UDu6ND6d2tsMZPiz">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="AhJFPPvfCtgF0t595wVZWK"><div class="fk" data-page-node-id="6989ZckK5LkXzmPdNlr4KM">能力边界</div><div class="fv" data-page-node-id="BLELMrmkDX7spx4giblbN2">这个弹窗<b data-page-node-id="mlKvdFUiDST53Hvn63v9qG">不是</b>微信授权弹窗——样子完全由我们自己定、自己画；全流程唯一的微信授权弹窗只有手机号那一次。</div></div>
+    </div>
+
+    <div class="pcard" data-page-node-id="jlcI55ftW09CcJHrfGbpPP">
+      <div class="pch" data-page-node-id="wjj4r83Z8baqtATfC5Pmcu"><b data-page-node-id="hkr4b6rWR25heH8KpNm9Zj">5.4 昵称展示与存储 · 全局规则</b><span class="src" data-page-node-id="eoDttGTsAsTsaDVaw2QMHq">身份绑定 PRD 4.1 / 5.4</span></div>
+      <div class="fb" data-page-node-id="GdynSAKLX5IVKi5gjGVOdR"><div class="fk" data-page-node-id="wNMEUSUJMNmcV5CjekfT7Z">存储规则</div><div class="fv" data-page-node-id="Sc3FkB0imX8NjnQnsRsX2b">昵称按"微信 × 供应商账号"一条一条分开存——同一个微信绑两个账号，两个账号的昵称各是各的。</div></div>
+      <div class="fb" data-page-node-id="D6JQfQVM8MjB7a1JiCyF9m"><div class="fk" data-page-node-id="DpJ83Zvxfm0Gwc83ytF1iP">显示逻辑</div><div class="fv" data-page-node-id="Je5pEnWCzPvvHob5EpY8WW">C 端昵称没填就显示橙色引导行。<span class="tg ok" data-page-node-id="qlsqNaXsvC7Yeq1AMHaRaF">原型已还原</span></div></div>
+      
+      <div class="fb" data-page-node-id="oGuiQ5UO7JrslIlmFqZPZW"><div class="fk" data-page-node-id="NbdDnqzlz4C3NhhXlJWQxJ">校验规则</div><div class="fv" data-page-node-id="856Z2205v5C7wgaRK2Ccps"><b data-page-node-id="rf4moDS3IB0ZvQraoPVWep">不能拿昵称查账号匙</b>（会重名、会随时改）</div></div><div class="fb" data-page-node-id="KsVEH95t3cR51i4mjFdzwj"><div class="fk" data-page-node-id="GlX7vNgZDtrYCXLhb2fk8j">异常与边界</div><div class="fv" data-page-node-id="gZJGZN0aXD1x4ifqcQs14o">昵称随便改，显示前把特殊字符转义掉防注入；显示多长都不砍；改昵称不影响绑定关系。</div></div>
+    </div>
+
+    <div class="pcard" data-page-node-id="3A0iSLchVvh5RuLB29JwRB">
+      <div class="pch" data-page-node-id="9uFkv6T3njMOlQAdosSYAC"><b data-page-node-id="wE7m9FeI6wihfK5gvyjDGQ">七、登录后顶部那条引导条</b><span class="src" data-page-node-id="1EhZ7dmUwvHYMjUzVp04Th">登录 PRD 功能块七</span></div>
+      <div class="fb" data-page-node-id="Me8899EGe66ET4Rjm3RYop"><div class="fk" data-page-node-id="9NTSQ92R1kTBjTdimEXYTN">新增</div><div class="fv" data-page-node-id="Vc7Qhq0ERAznW2JVMXtrUv">登录进来发现昵称是空的，页面顶部出一条<b data-page-node-id="4zEYoyotHnRHsf9AOPN8ma">不挡操作的引导条</b>，提醒去填；以及它跟身份确认弹层的先后顺序。</div></div>
+      <div class="fb" data-page-node-id="pBzlYPsX4k0f5HY5AEiRzJ"><div class="fk" data-page-node-id="oSxwR40E4BL2Z1y29ZKHhN">数据源</div><div class="fv" data-page-node-id="yJ9xIJXDaO0usXKopK5MFP">当前账号的微信昵称是不是空的。</div></div>
+      <div class="fb" data-page-node-id="aTXycTO4fFlkx2wrkcEzBm"><div class="fk" data-page-node-id="faqBeDD53Ri28N6ADdpX67">显示逻辑</div><div class="fv" data-page-node-id="GvJ1xf855hc5C0HJqNuApf">空 → 顶部出引导条，可以关掉；填过 → 不出。引导条等页面加载完再出，<b data-page-node-id="BEPL4MqNSx2JzNEoCoRhBh">不挡下面的操作</b>。<span class="tg ok" data-page-node-id="XvjMFVZO5lOLw6bHFpGC28">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="LnduomTPY6cI060R7Xsq48"><div class="fk" data-page-node-id="OdAVCELZ2VHPHAMm7Usfp0">显示逻辑</div><div class="fv" data-page-node-id="ovjRDRIrLBmWJJgrJ6fs11">文案定稿：<span class="k" data-page-node-id="qRk3reFv8uRxCVlqGjiGkL">【完善微信昵称，在售后时可以根据昵称@到你】</span>，右侧【去设置】、最右【×】可关闭<span class="tg ok" data-page-node-id="2xeluhQkFuqER0QKt6R4DA">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="7fAGh4CqConlCJhmOFJw5G"><div class="fk" data-page-node-id="BRobSv5bbHsaBnTDJWAaPz">交互逻辑</div><div class="fv" data-page-node-id="lTQhnfNDnhjDCPEmapotoy">点【去设置】→ 打开 ✎ 编辑弹窗；点关闭 → 本次不再弹，想填随时点昵称行的 ✎。<span class="tg ok" data-page-node-id="YojLL3hCmnkNeDzgloqMPG">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="k7YhtwC7CEMOgmjmDNjAbr"><div class="fk" data-page-node-id="uEEDWvbbDrWGxc0zv0scCT">异常与边界</div><div class="fv" data-page-node-id="mtSjB7S3gole4kkfXLgXMf">如果"要确认身份"和"要填昵称"撞到一起，只能弹一个：<b data-page-node-id="YiLIO1DFC0ULsb6knJ5Mz7">先弹身份确认</b>，引导条等它关了再说（v1.2 定稿）。</div></div>
+      
+    </div>
+  </div>
+
+  <!-- ========== 昵称填写层 ========== -->
+  <div class="prd" id="prd-nick" data-page-node-id="d5x4nCt79jF0iWKaZE8UVB">
+    <span class="fieldset" data-page-node-id="UWwJbAoVnPSMUENm26ygKA">— 微信昵称填写层 —</span>
+
+    <div class="pcard" data-page-node-id="OkhN4yDC8r3byYnGA1XZ0I">
+      <div class="pch" data-page-node-id="9dVof1ONISEs0KS7UVHuJ7"><b data-page-node-id="jzCLzZ2HsNBEbAAzWTFE6X">5.5 弹窗里有什么</b><span class="src" data-page-node-id="EaZu1ZfHcxQEdSPV4AcxYZ">身份绑定 PRD 5.5</span></div>
+      <div class="fb" data-page-node-id="NPb0QeNkAs5kVQrySOCel0"><div class="fk" data-page-node-id="1ogopJVkpljMyIzrmTlQrz">新增</div><div class="fv" data-page-node-id="OkiL7AdC1BpDeo1cq5EdR6">昵称可以从微信一键带入：点输入框，键盘上方冒出「使用微信昵称」，点一下就填进来；原来单独一条的用途提示框已撤掉，那句话并进了说明文案。</div></div>
+      <div class="fb" data-page-node-id="oLh5UdY08SJTAla9YNVixe"><div class="fk" data-page-node-id="H1PHWFWIuY53S7CPHTGqzi">数据源</div><div class="fv" data-page-node-id="9CJptY6esQwG5wDZdnKHVC">昵称靠用户自己填——点输入框，键盘上方冒出「使用微信昵称」，点一下就填进来，也可以手打。微信<b data-page-node-id="U1UQs0FqZR7DudypVI9IyM">不会自动给我们</b>，没有接口可读。</div></div>
+      <div class="fb" data-page-node-id="y0ni8dlzDWkoIVxND5J2os"><div class="fk" data-page-node-id="CuReok42J6y1l5qbDMQ24B">显示逻辑</div><div class="fv" data-page-node-id="DjPZje91gwtOnbuoiJVW4G">从上到下：标题 → 说明文案 → 昵称输入框（右侧「使用微信昵称」）→ 字数计数 →【保存】，不再单独出现用途提示框。<span class="tg ok" data-page-node-id="Sg6MbGs6daQAflYw7Vg0lh">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="Zzq2UMIowyJ6tJGE4O1qZT"><div class="fk" data-page-node-id="AjQilAyk9cZDRqN7dmjh8l">显示逻辑</div><div class="fv" data-page-node-id="GbeZt7emGvrqfyJwSOjk6y">标题两种：没填过【完善微信昵称】/ 填过【更新微信昵称】<span class="tg ok" data-page-node-id="QSW0V5rFEN5P22f2nPVj7v">原型已还原</span><br data-page-node-id="YN8N3eMWSGfkOfLmuFShEs">字数固定显示 <span class="k" data-page-node-id="CSO9asaHpOiW552M3Ql6XO">【当前字数/30】</span>（如 0/30），不显示「还能输几个」——两种口径不能混用<span class="tg ok" data-page-node-id="liFyVpqCfPPQXgivHoP2y6">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="34wdMzOOjDGWIS5Fyu8Qz7"><div class="fk" data-page-node-id="G9H4ARAV7h5A9NJcYF7eVm">显示逻辑</div><div class="fv" data-page-node-id="OckH2arrJ0IkqKavAID0QK">说明文案定稿（原用途提示框内容并入）：<span class="k" data-page-node-id="RiCiAfmmaGY91SN2qYYfSk">「用于处理售后时，在售后群内找到你【昵称要与售后群的昵称一致】。」</span></div></div>
+      <div class="fb warnbg" data-page-node-id="yLp6MFTDOblrnreRVoIyrU"><div class="fk" data-page-node-id="nTUTP0bXajhoR7hv5EJdYV">未覆盖</div><div class="fv" data-page-node-id="HVoWTSorNYJAibgkdmLxGJ">键盘上方那条"点击可一键填入"的引导文案没画——那块是微信渲染的，真机上才看得到。</div></div>
+    </div>
+
+    <div class="pcard" data-page-node-id="bSeIFAOrOeuAJX94AAUNV2">
+      <div class="pch" data-page-node-id="wMyGpFcNV524YfJnQDUGt9"><b data-page-node-id="fGBxJurFDZLucMQFWrN6Ik">5.5 填了之后会发生什么</b><span class="src" data-page-node-id="QhXnvm6LHO7dk250vGDBQU">身份绑定 PRD 5.5</span></div>
+      <div class="fb" data-page-node-id="O9eTnyTpkurtZM56UOD7F3"><div class="fk" data-page-node-id="bk7iTgcJqH7FnE4go1fwkD">交互逻辑</div><div class="fv" data-page-node-id="o7RQncsp1EH1sB5ihAC996">只有点【保存】才真正提交；点到别处不会自动提交；点【取消】或点变暗区域关掉 → 什么都没发生，<b data-page-node-id="M2TZoIZronOD7alne95Sd9">填了一半的下回还在</b>。<span class="tg ok" data-page-node-id="q4zaAJGAqB5E6sIMko4QmC">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="PDHE3EqFQLMPgUqBtW48rr"><div class="fk" data-page-node-id="0sxahJEAnjZo2Bz2QRLvLB">校验规则</div><div class="fv" data-page-node-id="Co8sgZcRTk29k5cne5wWcL">① 昵称空白 → 拦下，红字【请输入微信昵称】，库不写、弹窗不关<span class="tg ok" data-page-node-id="RFCrIO1FDACvKyGCUs92FS">原型已还原</span><br data-page-node-id="vXslGQQzDZAV0KLyfdvFYn">② 跟原来一模一样 → 提示 <span class="k" data-page-node-id="yZcZ1SaGtayGEdCyl1MWKW">【昵称没有变化】</span>，不算改过、不关弹窗<span class="tg ok" data-page-node-id="EoH7cruCmKzDGG2TZxVjPh">原型已还原</span><br data-page-node-id="Walsgdq7dFrGKsxvLjsgNe">③ 最多 30 个字（emoji 算 1 个），到顶就打不进去，<b data-page-node-id="y1eDlwc16RvZJR9Ou2myzs">不会偷偷砍掉</b></div></div>
+      <div class="fb" data-page-node-id="v87jl9AijTILMmvfEUQy3R"><div class="fk" data-page-node-id="02PIStAtFHBZDmPgEzpuoR">存储规则</div><div class="fv" data-page-node-id="EIpWrVsfk3eRtDhDNNrjT7">保存成功 → 提示 <span class="k" data-page-node-id="QL0kCS1V4Ari8yEiyGjYAJ">【保存成功】</span>，关弹窗、刷新"我的"页、记一条变更日志（旧值 / 新值 / 时间，<b data-page-node-id="gyqFemfx5Ml3sQOY4q5zN8">只有后台能看</b>）、顶部引导条跟着消失。<span class="tg ok" data-page-node-id="m6E8Bmdsg1DBDbuSyEa04B">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="oEpWbzvhWmc98mKGQTMUI6"><div class="fk" data-page-node-id="RYg9Chd06NWDI84kmGFJey">存储规则</div><div class="fv" data-page-node-id="Wz36ewbllpYbH95HFpBCwt"><b data-page-node-id="aACw4yTiGun7v9KDB7ypEE">昵称单独提交</b>，点【保存】才入库；昵称必须填，空白一律拦。</div></div>
+      <div class="fb" data-page-node-id="U73CxkDEDvCHCpn4HtMn9p"><div class="fk" data-page-node-id="fqQTRFa0N6V17cY9fC62XS">校验规则</div><div class="fv" data-page-node-id="x8oGzSWuOCjXp579QsLGGT"><b data-page-node-id="r4KoUz0pwYy4AZHXN7cJv7">昵称跟原来一样</b> → 提示 <span class="k" data-page-node-id="mFuwoCw7O7EHMzjSMjvywo">【昵称没有变化】</span>，不算改过、不关弹窗；填了一半没保存就关弹窗 → 草稿留着。<span class="tg ok" data-page-node-id="I8wZTGkqPMcVPTNc2ir9DO">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="ugb4gikv15E3w0gLLdSqHs"><div class="fk" data-page-node-id="hTbBDv0bfIlzO60sWUm69O">异常与边界</div><div class="fv" data-page-node-id="C8uy1ROWwvikaRYXyVu5AW">没有「填了再清空」这条路——系统不提供清空，空白一律拦。</div></div>
+      <div class="fb" data-page-node-id="VTvzxhMhLKdCEm0lLutBDA"><div class="fk" data-page-node-id="4aO1UCw2K143x8oYPRsvus">接口</div><div class="fv" data-page-node-id="FHdOgWMbgopdtPGRbl7Vny">变更日志在 C 端<b data-page-node-id="jbpBImHSe0o4p8SO0AoMxM">没有任何入口</b>，只有后台能查；客服走售后反查详情看历史昵称（接口 <span class="k" data-page-node-id="ma7nf8VriRZWKH44Tw45wi">GET /internal/binding/nickname-log</span>）。<span class="tg ok" data-page-node-id="dodSVClvrSAvTSmDZTV8SG">v1.2 定稿</span> 反查的时候连<b data-page-node-id="X0Tz3I1DEqigL66qvhCxRY">改名前的旧昵称</b>也要查得到——客户经常只记得旧昵称。</div></div>
+    </div>
+
+    <div class="pcard" data-page-node-id="Vp5iUue9b5rTLlICyBoi7E">
+      <div class="pch" data-page-node-id="5BK9Pzy3pQmtaBzwdWQFd5"><b data-page-node-id="JKLTC0ZEz9Ks1esMmxvKKP">研发硬约束（不可协商）</b><span class="src" data-page-node-id="wTUB1A6MccSGkt7xTJp6oO">身份绑定 PRD 5.5</span></div>
+      <div class="fb hardbg" data-page-node-id="ODsa2XSb8DK6S99gCvXQb0"><div class="fk" data-page-node-id="U5OU6TwcvimAJ8zWBeb8Oj">研发硬约束</div><div class="fv" data-page-node-id="AyY9oIK3SZ5HmELdn3XiiP">① 昵称输入框必须是可以聚焦的 <span class="k" data-page-node-id="TTdpiKVGmKrKSDAnVVFaLa">input type="nickname"</span>，<b data-page-node-id="T9PEJbQgsqPWHRKc8YeXtj">禁止 readonly / disabled</b>——一旦只读，「使用微信昵称」整个废掉<br data-page-node-id="U9xkBarFcvo7WGC9AJIGwE">② 键盘上方那条工具条是微信<b data-page-node-id="zFxHTHq1VoVfFxmyVhfRLU">在真机上</b>画的，我们改不了样式、也不能用代码替用户点；基础库要 2.21.2 以上，开发者工具里看不见，<b data-page-node-id="fevQhB2YB8LdY4NNE4qyz5">验收必须真机</b><br data-page-node-id="mJ19FtVqNh9ksiN6psATD8">③ 上线前《用户隐私保护指引》里<b data-page-node-id="NKWCNCnKSDzfSeLz7M246B">昵称必须声明</b>，没声明这个功能就悄悄失效<br data-page-node-id="zt3JiA117S01sTlekSobf5">④ 这套东西失败时<b data-page-node-id="eZKEhwYnGiHpEKC1Lk7wXu">全都没声没响</b>：没声明指引 / 输入框只读 / 基础库太老，都不报错但都不工作，联调要一条条排查</div></div>
+      <div class="fb warnbg" data-page-node-id="NfqFWO2VSgq0eGfxADQy8P"><div class="fk" data-page-node-id="cpCEUyBZ0KHzQvM9roxEMa">原型说明</div><div class="fv" data-page-node-id="wjiKtZ4DBKkAfE35pwssDL">原型里的微信填写面板是我们<b data-page-node-id="5U7atdb0cTB5tgrJjOzUWi">自己画的演示壳</b>——真的长什么样、怎么弹由微信说了算；开发必须按上面四条来。</div></div>
+    </div>
+
+    <div class="pcard" data-page-node-id="US4QX8cjuAJ1uWTPMQFpr4">
+      <div class="pch" data-page-node-id="S3Y6haVZtpDksU7PtQUttB"><b data-page-node-id="hdL1d9Urf9C2nWm1FthqZ0">微信做不到的事 · 认识要统一</b><span class="src" data-page-node-id="SW3dKtzGnkfaguxCfLE41D">身份绑定 PRD 5.5 / 答辩口径</span></div>
+      <div class="fb" data-page-node-id="JYmOTqKcXTKyhdZv4R8hDZ"><div class="fk" data-page-node-id="TmdwDKorIkYXJIx84LxpEc">能力边界</div><div class="fv" data-page-node-id="vmXC3IaBL1gjaN2svGYuWJ">昵称只是「填一下」，<b data-page-node-id="SBmJ9vVDvDG4SvFuER7NjI">不是「授权」</b>——<b data-page-node-id="5dkus0DQH0lGbKEfrpQ11k">没有授权弹窗</b>这一说，别再写「授权微信昵称」；微信也不提供读取接口、改名也不通知我们，用户改了这边毫无感知。</div></div>
+      <div class="fb" data-page-node-id="Nm8ep9qANpqwCzVHdXDJp5"><div class="fk" data-page-node-id="EkGfn9skJfuFYqZpToNpIG">交互逻辑</div><div class="fv" data-page-node-id="p0sWvRFzG8bHPheOCecF2F">昵称：点输入框 → 再点工具条，两步，一次点击拿不到昵称。</div></div>
+      <div class="fb" data-page-node-id="qbU8OwTnLitjOA1MixKl6Z"><div class="fk" data-page-node-id="tsZe0UAMnel5lFBnfrffVr">授权次数</div><div class="fv" data-page-node-id="x1s3m7ZCPtWokxwxce7QvC">从头到尾就一次授权弹窗——手机号面板，还必须用户自己点出来。<b data-page-node-id="IZul8p8fNXeFwh0VCHqYzk">昵称工具条不算授权</b>。</div></div>
+      <div class="fb hardbg" data-page-node-id="5WzekAbPQe8EMumWwRojEP"><div class="fk" data-page-node-id="68czozTxSaSwusVxfeeqZ4">研发硬约束</div><div class="fv" data-page-node-id="ySp7OPPGSJEB9ncfvySSRY"><span class="red" data-page-node-id="I0gy5aaGIKfaEVnXkk6svu">进小程序不会自动同步昵称。</span>技术上做不到，需求和话术里都不许这么写。唯一更新路径：✎ → 编辑弹窗 → 点「使用微信昵称」→ <b data-page-node-id="M0LA13QvRkGSEw59Ui0NxZ">保存</b>。少了「保存」就白弄。</div></div>
+    </div>
+  </div>
+
+  <span class="replay" data-page="replay" data-page-node-id="vCekiNKj1W6ZpYKV4YTv0R">↻ 重播完整流程</span>
+</div>
+<script>
+(function(){
+  /* 节点兜底：原型会经设计工具反复保存，节点可能被删/改名。
+     任何一个节点取不到都只让这一步变成空操作，绝不让整条点击链路抛错中断。 */
+  var NULL_EL = {
+    classList:{ add:function(){}, remove:function(){}, toggle:function(){}, contains:function(){ return false; } },
+    style:{}, dataset:{},
+    value:'', type:'text', textContent:'', disabled:false, offsetTop:0, scrollTop:0,
+    addEventListener:function(){}, setAttribute:function(){}, getAttribute:function(){ return null; },
+    focus:function(){}, blur:function(){}, closest:function(){ return null; }
+  };
+  var $ = function(id){ return document.getElementById(id) || NULL_EL; };
+  var state = {
+    page: 'login',                 // login | mine
+    scene: 'set',                  // set | unset | long
+    shopName: '测试环境--井惠琳',
+    wxNick: '井惠琳',
+    agree: false,
+    guideClosed: false,
+    phoneSel: 'a',               // 授权面板选中号码：a=193****2486（已注册） b=151****9939（未注册）
+    wxGot: false,
+    draft: null                  // 关层未保存时保留的昵称草稿（null = 没草稿，按当前值初始化）
+  };
+  var MOCK_WX = '井惠琳';
+  var LONG_NICK = '王记小吃·广州天河店售后对接负责人王姐';
+
+  var toastTimer = null;
+  function toast(msg){
+    var t = $('toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+  }
+
+  /* 右侧关键 PRD 跟随原型状态切换 */
+  function syncPrd(){
+    /* 判定顺序：半屏层优先于所在页 —— 账号密码半屏层是叠在登录页上的，
+       若先判 page==='login'，打开半屏层时右侧永远切不过去 */
+    var key = $('shPwd').classList.contains('show') ? 'pwd'
+            : $('shNick').classList.contains('show') ? 'nick'
+            : state.page === 'login' ? 'login'
+            : 'mine';
+    ['login','pwd','mine','nick'].forEach(function(k){
+      var p = document.getElementById('prd-' + k);
+      if(p) p.classList.toggle('on', k === key);
+    });
+    /* 目录条与面板都已做存在性判断：任何一个不在，也只跳过它自己 */
+    var box = document.getElementById('prd-' + key), side = document.getElementById('side');
+    if(box && side){
+      var top = box.offsetTop - 12;
+      if(side.scrollTop > top){ side.scrollTop = top; }
+    }
+  }
+
+  function goPage(p){
+    state.page = p;
+    $('pageLogin').classList.toggle('on', p === 'login');
+    $('pageMine').classList.toggle('on', p === 'mine');
+    document.querySelectorAll('.step').forEach(function(s){
+      s.classList.toggle('cur', s.getAttribute('data-page') === p);
+    });
+    syncPrd();
+  }
+  function openSheet(){ $('mask').classList.add('show'); $('shNick').classList.add('show'); syncPrd(); }
+  function openPwd(){
+    $('mask').classList.add('show'); $('shPwd').classList.add('show'); syncPrd();
+    setTimeout(function(){ $('accInput').focus(); }, 300);
+  }
+  function closeSheet(){
+    $('mask').classList.remove('show');
+    $('shNick').classList.remove('show');
+    $('shPwd').classList.remove('show');
+    $('dlg').classList.remove('show');
+    syncPrd();
+  }
+  function openWx(){
+    state.wxGot = false;
+    $('wxNickVal').textContent = '点击使用微信昵称'; $('wxNickVal').classList.remove('got');
+    $('wxUse').textContent = '使用微信昵称'; $('wxUse').classList.remove('done');
+    $('wxConfirm').disabled = true;
+    $('wxpanel').classList.add('show');
+  }
+  function closeWx(){ $('wxpanel').classList.remove('show'); }
+
+  function render(){
+    var unset = state.scene === 'unset';
+    $('uarea').classList.toggle('unset', unset);
+    $('uname').textContent = state.shopName;
+    if(unset){
+      $('unick').style.display = 'none';
+      $('zi').textContent = '测';
+    }else{
+      $('unick').style.display = '';
+      $('unickVal').textContent = state.wxNick;
+      $('zi').textContent = state.shopName.charAt(0);
+    }
+    /* 圆形占位两态：已填昵称 → 账号名称首字；未填 → 橙色「待」 */
+    $('avatar').classList.toggle('warn', unset);
+    $('guidebar').classList.toggle('show', unset && !state.guideClosed);
+  }
+
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    var el = (t && t.closest) ? t.closest('[data-act],[data-scene],[data-page]') : null;
+    if(!el) return;
+    var act = el.getAttribute('data-act');
+
+    if(el.hasAttribute('data-page')){
+      var p = el.getAttribute('data-page');
+      if(p === 'replay'){ doReplay(); } else { goPage(p); }
+      return;
+    }
+    if(el.hasAttribute('data-scene')){
+      state.scene = el.getAttribute('data-scene');
+      if(state.scene === 'set'){ state.wxNick = '井惠琳'; }
+      if(state.scene === 'long'){ state.wxNick = LONG_NICK; }
+      state.draft = null;
+      document.querySelectorAll('.chip').forEach(function(c){ c.classList.toggle('on', c === el); });
+      render();
+      if(state.page !== 'mine'){ goPage('mine'); } else { syncPrd(); }
+      return;
+    }
+    if(!act) return;
+
+    /* ---- 登录页 ---- */
+    if(act === 'navBack'){ toast('返回上一页（无上一页时退出小程序）'); return; }
+    if(act === 'agree'){
+      state.agree = !state.agree;
+      $('cbox').classList.toggle('on', state.agree); return;
+    }
+    if(act === 'privacy'){ toast('打开《隐私政策》（H5 页面），不影响登录页勾选状态'); return; }
+    if(act === 'pwdLogin'){ openPwd(); return; }
+    if(act === 'togglePwd'){
+      var pw = $('pwdInput');
+      var show = pw.type === 'password';
+      pw.type = show ? 'text' : 'password';
+      $('pwdPick').textContent = show ? '隐藏' : '显示';
+      return;
+    }
+    if(act === 'forgot'){ toast('忘记密码：进入手机号验证码重置流程'); return; }
+    if(act === 'pwdSubmit'){
+      var acc = $('accInput').value.trim();
+      var pwd = $('pwdInput').value.trim();
+      if(!acc){ toast('请输入账号'); return; }
+      if(!pwd){ toast('请输入密码'); return; }
+      closeSheet();
+      /* 账号密码登录：不调起微信授权；该账号微信昵称槽位为空，需手动完善 */
+      state.wxNick = ''; state.scene = 'unset'; state.guideClosed = false;
+      state.draft = null;
+      document.querySelectorAll('.chip').forEach(function(c){
+        c.classList.toggle('on', c.getAttribute('data-scene') === 'unset');
+      });
+      toast('登录成功，已进入「' + state.shopName + '」');
+      setTimeout(function(){ goPage('mine'); render(); }, 600);
+      return;
+    }
+    if(act === 'reg'){ toast('演示：注册申请页（需运营审核开通，注册≠开通）'); return; }
+    if(act === 'phoneLogin'){
+      if(!state.agree){ toast('请先阅读并同意《隐私政策》'); return; }
+      $('phonePanel').classList.add('show'); return;
+    }
+    if(act === 'pickPhone'){
+      state.phoneSel = el.getAttribute('data-num') || 'a';
+      document.querySelectorAll('#phonePanel .wphone').forEach(function(c){
+        c.classList.toggle('sel', c.getAttribute('data-num') === state.phoneSel);
+      });
+      return;
+    }
+    if(act === 'managePhone'){ toast('由微信客户端渲染：跳转「微信 > 发现 > 小程序 > 个人中心」管理手机号码'); return; }
+    if(act === 'phoneAllow'){
+      $('phonePanel').classList.remove('show');
+      /* 号码 a=193****2486 已注册供应商账号；b=151****9939 未命中 → 提示后停留登录页 */
+      if(state.phoneSel === 'b'){ toast('该手机号没有注册供应商账号'); return; }
+      state.scene = 'set'; state.wxNick = '井惠琳'; state.draft = null;
+      document.querySelectorAll('.chip').forEach(function(c){
+        c.classList.toggle('on', c.getAttribute('data-scene') === 'set');
+      });
+      toast('登录成功，已绑定「' + state.shopName + '」');
+      setTimeout(function(){ goPage('mine'); render(); }, 600);
+      return;
+    }
+    if(act === 'phoneDeny'){ $('phonePanel').classList.remove('show'); return; }
+    if(e.target === $('phonePanel')){ $('phonePanel').classList.remove('show'); return; }
+
+    /* ---- 我的页 ---- */
+    if(act === 'openNick'){
+      var unset = state.scene === 'unset';
+      $('shNickTitle').textContent = unset ? '完善微信昵称' : '更新微信昵称';
+      $('shNickDesc').textContent = unset
+        ? '用于处理售后时，在售后群内找到你【昵称要与售后群的昵称一致】。'
+        : '改了微信名，点一下重新获取再保存即可同步；进小程序不会自动更新。';
+      /* 草稿保留：上次关层没保存时填了一半的内容还在（与右栏说明、身份绑定 PRD 5.5 规则一致） */
+      var dv = (state.draft === null) ? (unset ? '' : state.wxNick) : state.draft;
+      $('nickInput').value = dv;
+      $('cnt').textContent = dv.length;
+      openSheet(); return;
+    }
+    if(act === 'closeSheet'){ closeSheet(); return; }
+    if(act === 'closeGuide'){ state.guideClosed = true; render(); return; }
+    if(act === 'openWx'){ openWx(); return; }
+
+    if(act === 'wxUse'){
+      if(state.wxGot) return;
+      $('wxUse').textContent = '获取中…';
+      setTimeout(function(){
+        state.wxGot = true;
+        $('wxNickVal').textContent = MOCK_WX; $('wxNickVal').classList.add('got');
+        $('wxUse').textContent = '已获取微信昵称 ✓'; $('wxUse').classList.add('done');
+        $('wxConfirm').disabled = false;
+      }, 700);
+      return;
+    }
+    if(act === 'wxConfirm'){
+      $('nickInput').value = MOCK_WX; $('cnt').textContent = MOCK_WX.length;
+      closeWx(); toast('已填入，请核对后保存'); return;
+    }
+    if(act === 'wxCancel'){ closeWx(); return; }
+    if(e.target === $('wxpanel')){ closeWx(); return; }
+
+    if(act === 'save'){
+      var v = $('nickInput').value.trim();
+      if(!v){ toast('请输入微信昵称'); return; }
+      var cur = state.scene === 'unset' ? '' : state.wxNick;
+      if(v === cur){ toast('昵称没有变化'); return; }
+      state.wxNick = v; state.scene = 'set'; state.draft = null;
+      document.querySelectorAll('.chip').forEach(function(c){
+        c.classList.toggle('on', c.getAttribute('data-scene') === 'set');
+      });
+      render(); closeSheet();
+      toast('保存成功'); return;
+    }
+
+    if(act === 'logout'){ $('mask').classList.add('show'); $('dlg').classList.add('show'); return; }
+    if(act === 'logoutNo'){ closeSheet(); return; }
+    if(act === 'logoutYes'){ closeSheet(); doReplay(); toast('已退出登录'); return; }
+
+    if(act === 'withdraw'){ toast('提现功能（演示入口）'); return; }
+    if(act === 'withdrawLog'){ toast('提现记录（演示入口）'); return; }
+  });
+
+  $('nickInput').addEventListener('input', function(){
+    this.value = this.value.slice(0, 30);
+    state.draft = this.value;
+    $('cnt').textContent = this.value.length;
+  });
+  $('nickInput').addEventListener('focus', function(){ $('field').classList.add('focus'); });
+  $('nickInput').addEventListener('blur', function(){ $('field').classList.remove('focus'); });
+
+  function doReplay(){
+    state.page = 'login'; state.agree = false;
+    state.wxNick = '井惠琳'; state.scene = 'set'; state.guideClosed = false;
+    state.draft = null;
+    $('cbox').classList.remove('on');
+    document.querySelectorAll('.chip').forEach(function(c){
+      c.classList.toggle('on', c.getAttribute('data-scene') === 'set');
+    });
+    render();
+    goPage('login');
+  }
+
+  render();
+  goPage('login');
+})();
+</script>
+
+
+
+
+
+
+
+</body></html>
