@@ -96,7 +96,7 @@
   .tab svg { width: 20px; height: 20px; }
   .homeind { position: absolute; left: 50%; bottom: 5px; transform: translateX(-50%); width: 110px; height: 4px; border-radius: 2px; background: #1F2329; opacity: .18; z-index: 4; }
 
-  .toast { position: absolute; left: 50%; bottom: 150px; transform: translateX(-50%) translateY(8px); background: rgba(31,35,41,.9); color: #fff; font-size: 13px; padding: 8px 16px; border-radius: 8px; opacity: 0; transition: all .2s ease; pointer-events: none; max-width: 280px; text-align: center; line-height: 1.5; z-index: 6; }
+  .toast { position: absolute; left: 50%; top: 70px; transform: translateX(-50%) translateY(-8px); background: rgba(31,35,41,.9); color: #fff; font-size: 13px; padding: 8px 16px; border-radius: 8px; opacity: 0; transition: all .2s ease; pointer-events: none; max-width: 280px; text-align: center; line-height: 1.5; z-index: 6; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   .toast.err { background: rgba(190,54,63,.94); }
 
@@ -146,6 +146,7 @@
   table.tt th, table.tt td { text-align: left; padding: 5px 6px; border-bottom: 1px solid #F0F2F5; vertical-align: top; }
   table.tt th { color: #8A9099; font-weight: 400; }
   .tag-new { display: inline-block; font-size: 11px; color: #1677FF; background: #E8F1FE; border-radius: 3px; padding: 0 5px; }
+  .tag-old { display: inline-block; font-size: 11px; color: #6B7280; background: #F0F2F5; border-radius: 3px; padding: 0 5px; }
   .warn { background: #FFF7E6; border: 1px solid #FFE1A8; border-radius: 8px; padding: 9px 12px; font-size: 12px; color: #8A6100; line-height: 1.7; }
 </style>
 <style id="__dm_no_drag_style__">* { -webkit-user-drag: none !important; }</style><style id="__dm_bindable_badge_style__">[data-sp-bindable="database"]{outline:1px dashed #0088ff;outline-offset:2px;border-radius:4px;}[data-sp-bindable="database"] *{pointer-events:none !important;transition:none !important;animation:none !important;}[data-sp-bindable="database"]{transition:none !important;animation:none !important;}</style></head>
@@ -241,9 +242,9 @@
   <!-- ================= 说明面板 ================= -->
   <div class="panel">
     <h2>说明</h2>
-    <div class="sub">报价规则列表 · 一键开启 / 关闭报价规则（单条 + 批量 + 操作成功提示）</div>
+    <div class="sub" style="display:none">报价规则列表 · 一键开启 / 关闭报价规则（单条 + 批量 + 操作成功提示）</div>
 
-    <div class="metric">
+    <div class="metric" style="display:none">
       <div><div class="n" id="m-total">68</div><div class="l">规则总数</div></div>
       <div><div class="n" id="m-loaded">10</div><div class="l">已加载</div></div>
       <div><div class="n" id="m-on" style="color:#3B6D11">23</div><div class="l">启用中</div></div>
@@ -256,6 +257,7 @@
       <li><span class="tag-new">新增</span> 「批量管理」+ 勾选式批量开启 / 关闭，支持按当前筛选范围操作。</li>
       <li><span class="tag-new">新增</span> 分页加载（每页 10 条）与三层全选范围（已加载 / 全部加载 / 跨页）。</li>
       <li><span class="tag-new">新增</span> 批量操作确认执行后 Toast 提示<b>操作成功</b>（有失败时提示成功/失败条数）。</li>
+      <li><span class="tag-old">存量</span> 搜索框、<b>筛选图标（品牌筛选）</b>、新增报价规则、修改、删除均为原有小程序功能，本次未改动；原型中点击筛选图标仅提示，搜索为简化实现，用于验证「筛选变化 → 清空已选」联动。</li>
       
     </ul>
 
@@ -264,13 +266,12 @@
 
     <h3>混选处理（核心）</h3>
     <div class="warn" style="cursor: text;">
-      批量开关写入的是<b>目标态</b>，不是翻转态。批量开启时已是开启的规则<b>跳过不重复写入​</b>；批量关闭同理。反向操作完全对称。
+      批量开关写入的是<b>目标态</b>，不是翻转态。批量开启时已是开启的规则<b>将跳过</b>；批量关闭同理。反向操作完全对称。
     </div>
     <table class="tt" style="margin-top:8px;">
       <tbody><tr><th>场景</th><th>处理</th></tr>
       <tr><td>部分已达成</td><td>弹窗标题只写真实会变的条数：「将开启 3 条报价规则」</td></tr>
       <tr><td>全部已达成</td><td>不弹确认，直接提示「所选规则均已是开启状态，无需操作」</td></tr>
-      <tr><td>存在失败</td><td>结果弹窗给失败清单 + 重试入口</td></tr>
     </tbody></table>
 
     
@@ -593,11 +594,13 @@
     var ahead = target ? '开启' : '禁用';
     var desc = '';
     if (skipped.length) {
-      desc += '已选 ' + sel.length + ' 条，其中 <b>' + skipped.length + ' 条已是' + ahead + '状态</b>，将跳过、不重复写入。<br>';
+      desc += '已选 ' + sel.length + ' 条，其中 <b>' + skipped.length + ' 条已是' + ahead + '状态</b>，将跳过。<br>';
     } else {
-      desc += '已选 <b>' + sel.length + '</b> 条规则，将批量' + txt + '报价。<br>';
+      desc += '已选 <b>' + sel.length + '</b> 条规则，将' + txt + '报价。<br>';
     }
-    desc += '范围：' + scopeText() + (selectAllAcross ? '（含未加载的 ' + (filtered.length - shown) + ' 条）' : '');
+    if (selectAllAcross) {
+      desc += '范围：' + scopeText() + '（含未加载的 ' + (filtered.length - shown) + ' 条）';
+    }
     askConfirm('将' + txt + ' ' + willChange.length + ' 条报价规则', desc, '确认' + txt, !target, function () {
       runBatch(target, willChange, skipped);
     });
@@ -685,9 +688,7 @@
     applyFilter(); render();
   });
   document.getElementById('btn-filter').addEventListener('click', function () {
-    var c = document.getElementById('chips');
-    var on = c.classList.toggle('show');
-    this.classList.toggle('active', on);
+    toast('跟小程序原来功能一致');
   });
 
   function buildChips() {
