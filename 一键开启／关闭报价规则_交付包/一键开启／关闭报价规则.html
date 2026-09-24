@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>报价规则列表 · 一键开启/关闭（分页 + 批量 + 结果提示）</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #F5F6F8; color: #1F2329; padding: 28px 24px; min-height: 100vh;
+    display: flex; gap: 28px; justify-content: center; align-items: flex-start;
+  }
+
+  .phone {
+    width: 375px; height: 748px; flex: 0 0 auto; background: #fff;
+    border: 1px solid #E3E5E8; border-radius: 26px; overflow: hidden;
+    display: flex; flex-direction: column; position: relative;
+  }
+  .statusbar { height: 26px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 11px; }
+  .statusbar .right { display: flex; gap: 5px; align-items: center; }
+  .statusbar .bar { width: 14px; height: 8px; border: 1px solid #1F2329; border-radius: 2px; position: relative; }
+  .statusbar .bar::after { content: ""; position: absolute; left: 1px; top: 1px; bottom: 1px; width: 9px; background: #1F2329; border-radius: 1px; }
+  .navbar { height: 44px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; position: relative; font-size: 16px; font-weight: 500; border-bottom: 1px solid #F0F2F5; }
+  .navbar .back { position: absolute; left: 14px; font-size: 15px; }
+
+  .searchrow { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; padding: 10px 12px 8px; }
+  .searchbox { flex: 1; min-width: 0; height: 34px; background: #F2F3F5; border-radius: 17px; display: flex; align-items: center; gap: 6px; padding: 0 12px; }
+  .searchbox input { flex: 1; min-width: 0; border: 0; background: transparent; outline: none; font-size: 13px; font-family: inherit; color: #1F2329; }
+  .searchbox input::placeholder { color: #A8AEB6; }
+  .search-btn { height: 34px; padding: 0 14px; border-radius: 17px; background: #1677FF; color: #fff; font-size: 13px; border: 0; font-family: inherit; cursor: pointer; }
+  .icon-btn { width: 34px; height: 34px; flex: 0 0 auto; border-radius: 17px; border: 1px solid #E3E5E8; background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .icon-btn.active { border-color: #85B7EB; background: #F2F7FF; }
+
+  .chips { flex: 0 0 auto; display: none; gap: 8px; overflow-x: auto; padding: 0 12px 8px; }
+  .chips.show { display: flex; }
+  .chips::-webkit-scrollbar { height: 0; }
+  .chip { flex: 0 0 auto; height: 26px; padding: 0 12px; border-radius: 13px; background: #F2F3F5; font-size: 12px; color: #646A73; display: flex; align-items: center; cursor: pointer; white-space: nowrap; }
+  .chip.on { background: #E8F1FE; color: #1677FF; }
+
+  .toolbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 14px 8px; font-size: 12.5px; color: #8A9099; }
+  .toolbar .entry { color: #1677FF; cursor: pointer; font-size: 13px; }
+  .toolbar .link { color: #1677FF; cursor: pointer; font-size: 12.5px; margin-right: 12px; }
+  .toolbar .done { color: #1677FF; cursor: pointer; font-size: 13px; }
+  .sel-all { display: none; align-items: center; gap: 6px; color: #1F2329; cursor: pointer; font-size: 13px; white-space: nowrap; }
+  #tb-right { display: inline-flex; align-items: center; }
+  .cb { width: 17px; height: 17px; border-radius: 4px; border: 1px solid #C6CBD1; background: #fff; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; }
+  .cb.on { background: #1677FF; border-color: #1677FF; }
+  .cb.on::after { content: ""; width: 8px; height: 4px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg); margin-bottom: 2px; }
+
+  .list { flex: 1; overflow-y: auto; padding: 0 12px 100px; }
+  .list::-webkit-scrollbar { width: 0; }
+  .card { background: #fff; border: 1px solid #EDEFF2; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(31,35,41,.04); }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 9px; border-bottom: 1px solid #F4F5F7; margin-bottom: 8px; }
+  .card-head .left { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .card-title { font-size: 14px; font-weight: 600; }
+  .status { font-size: 11.5px; padding: 2px 8px; border-radius: 4px; flex: 0 0 auto; background: #FCEBEB; color: #A32D2D; }
+  .status.on { background: #EAF3DE; color: #3B6D11; }
+  .fields { display: grid; grid-template-columns: 76px 1fr; row-gap: 3px; }
+  .fields .k { font-size: 12.5px; color: #8A9099; line-height: 1.75; }
+  .fields .v { font-size: 12.5px; line-height: 1.75; word-break: break-all; }
+  .card-foot { display: flex; gap: 8px; margin-top: 11px; padding-top: 11px; border-top: 1px solid #F4F5F7; }
+  .card-foot button { flex: 1; height: 31px; border-radius: 6px; font-size: 13px; font-family: inherit; cursor: pointer; background: #fff; white-space: nowrap; }
+  .btn-toggle { border: 1px solid #B7D68E; color: #3B6D11; }
+  .btn-toggle.off { border: 1px solid #DCDEE2; color: #5F5E5A; }
+  .btn-toggle.loading { color: #A8AEB6; border-color: #E3E5E8; pointer-events: none; }
+  .btn-mod { border: 1px solid #C7DCFB; color: #1677FF; }
+  .btn-del { border: 1px solid #FAD6D6; color: #E34D59; }
+
+  .card.selmode .card-head { cursor: pointer; }
+  .card.selmode .card-foot { display: none; }
+  .card .row-cb { display: none; }
+  .card.selmode .row-cb { display: flex; }
+  .card.selected { border-color: #85B7EB; box-shadow: 0 0 0 2px rgba(22,119,255,.08); }
+
+  .listfoot { text-align: center; font-size: 12px; color: #A8AEB6; padding: 14px 0 20px; }
+  .spinner { display: inline-block; width: 12px; height: 12px; border: 1.5px solid #D7DAE0; border-top-color: #1677FF; border-radius: 50%; vertical-align: -2px; margin-right: 6px; animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .batchbar { position: absolute; left: 0; right: 0; bottom: 58px; background: #fff; border-top: 1px solid #F0F2F5; display: none; flex-direction: column; padding: 8px 14px 10px; }
+  .batchbar.show { display: flex; }
+  .batchbar .r1 { display: flex; align-items: center; font-size: 12.5px; color: #8A9099; }
+  .batchbar .r1 b { color: #1F2329; font-weight: 500; }
+  .batchbar .r1 .sep { margin: 0 6px; color: #D7DAE0; }
+  .batchbar .r2 { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .batchbar button { height: 32px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-family: inherit; cursor: pointer; background: #fff; white-space: nowrap; }
+  .batchbar .on-btn { border: 1px solid #97C459; color: #3B6D11; }
+  .batchbar .off-btn { border: 1px solid #F09595; color: #A32D2D; }
+  .batchbar button:disabled { opacity: .4; cursor: not-allowed; }
+  .batchbar .scope { margin-left: auto; font-size: 12px; color: #1677FF; cursor: pointer; }
+
+  .fab { position: absolute; right: 16px; bottom: 74px; height: 40px; padding: 0 18px; border-radius: 20px; background: #1677FF; color: #fff; font-size: 13px; border: 0; font-family: inherit; cursor: pointer; box-shadow: 0 4px 12px rgba(22,119,255,.32); display: flex; align-items: center; gap: 4px; }
+  .fab.hide { display: none; }
+  .tabbar { position: absolute; left: 0; right: 0; bottom: 0; height: 58px; background: #fff; border-top: 1px solid #F0F2F5; display: flex; z-index: 3; }
+  .tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 10.5px; color: #A8AEB6; }
+  .tab.active { color: #1677FF; }
+  .tab svg { width: 20px; height: 20px; }
+  .homeind { position: absolute; left: 50%; bottom: 5px; transform: translateX(-50%); width: 110px; height: 4px; border-radius: 2px; background: #1F2329; opacity: .18; z-index: 4; }
+
+  .toast { position: absolute; left: 50%; bottom: 150px; transform: translateX(-50%) translateY(8px); background: rgba(31,35,41,.9); color: #fff; font-size: 13px; padding: 8px 16px; border-radius: 8px; opacity: 0; transition: all .2s ease; pointer-events: none; max-width: 280px; text-align: center; line-height: 1.5; z-index: 6; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.err { background: rgba(190,54,63,.94); }
+
+  .mask { position: absolute; inset: 0; background: rgba(31,35,41,.45); z-index: 8; display: none; align-items: center; justify-content: center; }
+  .mask.show { display: flex; }
+  .dialog { width: 288px; background: #fff; border-radius: 14px; overflow: hidden; text-align: center; }
+  .dialog .dt { font-size: 15px; font-weight: 600; padding: 20px 20px 6px; }
+  .dialog .dc { font-size: 12.5px; color: #646A73; line-height: 1.7; padding: 0 20px 18px; }
+  .dialog .dc b { color: #1F2329; font-weight: 500; }
+  .dialog .da { display: flex; border-top: 1px solid #F0F2F5; }
+  .dialog .da button { flex: 1; height: 46px; border: 0; background: #fff; font-size: 15px; font-family: inherit; cursor: pointer; color: #646A73; }
+  .dialog .da button + button { border-left: 1px solid #F0F2F5; color: #1677FF; }
+  .dialog .da button.danger { color: #E34D59; }
+
+  .dialog.res { width: 304px; }
+  .dialog.res .dt { padding-bottom: 2px; }
+  .stats { display: flex; padding: 12px 6px 12px; }
+  .stats > div { flex: 1; position: relative; }
+  .stats > div + div::before { content: ""; position: absolute; left: 0; top: 4px; bottom: 4px; width: 1px; background: #F0F2F5; }
+  .stats .sn { font-size: 22px; font-weight: 500; line-height: 1.2; }
+  .stats .sl { font-size: 11px; color: #8A9099; margin-top: 2px; }
+  .rbody { text-align: left; font-size: 12px; color: #646A73; line-height: 1.75; padding: 0 16px 14px; max-height: 214px; overflow-y: auto; }
+  .rbody .row { display: flex; gap: 8px; padding-top: 7px; margin-top: 7px; border-top: 1px solid #F4F5F7; }
+  .rbody .rl { color: #8A9099; flex: 0 0 44px; }
+  .rbody .rv { flex: 1; word-break: break-all; }
+  .rbody b { color: #1F2329; font-weight: 500; }
+  .rbody .note { background: #F7F8FA; border-radius: 6px; padding: 7px 9px; margin-top: 8px; font-size: 11.5px; color: #8A9099; line-height: 1.7; }
+  .dialog.res .da button.primary { color: #1677FF; }
+
+  .panel { width: 430px; flex: 0 0 auto; background: #fff; border: 1px solid #E3E5E8; border-radius: 14px; padding: 20px 22px; font-size: 12.5px; line-height: 1.75; }
+  .panel h2 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .panel .sub { font-size: 12px; color: #8A9099; margin-bottom: 16px; }
+  .panel h3 { font-size: 13px; font-weight: 600; margin: 16px 0 7px; padding-left: 8px; border-left: 3px solid #1677FF; line-height: 1.2; }
+  .panel h3:first-of-type { margin-top: 0; }
+  .panel ul { padding-left: 16px; }
+  .panel li { margin-bottom: 3px; }
+  .panel code { background: #F2F3F5; border-radius: 3px; padding: 0 4px; font-size: 11.5px; }
+  .metric { display: flex; gap: 8px; margin-bottom: 14px; }
+  .metric div { flex: 1; background: #F7F8FA; border-radius: 8px; padding: 8px 9px; }
+  .metric .n { font-size: 19px; font-weight: 500; line-height: 1.3; }
+  .metric .l { font-size: 11px; color: #8A9099; }
+  .demo { background: #F7F9FF; border: 1px solid #E4EDFC; border-radius: 8px; padding: 10px 12px; }
+  .demo label { display: flex; align-items: center; gap: 8px; font-size: 12.5px; cursor: pointer; }
+  .demo .hint { font-size: 11.5px; color: #8A9099; margin-top: 6px; }
+  .demo-reset { margin-top: 10px; height: 30px; padding: 0 12px; border-radius: 6px; border: 1px solid #E3E5E8; background: #fff; font-size: 12.5px; font-family: inherit; cursor: pointer; }
+  table.tt { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.tt th, table.tt td { text-align: left; padding: 5px 6px; border-bottom: 1px solid #F0F2F5; vertical-align: top; }
+  table.tt th { color: #8A9099; font-weight: 400; }
+  .tag-new { display: inline-block; font-size: 11px; color: #1677FF; background: #E8F1FE; border-radius: 3px; padding: 0 5px; }
+  .warn { background: #FFF7E6; border: 1px solid #FFE1A8; border-radius: 8px; padding: 9px 12px; font-size: 12px; color: #8A6100; line-height: 1.7; }
+</style>
+<style id="__dm_no_drag_style__">* { -webkit-user-drag: none !important; }</style><style id="__dm_bindable_badge_style__">[data-sp-bindable="database"]{outline:1px dashed #0088ff;outline-offset:2px;border-radius:4px;}[data-sp-bindable="database"] *{pointer-events:none !important;transition:none !important;animation:none !important;}[data-sp-bindable="database"]{transition:none !important;animation:none !important;}</style></head>
+<body>
+
+  <div class="phone">
+    <div class="statusbar">
+      <span>10:56</span>
+      <span class="right"><span>5G</span><span class="bar"></span></span>
+    </div>
+
+    <div class="navbar"><span class="back">‹</span>首页</div>
+
+    <div class="searchrow">
+      <div class="searchbox">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A8AEB6" stroke-width="2.2"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6"></path></svg>
+        <input type="text" id="kw" placeholder="搜索商品名称 / 品牌 / 供应商">
+      </div>
+      <button class="search-btn" id="btn-search">搜索</button>
+      <div class="icon-btn" id="btn-filter">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F2329" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"></path></svg>
+      </div>
+    </div>
+
+    <div class="chips" id="chips"><span class="chip on" data-b="">全部</span><span class="chip" data-b="麦当劳">麦当劳</span><span class="chip" data-b="霸王茶姬">霸王茶姬</span><span class="chip" data-b="星巴克">星巴克</span><span class="chip" data-b="瑞幸咖啡">瑞幸咖啡</span><span class="chip" data-b="肯德基">肯德基</span><span class="chip" data-b="蜜雪冰城">蜜雪冰城</span><span class="chip" data-b="喜茶">喜茶</span><span class="chip" data-b="华莱士">华莱士</span></div>
+
+    <div class="toolbar">
+      <span id="tb-left" style="display: inline;">共 68 条报价规则</span>
+      <span class="sel-all" id="sel-all" style="display: none;"><span class="cb" id="cb-all"></span><span id="sel-all-text">全选已加载 10 条</span></span>
+      <span id="tb-right">
+        <span class="entry" id="entry" style="display: inline;">批量管理</span>
+        <span class="link" id="selall-link" style="display:none">选择全部 68 条</span>
+        <span class="done" id="done" style="display:none">完成</span>
+      </span>
+    </div>
+
+    <div class="list" id="list"><div class="card" data-id="1"><div class="card-head"><span class="left"><span class="cb row-cb"></span><span class="card-title">规则：2</span></span><span class="status">禁用</span></div><div class="fields"><span class="k">商品品牌</span><span class="v">麦当劳</span><span class="k">报价商品</span><span class="v">吉士蛋麦满分套餐、猪柳蛋麦满分组合</span><span class="k">可出餐城市</span><span class="v">全国</span><span class="k">报价时间</span><span class="v">2026-09-16 11:34:37</span><span class="k">更新时间</span><span class="v" data-f="updateTime">2026-09-16 15:49:39</span><span class="k">报价金额</span><span class="v">¥0.5</span><span class="k">出餐方式</span><span class="v">人工</span><span class="k">供应商名称</span><span class="v">井惠琳</span></div><div class="card-foot"><button class="btn-toggle" data-toggle="1">开启报价</button><button class="btn-mod">修改</button><button class="btn-del">删除</button></div></div><div class="card" data-id="2"><div class="card-head"><span class="left"><span class="cb row-cb"></span><span class="card-title">规则：1111</span></span><span class="status">禁用</span></div><div class="fields"><span class="k">商品品牌</span><span class="v">霸王茶姬</span><span class="k">报价商品</span><span class="v">归云南·云漫普洱（小杯（主题杯））、青沫观音（大杯）、任天真·小森林柚子气泡茶（中杯）、归云南·云焦卡美罗（小杯（主题杯））、一抹山月（小杯（主题杯））</span><span class="k">可出餐城市</span><span class="v">全国</span><span class="k">报价时间</span><span class="v">2026-09-16 11:34:05</span><span class="k">更新时间</span><span class="v" data-f="updateTime">2026-09-16 15:48:12</span><span class="k">报价金额</span><span class="v">¥1.0</span><span class="k">出餐方式</span><span class="v">人工</span><span class="k">供应商名称</span><span class="v">井惠琳</span></div><div class="card-foot"><button class="btn-toggle" data-toggle="2">开启报价</button><button class="btn-mod">修改</button><button class="btn-del">删除</button></div></div><div class="card" data-id="3"><div class="card-head"><span class="left"><span class="cb row-cb"></span><span class="card-title">规则：9</span></span><span class="status on">启用中</span></div><div class="fields"><span class="k">商品品牌</span><span class="v">麦当劳</span><span class="k">报价商品</span><span class="v">板烧鸡腿堡套餐、双层深海鳕鱼堡套餐</span><span class="k">可出餐城市</span><span class="v">厦门市、福州市</span><span class="k">报价时间</span><span class="v">2026-09-18 09:21:05</span><span class="k">更新时间</span><span class="v" data-f="updateTime">2026-09-18 09:21:05</span><span class="k">报价金额</span><span class="v">¥0.8</span><span class="k">出餐方式</span><span class="v">人工</span><span class="k">供应商名称</span><span class="v">林晓东</span></div><div class="card-foot"><button class="btn-toggle off" data-toggle="3">关闭报价</button><button class="btn-mod">修改</button><button class="btn-del">删除</button></div></div><div class="card" data-id="4"><div class="card-head"><span class="left"><span class="cb row-cb"></span><span class="card-title">规则：33</span></span><span class="status on">启用中</span></div><div class="fields"><span class="k">商品品牌</span><span class="v">星巴克</span><span class="k">报价商品</span><span class="v">拿铁（大杯）、冷萃咖啡（中杯）</span><span class="k">可出餐城市</span><span class="v">全国</span><span class="k">报价时间</span><span class="v">2026-09-20 14:02:11</span><span class="k">更新时间</span><span class="v" data-f="updateTime">2026-09-20 14:30:47</span><span class="k">报价金额</span><span class="v">¥1.2</span><span class="k">出餐方式</span><span class="v">自动</span><span class="k">供应商名称</span><span class="v">黄志强</span></div><div class="card-foot"><button class="btn-toggle off" data-toggle="4">关闭报价</button><button class="btn-mod">修改</button><button class="btn-del">删除</button></div></div><div class="card" data-id="5"><div class="card-head"><span class="left"><span class="cb row-cb"></span><span class="card-title">规则：22</span></span><span class="status">禁用</span></div><div class="fields"><span class="k">商品品牌</span><span class="v">华莱士</span><span class="k">报价商品</span><span class="v">脆皮炸鸡桶、全鸡堡套餐、脆皮炸鸡桶</span><span class="k">可出餐城市</span><span class="v">杭州市、宁波市</span><span class="k">报价时间</span><span class="v">2026-09-08 15:55:05</span><span class="k">更新时间</span><span class="v" data-f="updateTime">2026-09-09 17:12:10</span><span class="k">报价金额</span><span class="v">¥1.3</span><span class="k">出餐方式</span><span class="v">人工</span><span class="k">供应商名称</span><span class="v">郑晓晴</span></div><div class="card-foot"><button class="btn-toggle" data-toggle="5">开启报价</button><button class="btn-mod">修改</button><button class="btn-del">删除</button></div></div><div class="card" data-id="6"><div class="card-head"><span class="left"><span class="cb row-cb"></span><span class="card-title">规则：25</span></span><span class="status on">启用中</span></div><div class="fields"><span class="k">商品品牌</span><span class="v">星巴克</span><span class="k">报价商品</span><span class="v">拿铁（大杯）</span><span class="k">可出餐城市</span><span class="v">成都市、重庆市</span><span class="k">报价时间</span><span class="v">2026-09-15 18:06:18</span><span class="k">更新时间</span><span class="v" data-f="updateTime">2026-09-16 20:23:23</span><span class="k">报价金额</span><span class="v">¥1.5</span><span class="k">出餐方式</span><span class="v">人工</span><span class="k">供应商名称</span><span class="v">吴俊宏</span></div><div class="card-foot"><button class="btn-toggle off" data-toggle="6">关闭报价</button><button class="btn-mod">修改</button><button class="btn-del">删除</button></div></div><div class="card" data-id="7"><div class="card-head"><span class="left"><span class="cb row-cb"></span><span class="card-title">规则：28</span></span><span class="status">禁用</span></div><div class="fields"><span class="k">商品品牌</span><span class="v">蜜雪冰城</span><span class="k">报价商品</span><span class="v">蜜桃四季春（中杯）、冰鲜柠檬水（大杯）</span><span class="k">可出餐城市</span><span class="v">全国</span><span class="k">报价时间</span><span class="v">2026-09-22 21:17:31</span><span class="k">更新时间</span><span class="v" data-f="updateTime">2026-09-23 23:34:36</span><span class="k">报价金额</span><span class="v">¥0.3</span><span class="k">出餐方式</span><span class="v">自动</span><span class="k">供应商名称</span><span class="v">井惠琳</span></div><div class="card-foot"><button class="btn-toggle" data-toggle="7">开启报价</button><button class="btn-mod">修改</button><button class="btn-del">删除</button></div></div><div class="card" data-id="8"><div class="card-head"><span class="left"><span class="cb row-cb"></span><span class="card-title">规则：31</span></span><span class="status">禁用</span></div><div class="fields"><span class="k">商品品牌</span><span class="v">麦当劳</span><span class="k">报价商品</span><span class="v">双层深海鳕鱼堡套餐、巨无霸套餐、吉士蛋麦满分套餐</span><span class="k">可出餐城市</span><span class="v">厦门市、福州市</span><span class="k">报价时间</span><span class="v">2026-09-01 00:28:44</span><span class="k">更新时间</span><span class="v" data-f="updateTime">2026-09-02 02:45:49</span><span class="k">报价金额</span><span class="v">¥0.5</span><span class="k">出餐方式</span><span class="v">人工</span><span class="k">供应商名称</span><span class="v">林晓东</span></div><div class="card-foot"><button class="btn-toggle" data-toggle="8">开启报价</button><button class="btn-mod">修改</button><button class="btn-del">删除</button></div></div><div class="card" data-id="9"><div class="card-head"><span class="left"><span class="cb row-cb"></span><span class="card-title">规则：34</span></span><span class="status on">启用中</span></div><div class="fields"><span class="k">商品品牌</span><span class="v">瑞幸咖啡</span><span class="k">报价商品</span><span class="v">丝绒拿铁（中杯）</span><span class="k">可出餐城市</span><span class="v">上海市</span><span class="k">报价时间</span><span class="v">2026-09-08 03:39:57</span><span class="k">更新时间</span><span class="v" data-f="updateTime">2026-09-09 05:56:02</span><span class="k">报价金额</span><span class="v">¥0.7</span><span class="k">出餐方式</span><span class="v">人工</span><span class="k">供应商名称</span><span class="v">黄志强</span></div><div class="card-foot"><button class="btn-toggle off" data-toggle="9">关闭报价</button><button class="btn-mod">修改</button><button class="btn-del">删除</button></div></div><div class="card" data-id="10"><div class="card-head"><span class="left"><span class="cb row-cb"></span><span class="card-title">规则：37</span></span><span class="status">禁用</span></div><div class="fields"><span class="k">商品品牌</span><span class="v">喜茶</span><span class="k">报价商品</span><span class="v">多肉葡萄（大杯）、烤黑糖波波牛乳（中杯）</span><span class="k">可出餐城市</span><span class="v">北京市、天津市</span><span class="k">报价时间</span><span class="v">2026-09-15 06:50:10</span><span class="k">更新时间</span><span class="v" data-f="updateTime">2026-09-16 08:07:15</span><span class="k">报价金额</span><span class="v">¥0.9</span><span class="k">出餐方式</span><span class="v">人工</span><span class="k">供应商名称</span><span class="v">周敏</span></div><div class="card-foot"><button class="btn-toggle" data-toggle="10">开启报价</button><button class="btn-mod">修改</button><button class="btn-del">删除</button></div></div><div class="listfoot">上拉加载更多（已加载 10 / 68）</div></div>
+
+    <button class="fab" id="fab">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      新增报价规则
+    </button>
+
+    <div class="batchbar" id="batchbar">
+      <div class="r1">
+        <span>已选 <b id="sel-count">0</b> 条<span id="sel-total">（共 68 条）</span></span>
+        <span class="sep" style="display: none;">|</span>
+        <span id="sel-state" style="display: none;">已开启 0 · 已禁用 0</span>
+      </div>
+      <div class="r2">
+        <button class="on-btn" id="batch-on" disabled="">批量开启</button>
+        <button class="off-btn" id="batch-off" disabled="">批量关闭</button>
+        <span class="scope" id="scope-link" style="display:none">选择全部 68 条</span>
+      </div>
+    </div>
+
+    <div class="tabbar">
+      <div class="tab active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3 10.6 12 3.4l9 7.2V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>
+        首页
+      </div>
+      <div class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"></rect></svg>
+        工作台
+      </div>
+      <div class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M5 3.5h14v17l-2.4-1.7-2.6 1.7-2.6-1.7L9.4 20.5 7 18.8 5 20.5z"></path><path d="M9 9h6M9 13h4" stroke-linecap="round"></path></svg>
+        订单
+      </div>
+      <div class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.8 20c.9-3.6 3.8-5.6 7.2-5.6s6.3 2 7.2 5.6" stroke-linecap="round"></path></svg>
+        我的
+      </div>
+    </div>
+
+    <div class="homeind"></div>
+    <div class="toast" id="toast"></div>
+
+    <div class="mask" id="mask">
+      <div class="dialog">
+        <div class="dt" id="dlg-title">确认操作</div>
+        <div class="dc" id="dlg-desc"></div>
+        <div class="da">
+          <button id="dlg-cancel">取消</button>
+          <button id="dlg-ok">确认</button>
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
+
+  <!-- ================= 说明面板 ================= -->
+  <div class="panel">
+    <h2>说明</h2>
+    <div class="sub">报价规则列表 · 一键开启 / 关闭报价规则（单条 + 批量 + 操作成功提示）</div>
+
+    <div class="metric">
+      <div><div class="n" id="m-total">68</div><div class="l">规则总数</div></div>
+      <div><div class="n" id="m-loaded">10</div><div class="l">已加载</div></div>
+      <div><div class="n" id="m-on" style="color:#3B6D11">23</div><div class="l">启用中</div></div>
+      <div><div class="n" id="m-off" style="color:#E34D59">45</div><div class="l">已禁用</div></div>
+    </div>
+
+    <h3>本次改动</h3>
+    <ul>
+      
+      <li><span class="tag-new">新增</span> 「批量管理」+ 勾选式批量开启 / 关闭，支持按当前筛选范围操作。</li>
+      <li><span class="tag-new">新增</span> 分页加载（每页 10 条）与三层全选范围（已加载 / 全部加载 / 跨页）。</li>
+      <li><span class="tag-new">新增</span> 批量操作确认执行后 Toast 提示<b>操作成功</b>（有失败时提示成功/失败条数）。</li>
+      
+    </ul>
+
+    
+    
+
+    <h3>混选处理（核心）</h3>
+    <div class="warn" style="cursor: text;">
+      批量开关写入的是<b>目标态</b>，不是翻转态。批量开启时已是开启的规则<b>跳过不重复写入​</b>；批量关闭同理。反向操作完全对称。
+    </div>
+    <table class="tt" style="margin-top:8px;">
+      <tbody><tr><th>场景</th><th>处理</th></tr>
+      <tr><td>部分已达成</td><td>弹窗标题只写真实会变的条数：「将开启 3 条报价规则」</td></tr>
+      <tr><td>全部已达成</td><td>不弹确认，直接提示「所选规则均已是开启状态，无需操作」</td></tr>
+      <tr><td>存在失败</td><td>结果弹窗给失败清单 + 重试入口</td></tr>
+    </tbody></table>
+
+    
+    
+    <ul style="margin-top:8px;">
+      
+      <li>进入批量管理，混选已开启与已禁用的规则 → 点「批量开启」→ 看弹窗真实条数与跳过提示 → 看结果弹窗。</li>
+      <li>上拉列表底部触发分页，「全选」文案会从「全选已加载 8 条」逐步变化。</li>
+    </ul>
+
+    <h3>边界规则</h3>
+    <ul>
+      <li>切换筛选 / 搜索条件必须清空已选并提示。</li>
+      <li>加载新一页时已选项保留，新加载项不自动勾选。</li>
+      <li>底栏实时显示「已选 N 条（共 M 条）｜ 已开启 X · 已禁用 Y」，便于预判。</li>
+      <li>退出批量管理或执行完成后清空已选。</li>
+    </ul>
+
+    
+    <ul>
+      
+      
+      
+    </ul>
+
+    
+    <ul>
+      
+      
+      
+    </ul>
+  </div>
+
+<script>
+  var PAGE_SIZE = 10;
+
+  var BRANDS = [
+    { b: '麦当劳', items: ['吉士蛋麦满分套餐', '猪柳蛋麦满分组合', '板烧鸡腿堡套餐', '双层深海鳕鱼堡套餐', '巨无霸套餐'] },
+    { b: '霸王茶姬', items: ['归云南·云漫普洱（小杯（主题杯））', '青沫观音（大杯）', '任天真·小森林柚子气泡茶（中杯）', '归云南·云焦卡美罗（小杯（主题杯））', '一抹山月（小杯（主题杯））'] },
+    { b: '星巴克', items: ['拿铁（大杯）', '冷萃咖啡（中杯）', '燕麦拿铁（大杯）'] },
+    { b: '瑞幸咖啡', items: ['生椰拿铁（大杯）', '丝绒拿铁（中杯）'] },
+    { b: '肯德基', items: ['香辣鸡腿堡套餐', '新奥尔良烤翅套餐'] },
+    { b: '蜜雪冰城', items: ['冰鲜柠檬水（大杯）', '蜜桃四季春（中杯）'] },
+    { b: '喜茶', items: ['多肉葡萄（大杯）', '烤黑糖波波牛乳（中杯）'] },
+    { b: '华莱士', items: ['全鸡堡套餐', '脆皮炸鸡桶'] }
+  ];
+  var CITIES = ['全国', '厦门市、福州市', '上海市', '北京市、天津市', '广州市、深圳市', '杭州市、宁波市', '成都市、重庆市'];
+  var MODES = ['人工', '人工', '人工', '自动'];
+  var SUPPLIERS = ['井惠琳', '林晓东', '黄志强', '周敏', '陈伟杰', '郑晓晴', '吴俊宏'];
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function buildRules() {
+    var arr = [];
+    arr.push({ id: 1, title: '规则：2', brand: '麦当劳', items: '吉士蛋麦满分套餐、猪柳蛋麦满分组合', city: '全国', quoteTime: '2026-09-16 11:34:37', updateTime: '2026-09-16 15:49:39', amount: '¥0.5', mode: '人工', supplier: '井惠琳', enabled: false });
+    arr.push({ id: 2, title: '规则：1111', brand: '霸王茶姬', items: '归云南·云漫普洱（小杯（主题杯））、青沫观音（大杯）、任天真·小森林柚子气泡茶（中杯）、归云南·云焦卡美罗（小杯（主题杯））、一抹山月（小杯（主题杯））', city: '全国', quoteTime: '2026-09-16 11:34:05', updateTime: '2026-09-16 15:48:12', amount: '¥1.0', mode: '人工', supplier: '井惠琳', enabled: false });
+    arr.push({ id: 3, title: '规则：9', brand: '麦当劳', items: '板烧鸡腿堡套餐、双层深海鳕鱼堡套餐', city: '厦门市、福州市', quoteTime: '2026-09-18 09:21:05', updateTime: '2026-09-18 09:21:05', amount: '¥0.8', mode: '人工', supplier: '林晓东', enabled: true });
+    arr.push({ id: 4, title: '规则：33', brand: '星巴克', items: '拿铁（大杯）、冷萃咖啡（中杯）', city: '全国', quoteTime: '2026-09-20 14:02:11', updateTime: '2026-09-20 14:30:47', amount: '¥1.2', mode: '自动', supplier: '黄志强', enabled: true });
+
+    for (var i = 5; i <= 68; i++) {
+      var bd = BRANDS[(i * 3) % BRANDS.length];
+      var cnt = 1 + (i % 3);
+      var picks = [];
+      for (var j = 0; j < cnt; j++) picks.push(bd.items[(i + j) % bd.items.length]);
+      var day = 1 + ((i * 7) % 28);
+      var hh = (i * 3) % 24, mi = (i * 11) % 60, ss = (i * 13) % 60;
+      var quote = '2026-09-' + pad(day) + ' ' + pad(hh) + ':' + pad(mi) + ':' + pad(ss);
+      var up = '2026-09-' + pad(Math.min(28, day + 1)) + ' ' + pad((hh + 2) % 24) + ':' + pad((mi + 17) % 60) + ':' + pad((ss + 5) % 60);
+      arr.push({
+        id: i,
+        title: '规则：' + (i * 3 + 7),
+        brand: bd.b,
+        items: picks.join('、'),
+        city: CITIES[i % CITIES.length],
+        quoteTime: quote,
+        updateTime: up,
+        amount: '¥' + (0.3 + ((i % 7) * 0.2)).toFixed(1),
+        mode: MODES[i % MODES.length],
+        supplier: SUPPLIERS[i % SUPPLIERS.length],
+        enabled: i % 3 === 0
+      });
+    }
+    return arr;
+  }
+
+  var rules = [];
+  var brandFilter = '';
+  var keyword = '';
+  var filtered = [];
+  var shown = 0;
+  var loadingPage = false;
+  var selMode = false;
+  var selected = [];
+  var selectAllAcross = false;
+  var failNext = false;
+  var busy = false;
+
+  var listEl = document.getElementById('list');
+  var toastEl = document.getElementById('toast');
+  var toastTimer = null;
+  var dlgOk = null;
+
+  function clone(a) { return JSON.parse(JSON.stringify(a)); }
+  function byId(id) { for (var i = 0; i < rules.length; i++) if (rules[i].id === id) return rules[i]; return null; }
+  function isSel(id) { return selectAllAcross || selected.indexOf(id) > -1; }
+  function visibleList() { return filtered.slice(0, shown); }
+  function hasMore() { return shown < filtered.length; }
+
+  function nowStr() {
+    var d = new Date();
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' +
+           pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+  }
+
+  function applyFilter() {
+    filtered = [];
+    for (var i = 0; i < rules.length; i++) {
+      var r = rules[i];
+      if (brandFilter && r.brand !== brandFilter) continue;
+      if (keyword) {
+        var hay = r.brand + ' ' + r.items + ' ' + r.supplier + ' ' + r.city + ' ' + r.title;
+        if (hay.toLowerCase().indexOf(keyword.toLowerCase()) === -1) continue;
+      }
+      filtered.push(r);
+    }
+    shown = Math.min(PAGE_SIZE, filtered.length);
+  }
+
+  function selectedRules() {
+    var out = [];
+    for (var i = 0; i < filtered.length; i++) {
+      var r = filtered[i];
+      if (selectAllAcross || selected.indexOf(r.id) > -1) out.push(r);
+    }
+    return out;
+  }
+
+  function scopeText() {
+    if (brandFilter) return '当前筛选「' + brandFilter + '」';
+    if (keyword) return '当前搜索「' + keyword + '」';
+    return '当前列表';
+  }
+
+  function cardHTML(r) {
+    var sel = isSel(r.id);
+    return '' +
+      '<div class="card' + (selMode ? ' selmode' : '') + (sel ? ' selected' : '') + '" data-id="' + r.id + '">' +
+        '<div class="card-head">' +
+          '<span class="left">' +
+            '<span class="cb row-cb' + (sel ? ' on' : '') + '"></span>' +
+            '<span class="card-title">' + r.title + '</span>' +
+          '</span>' +
+          '<span class="status' + (r.enabled ? ' on' : '') + '">' + (r.enabled ? '启用中' : '禁用') + '</span>' +
+        '</div>' +
+        '<div class="fields">' +
+          '<span class="k">商品品牌</span><span class="v">' + r.brand + '</span>' +
+          '<span class="k">报价商品</span><span class="v">' + r.items + '</span>' +
+          '<span class="k">可出餐城市</span><span class="v">' + r.city + '</span>' +
+          '<span class="k">报价时间</span><span class="v">' + r.quoteTime + '</span>' +
+          '<span class="k">更新时间</span><span class="v" data-f="updateTime">' + r.updateTime + '</span>' +
+          '<span class="k">报价金额</span><span class="v">' + r.amount + '</span>' +
+          '<span class="k">出餐方式</span><span class="v">' + r.mode + '</span>' +
+          '<span class="k">供应商名称</span><span class="v">' + r.supplier + '</span>' +
+        '</div>' +
+        '<div class="card-foot">' +
+          '<button class="btn-toggle' + (r.enabled ? ' off' : '') + '" data-toggle="' + r.id + '">' + (r.enabled ? '关闭报价' : '开启报价') + '</button>' +
+          '<button class="btn-mod">修改</button>' +
+          '<button class="btn-del">删除</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function render() {
+    var st = listEl.scrollTop;
+    var html = '';
+    var vs = visibleList();
+    if (!vs.length) {
+      html += '<div class="listfoot">没有符合条件的报价规则</div>';
+    } else {
+      for (var i = 0; i < vs.length; i++) html += cardHTML(vs[i]);
+      if (loadingPage) html += '<div class="listfoot"><span class="spinner"></span>加载中…</div>';
+      else if (hasMore()) html += '<div class="listfoot">上拉加载更多（已加载 ' + shown + ' / ' + filtered.length + '）</div>';
+      else html += '<div class="listfoot">没有更多了</div>';
+    }
+    listEl.innerHTML = html;
+    listEl.scrollTop = st;
+    syncUI();
+  }
+
+  function syncUI() {
+    var on = 0;
+    for (var i = 0; i < rules.length; i++) if (rules[i].enabled) on++;
+    document.getElementById('m-total').textContent = rules.length;
+    document.getElementById('m-loaded').textContent = shown;
+    document.getElementById('m-on').textContent = on;
+    document.getElementById('m-off').textContent = rules.length - on;
+
+    var total = filtered.length;
+    var vs = visibleList();
+    var loadedCount = vs.length;
+
+    document.getElementById('tb-left').textContent = '共 ' + total + ' 条报价规则';
+
+    var selAllText = document.getElementById('sel-all-text');
+    if (selectAllAcross) selAllText.textContent = '已全选 ' + total + ' 条';
+    else if (loadedCount > 0 && loadedCount === total) selAllText.textContent = '全选';
+    else selAllText.textContent = '全选已加载 ' + loadedCount + ' 条';
+
+    var allLoadedSelected = loadedCount > 0;
+    for (var k = 0; k < vs.length; k++) if (!isSel(vs[k].id)) { allLoadedSelected = false; break; }
+    document.getElementById('cb-all').className = 'cb' + (allLoadedSelected ? ' on' : '');
+
+    var sel = selectedRules();
+    var selOn = 0;
+    for (var m = 0; m < sel.length; m++) if (sel[m].enabled) selOn++;
+    document.getElementById('sel-count').textContent = sel.length;
+    document.getElementById('sel-total').textContent = selectAllAcross ? '（全部）' : '（共 ' + total + ' 条）';
+    document.getElementById('sel-state').textContent = '已开启 ' + selOn + ' · 已禁用 ' + (sel.length - selOn);
+    document.getElementById('sel-state').style.display = sel.length ? 'inline' : 'none';
+    document.querySelector('.batchbar .sep').style.display = sel.length ? 'inline' : 'none';
+
+    var canBatch = sel.length > 0;
+    document.getElementById('batch-on').disabled = !canBatch;
+    document.getElementById('batch-off').disabled = !canBatch;
+
+    var link = document.getElementById('selall-link');
+    var scope = document.getElementById('scope-link');
+    var needLink = !selectAllAcross && selMode && total > loadedCount;
+    link.style.display = needLink ? 'inline' : 'none';
+    link.textContent = '选择全部 ' + total + ' 条';
+    scope.style.display = needLink ? 'inline' : 'none';
+    scope.textContent = '选择全部 ' + total + ' 条';
+
+    document.getElementById('tb-left').style.display = selMode ? 'none' : 'inline';
+    document.getElementById('sel-all').style.display = selMode ? 'inline-flex' : 'none';
+    document.getElementById('entry').style.display = selMode ? 'none' : 'inline';
+    document.getElementById('done').style.display = selMode ? 'inline' : 'none';
+    document.getElementById('batchbar').className = 'batchbar' + (selMode ? ' show' : '');
+    document.getElementById('fab').className = 'fab' + (selMode ? ' hide' : '');
+  }
+
+  function loadMore() {
+    if (loadingPage || !hasMore()) return;
+    loadingPage = true;
+    render();
+    setTimeout(function () {
+      loadingPage = false;
+      shown = Math.min(shown + PAGE_SIZE, filtered.length);
+      render();
+    }, 500);
+  }
+
+  listEl.addEventListener('scroll', function () {
+    if (listEl.scrollTop + listEl.clientHeight >= listEl.scrollHeight - 40) loadMore();
+  });
+
+  function singleToggle(btn) {
+    if (busy) return;
+    var r = byId(parseInt(btn.getAttribute('data-toggle'), 10));
+    if (!r) return;
+    busy = true;
+    var origin = btn.textContent;
+    btn.classList.add('loading');
+    btn.textContent = '处理中…';
+
+    setTimeout(function () {
+      busy = false;
+      btn.classList.remove('loading');
+      if (failNext) {
+        failNext = false;
+        clearFailDemo();
+        btn.textContent = origin;
+        toast('操作失败，请重试', true);
+        return;
+      }
+      r.enabled = !r.enabled;
+      r.updateTime = nowStr();
+      btn.textContent = r.enabled ? '关闭报价' : '开启报价';
+      btn.className = 'btn-toggle' + (r.enabled ? ' off' : '');
+      var card = btn.closest('.card');
+      card.querySelector('[data-f="updateTime"]').textContent = r.updateTime;
+      var st = card.querySelector('.status');
+      st.className = 'status' + (r.enabled ? ' on' : '');
+      st.textContent = r.enabled ? '启用中' : '禁用';
+      syncUI();
+      toast(r.enabled ? '已开启报价' : '已关闭报价');
+    }, 700);
+  }
+
+  function askConfirm(title, desc, okText, danger, cb) {
+    document.getElementById('dlg-title').textContent = title;
+    document.getElementById('dlg-desc').innerHTML = desc;
+    var ok = document.getElementById('dlg-ok');
+    ok.textContent = okText;
+    ok.className = danger ? 'danger' : '';
+    dlgOk = cb;
+    document.getElementById('mask').classList.add('show');
+  }
+  document.getElementById('dlg-cancel').addEventListener('click', function () {
+    document.getElementById('mask').classList.remove('show'); dlgOk = null;
+  });
+  document.getElementById('dlg-ok').addEventListener('click', function () {
+    document.getElementById('mask').classList.remove('show');
+    var f = dlgOk; dlgOk = null;
+    if (f) f();
+  });
+
+  function batchDo(target) {
+    var txt = target ? '开启' : '关闭';
+    var sel = selectedRules();
+    if (!sel.length) return;
+    var willChange = [], skipped = [];
+    for (var i = 0; i < sel.length; i++) {
+      if (sel[i].enabled === target) skipped.push(sel[i]); else willChange.push(sel[i]);
+    }
+    if (!willChange.length) {
+      toast('所选规则均已是' + txt + '状态，无需操作');
+      return;
+    }
+    var ahead = target ? '开启' : '禁用';
+    var desc = '';
+    if (skipped.length) {
+      desc += '已选 ' + sel.length + ' 条，其中 <b>' + skipped.length + ' 条已是' + ahead + '状态</b>，将跳过、不重复写入。<br>';
+    } else {
+      desc += '已选 <b>' + sel.length + '</b> 条规则，将批量' + txt + '报价。<br>';
+    }
+    desc += '范围：' + scopeText() + (selectAllAcross ? '（含未加载的 ' + (filtered.length - shown) + ' 条）' : '');
+    askConfirm('将' + txt + ' ' + willChange.length + ' 条报价规则', desc, '确认' + txt, !target, function () {
+      runBatch(target, willChange, skipped);
+    });
+  }
+
+  function runBatch(target, willChange, skipped, retryRules) {
+    var fail = [];
+    var ok = [];
+    for (var i = 0; i < willChange.length; i++) {
+      if (failNext && i === willChange.length - 1) fail.push(willChange[i]);
+      else ok.push(willChange[i]);
+    }
+    if (failNext) {
+      failNext = false;
+      clearFailDemo();
+    }
+    var t = nowStr();
+    for (var k = 0; k < ok.length; k++) { ok[k].enabled = target; ok[k].updateTime = t; }
+
+    selected = []; selectAllAcross = false; selMode = false;
+    render();
+    toast(fail.length ? ('成功 ' + ok.length + ' 条，失败 ' + fail.length + ' 条') : '操作成功', fail.length > 0);
+  }
+
+  function clearSelection(showTip) {
+    var had = selectAllAcross || selected.length > 0;
+    selected = []; selectAllAcross = false;
+    if (had && showTip) toast('筛选条件已变化，已清空选择');
+  }
+
+  listEl.addEventListener('click', function (e) {
+    var t = e.target;
+    if (t.closest && t.closest('[data-toggle]')) { singleToggle(t.closest('[data-toggle]')); return; }
+    var card = t.closest ? t.closest('.card') : null;
+    if (selMode && card) {
+      var id = parseInt(card.getAttribute('data-id'), 10);
+      if (selectAllAcross) { selectAllAcross = false; selected = [id]; }
+      else {
+        var i = selected.indexOf(id);
+        if (i > -1) selected.splice(i, 1); else selected.push(id);
+      }
+      render(); return;
+    }
+    if (t.classList && (t.classList.contains('btn-mod') || t.classList.contains('btn-del'))) {
+      toast('修改 / 删除为存量功能，本次未改动');
+    }
+  });
+
+  document.getElementById('entry').addEventListener('click', function () {
+    selMode = true; selected = []; selectAllAcross = false; render();
+  });
+  document.getElementById('done').addEventListener('click', function () {
+    selMode = false; selected = []; selectAllAcross = false; render();
+  });
+
+  document.getElementById('sel-all').addEventListener('click', function () {
+    var vs = visibleList();
+    if (selectAllAcross) { selectAllAcross = false; selected = []; }
+    else {
+      var allSel = vs.length > 0;
+      for (var i = 0; i < vs.length; i++) if (!isSel(vs[i].id)) { allSel = false; break; }
+      if (allSel) { selected = []; }
+      else { selected = []; for (var j = 0; j < vs.length; j++) selected.push(vs[j].id); }
+    }
+    render();
+  });
+
+  function crossPageSelect() {
+    askConfirm(
+      '选择全部 ' + filtered.length + ' 条规则？',
+      '包括当前未加载的 <b>' + (filtered.length - shown) + '</b> 条规则，后续批量操作将同时影响它们。',
+      '确认选择', false,
+      function () { selectAllAcross = true; selected = []; render(); toast('已选中全部 ' + filtered.length + ' 条规则'); }
+    );
+  }
+  document.getElementById('selall-link').addEventListener('click', crossPageSelect);
+  document.getElementById('scope-link').addEventListener('click', crossPageSelect);
+
+  document.getElementById('batch-on').addEventListener('click', function () { batchDo(true); });
+  document.getElementById('batch-off').addEventListener('click', function () { batchDo(false); });
+
+  document.getElementById('btn-search').addEventListener('click', function () {
+    keyword = document.getElementById('kw').value.trim();
+    clearSelection(true);
+    applyFilter(); render();
+  });
+  document.getElementById('btn-filter').addEventListener('click', function () {
+    var c = document.getElementById('chips');
+    var on = c.classList.toggle('show');
+    this.classList.toggle('active', on);
+  });
+
+  function buildChips() {
+    var box = document.getElementById('chips');
+    var html = '<span class="chip on" data-b="">全部</span>';
+    for (var i = 0; i < BRANDS.length; i++) html += '<span class="chip" data-b="' + BRANDS[i].b + '">' + BRANDS[i].b + '</span>';
+    box.innerHTML = html;
+    box.addEventListener('click', function (e) {
+      var chip = e.target.closest ? e.target.closest('.chip') : null;
+      if (!chip) return;
+      brandFilter = chip.getAttribute('data-b');
+      var all = box.querySelectorAll('.chip');
+      for (var k = 0; k < all.length; k++) all[k].className = 'chip' + (all[k] === chip ? ' on' : '');
+      clearSelection(true);
+      applyFilter(); render();
+      toast(brandFilter ? '已筛选：' + brandFilter : '已显示全部品牌');
+    });
+  }
+
+  function renderChips() {
+    var all = document.querySelectorAll('#chips .chip');
+    for (var k = 0; k < all.length; k++) {
+      all[k].className = 'chip' + (all[k].getAttribute('data-b') === brandFilter ? ' on' : '');
+    }
+  }
+
+  document.getElementById('fab').addEventListener('click', function () {
+    toast('新增报价规则为存量功能，本次未改动');
+  });
+
+  var failboxEl = document.getElementById('failbox');
+  if (failboxEl) failboxEl.addEventListener('change', function () {
+    failNext = this.checked;
+    var fh = document.getElementById('failhint');
+    if (fh) fh.textContent = this.checked
+      ? '已开启：单条操作整体失败；批量操作挑最后 1 条失败'
+      : '未开启：操作全部成功';
+  });
+
+  var resetBtn = document.getElementById('reset');
+  if (resetBtn) resetBtn.addEventListener('click', function () {
+    rules = clone(INITIAL);
+    brandFilter = ''; keyword = '';
+    document.getElementById('kw').value = '';
+    selMode = false; selected = []; selectAllAcross = false;
+    failNext = false; busy = false; loadingPage = false;
+    clearFailDemo();
+    document.getElementById('mask').classList.remove('show');
+    var rm = document.getElementById('rmask');
+    if (rm) rm.classList.remove('show');
+    listEl.scrollTop = 0;
+    applyFilter(); render(); renderChips();
+    toast('已恢复初始数据');
+  });
+
+  function clearFailDemo() {
+    var f = document.getElementById('failbox');
+    if (f) f.checked = false;
+    var h = document.getElementById('failhint');
+    if (h) h.textContent = '未开启：操作全部成功';
+  }
+
+  function toast(msg, isErr) {
+    toastEl.textContent = msg;
+    toastEl.className = 'toast show' + (isErr ? ' err' : '');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.className = 'toast'; }, 1800);
+  }
+
+  var INITIAL = buildRules();
+  rules = clone(INITIAL);
+  document.getElementById('sel-state').style.display = 'none';
+  document.querySelector('.batchbar .sep').style.display = 'none';
+  buildChips();
+  applyFilter();
+  render();
+</script>
+
+
+
+</body></html>

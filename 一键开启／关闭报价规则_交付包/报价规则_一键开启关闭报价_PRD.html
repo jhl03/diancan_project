@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>报价规则列表 · 一键开启/关闭报价 PRD</title>
+<style>
+  body { font-family: "PingFang SC","Microsoft YaHei",-apple-system,sans-serif; color:#1F2329; background:#F5F6F7; margin:0; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 40px 80px; background:#fff; min-height:100vh; box-sizing:border-box; }
+  h1 { font-size: 24px; border-bottom: 2px solid #1677FF; padding-bottom: 12px; }
+  h2 { font-size: 19px; margin-top: 36px; border-left: 4px solid #1677FF; padding-left: 10px; }
+  h3 { font-size: 16px; margin-top: 24px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 13.5px; }
+  th, td { border: 1px solid #E3E6EB; padding: 8px 12px; text-align: left; vertical-align: top; line-height:1.6; }
+  th { background: #F2F4F7; font-weight: 600; white-space: nowrap; }
+  tr:nth-child(even) td { background: #FAFBFC; }
+  code { background: #F2F4F7; padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: Consolas, monospace; }
+  pre { background: #1E2430; color:#E6EDF3; padding: 14px 16px; border-radius: 8px; overflow-x: auto; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  blockquote { border-left: 4px solid #D7DAE0; margin: 12px 0; padding: 4px 16px; color: #5A6169; background:#FAFBFC; }
+  hr { border: none; border-top: 1px solid #E3E6EB; margin: 28px 0; }
+  ul, ol { line-height: 1.8; }
+  li { margin: 3px 0; }
+  strong { color: #0F1114; }
+</style>
+</head>
+<body><div class="wrap">
+<h1>报价规则列表 · 一键开启 / 关闭报价 需求文档（PRD）</h1>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模块</td>
+<td>供应商报价规则列表</td>
+</tr>
+<tr>
+<td>版本</td>
+<td>v1.1（v1.0 基础上按评审定稿调整：结果反馈改为 Toast、分页改为 10 条/页）</td>
+</tr>
+<tr>
+<td>迭代性质</td>
+<td>存量功能增量：仅新增"开启/关闭报价"能力，不改动既有列表逻辑</td>
+</tr>
+<tr>
+<td>载体</td>
+<td>小程序（375×748）</td>
+</tr>
+<tr>
+<td>配套原型</td>
+<td><code>报价规则列表_一键开关.html</code>（可点击，含失败回滚、分页、批量确认、结果弹窗）</td>
+</tr>
+<tr>
+<td>日期</td>
+<td>2026-09-24</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>一、背景与目标</h2>
+<h3>1.1 背景</h3>
+<p>报价规则列表页当前每条规则有「启用 / 修改 / 删除」三个按钮，状态在卡片右上角以只读标签展示。运营在调整供应商报价的可用性时，需要逐条点「启用」，无法同时管理多条，也无法快速停掉一批规则。</p>
+<h3>1.2 目标</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>目标</th>
+<th>衡量方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>单条规则可一键开启 / 关闭报价</td>
+<td>单条操作点击次数 ≤ 1 次（不含确认）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>多条规则可批量开启 / 关闭</td>
+<td>支持勾选与按筛选范围操作</td>
+</tr>
+<tr>
+<td>3</td>
+<td>操作结果对用户完全透明</td>
+<td>结果提示必须包含成功 / 跳过 / 失败三态数量与明细</td>
+</tr>
+<tr>
+<td>4</td>
+<td>不破坏存量逻辑</td>
+<td>列表、搜索、筛选、新增、修改、删除、字段展示零改动</td>
+</tr>
+</tbody>
+</table>
+<h3>1.3 非目标（本期不做）</h3>
+<ul>
+<li>不做规则的定时生效 / 失效（定时报价）。</li>
+<li>不做同商品规则冲突校验（业务已确认允许并存）。</li>
+<li>不做报价规则的操作审计日志（见第七章开放问题）。</li>
+<li>不改造「新增报价规则」入口与表单。</li>
+</ul>
+<hr />
+<h2>二、术语与字段口径</h2>
+<h3>2.1 术语</h3>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>定义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开启报价</td>
+<td>该规则参与报价，供应商可按此规则接单</td>
+</tr>
+<tr>
+<td>关闭报价</td>
+<td>该规则停止参与报价</td>
+</tr>
+<tr>
+<td>混选</td>
+<td>一次勾选中同时包含已开启与已禁用的规则</td>
+</tr>
+<tr>
+<td>目标态</td>
+<td>批量操作写入的最终状态值（开启=1 / 关闭=0），<strong>不是状态翻转</strong></td>
+</tr>
+<tr>
+<td>已加载</td>
+<td>当前列表已渲染出来的规则（受分页影响）</td>
+</tr>
+</tbody>
+</table>
+<h3>2.2 字段口径（关键，避免实现歧义）</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>口径</th>
+<th>是否被开关操作影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>规则</td>
+<td>规则编号，如「规则：2」</td>
+<td>否</td>
+</tr>
+<tr>
+<td>商品品牌</td>
+<td>规则关联品牌</td>
+<td>否</td>
+</tr>
+<tr>
+<td>报价商品</td>
+<td>规则关联商品，多个以「、」分隔</td>
+<td>否</td>
+</tr>
+<tr>
+<td>可出餐城市</td>
+<td>规则生效城市范围</td>
+<td>否</td>
+</tr>
+<tr>
+<td><strong>报价时间</strong></td>
+<td><strong>新增这条报价规则的时间</strong>，规则创建时写入一次，之后不变</td>
+<td><strong>否</strong></td>
+</tr>
+<tr>
+<td><strong>更新时间</strong></td>
+<td>最近一次<strong>实际发生变更</strong>的时间</td>
+<td><strong>是</strong> —— 仅实际操作成功的规则刷新；被跳过的规则不刷新</td>
+</tr>
+<tr>
+<td>报价金额</td>
+<td>该规则的单笔报价金额</td>
+<td>否</td>
+</tr>
+<tr>
+<td>出餐方式</td>
+<td>人工 / 自动</td>
+<td>否</td>
+</tr>
+<tr>
+<td>供应商名称</td>
+<td>规则归属供应商</td>
+<td>否</td>
+</tr>
+<tr>
+<td>状态标签</td>
+<td>右上角只读展示：启用中（绿）/ 禁用（红）</td>
+<td>是（只读展示，不可点击）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>口径澄清：「报价时间」是存量字段，语义为规则创建时间，<strong>本期不新增、不修改</strong>。「更新时间」沿用存量字段语义，开关操作成功即视为一次变更。</p>
+</blockquote>
+<h3>2.3 业务规则（已确认）</h3>
+<ol>
+<li><strong>同一商品可同时存在于多条规则中，且允许同时开启。</strong> 开关不做冲突校验，不会因开启一条而自动关闭另一条。供应商端会同时看到这几条报价，由业务侧自行区分优先级。</li>
+<li><strong>关闭报价后，卡片不置灰</strong>，字段保持可读、可修改（禁用 ≠ 失效，用户常需"先禁用再修改"）。</li>
+</ol>
+<hr />
+<h2>三、功能需求</h2>
+<h3>3.1 单条：开启 / 关闭报价</h3>
+<p><strong>位置</strong>：卡片底部按钮区，第一个按钮（原「启用」按钮的位置），顺序为 <strong>[开启报价 / 关闭报价] → [修改] → [删除]</strong>。</p>
+<p><strong>形态</strong>：文字按钮，不做 Switch。文案随当前状态反转，避免与「修改 / 删除」的按钮语言不一致。</p>
+<table>
+<thead>
+<tr>
+<th>当前状态</th>
+<th>按钮文案</th>
+<th>按钮样式</th>
+<th>右上角状态标签（只读）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>已禁用</td>
+<td>开启报价</td>
+<td>绿框绿字</td>
+<td>禁用（红）</td>
+</tr>
+<tr>
+<td>启用中</td>
+<td>关闭报价</td>
+<td>灰框灰字</td>
+<td>启用中（绿）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>交互流程</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>表现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. 点击按钮</td>
+<td>按钮文案变「处理中…」并进入禁用态（灰化、<code>pointer-events: none</code>），防止重复点击</td>
+</tr>
+<tr>
+<td>2. 请求发出</td>
+<td>静默请求，<strong>不刷新列表、不重排卡片位置</strong>（长列表跳动是体验事故）</td>
+</tr>
+<tr>
+<td>3. 成功</td>
+<td>状态切换 → 按钮文案反转 → 右上角标签切换 → <strong>刷新该卡片「更新时间」为当前时间</strong> → Toast「已开启报价」/「已关闭报价」</td>
+</tr>
+<tr>
+<td>4. 失败</td>
+<td>按钮文案<strong>回滚到点击前的原值</strong>，状态不变、更新时间不变 → 红色 Toast「操作失败，请重试」</td>
+</tr>
+</tbody>
+</table>
+<p><strong>约束</strong>：</p>
+<ul>
+<li><strong>不做二次确认。</strong> 开关是可逆、单条、低风险操作，加确认属于过度设计。</li>
+<li>单条操作进行中，全局锁 <code>busy</code> 生效，期间其他单条点击不响应。</li>
+<li>失败必须回滚 UI —— 不回滚是最常见的事故源头。</li>
+</ul>
+<h3>3.2 批量：勾选式批量开启 / 关闭</h3>
+<h4>3.2.1 入口与选择态</h4>
+<table>
+<thead>
+<tr>
+<th>元素</th>
+<th>默认态</th>
+<th>选择态（批量管理）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工具栏右侧</td>
+<td>「批量管理」文字入口</td>
+<td>「完成」+「选择全部 N 条」（仅当筛选结果数 &gt; 已加载数时出现）</td>
+</tr>
+<tr>
+<td>工具栏左侧</td>
+<td>「共 N 条报价规则」</td>
+<td>「全选已加载 N 条」/「全选」+ 复选框</td>
+</tr>
+<tr>
+<td>卡片</td>
+<td>无勾选框，底部显示三个操作按钮</td>
+<td>卡片左侧出现勾选框，<strong>卡片底部三个按钮隐藏</strong>（避免两套操作语义打架），整卡可点选</td>
+</tr>
+<tr>
+<td>悬浮「+ 新增报价规则」</td>
+<td>显示</td>
+<td><strong>隐藏</strong></td>
+</tr>
+<tr>
+<td>底部固定操作栏</td>
+<td>隐藏</td>
+<td>显示「已选 N 条（共 M 条）｜ 已开启 X · 已禁用 Y」+「批量开启」「批量关闭」</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>进入批量管理时<strong>不弹 Toast</strong>（界面变化本身已足够明确，避免多余打扰）。</li>
+<li>「批量开启」「批量关闭」在已选 0 条时置灰不可点。</li>
+<li>底部计数栏<strong>必须带总数</strong>：「已选 5 条（共 68 条）」——这是用户判断"我选多了没"的唯一依据。</li>
+</ul>
+<h4>3.2.2 全选的三层范围（核心）</h4>
+<p>全选范围必须与用户认知边界一致，<strong>默认只选"看得见"的</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>列表状态</th>
+<th>全选覆盖范围</th>
+<th>按钮文案</th>
+<th>底栏计数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>仅加载了首屏（如 8 / 68）</td>
+<td>仅当前已加载的规则</td>
+<td>「全选已加载 8 条」</td>
+<td>已选 8 条（共 68 条）</td>
+</tr>
+<tr>
+<td>已滑到底、全部加载完</td>
+<td>当前筛选结果全部</td>
+<td>「全选」</td>
+<td>已选 68 条（共 68 条）</td>
+</tr>
+<tr>
+<td>点「选择全部 68 条」跨页</td>
+<td>当前筛选结果全部（含未加载）</td>
+<td>「已全选 68 条」</td>
+<td>已选 68 条（全部）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>跨页选择是独立的一次显式动作</strong>：</p>
+<ul>
+<li>入口有两处：工具栏「选择全部 N 条」、底栏右侧「选择全部 N 条」，两处触发同一个确认弹窗。</li>
+<li>确认弹窗文案：</li>
+<li>标题：<strong>选择全部 68 条规则？</strong></li>
+<li>正文：包括当前未加载的 <strong>60</strong> 条规则，后续批量操作将同时影响它们。</li>
+<li>按钮：取消 / 确认选择</li>
+<li>确认后才把范围扩到全库，并 Toast「已选中全部 68 条规则」。</li>
+<li>全选复选框的选中判定：已加载项全部被选中即显示为选中态；再次点击取消全选。</li>
+</ul>
+<h4>3.2.3 筛选与批量的关系</h4>
+<p>批量操作的范围<strong>永远跟随当前筛选条件</strong>，三层口径：</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>实际作用范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>勾选后批量</td>
+<td>勾选的这些（必然都在筛选结果内）</td>
+</tr>
+<tr>
+<td>全选</td>
+<td>当前筛选结果中<strong>已加载</strong>的部分</td>
+</tr>
+<tr>
+<td>选择全部 N 条</td>
+<td>当前筛选结果<strong>全部</strong>（含未加载），N 为筛选后总数，<strong>不是全库总数</strong></td>
+</tr>
+</tbody>
+</table>
+<p>确认弹窗与结果弹窗都必须写明当前范围，否则用户不知道 N 从哪来：</p>
+<blockquote>
+<p>范围：当前筛选「麦当劳」（含未加载的 4 条）</p>
+</blockquote>
+<p>范围文案优先级：有品牌筛选 → <code>当前筛选「品牌名」</code>；有关键词 → <code>当前搜索「关键词」</code>；无筛选 → <code>当前列表</code>。</p>
+<h3>3.3 混选处理（本期最关键规则）</h3>
+<p><strong>核心原则：批量开关写入的是「目标态」，不是「翻转态」。</strong></p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>处理方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>批量<strong>开启</strong>时，勾选项中有<strong>已是开启</strong>的</td>
+<td>该条<strong>跳过</strong>，不重复写入</td>
+</tr>
+<tr>
+<td>批量<strong>关闭</strong>时，勾选项中有<strong>已是禁用</strong>的</td>
+<td>该条<strong>跳过</strong>，不重复写入</td>
+</tr>
+<tr>
+<td>所选项<strong>全部</strong>已是目标态</td>
+<td><strong>不弹确认</strong>，直接 Toast「所选规则均已是开启状态，无需操作」/「…均已是禁用状态，无需操作」</td>
+</tr>
+</tbody>
+</table>
+<p><strong>为什么跳过而不是全量覆写</strong>：</p>
+<ul>
+<li>全量覆写会让"状态本就正确"的规则「更新时间」被无意义刷新，用户查看"最近变更时间"时信息失真。</li>
+<li>跳过是幂等的：重复点同一个批量按钮，结果不产生差异。</li>
+<li>全量覆写唯一的"好处"是结果数字整齐，但代价是污染时间字段，不值得。</li>
+</ul>
+<p><strong>对称性要求</strong>：开启与关闭两个方向必须完全对称，文案反向即可。</p>
+<h4>3.3.1 二次确认弹窗（批量必弹）</h4>
+<p>弹窗标题<strong>只写真实会改变的条数</strong>（不是勾选总数）——用户确认前看到的数字必须是实际会被改动的数字。</p>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>批量开启</th>
+<th>批量关闭</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>标题</td>
+<td>将开启 <strong>3</strong> 条报价规则</td>
+<td>将关闭 <strong>3</strong> 条报价规则</td>
+</tr>
+<tr>
+<td>正文（有跳过）</td>
+<td>已选 5 条，其中 <strong>2 条已是开启状态</strong>，将跳过、不重复写入。</td>
+<td>已选 5 条，其中 <strong>2 条已是禁用状态</strong>，将跳过、不重复写入。</td>
+</tr>
+<tr>
+<td>正文（无跳过）</td>
+<td>已选 <strong>5</strong> 条规则，将批量开启报价。</td>
+<td>已选 <strong>5</strong> 条规则，将批量关闭报价。</td>
+</tr>
+<tr>
+<td>正文（范围行）</td>
+<td>范围：当前筛选「麦当劳」（含未加载的 4 条）</td>
+<td>同左</td>
+</tr>
+<tr>
+<td>确认按钮</td>
+<td>确认开启</td>
+<td>确认关闭（危险色）</td>
+</tr>
+</tbody>
+</table>
+<h3>3.4 批量操作结果提示</h3>
+<p>批量执行完成后用 <strong>Toast</strong> 反馈（评审定稿：不使用结果弹窗）：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>提示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>执行完成且无失败</td>
+<td>Toast「<strong>操作成功</strong>」</td>
+</tr>
+<tr>
+<td>存在失败项</td>
+<td>红色 Toast「成功 N 条，失败 K 条」</td>
+</tr>
+<tr>
+<td>所选全部已是目标态</td>
+<td>不执行，直接 Toast「所选规则均已是开启/禁用状态，无需操作」（见 3.3）</td>
+</tr>
+</tbody>
+</table>
+<p>执行完成后：清空已选、自动退出批量管理模式、列表状态刷新。</p>
+<blockquote>
+<p><strong>变更记录（v1.1）</strong>：v1.0 曾设计"结果弹窗"（三态数量 + 成功/跳过/失败明细 + 操作时间 + 重试失败项），评审定稿改为轻量 Toast「操作成功」。被跳过规则「更新时间」不刷新的口径不变（见 2.2）。</p>
+</blockquote>
+<h3>3.5 分页加载</h3>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>规格</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>每页条数</td>
+<td><strong>10 条</strong>（v1.0 为 8 条，v1.1 调整）</td>
+</tr>
+<tr>
+<td>触发方式</td>
+<td>列表滚动到底部前 40px 自动触发</td>
+</tr>
+<tr>
+<td>加载中</td>
+<td>列表底部显示「⟳ 加载中…」</td>
+</tr>
+<tr>
+<td>还有更多</td>
+<td>底部显示「上拉加载更多（已加载 10 / 68）」</td>
+</tr>
+<tr>
+<td>已到底</td>
+<td>底部显示「没有更多了」</td>
+</tr>
+</tbody>
+</table>
+<p><strong>分页与选择的联动</strong>：</p>
+<ul>
+<li>加载新一页时<strong>已选项保留</strong>，但<strong>不自动勾选</strong>新加载进来的项。</li>
+<li>列表重新渲染时保留滚动位置，避免加载后跳回顶部。</li>
+</ul>
+<h3>3.6 边界规则清单</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>规则</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>切换筛选 / 执行搜索时，<strong>必须清空已选</strong>并 Toast「筛选条件已变化，已清空选择」</td>
+<td>否则会出现"筛了麦当劳选 10 条，切到霸王茶姬点批量，实际改的还是那 10 条"的错位</td>
+</tr>
+<tr>
+<td>2</td>
+<td>加载新一页时已选项保留，新加载项不自动勾选</td>
+<td>避免用户未察觉的选区扩大</td>
+</tr>
+<tr>
+<td>3</td>
+<td>全选文案必须带数量（已加载数 / 总数）</td>
+<td>让用户知道选择边界</td>
+</tr>
+<tr>
+<td>4</td>
+<td>跨页选择必须先确认</td>
+<td>操作范围超出认知范围，是最高风险动作</td>
+</tr>
+<tr>
+<td>5</td>
+<td>退出批量管理或执行完成后清空已选</td>
+<td>避免残留选择被下一次操作误用</td>
+</tr>
+<tr>
+<td>6</td>
+<td>关闭报价后卡片不置灰</td>
+<td>禁用 ≠ 失效，需支持"先禁用再修改"</td>
+</tr>
+<tr>
+<td>7</td>
+<td>同商品多规则允许同时开启，不做冲突校验</td>
+<td>业务已确认</td>
+</tr>
+<tr>
+<td>8</td>
+<td>操作进行中按钮置灰不可重复点击</td>
+<td>防抖</td>
+</tr>
+<tr>
+<td>9</td>
+<td>不刷新整页、不重排卡片</td>
+<td>避免长列表跳动</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>四、状态机</h2>
+<h3>4.1 单条规则状态</h3>
+<pre><code>        ┌──────────────┐  点击「开启报价」   ┌──────────────┐
+        │              │ ────────────────&gt; │              │
+        │    已禁用     │     处理中(700ms)  │    启用中     │
+        │              │ &lt;──────────────── │              │
+        └──────────────┘  点击「关闭报价」   └──────────────┘
+               ▲                                    ▲
+               │           请求失败：回滚原态          │
+               └────────────────────────────────────┘
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>当前态</th>
+<th>触发</th>
+<th>中间态</th>
+<th>成功</th>
+<th>失败</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>已禁用</td>
+<td>点「开启报价」</td>
+<td>按钮「处理中…」置灰</td>
+<td>启用中，按钮变「关闭报价」，刷新更新时间，Toast「已开启报价」</td>
+<td>回原态，红色 Toast「操作失败，请重试」</td>
+</tr>
+<tr>
+<td>启用中</td>
+<td>点「关闭报价」</td>
+<td>同上</td>
+<td>已禁用，按钮变「开启报价」，刷新更新时间，Toast「已关闭报价」</td>
+<td>同上</td>
+</tr>
+</tbody>
+</table>
+<h3>4.2 列表管理模式</h3>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>进入</th>
+<th>退出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>浏览模式</td>
+<td>默认</td>
+<td>点「批量管理」进入选择态</td>
+</tr>
+<tr>
+<td>选择态</td>
+<td>点「批量管理」</td>
+<td>点「完成」/ 批量执行完成 → 清空已选并回到浏览模式</td>
+</tr>
+</tbody>
+</table>
+<h3>4.3 批量操作分支</h3>
+<pre><code>点「批量开启 / 批量关闭」
+      │
+      ├─ 已选 0 条 → 按钮置灰，不可点
+      │
+      └─ 已选 N 条
+            │
+            ├─ 全部已是目标态 → Toast「所选规则均已是X状态，无需操作」（不弹确认）
+            │
+            └─ 存在待变更项
+                  │
+                  └─ 弹确认（标题为真实变更条数）
+                        │
+                        ├─ 取消 → 停留在选择态，已选保留
+                        │
+                        └─ 确认 → 执行
+                              │
+                              ├─ 全部成功 → 结果弹窗（成功N/跳过M/失败0）
+                              ├─ 部分失败 → 结果弹窗 + 「重试失败项」
+                              └─ 执行后：清空已选、退出选择态
+</code></pre>
+<hr />
+<h2>五、接口契约</h2>
+<h3>5.1 单条切换状态</h3>
+<pre><code>POST /api/quote-rule/status
+Content-Type: application/json
+
+{ &quot;ruleId&quot;: 1, &quot;status&quot;: 1 }        // 1=开启报价  0=关闭报价
+</code></pre>
+<p><strong>响应</strong></p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;data&quot;: {
+    &quot;ruleId&quot;: 1,
+    &quot;status&quot;: 1,
+    &quot;updateTime&quot;: &quot;2026-09-24 11:02:33&quot;
+  }
+}
+</code></pre>
+<ul>
+<li>返回的 <code>updateTime</code> 直接回填卡片「更新时间」，保证"开关也是一次变更"逻辑自洽。</li>
+<li>失败：<code>{ "code": 50001, "msg": "操作失败，请重试" }</code>，前端回滚 UI。</li>
+</ul>
+<h3>5.2 批量切换（按勾选 id）</h3>
+<pre><code>POST /api/quote-rule/status
+{
+  &quot;ruleIds&quot;: [1, 2, 9],
+  &quot;status&quot;: 1,
+  &quot;skipSameStatus&quot;: true            // 跳过已是目标态的规则，不重复写入
+}
+</code></pre>
+<p><strong>响应</strong></p>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;data&quot;: {
+    &quot;changedCount&quot;: 3,
+    &quot;skippedCount&quot;: 2,
+    &quot;failList&quot;: [ { &quot;id&quot;: 19, &quot;title&quot;: &quot;规则：64&quot;, &quot;reason&quot;: &quot;操作超时&quot; } ],
+    &quot;updateTime&quot;: &quot;2026-09-24 11:02:33&quot;
+  }
+}
+</code></pre>
+<h3>5.3 批量切换（跨页全选，传筛选条件）</h3>
+<pre><code>POST /api/quote-rule/status
+{
+  &quot;filter&quot;: { &quot;brand&quot;: &quot;麦当劳&quot;, &quot;city&quot;: &quot;&quot;, &quot;keyword&quot;: &quot;&quot; },
+  &quot;status&quot;: 0,
+  &quot;skipSameStatus&quot;: true
+}
+</code></pre>
+<p><strong>响应</strong>：同上，额外返回 <code>affectedCount</code>（实际匹配的规则总数），前端据此提示「已关闭 68 条报价规则」。</p>
+<blockquote>
+<p>为什么不传 id 列表：几十上百个 id 传前端既冗余又易错；且筛选与执行之间若产生新增数据，以筛选条件为准语义更清晰。</p>
+</blockquote>
+<h3>5.4 列表查询（存量接口，仅确认分页参数）</h3>
+<pre><code>GET /api/quote-rule/list?page=1&amp;pageSize=8&amp;brand=&amp;keyword=
+</code></pre>
+<p>需返回总数 <code>total</code>，前端才能渲染「已加载 8 / 68」与三层全选文案。</p>
+<hr />
+<h2>六、埋点建议</h2>
+<table>
+<thead>
+<tr>
+<th>事件</th>
+<th>关键参数</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单条开关点击</td>
+<td>ruleId、目标状态、结果（成功/失败）</td>
+<td>评估单条操作频率与失败率</td>
+</tr>
+<tr>
+<td>批量管理进入</td>
+<td>当前筛选条件、列表总数</td>
+<td>评估批量功能使用广度</td>
+</tr>
+<tr>
+<td>全选范围使用</td>
+<td>范围类型（已加载 / 全部加载 / 跨页）</td>
+<td>判断"跨页全选"是否真被需要</td>
+</tr>
+<tr>
+<td>批量执行</td>
+<td>勾选数、真实变更数、跳过数、失败数</td>
+<td>评估混选场景占比</td>
+</tr>
+</tbody>
+</table>
+<p><strong>重点观测</strong>：跨页全选的使用频次。若长期为 0，建议下线该能力，只保留「全选已加载」，认知负担与误操作风险都更低。</p>
+<hr />
+<h2>七、开放问题（待确认）</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>问题</th>
+<th>影响</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>是否需要"跨页全选"？</td>
+<td>决定是否保留跨页确认弹窗与 <code>filter</code> 版接口</td>
+<td>视真实运营场景：若极少"一把全关"，建议只保留「全选已加载」</td>
+</tr>
+<tr>
+<td>2</td>
+<td>是否需要操作审计日志（谁在什么时候开启了哪条规则）？</td>
+<td>决定是否需新增日志表与查询页</td>
+<td>报价开关直接影响供应商接单，建议至少记录服务端日志</td>
+</tr>
+<tr>
+<td>3</td>
+<td>权限范围：小程序端与后台管理端的开关权限是否一致？</td>
+<td>决定是否需要权限校验</td>
+<td>需产品与业务确认</td>
+</tr>
+<tr>
+<td>4</td>
+<td>并发冲突：用户 A 开启规则时，用户 B 已将其关闭，如何处理？</td>
+<td>决定是否需要版本号 / 乐观锁</td>
+<td>建议以服务端返回的最终 <code>status</code> 为准，前端静默同步</td>
+</tr>
+<tr>
+<td>5</td>
+<td>单条操作是否需要冲突提示（同商品已有开启规则）？</td>
+<td>本期已明确不做校验</td>
+<td>保持现状，不做</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>八、验收标准</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>用例</th>
+<th>预期</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>点击「规则：2」的「开启报价」</td>
+<td>按钮变「处理中…」→ 状态标签变「启用中」→ 按钮变「关闭报价」→ 更新时间刷新为当前时间 → Toast「已开启报价」</td>
+</tr>
+<tr>
+<td>2</td>
+<td>模拟接口失败后点击单条开关</td>
+<td>按钮文案回到原值、状态不变、更新时间不变、红色 Toast「操作失败，请重试」</td>
+</tr>
+<tr>
+<td>3</td>
+<td>进入批量管理，勾选 5 条（其中 2 条已开启），点「批量开启」</td>
+<td>弹窗标题为「将开启 <strong>3</strong> 条报价规则」，正文写明「其中 2 条已是开启状态，将跳过」</td>
+</tr>
+<tr>
+<td>4</td>
+<td>承接用例 3 确认后</td>
+<td>Toast「操作成功」；已选清空、退出批量管理；3 条状态变更、「更新时间」刷新，被跳过的 2 条「更新时间」不变</td>
+</tr>
+<tr>
+<td>5</td>
+<td>勾选 5 条全部已开启，点「批量开启」</td>
+<td>不弹确认，直接 Toast「所选规则均已是开启状态，无需操作」</td>
+</tr>
+<tr>
+<td>6</td>
+<td>首屏加载 10 条时查看全选文案</td>
+<td>显示「全选已加载 10 条」，底栏显示「已选 10 条（共 68 条）」</td>
+</tr>
+<tr>
+<td>7</td>
+<td>点「选择全部 68 条」</td>
+<td>弹确认「包括当前未加载的 60 条规则…」，确认后计数变「已选 68 条（全部）」</td>
+</tr>
+<tr>
+<td>8</td>
+<td>选择态下切换品牌筛选</td>
+<td>已选立即清空，Toast「筛选条件已变化，已清空选择」</td>
+</tr>
+<tr>
+<td>9</td>
+<td>上拉加载第二页</td>
+<td>已选项保留，新加载项未被自动勾选，滚动位置不跳回顶部</td>
+</tr>
+<tr>
+<td>10</td>
+<td>批量执行中出现 1 条失败</td>
+<td>红色 Toast「成功 N 条，失败 1 条」，成功项状态已变更、失败项保持原态</td>
+</tr>
+<tr>
+<td>11</td>
+<td>开启同一商品的多条规则</td>
+<td>两条均可同时开启，无冲突拦截、无自动禁用</td>
+</tr>
+<tr>
+<td>12</td>
+<td>关闭报价后查看卡片</td>
+<td>卡片不置灰，字段可读，修改 / 删除仍可用</td>
+</tr>
+<tr>
+<td>13</td>
+<td>点击确认弹窗中的「确认开启 / 确认关闭」</td>
+<td>执行成功后 Toast 提示「操作成功」</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>附录：页面结构（低保真描述）</h2>
+<pre><code>┌─────────────────────────────────┐
+│ 状态栏                     5G ▮ │
+├─────────────────────────────────┤
+│ ‹ 首页                          │  ← 导航
+├─────────────────────────────────┤
+│ [🔍 搜索商品名称/品牌/供应商] [搜索] [☰] │  ← 搜索行（存量）
+├─────────────────────────────────┤
+│ (全部)(麦当劳)(霸王茶姬)(星巴克)… │  ← 品牌筛选 chips（存量，可展开）
+├─────────────────────────────────┤
+│ 共 68 条报价规则    [ 批量管理 ] │  ← 工具栏（新增「批量管理」）
+├─────────────────────────────────┤
+│ ┌─────────────────────────────┐ │
+│ │ 规则：2            [禁用]    │ │  ← 状态标签只读
+│ │ ─────────────────────────── │ │
+│ │ 商品品牌    麦当劳           │ │
+│ │ 报价商品    吉士蛋麦满分套餐… │ │
+│ │ 可出餐城市  全国             │ │
+│ │ 报价时间    2026-09-16 11:34 │ │  ← 新增规则的时间
+│ │ 更新时间    2026-09-16 15:49 │ │  ← 操作成功后刷新
+│ │ 报价金额    ¥0.5             │ │
+│ │ 出餐方式    人工             │ │
+│ │ 供应商名称  井惠琳           │ │
+│ │ ─────────────────────────── │ │
+│ │ [开启报价] [修改] [删除]      │ │  ← 单条开关在「修改」左边
+│ └─────────────────────────────┘ │
+│            …（每页 10 条）        │
+│      上拉加载更多（已加载 10/68）  │
+├─────────────────────────────────┤
+│                    [+ 新增报价规则] │  ← 悬浮按钮（选择态隐藏）
+├─────────────────────────────────┤
+│  首页   工作台   订单   我的      │
+└─────────────────────────────────┘
+
+【批量管理模式】
+├─────────────────────────────────┤
+│ ☑ 全选已加载 8 条   选择全部68条 完成 │
+├─────────────────────────────────┤
+│ ☑ │ 规则：2 …              [禁用] │  ← 勾选框出现，底部按钮隐藏
+│ ☐ │ 规则：1111 …           [启用中] │
+├─────────────────────────────────┤
+│ 已选 3 条（共 68 条）｜已开启 1·已禁用 2│
+│            [批量开启] [批量关闭]     │
+└─────────────────────────────────┘
+</code></pre>
+<hr />
+<p><em>本 PRD 与原型 <code>报价规则列表_一键开关.html</code> 一一对应，原型中所有文案、条数计算、跳过逻辑、结果弹窗字段均按本文档实现。</em></p>
+</div></body></html>

@@ -1,0 +1,22 @@
+交付包质量检查报告
+生成时间: 2026-09-24 14:14:48
+
+[PASS] HTML 结构：div 开/闭 89/89 平衡
+[INFO] 脚本提取: 18739 字符，待 node --check 校验
+[PASS] 缺失元素 id: ['failbox', 'failhint', 'reset', 'rmask']
+       访问方式核查: 全部为「存变量+判空」安全访问
+[PASS] 功能标记「分页每页 10 条」: 存在
+[PASS] 功能标记「批量管理入口」: 存在
+[PASS] 功能标记「批量成功 Toast」: 存在
+[PASS] 功能标记「混选跳过逻辑」: 存在
+[PASS] 功能标记「跨页全选」: 存在
+[PASS] 无「已进入批量管理」Toast（v4 已按要求移除）: 确认
+[PASS] 无编辑器重存标注 data-page-node-id: 确认
+[PASS] PRD.md: 23688 字节 / 455 行，版本标记 v1.1
+[PASS] PRD.html 阅读版: 31413 字节，含 19 张表格
+
+PRD 与原型口径一致性抽查:
+  [PASS] PRD「每页 10 条」与原型 PAGE_SIZE=10 一致
+  [PASS] PRD「不弹 Toast」与原型无该提示一致
+JS 语法校验: PASS (node --check)
+桩 DOM 运行: PASS (无异常抛出)
