@@ -36,7 +36,7 @@
         font-weight: 600 !important;
       }
       .prototype-change-badge {
-        display: inline-flex;
+        display: flex;
         align-items: center;
         margin-left: 6px;
         padding: 1px 6px;
@@ -212,10 +212,12 @@
         box-shadow: 0 0.18rem 0.65rem rgba(47, 115, 255, 0.14);
       }
       .prototype-after-sale-invoice-mark {
-        display: inline-flex;
+        display: flex;
         align-items: center;
         justify-content: center;
         margin-top: 0.25rem;
+        margin-left: auto;
+        width: fit-content;
         padding: 0.18rem 0.5rem;
         border-radius: 999px;
         background: #fff1f0;
