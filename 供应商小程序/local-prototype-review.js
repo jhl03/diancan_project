@@ -177,11 +177,7 @@
         color: transparent;
       }
       .prototype-after-sale-merge-btn {
-        position: fixed;
-        right: 0.75rem;
-        bottom: calc(1rem + env(safe-area-inset-bottom));
-        left: 0.75rem;
-        z-index: 1;
+        flex: 1.12;
         height: 2.625rem;
         border: none;
         border-radius: 1.25rem;
@@ -191,6 +187,50 @@
         line-height: 2.625rem;
         font-weight: 600;
         box-shadow: 0 0.25rem 0.875rem rgba(71, 139, 255, 0.24);
+      }
+      .prototype-after-sale-action-bar {
+        position: fixed;
+        right: 0.75rem;
+        bottom: calc(1rem + env(safe-area-inset-bottom));
+        left: 0.75rem;
+        z-index: 19;
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+      }
+      .prototype-after-sale-batch-mark-btn,
+      .prototype-after-sale-batch-unmark-btn {
+        flex: 1;
+        height: 2.625rem;
+        border: none;
+        border-radius: 1.25rem;
+        background: #eef5ff;
+        color: #2f73ff;
+        font-size: 0.8125rem;
+        line-height: 2.625rem;
+        font-weight: 700;
+        box-shadow: 0 0.18rem 0.65rem rgba(47, 115, 255, 0.14);
+      }
+      .prototype-after-sale-invoice-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0.35rem;
+        padding: 0.18rem 0.5rem;
+        border-radius: 999px;
+        background: #fff7e8;
+        color: #f59a23;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+      .prototype-after-sale-invoice-mark.marked {
+        background: #e8f8ed;
+        color: #2da44e;
+      }
+      .prototype-after-sale-mark-btn {
+        margin-left: 0.5rem;
+        color: #2f73ff !important;
+        font-weight: 700;
       }
       .prototype-after-sale-merge-mask {
         position: fixed;
@@ -548,6 +588,25 @@
         box-sizing: border-box;
         outline: none;
       }
+      .prototype-filter-merge-id-input {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 100%;
+        height: 33px;
+        border-radius: 7px;
+        border: 1px solid #ffb4b4;
+        background: #fff8f8;
+        color: ${RED};
+        font-size: 13px;
+        padding: 0 10px;
+        box-sizing: border-box;
+        outline: none;
+      }
+      .prototype-filter-merge-id-input::placeholder {
+        color: ${RED};
+        opacity: 0.72;
+      }
       .prototype-filter-item[data-prototype-filter-brand="true"] .prototype-filter-label,
       .prototype-filter-item[data-prototype-filter-brand="true"] .prototype-filter-select-native {
         display: block !important;
@@ -599,15 +658,18 @@
         ["抬头类型", "上传发票、重新上传发票弹窗均展示；数据源为客服本地生活工作台接口。"],
         ["上传交互", "供应商选择发票文件后提交；弹窗中的抬头类型用于提交前核对开票主体。"],
         ["合并上传", "处理中列表支持勾选多张未结束工单后点击底部“合并上传”；已驳回列表每张卡片前展示可勾选方块，支持勾选工单后点击底部“重新合并上传”。处理中已结束工单不可选，已驳回工单均可选。未勾选时提示“请选择要合并上传发票的工单”；先校验发票抬头/税号，不一致提示“选择的发票抬头/税号不一样”；再校验发票类型，不一致提示“所选发票类型不一样”；校验通过后弹出与上传弹窗内容一致的合并上传发票弹窗，开票金额=所选工单用户支付价合计。"],
+        ["合并ID", "每个卡片在商品品牌上方新增“合并ID”字段；点击筛选图标后，在商品品牌筛选项下新增“合并ID”输入框，默认提示词为“请输入合并ID”，按输入值精准筛选。"],
+        ["开票标识", "处理中、已驳回卡片展示“待开票/开票中”状态，并在操作区新增“标记开票中”按钮；点击后状态变为“开票中”，按钮变为“取消标记”，再次点击恢复“待开票”。已上传页面不展示该状态和按钮。"],
+        ["批量标记", "底部按钮区在“合并上传/重新合并上传”右侧新增“批量标记”“批量取消标记”。未选择订单时提示“至少选择一个订单”；批量标记时，存在未标记订单则标记为“开票中”并提示“标记成功”，若已全部标记则提示“已全部标记，请选择未标记的订单”；批量取消标记时，存在已标记订单则恢复“待开票”并提示“标记成功”，若均未标记则提示“没有未标记的订单，请重新选择”。"],
       ],
       notes: [],
     },
     "/subpkg-invoice/compensation": {
       title: "本页改动说明：补偿单列表",
       items: [
-        ["用户名称", "显示在商品信息下方，格式为“用户名称：用户实际名称”；数据源取该工单发票抬头，并与供应商后台补偿单列表保持同一组演示数据。"],
+        ["合并ID", "每个卡片在商品字段上方新增“合并ID”；字段说明跟PC端的字段说明一致。"],
         ["卡片选择", "每个卡片支持单选；每个 Tab 有全选框，可选中当前 Tab 下全部可见卡片。"],
-        ["筛选图标", "点击右上角筛选图标，从底部弹出筛选表单；新增红字筛选项“用户名称”，位置在“商品品牌”下方，选项从当前补偿单列表已有用户名称去重生成，并按“用户名称（数量）”展示数量；选择后只展示对应用户名称的卡片，点击重置恢复全部卡片；金额区间最小值不能大于最大值。"],
+        ["筛选图标", "点击右上角筛选图标，从底部弹出筛选表单；在“商品品牌”下方新增红字筛选项“合并ID”输入框，默认提示词为“请输入合并ID”，按输入值精准筛选；点击重置恢复全部卡片；金额区间最小值不能大于最大值。"],
         ["一键抢单", "点击后直接展示提示，不再弹出筛选弹窗；提示沿用批量接单信息。"],
       ],
       notes: [
@@ -759,6 +821,23 @@
     productNameRow.setAttribute(MARK, "after-sale-invoice-fields");
   }
 
+  function patchAfterSaleMergeIdRow(card) {
+    const brandRow = Array.from(card.querySelectorAll(".info-row")).find((row) =>
+      textOf(row.querySelector(".info-label") || row).includes("商品品牌")
+    );
+    if (!brandRow) return;
+    const old = Array.from(card.querySelectorAll(`[${MARK}="after-sale-merge-id"]`))[0];
+    const value = getAfterSaleMergeId(card);
+    if (old) {
+      const valueNode = old.querySelector(".info-value");
+      if (valueNode) valueNode.textContent = value;
+      return;
+    }
+    const row = createAfterSaleInvoiceRow(brandRow, "合并ID", value);
+    row.setAttribute(MARK, "after-sale-merge-id");
+    brandRow.before(row);
+  }
+
   function patchAfterSaleSubsidy() {
     document.querySelectorAll(".info-row").forEach((row) => {
       const label = textOf(row.querySelector(".info-label") || row);
@@ -768,12 +847,20 @@
       const value = guessTitleType(findValueInRow(row));
       row.before(createInfoRow(row, "抬头类型", value, "invoice-title-type"));
     });
+    document.querySelectorAll(".subsidy-card").forEach(patchAfterSaleMergeIdRow);
     document.querySelectorAll(".subsidy-card").forEach(createAfterSaleInvoiceRows);
     refreshAfterSaleCountdowns();
+    patchAfterSaleFilter();
+    applyAfterSaleFilter();
     patchAfterSaleMergeUpload();
   }
 
   const selectedAfterSaleCards = new Set();
+  const afterSaleInvoiceMarkState = new Map();
+  const afterSaleFilterState = {
+    brand: "全部品牌",
+    mergeId: "",
+  };
 
   function isAfterSaleProcessingTab() {
     const active = document.querySelector(".tab-item.active");
@@ -851,6 +938,14 @@
     };
   }
 
+  function getAfterSaleMergeId(card) {
+    const text = textOf(card || "");
+    if (text.includes("生椰拿铁") || text.includes("厚乳拿铁")) return "4138";
+    if (text.includes("肯德基 50元代金券") || text.includes("肯德基 38元套餐券")) return "3579";
+    if (text.includes("肯德基早餐套餐") || text.includes("麦当劳 双人套餐")) return "9629";
+    return "-";
+  }
+
   function validateAfterSaleMergeRecords(records) {
     if (!records.length) return "请选择要合并上传发票的工单";
     const first = records[0];
@@ -860,6 +955,88 @@
     if (differentInvoice) return "选择的发票抬头/税号不一样";
     if (records.some((item) => item.titleType !== first.titleType)) return "所选发票类型不一样";
     return "";
+  }
+
+  function getAfterSaleBrandFromCard(card) {
+    const brand = getInfoValue(card, "商品品牌");
+    if (brand.includes("瑞幸")) return "瑞幸咖啡";
+    if (brand.includes("肯德基")) return "肯德基";
+    if (brand.includes("麦当劳")) return "麦当劳";
+    return "全部品牌";
+  }
+
+  function patchAfterSaleFilter() {
+    const sticky = document.querySelector(".sticky-top-wrap");
+    if (!sticky || sticky.querySelector(".prototype-after-sale-filter-entry")) return;
+    const entry = document.createElement("uni-view");
+    entry.className = "prototype-filter-entry prototype-after-sale-filter-entry";
+    entry.setAttribute("aria-label", "筛选");
+    entry.setAttribute("title", "筛选");
+    entry.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      showAfterSaleFilterDialog();
+    });
+    sticky.appendChild(entry);
+  }
+
+  function showAfterSaleFilterDialog() {
+    document.querySelector(".prototype-filter-mask")?.remove();
+    const mask = document.createElement("uni-view");
+    mask.className = "prototype-filter-mask";
+    mask.innerHTML = `
+      <uni-view class="prototype-filter-dialog">
+        <uni-view class="prototype-filter-header">
+          <uni-text class="prototype-filter-title"><span>筛选条件</span></uni-text>
+          <uni-view class="prototype-filter-close">×</uni-view>
+        </uni-view>
+        <uni-view class="prototype-filter-body">
+          <uni-view class="prototype-filter-item" data-prototype-filter-brand="true" aria-label="商品品牌筛选项">
+            <uni-view class="prototype-filter-label">商品品牌</uni-view>
+            <select class="prototype-filter-select-native" data-field="brand" aria-label="商品品牌">
+              ${["全部品牌", "瑞幸咖啡", "肯德基", "麦当劳"].map((item) => `<option value="${item}" ${afterSaleFilterState.brand === item ? "selected" : ""}>${escapeHtml(item)}</option>`).join("")}
+            </select>
+          </uni-view>
+          <uni-view class="prototype-filter-item" aria-label="合并ID筛选项">
+            <uni-view class="prototype-filter-label prototype-review-red">合并ID</uni-view>
+            <input class="prototype-filter-merge-id-input" data-field="mergeId" value="${escapeHtml(afterSaleFilterState.mergeId)}" placeholder="请输入合并ID" inputmode="numeric" />
+          </uni-view>
+        </uni-view>
+        <uni-view class="prototype-filter-footer">
+          <button class="prototype-filter-btn prototype-filter-reset" type="button">重置</button>
+          <button class="prototype-filter-btn prototype-filter-confirm" type="button">确认筛选</button>
+        </uni-view>
+      </uni-view>
+    `;
+    mask.querySelector(".prototype-filter-close").addEventListener("click", () => mask.remove());
+    mask.querySelector(".prototype-filter-reset").addEventListener("click", () => {
+      afterSaleFilterState.brand = "全部品牌";
+      afterSaleFilterState.mergeId = "";
+      mask.remove();
+      applyAfterSaleFilter();
+      patchAfterSaleMergeUpload();
+    });
+    mask.querySelector(".prototype-filter-confirm").addEventListener("click", () => {
+      const brandSelect = mask.querySelector('[data-field="brand"]');
+      const mergeIdInput = mask.querySelector('[data-field="mergeId"]');
+      afterSaleFilterState.brand = brandSelect ? brandSelect.value : "全部品牌";
+      afterSaleFilterState.mergeId = mergeIdInput ? mergeIdInput.value.trim() : "";
+      mask.remove();
+      applyAfterSaleFilter();
+      patchAfterSaleMergeUpload();
+    });
+    mask.addEventListener("click", (event) => {
+      if (event.target === mask) mask.remove();
+    });
+    document.body.appendChild(mask);
+  }
+
+  function applyAfterSaleFilter() {
+    document.querySelectorAll(".subsidy-card").forEach((card) => {
+      const brandMatch = afterSaleFilterState.brand === "全部品牌" || getAfterSaleBrandFromCard(card) === afterSaleFilterState.brand;
+      const mergeIdMatch = !afterSaleFilterState.mergeId || getAfterSaleMergeId(card) === afterSaleFilterState.mergeId;
+      card.style.display = brandMatch && mergeIdMatch ? "" : "none";
+    });
   }
 
   function showAfterSaleMergeUploadDialog(records, retry = false) {
@@ -925,9 +1102,82 @@
     if (check) check.textContent = selected ? "✓" : "";
   }
 
+  function getAfterSaleInvoiceMarkStatus(card) {
+    const id = card.dataset.prototypeAfterSaleCardId || getAfterSaleCardId(card, 0);
+    return afterSaleInvoiceMarkState.get(id) || "待开票";
+  }
+
+  function setAfterSaleInvoiceMarkStatus(card, status) {
+    const id = card.dataset.prototypeAfterSaleCardId || getAfterSaleCardId(card, 0);
+    afterSaleInvoiceMarkState.set(id, status);
+    syncAfterSaleInvoiceMarkUi(card);
+  }
+
+  function syncAfterSaleInvoiceMarkUi(card) {
+    const status = getAfterSaleInvoiceMarkStatus(card);
+    const mark = card.querySelector(".prototype-after-sale-invoice-mark");
+    if (mark) {
+      mark.textContent = status;
+      mark.classList.toggle("marked", status === "开票中");
+    }
+    const button = card.querySelector(".prototype-after-sale-mark-btn");
+    if (button) button.textContent = status === "开票中" ? "取消标记" : "标记开票中";
+  }
+
+  function patchAfterSaleInvoiceMark(card) {
+    if (!isAfterSaleSelectionTab()) {
+      card.querySelector(".prototype-after-sale-invoice-mark")?.remove();
+      card.querySelector(".prototype-after-sale-mark-btn")?.remove();
+      return;
+    }
+    if (!card.querySelector(".prototype-after-sale-invoice-mark")) {
+      const mark = document.createElement("uni-view");
+      mark.className = "prototype-after-sale-invoice-mark";
+      const statusNode = card.querySelector(".status-tag, .status, .countdown");
+      if (statusNode) statusNode.after(mark);
+      else card.prepend(mark);
+    }
+    const actionRow = card.querySelector(".action-row");
+    if (actionRow && !actionRow.querySelector(".prototype-after-sale-mark-btn")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "prototype-after-sale-mark-btn";
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const next = getAfterSaleInvoiceMarkStatus(card) === "开票中" ? "待开票" : "开票中";
+        setAfterSaleInvoiceMarkStatus(card, next);
+      }, true);
+      actionRow.appendChild(button);
+    }
+    syncAfterSaleInvoiceMarkUi(card);
+  }
+
+  function getSelectedAfterSaleCardElements() {
+    return Array.from(document.querySelectorAll(".subsidy-card.prototype-after-sale-selected:not(.prototype-after-sale-disabled)"));
+  }
+
+  function batchSetAfterSaleInvoiceMark(marked) {
+    const cards = getSelectedAfterSaleCardElements();
+    if (!cards.length) {
+      showMiniToast("至少选择一个订单");
+      return;
+    }
+    const targetStatus = marked ? "开票中" : "待开票";
+    const targets = cards.filter((card) => getAfterSaleInvoiceMarkStatus(card) !== targetStatus);
+    if (!targets.length) {
+      showMiniToast(marked ? "已全部标记，请选择未标记的订单" : "没有未标记的订单，请重新选择");
+      return;
+    }
+    targets.forEach((card) => setAfterSaleInvoiceMarkStatus(card, targetStatus));
+    showMiniToast("标记成功");
+  }
+
   function hideAfterSaleMergeUploadButton() {
     const button = document.querySelector(".prototype-after-sale-merge-btn");
     if (button) button.style.display = "none";
+    const bar = document.querySelector(".prototype-after-sale-action-bar");
+    if (bar) bar.style.display = "none";
   }
 
   function getSelectableAfterSaleCards() {
@@ -997,6 +1247,7 @@
         card.classList.remove("prototype-after-sale-selected");
         card.classList.remove("prototype-after-sale-disabled");
         card.querySelector(".prototype-after-sale-select-check")?.remove();
+        patchAfterSaleInvoiceMark(card);
         return;
       }
       if (!card.querySelector(".prototype-after-sale-select-check")) {
@@ -1006,6 +1257,7 @@
         card.appendChild(check);
       }
       syncAfterSaleCard(card, (rejected || !expired) && selectedAfterSaleCards.has(id));
+      patchAfterSaleInvoiceMark(card);
       if (card.dataset.prototypeAfterSaleSelectableBound === "true") return;
       card.dataset.prototypeAfterSaleSelectableBound = "true";
       card.addEventListener("click", (event) => {
@@ -1017,6 +1269,13 @@
         syncAfterSaleSelectAllControl();
       });
     });
+
+    let bar = document.querySelector(".prototype-after-sale-action-bar");
+    if (!bar) {
+      bar = document.createElement("uni-view");
+      bar.className = "prototype-after-sale-action-bar";
+      document.body.appendChild(bar);
+    }
 
     let button = document.querySelector(".prototype-after-sale-merge-btn");
     if (!button) {
@@ -1035,20 +1294,51 @@
         }
         showAfterSaleMergeUploadDialog(records, isAfterSaleRejectedTab());
       }, true);
-      document.body.appendChild(button);
     }
+    if (button.parentElement !== bar) bar.appendChild(button);
     button.textContent = rejected ? "重新合并上传" : "合并上传";
-    button.style.display = selectionTab ? "" : "none";
+    button.style.display = "";
+
+    let batchMarkButton = document.querySelector(".prototype-after-sale-batch-mark-btn");
+    if (!batchMarkButton) {
+      batchMarkButton = document.createElement("button");
+      batchMarkButton.type = "button";
+      batchMarkButton.className = "prototype-after-sale-batch-mark-btn";
+      batchMarkButton.textContent = "批量标记";
+      batchMarkButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        batchSetAfterSaleInvoiceMark(true);
+      }, true);
+    }
+    if (batchMarkButton.parentElement !== bar) bar.appendChild(batchMarkButton);
+
+    let batchUnmarkButton = document.querySelector(".prototype-after-sale-batch-unmark-btn");
+    if (!batchUnmarkButton) {
+      batchUnmarkButton = document.createElement("button");
+      batchUnmarkButton.type = "button";
+      batchUnmarkButton.className = "prototype-after-sale-batch-unmark-btn";
+      batchUnmarkButton.textContent = "批量取消标记";
+      batchUnmarkButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        batchSetAfterSaleInvoiceMark(false);
+      }, true);
+    }
+    if (batchUnmarkButton.parentElement !== bar) bar.appendChild(batchUnmarkButton);
+
+    bar.style.display = selectionTab ? "" : "none";
     patchAfterSaleSelectAllControl(selectionTab);
   }
 
   function patchCompensation() {
+    document.querySelectorAll('[data-prototype-review-key="compensation-user-name"]').forEach((row) => row.remove());
     document.querySelectorAll(".info-row").forEach((row) => {
       const label = textOf(row.querySelector(".info-label") || row);
       if (!label.includes("商品")) return;
-      if (row.nextElementSibling && row.nextElementSibling.getAttribute(MARK) === "compensation-user-name") return;
-      const value = guessUserName(findValueInRow(row));
-      row.after(createInlineInfoRow(row, "用户名称", value, "compensation-user-name"));
+      if (row.previousElementSibling && row.previousElementSibling.getAttribute(MARK) === "compensation-merge-id") return;
+      const value = getCompensationMergeIdFromCard(row.closest(".compensation-card"));
+      row.before(createInlineInfoRow(row, "合并ID", value, "compensation-merge-id"));
     });
     patchCompensationCards();
     patchCompensationFilter();
@@ -1062,7 +1352,7 @@
   const filterState = {
     count: "5",
     brand: "全部品牌",
-    userName: "全部用户名称",
+    mergeId: "",
     subsidyMin: "",
     subsidyMax: "",
     userPayMin: "",
@@ -1094,21 +1384,11 @@
     return "全部品牌";
   }
 
-  function getUserNameFromCard(card) {
-    const row = Array.from(card.querySelectorAll(".info-row")).find((item) =>
-      textOf(item).includes("用户名称"),
-    );
-    if (row) return textOf(row).replace(/^用户名称\s*[:：]\s*/, "").trim();
-    return guessUserName(textOf(card));
-  }
-
-  function getCompensationUserNameOptions() {
-    const counts = new Map();
-    document.querySelectorAll(".compensation-card").forEach((card) => {
-      const name = getUserNameFromCard(card);
-      if (name) counts.set(name, (counts.get(name) || 0) + 1);
-    });
-    return Array.from(counts.entries()).sort(([left], [right]) => left.localeCompare(right, "zh-CN"));
+  function getCompensationMergeIdFromCard(card) {
+    const text = textOf(card || "");
+    if (text.includes("瑞幸咖啡 29元饮品券") || text.includes("瑞幸咖啡 38元套餐券")) return "6138";
+    if (text.includes("肯德基 50元代金券") && text.includes("厦门")) return "3862";
+    return "-";
   }
 
   function hideImmediateClaimButtons(card) {
@@ -1235,7 +1515,6 @@
     if (old) old.remove();
     const shouldShowBrand = isAllCompensationTab();
     if (!shouldShowBrand) filterState.brand = "全部品牌";
-    const userNameOptions = getCompensationUserNameOptions();
     const mask = document.createElement("uni-view");
     mask.className = "prototype-filter-mask";
     mask.innerHTML = `
@@ -1257,12 +1536,9 @@
               ${["全部品牌", "瑞幸咖啡", "肯德基", "麦当劳"].map((item) => `<option value="${item}" ${filterState.brand === item ? "selected" : ""}>${escapeHtml(item)}</option>`).join("")}
             </select>
           </uni-view>` : ""}
-          <uni-view class="prototype-filter-item" aria-label="用户名称筛选项">
-            <uni-view class="prototype-filter-label prototype-review-red">用户名称</uni-view>
-            <select class="prototype-filter-select-native" data-field="userName" aria-label="用户名称">
-              <option value="全部用户名称" ${filterState.userName === "全部用户名称" ? "selected" : ""}>全部用户名称</option>
-              ${userNameOptions.map(([name, count]) => `<option value="${escapeHtml(name)}" ${filterState.userName === name ? "selected" : ""}>${escapeHtml(name)}（${count}）</option>`).join("")}
-            </select>
+          <uni-view class="prototype-filter-item" aria-label="合并ID筛选项">
+            <uni-view class="prototype-filter-label prototype-review-red">合并ID</uni-view>
+            <input class="prototype-filter-merge-id-input" data-field="mergeId" value="${escapeHtml(filterState.mergeId)}" placeholder="请输入合并ID" inputmode="numeric" />
           </uni-view>
           <uni-view class="prototype-filter-item">
             <uni-view class="prototype-filter-label">补贴金额区间</uni-view>
@@ -1292,7 +1568,7 @@
     mask.querySelector(".prototype-filter-reset").addEventListener("click", () => {
       filterState.count = "5";
       filterState.brand = "全部品牌";
-      filterState.userName = "全部用户名称";
+      filterState.mergeId = "";
       filterState.subsidyMin = "";
       filterState.subsidyMax = "";
       filterState.userPayMin = "";
@@ -1303,10 +1579,10 @@
     mask.querySelector(".prototype-filter-confirm").addEventListener("click", () => {
       const countSelect = mask.querySelector('[data-field="count"]');
       const brandSelect = mask.querySelector('[data-field="brand"]');
-      const userNameSelect = mask.querySelector('[data-field="userName"]');
+      const mergeIdInput = mask.querySelector('[data-field="mergeId"]');
       filterState.count = countSelect ? countSelect.value : "5";
       filterState.brand = brandSelect ? brandSelect.value : "全部品牌";
-      filterState.userName = userNameSelect ? userNameSelect.value : "全部用户名称";
+      filterState.mergeId = mergeIdInput ? mergeIdInput.value.trim() : "";
       ["subsidyMin", "subsidyMax", "userPayMin", "userPayMax"].forEach((field) => {
         const input = mask.querySelector(`[data-field="${field}"]`);
         filterState[field] = input ? input.value.replace(/[^\d.]/g, "") : "";
@@ -1353,7 +1629,7 @@
       <uni-view class="prototype-claim-toast-title">一键抢单提示</uni-view>
       <uni-view class="prototype-claim-toast-line">批量接单数量：${escapeHtml(filterState.count)}单</uni-view>
       <uni-view class="prototype-claim-toast-line">商品品牌：${escapeHtml(filterState.brand)}</uni-view>
-      <uni-view class="prototype-claim-toast-line">用户名称：${escapeHtml(filterState.userName)}</uni-view>
+      <uni-view class="prototype-claim-toast-line">合并ID：${escapeHtml(filterState.mergeId || "全部合并ID")}</uni-view>
       <uni-view class="prototype-claim-toast-line">补贴金额区间：${escapeHtml(rangeText(filterState.subsidyMin, filterState.subsidyMax))}</uni-view>
       <uni-view class="prototype-claim-toast-line">用户支付金额区间：${escapeHtml(rangeText(filterState.userPayMin, filterState.userPayMax))}</uni-view>
       <uni-view class="prototype-claim-toast-line">当前已选择：${selectedCount}张卡片</uni-view>
@@ -1390,12 +1666,12 @@
     const cards = Array.from(document.querySelectorAll(".compensation-card"));
     cards.forEach((card) => {
       const brandMatch = filterState.brand === "全部品牌" || getBrandFromCard(card) === filterState.brand;
-      const userNameMatch = filterState.userName === "全部用户名称" || getUserNameFromCard(card) === filterState.userName;
+      const mergeIdMatch = !filterState.mergeId || getCompensationMergeIdFromCard(card) === filterState.mergeId;
       const subsidy = getAmountFromCard(card, "补贴金额");
       const userPay = getAmountFromCard(card, "用户支付");
       const amountMatch = inRange(subsidy, filterState.subsidyMin, filterState.subsidyMax) &&
         inRange(userPay, filterState.userPayMin, filterState.userPayMax);
-      card.style.display = brandMatch && userNameMatch && amountMatch ? "" : "none";
+      card.style.display = brandMatch && mergeIdMatch && amountMatch ? "" : "none";
     });
     syncSelectAllControl();
   }
