@@ -672,6 +672,7 @@
         ["上传交互", "供应商选择发票文件后提交；弹窗中的抬头类型用于提交前核对开票主体。"],
         ["合并上传", "处理中列表支持勾选多张未结束工单后点击底部“合并上传”；已驳回列表每张卡片前展示可勾选方块，支持勾选工单后点击底部“重新合并上传”。处理中已结束工单不可选，已驳回工单均可选。未勾选时提示“请选择要合并上传发票的工单”；先校验发票抬头/税号，不一致提示“选择的发票抬头/税号不一样”；再校验发票类型，不一致提示“所选发票类型不一样”；校验通过后弹出与上传弹窗内容一致的合并上传发票弹窗，开票金额=所选工单用户支付价合计。"],
         ["合并ID", "每个卡片在商品品牌上方新增“合并ID”字段；点击筛选图标后，在商品品牌筛选项下新增“合并ID”输入框，默认提示词为“请输入合并ID”，按输入值精准筛选。"],
+        ["标记状态筛选", "已驳回、处理中页面的筛选条件弹窗在“合并ID”下方新增“标记状态”筛选项，枚举值为“全部、开票中、待开票”，默认选择“全部”，用于按卡片当前开票标识筛选。"],
         ["开票标识", "处理中、已驳回卡片展示“待开票/开票中”状态，并在操作区新增“标记开票中”按钮；点击后状态变为“开票中”，按钮变为“取消标记”，再次点击恢复“待开票”。已上传页面不展示该状态和按钮。"],
         ["批量标记", "底部按钮区在“合并上传/重新合并上传”右侧新增“批量标记”“批量取消标记”。未选择订单时提示“至少选择一个订单”；批量标记时，存在未标记订单则标记为“开票中”并在页面上方提示“标记成功”，若已全部标记则提示“已全部标记，请选择未标记的订单”；批量取消标记时，存在已标记订单则恢复“待开票”并在页面上方提示“取消标记成功”，若均未标记则提示“没有未标记的订单，请重新选择”。"],
       ],
@@ -873,6 +874,7 @@
   const afterSaleFilterState = {
     brand: "全部品牌",
     mergeId: "",
+    markStatus: "全部",
   };
 
   function isAfterSaleProcessingTab() {
@@ -981,7 +983,7 @@
   function patchAfterSaleFilter() {
     const sticky = document.querySelector(".sticky-top-wrap");
     if (!sticky) return;
-    sticky.querySelectorAll(".prototype-after-sale-filter-entry").forEach((entry) => entry.remove());
+    sticky.querySelectorAll(".prototype-filter-entry, .prototype-after-sale-filter-entry").forEach((entry) => entry.remove());
     const trigger = sticky.querySelector(".filter-trigger");
     if (!trigger || trigger.dataset.prototypeAfterSaleFilterBound === "true") return;
     trigger.dataset.prototypeAfterSaleFilterBound = "true";
@@ -995,6 +997,7 @@
 
   function showAfterSaleFilterDialog() {
     document.querySelector(".prototype-filter-mask")?.remove();
+    const showMarkFilter = isAfterSaleSelectionTab();
     const mask = document.createElement("uni-view");
     mask.className = "prototype-filter-mask";
     mask.innerHTML = `
@@ -1014,6 +1017,12 @@
             <uni-view class="prototype-filter-label prototype-review-red">合并ID</uni-view>
             <input class="prototype-filter-merge-id-input" data-field="mergeId" value="${escapeHtml(afterSaleFilterState.mergeId)}" placeholder="请输入合并ID" inputmode="numeric" />
           </uni-view>
+          ${showMarkFilter ? `<uni-view class="prototype-filter-item" aria-label="标记状态筛选项">
+            <uni-view class="prototype-filter-label prototype-review-red">标记状态</uni-view>
+            <select class="prototype-filter-select-native" data-field="markStatus" aria-label="标记状态">
+              ${["全部", "开票中", "待开票"].map((item) => `<option value="${item}" ${afterSaleFilterState.markStatus === item ? "selected" : ""}>${escapeHtml(item)}</option>`).join("")}
+            </select>
+          </uni-view>` : ""}
         </uni-view>
         <uni-view class="prototype-filter-footer">
           <button class="prototype-filter-btn prototype-filter-reset" type="button">重置</button>
@@ -1025,6 +1034,7 @@
     mask.querySelector(".prototype-filter-reset").addEventListener("click", () => {
       afterSaleFilterState.brand = "全部品牌";
       afterSaleFilterState.mergeId = "";
+      afterSaleFilterState.markStatus = "全部";
       mask.remove();
       applyAfterSaleFilter();
       patchAfterSaleMergeUpload();
@@ -1032,8 +1042,10 @@
     mask.querySelector(".prototype-filter-confirm").addEventListener("click", () => {
       const brandSelect = mask.querySelector('[data-field="brand"]');
       const mergeIdInput = mask.querySelector('[data-field="mergeId"]');
+      const markStatusSelect = mask.querySelector('[data-field="markStatus"]');
       afterSaleFilterState.brand = brandSelect ? brandSelect.value : "全部品牌";
       afterSaleFilterState.mergeId = mergeIdInput ? mergeIdInput.value.trim() : "";
+      afterSaleFilterState.markStatus = markStatusSelect ? markStatusSelect.value : "全部";
       mask.remove();
       applyAfterSaleFilter();
       patchAfterSaleMergeUpload();
@@ -1048,7 +1060,8 @@
     document.querySelectorAll(".subsidy-card").forEach((card) => {
       const brandMatch = afterSaleFilterState.brand === "全部品牌" || getAfterSaleBrandFromCard(card) === afterSaleFilterState.brand;
       const mergeIdMatch = !afterSaleFilterState.mergeId || getAfterSaleMergeId(card) === afterSaleFilterState.mergeId;
-      card.style.display = brandMatch && mergeIdMatch ? "" : "none";
+      const markMatch = !isAfterSaleSelectionTab() || afterSaleFilterState.markStatus === "全部" || getAfterSaleInvoiceMarkStatus(card) === afterSaleFilterState.markStatus;
+      card.style.display = brandMatch && mergeIdMatch && markMatch ? "" : "none";
     });
   }
 
@@ -1125,6 +1138,8 @@
     const id = card.dataset.prototypeAfterSaleCardId || getAfterSaleCardId(card, 0);
     afterSaleInvoiceMarkState.set(id, status);
     syncAfterSaleInvoiceMarkUi(card);
+    applyAfterSaleFilter();
+    syncAfterSaleSelectAllControl();
   }
 
   function syncAfterSaleInvoiceMarkUi(card) {

@@ -354,6 +354,29 @@
         font-weight: 700;
         white-space: nowrap;
       }
+      .prototype-after-sale-invoice-mark-filter {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-right: 12px;
+        vertical-align: middle;
+      }
+      .prototype-after-sale-invoice-mark-filter-label {
+        color: ${RED};
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .prototype-after-sale-invoice-mark-filter-select {
+        min-width: 160px;
+        height: 32px;
+        padding: 0 10px;
+        border: 1px solid #ffb4b4;
+        border-radius: 4px;
+        background: #fff;
+        color: ${RED};
+        outline: none;
+        box-sizing: border-box;
+      }
       .prototype-after-sale-merge-id-filter-input {
         width: 200px;
         height: 32px;
@@ -386,6 +409,7 @@
         ["合并上传", "处理中列表支持勾选多张未结束工单后点击“合并上传”；已驳回列表每条工单前展示可勾选方块，支持勾选工单后点击“重新合并上传”。处理中已结束工单不可选，已驳回工单均可选。未勾选时提示“请选择要合并上传发票的工单”；先校验发票抬头/税号，不一致提示“选择的发票抬头/税号不一样”；再校验发票类型，不一致提示“所选发票类型不一样”；校验通过后弹出与上传弹窗内容一致的合并上传发票弹窗，开票金额=所选工单用户支付价合计。"],
         ["合并ID 字段", "若订单原本无合并ID，后续又抢到一笔满足同组条件的订单，则新抢到的订单与原订单同步填充同一个合并ID。"],
         ["合并ID筛选", "筛选区新增红字“合并ID”输入框，默认提示词为“请输入合并ID”；输入后按当前列表合并ID精准搜索，点击搜索或按回车执行，点击重置清空筛选。"],
+        ["开票标记筛选", "处理中、已驳回页面新增筛选项“开票标记”，枚举值为“全部、开票中、待开票”，默认选择“全部”，用于按当前列表开票标识筛选。"],
         ["合并上传校验", "点击“合并上传”或“重新合并上传”时，需至少勾选两个工单且所选工单合并ID完全一致；若所选工单合并ID为空或显示为“-”，提示“合并ID为空的不能进行合并上传”；仅勾选一个有效合并ID工单时提示“至少勾选两个相同的合并ID”，合并ID不同提示“合并ID不同，请重新选择”。"],
         ["开票标识", "处理中、已驳回列表在“状态”字段后新增红字字段“开票标识”，默认显示“待开票”；每条数据操作列新增“标记开票中”按钮，点击后该行开票标识变为“开票中”，按钮同步变为“取消标记”；再次点击取消后恢复“待开票”。已上传列表不展示该字段和操作。"],
         ["批量标记", "“合并上传/重新合并上传”按钮后新增“批量标记”“批量取消标记”。未选择订单时提示“至少选择一个订单”；批量标记时，所选订单中存在未标记数据则标记为“开票中”并提示“标记成功”，若所选订单已全部标记则提示“已全部标记，请选择未标记的订单”；批量取消标记时，所选订单中存在已标记数据则恢复为“待开票”并提示“取消标记成功”，若所选订单均未标记则提示“没有未标记的订单，请重新选择”。"],
@@ -679,9 +703,13 @@
   function applyAfterSaleMergeIdFilter() {
     const input = document.querySelector(".prototype-after-sale-merge-id-filter-input");
     const value = String(input?.value || "").trim();
+    const markSelect = document.querySelector(".prototype-after-sale-invoice-mark-filter-select");
+    const markValue = String(markSelect?.value || "全部");
     document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
       const mergeId = afterSaleMergeIdFromRow(row);
-      row.style.display = !value || mergeId === value ? "" : "none";
+      const mergeMatch = !value || mergeId === value;
+      const markMatch = !isAfterSaleSelectionTabActive() || markValue === "全部" || invoiceMarkStatusForRow(row) === markValue;
+      row.style.display = mergeMatch && markMatch ? "" : "none";
     });
   }
 
@@ -689,6 +717,9 @@
     const form = document.querySelector(".app-main .app-container .el-form") || document.querySelector(".el-form");
     if (!form) return;
     document.querySelectorAll(".prototype-compensation-merge-id-filter").forEach((field) => field.remove());
+    if (!isAfterSaleSelectionTabActive()) {
+      form.querySelector(".prototype-after-sale-invoice-mark-filter")?.remove();
+    }
     let field = form.querySelector(".prototype-after-sale-merge-id-filter");
     if (!field) {
       field = document.createElement("div");
@@ -698,6 +729,20 @@
         <input class="prototype-after-sale-merge-id-filter-input" type="text" placeholder="请输入合并ID" />
       `;
       form.insertBefore(field, form.firstElementChild || null);
+    }
+    let markField = form.querySelector(".prototype-after-sale-invoice-mark-filter");
+    if (isAfterSaleSelectionTabActive() && !markField) {
+      markField = document.createElement("div");
+      markField.className = "prototype-after-sale-invoice-mark-filter";
+      markField.innerHTML = `
+        <span class="prototype-after-sale-invoice-mark-filter-label">开票标记</span>
+        <select class="prototype-after-sale-invoice-mark-filter-select" aria-label="开票标记">
+          <option value="全部" selected>全部</option>
+          <option value="开票中">开票中</option>
+          <option value="待开票">待开票</option>
+        </select>
+      `;
+      field.after(markField);
     }
     const input = field.querySelector("input");
     if (input && input.dataset.prototypeMergeFilterBound !== "true") {
@@ -709,6 +754,11 @@
           applyAfterSaleMergeIdFilter();
         }
       });
+    }
+    const markSelect = form.querySelector(".prototype-after-sale-invoice-mark-filter-select");
+    if (markSelect && markSelect.dataset.prototypeInvoiceMarkFilterBound !== "true") {
+      markSelect.dataset.prototypeInvoiceMarkFilterBound = "true";
+      markSelect.addEventListener("change", applyAfterSaleMergeIdFilter);
     }
     const searchButton = Array.from(form.querySelectorAll("button")).find((button) => textOf(button).includes("搜索"));
     if (searchButton && searchButton.dataset.prototypeMergeIdSearchBound !== "true") {
@@ -722,6 +772,8 @@
         window.setTimeout(() => {
           const current = document.querySelector(".prototype-after-sale-merge-id-filter-input");
           if (current) current.value = "";
+          const mark = document.querySelector(".prototype-after-sale-invoice-mark-filter-select");
+          if (mark) mark.value = "全部";
           applyAfterSaleMergeIdFilter();
         }, 80);
       });
@@ -883,6 +935,7 @@
         const current = invoiceMarkStatusForRow(row);
         setInvoiceMarkStatusForRow(row, current === "开票中" ? "待开票" : "开票中");
         syncInvoiceMarkCellsAndButtons();
+        applyAfterSaleMergeIdFilter();
         showToast(current === "开票中" ? "取消标记成功" : "标记成功");
       });
       const content = operationCell.querySelector(".cell") || operationCell;
@@ -991,6 +1044,7 @@
       }
       targets.forEach((row) => setInvoiceMarkStatusForRow(row, "开票中"));
       syncInvoiceMarkCellsAndButtons();
+      applyAfterSaleMergeIdFilter();
       showToast("标记成功");
       return;
     }
@@ -1001,6 +1055,7 @@
     }
     targets.forEach((row) => setInvoiceMarkStatusForRow(row, "待开票"));
     syncInvoiceMarkCellsAndButtons();
+    applyAfterSaleMergeIdFilter();
     showToast("取消标记成功");
   }
 
