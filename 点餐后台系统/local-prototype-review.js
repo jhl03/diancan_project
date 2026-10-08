@@ -2,6 +2,7 @@
   (function openRequestedRoute() {
     const params = new URLSearchParams(window.location.search);
     const routeMap = {
+      supplierList: "/supplier/list",
       afterSalesList: "/order/after-sales-list",
       invoiceList: "/order/invoice-list",
     };
@@ -349,6 +350,119 @@
         color: #fff;
         font-weight: 700;
       }
+      .prototype-supplier-table-shell {
+        margin-top: 12px;
+        border: 1px solid #ebeef5;
+        border-radius: 4px;
+        background: #fff;
+        overflow-x: auto;
+      }
+      .prototype-supplier-table {
+        width: 100%;
+        min-width: 1180px;
+        border-collapse: collapse;
+        table-layout: fixed;
+        color: #344054;
+        font-size: 14px;
+      }
+      .prototype-supplier-table th,
+      .prototype-supplier-table td {
+        height: 52px;
+        padding: 0 14px;
+        border-right: 1px solid #ebeef5;
+        border-bottom: 1px solid #ebeef5;
+        text-align: left;
+        box-sizing: border-box;
+      }
+      .prototype-supplier-table th {
+        background: #f8f9fb;
+        color: #24324b;
+        font-weight: 700;
+      }
+      .prototype-supplier-table tbody tr:nth-child(even) td {
+        background: #fafcff;
+      }
+      .prototype-supplier-status {
+        display: inline-flex;
+        align-items: center;
+        height: 24px;
+        padding: 0 9px;
+        border-radius: 4px;
+        color: #67c23a;
+        background: #f0f9eb;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .prototype-supplier-status.stopped {
+        color: #f56c6c;
+        background: #fef0f0;
+      }
+      .prototype-invoice-switch-demo {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        width: 46px;
+        height: 24px;
+        border-radius: 999px;
+        background: #dcdfe6;
+        vertical-align: middle;
+        transition: background 0.2s;
+      }
+      .prototype-invoice-switch-demo::after {
+        content: "";
+        position: absolute;
+        left: 3px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 2px 5px rgba(15, 23, 42, 0.18);
+        transition: transform 0.2s;
+      }
+      .prototype-invoice-switch-demo.on {
+        background: #409eff;
+      }
+      .prototype-invoice-switch-demo.on::after {
+        transform: translateX(22px);
+      }
+      .prototype-invoice-switch-text {
+        margin-left: 8px;
+        color: #606266;
+      }
+      .prototype-brand-tags {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .prototype-brand-tag {
+        display: inline-flex;
+        align-items: center;
+        height: 24px;
+        padding: 0 8px;
+        border-radius: 999px;
+        color: #409eff;
+        background: #ecf5ff;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .prototype-brand-empty {
+        color: #909399;
+      }
+      .prototype-supplier-action {
+        border: none;
+        background: transparent;
+        color: #409eff;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .prototype-supplier-action.stop {
+        color: #f56c6c;
+      }
+      .prototype-supplier-tip {
+        margin: 10px 0 0;
+        color: #7b8798;
+        font-size: 12px;
+      }
     `;
     document.head.appendChild(style);
   }
@@ -607,6 +721,157 @@
 
   function patchInvoiceList() {
     renderPrototypeInvoiceTable();
+  }
+
+  const supplierDemoRows = [
+    {
+      supplierNo: "SUP20260914001",
+      supplierName: "厦门惠生活供应链有限公司",
+      contactName: "陈经理",
+      phone: "13800138000",
+      cooperationStatus: "合作中",
+      invoiceEnabled: true,
+      brands: ["瑞幸咖啡", "肯德基", "麦当劳"],
+    },
+    {
+      supplierNo: "SUP20260914002",
+      supplierName: "北京星河到家供应链有限公司",
+      contactName: "李经理",
+      phone: "13900139000",
+      cooperationStatus: "合作中",
+      invoiceEnabled: false,
+      brands: [],
+    },
+    {
+      supplierNo: "SUP20260914003",
+      supplierName: "上海云朵互动科技有限公司",
+      contactName: "王经理",
+      phone: "13700137000",
+      cooperationStatus: "停止合作",
+      invoiceEnabled: false,
+      brands: ["瑞幸咖啡"],
+    },
+  ];
+
+  function hideSupplierSourceTables() {
+    document.querySelectorAll(".el-table, .el-pagination, .pagination-container").forEach((node) => {
+      if (node.closest(".prototype-supplier-table-shell") || node.closest(".prototype-invoice-table-shell")) return;
+      node.classList.add("prototype-hide-invoice-source");
+      node.style.setProperty("display", "none", "important");
+      node.style.setProperty("visibility", "hidden", "important");
+      node.style.setProperty("height", "0", "important");
+      node.style.setProperty("min-height", "0", "important");
+      node.style.setProperty("max-height", "0", "important");
+      node.style.setProperty("overflow", "hidden", "important");
+    });
+  }
+
+  function supplierBrandTitle(row) {
+    return row.invoiceEnabled && row.brands.length ? `已勾选开票商品品牌：${row.brands.join("、")}` : "未开启接开票单";
+  }
+
+  function renderSupplierBrandTags(row) {
+    if (!row.invoiceEnabled) return `<span class="prototype-brand-empty">未开启接开票单</span>`;
+    return `
+      <span class="prototype-brand-tags" title="${escapeHtml(supplierBrandTitle(row))}">
+        ${row.brands.map((brand) => `<span class="prototype-brand-tag">${escapeHtml(brand)}</span>`).join("")}
+      </span>
+    `;
+  }
+
+  function renderSupplierRow(row, index) {
+    const stopped = row.cooperationStatus === "停止合作";
+    return `
+      <tr data-prototype-supplier-index="${index}">
+        <td>${escapeHtml(row.supplierNo)}</td>
+        <td>${escapeHtml(row.supplierName)}</td>
+        <td>${escapeHtml(row.contactName)}</td>
+        <td>${escapeHtml(row.phone)}</td>
+        <td><span class="prototype-supplier-status${stopped ? " stopped" : ""}">${escapeHtml(row.cooperationStatus)}</span></td>
+        <td>
+          <span class="prototype-invoice-switch-demo${row.invoiceEnabled ? " on" : ""}" title="${escapeHtml(supplierBrandTitle(row))}"></span>
+          <span class="prototype-invoice-switch-text">${row.invoiceEnabled ? "已开启" : "未开启"}</span>
+        </td>
+        <td>${renderSupplierBrandTags(row)}</td>
+        <td>
+          <button type="button" class="prototype-supplier-action${stopped ? "" : " stop"}">${stopped ? "恢复合作" : "停止合作"}</button>
+        </td>
+      </tr>
+    `;
+  }
+
+  function bindSupplierDemoActions(wrap) {
+    wrap.querySelectorAll(".prototype-supplier-action").forEach((button) => {
+      if (button.dataset.prototypeBound === "true") return;
+      button.dataset.prototypeBound = "true";
+      button.addEventListener("click", () => {
+        const row = button.closest("tr");
+        const index = Number(row?.dataset.prototypeSupplierIndex || 0);
+        const record = supplierDemoRows[index];
+        if (!record) return;
+        if (record.cooperationStatus === "停止合作") {
+          record.cooperationStatus = "合作中";
+          record.invoiceEnabled = false;
+        } else {
+          record.cooperationStatus = "停止合作";
+          record.invoiceEnabled = false;
+        }
+        renderPrototypeSupplierList(true);
+      });
+    });
+  }
+
+  function renderPrototypeSupplierList(force = false) {
+    const host = document.querySelector(".app-main .app-container") || document.querySelector(".app-main") || document.body;
+    if (!host) return;
+    hideSupplierSourceTables();
+    let wrap = document.querySelector(".prototype-supplier-table-shell");
+    if (!wrap) {
+      wrap = document.createElement("div");
+      wrap.className = "prototype-supplier-table-shell";
+      const guide = host.querySelector(".prototype-change-guide");
+      if (guide) guide.after(wrap);
+      else host.appendChild(wrap);
+    }
+    const signature = JSON.stringify(supplierDemoRows);
+    if (!force && wrap.dataset.prototypeSupplierSignature === signature) return;
+    wrap.dataset.prototypeSupplierSignature = signature;
+    wrap.innerHTML = `
+      <table class="prototype-supplier-table">
+        <colgroup>
+          <col style="width:150px" />
+          <col style="width:260px" />
+          <col style="width:110px" />
+          <col style="width:140px" />
+          <col style="width:110px" />
+          <col style="width:150px" />
+          <col style="width:260px" />
+          <col style="width:120px" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>供应商编号</th>
+            <th>供应商名称</th>
+            <th>联系人</th>
+            <th>联系电话</th>
+            <th>合作状态</th>
+            <th class="prototype-review-red">是否接开票单</th>
+            <th class="prototype-review-red">已勾选商品品牌</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${supplierDemoRows.map(renderSupplierRow).join("")}
+        </tbody>
+      </table>
+      <div class="prototype-supplier-tip">演示逻辑：点击“停止合作”会同步关闭接开票单开关；点击“恢复合作”后，接开票单开关保持关闭。鼠标悬停开关或品牌标签可查看已勾选品牌。</div>
+    `;
+    bindSupplierDemoActions(wrap);
+    hideSupplierSourceTables();
+  }
+
+  function patchSupplierList() {
+    renderPrototypeSupplierList();
   }
 
   const invoiceTabs = {
@@ -1520,7 +1785,10 @@
     ensureReviewGuide();
     ensureInlineNotes();
     const path = window.location.pathname;
-    if (path.includes("/supplier/list")) patchSupplierCooperationSwitch();
+    if (path.includes("/supplier/list")) {
+      patchSupplierCooperationSwitch();
+      patchSupplierList();
+    }
     if (path.includes("/order/invoice-list")) patchInvoiceList();
     if (path.includes("/order/after-sales-list")) patchAfterSalesList();
     syncHeaderScroll();
