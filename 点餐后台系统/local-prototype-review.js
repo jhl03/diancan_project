@@ -228,6 +228,18 @@
       .prototype-hide-invoice-source {
         display: none !important;
       }
+      .prototype-hide-invoice-source,
+      .prototype-hide-invoice-source.el-table,
+      .prototype-hide-invoice-source.el-pagination,
+      .prototype-hide-invoice-source.el-table__body-wrapper,
+      .prototype-hide-invoice-source.el-table__header-wrapper {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        max-height: 0 !important;
+        overflow: hidden !important;
+      }
       .prototype-invoice-table-shell {
         width: 100%;
         max-width: 100%;
@@ -653,7 +665,7 @@
           uploadTime: "2026-09-13 12:10:00",
         },
         {
-          mergeId: "7286",
+          mergeId: "-",
           itemOrderNo: "FO202609120003",
           requirementNo: "KP202609120003",
           createTime: "2026-09-12 11:06:00",
@@ -673,7 +685,7 @@
       columns: ["合并ID", "出餐单号", "开票单号", "已创建时长", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "抬头类型", "发票抬头/税号"],
       rows: [
         {
-          mergeId: "6138",
+          mergeId: "-",
           itemOrderNo: "FO202609140001",
           requirementNo: "KP202609140001",
           createdDuration: "1天2小时",
@@ -705,7 +717,7 @@
       columns: ["合并ID", "出餐单号", "开票单号", "处理倒计时", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "抬头类型", "发票抬头/税号"],
       rows: [
         {
-          mergeId: "6138",
+          mergeId: "-",
           itemOrderNo: "FO202609130006",
           requirementNo: "KP202609130006",
           deadline: "0天4小时",
@@ -796,6 +808,19 @@
     return escapeHtml(row[key] || "--");
   }
 
+  function hideInvoiceSourceTables() {
+    document.querySelectorAll(".el-table, .el-pagination, .pagination-container").forEach((node) => {
+      if (node.closest(".prototype-invoice-table-shell")) return;
+      node.classList.add("prototype-hide-invoice-source");
+      node.style.setProperty("display", "none", "important");
+      node.style.setProperty("visibility", "hidden", "important");
+      node.style.setProperty("height", "0", "important");
+      node.style.setProperty("min-height", "0", "important");
+      node.style.setProperty("max-height", "0", "important");
+      node.style.setProperty("overflow", "hidden", "important");
+    });
+  }
+
   function renderPrototypeInvoiceTable() {
     const tables = Array.from(document.querySelectorAll(".el-table")).filter((item) => !item.closest(".prototype-invoice-table-shell"));
     const table = tables[tables.length - 1];
@@ -803,10 +828,7 @@
     const tabName = getActiveInvoiceTabName();
     const config = invoiceTabs[tabName] || invoiceTabs["已上传"];
 
-    tables.forEach((sourceTable) => sourceTable.classList.add("prototype-hide-invoice-source"));
-    document.querySelectorAll(".pagination-container, .el-pagination").forEach((pagination) => {
-      pagination.classList.add("prototype-hide-invoice-source");
-    });
+    hideInvoiceSourceTables();
 
     let wrap = document.querySelector(".prototype-invoice-table-shell");
     if (!wrap) {
@@ -844,6 +866,7 @@
         <span class="prototype-invoice-page-current">1</span>
       </div>
     `;
+    hideInvoiceSourceTables();
   }
 
   function createInvoiceTitleTypeHeader(invoiceHeader) {
