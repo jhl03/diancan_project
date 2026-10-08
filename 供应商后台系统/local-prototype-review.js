@@ -302,6 +302,33 @@
         color: #606266;
         outline: none;
       }
+      .prototype-after-sale-merge-id-filter {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-right: 12px;
+        vertical-align: middle;
+      }
+      .prototype-after-sale-merge-id-filter-label {
+        color: ${RED};
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .prototype-after-sale-merge-id-filter-input {
+        width: 200px;
+        height: 32px;
+        padding: 0 10px;
+        border: 1px solid #ffb4b4;
+        border-radius: 4px;
+        background: #fff;
+        color: ${RED};
+        outline: none;
+        box-sizing: border-box;
+      }
+      .prototype-after-sale-merge-id-filter-input::placeholder {
+        color: ${RED};
+        opacity: 0.78;
+      }
     `;
     document.head.appendChild(style);
   }
@@ -318,6 +345,9 @@
         ["发票上传/重传", "上传发票与重新上传发票弹窗同步展示抬头类型，用于校验发票主体。"],
         ["合并上传", "处理中列表支持勾选多张未结束工单后点击“合并上传”；已驳回列表每条工单前展示可勾选方块，支持勾选工单后点击“重新合并上传”。处理中已结束工单不可选，已驳回工单均可选。未勾选时提示“请选择要合并上传发票的工单”；先校验发票抬头/税号，不一致提示“选择的发票抬头/税号不一样”；再校验发票类型，不一致提示“所选发票类型不一样”；校验通过后弹出与上传弹窗内容一致的合并上传发票弹窗，开票金额=所选工单用户支付价合计。"],
         ["合并ID 字段", "三个 Tab 的列表均在“抢单编号”前新增红字字段“合并ID”。系统按“真实出餐供应商一致 + 订单来源店铺一致 + 发票抬头一致 + 税号一致”判断是否可合并；同组订单数量大于等于 2 时，自动生成不以 0 开头的随机 4 位数字并在同组合并ID中保持一致；不存在合并情况时显示“-”。若订单原本无合并ID，后续又抢到一笔满足同组条件的订单，则新抢到的订单与原订单同步填充同一个合并ID。"],
+        ["合并ID筛选", "筛选区新增红字“合并ID”输入框，默认提示词为“请输入合并ID”；输入后按当前列表合并ID精准搜索，点击搜索或按回车执行，点击重置清空筛选。"],
+        ["合并上传校验", "点击“合并上传”或“重新合并上传”时，需至少勾选两个工单且所选工单合并ID完全一致；仅勾选一个时提示“至少勾选两个相同的合并ID”，合并ID不同或无有效合并ID时提示“合并ID不同，请重新选择”。"],
+        ["注意", "1. 已上传和已驳回页面已有的合并ID，就不能在使用了。2. 合并上传是多个订单的发票文件是相同的，上传到点餐后台/客服工作台。"],
       ],
       notes: [],
     },
@@ -557,6 +587,7 @@
 
   function patchAfterSaleSubsidy() {
     patchAfterSaleMergeId();
+    patchAfterSaleMergeIdFilter();
     patchColumnByHeader("发票抬头/税号", "抬头类型", "invoice-title-type", "before", (_row, titleCell) =>
       guessTitleType(textOf(titleCell)),
     );
@@ -575,7 +606,15 @@
   function afterSaleMergeIdFromRow(row) {
     const claimNo = claimNoFromRow(row);
     const meta = mergeMetaByClaimNo(claimNo);
-    return meta?.mergeId || "-";
+    const mergeId = meta?.mergeId || "-";
+    const rowText = textOf(row);
+    if ((isProcessingTabActive() || rowText.includes("处理中") || isRejectedTabActive() || rowText.includes("已驳回")) && mergeId === "9629") {
+      return "-";
+    }
+    if ((rowText.includes("已上传") || textOf(document.querySelector(".el-tabs__item.is-active, .el-tabs__item[aria-selected='true']")).includes("已上传")) && mergeId === "-") {
+      return "9629";
+    }
+    return mergeId;
   }
 
   function syncAfterSaleMergeIdCells() {
@@ -589,6 +628,58 @@
       const content = mergeCell.querySelector(".cell") || mergeCell;
       content.textContent = afterSaleMergeIdFromRow(row);
     });
+  }
+
+  function applyAfterSaleMergeIdFilter() {
+    const input = document.querySelector(".prototype-after-sale-merge-id-filter-input");
+    const value = String(input?.value || "").trim();
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const mergeId = afterSaleMergeIdFromRow(row);
+      row.style.display = !value || mergeId === value ? "" : "none";
+    });
+  }
+
+  function patchAfterSaleMergeIdFilter() {
+    const form = document.querySelector(".app-main .app-container .el-form") || document.querySelector(".el-form");
+    if (!form) return;
+    let field = form.querySelector(".prototype-after-sale-merge-id-filter");
+    if (!field) {
+      field = document.createElement("div");
+      field.className = "prototype-after-sale-merge-id-filter";
+      field.innerHTML = `
+        <span class="prototype-after-sale-merge-id-filter-label">合并ID</span>
+        <input class="prototype-after-sale-merge-id-filter-input" type="text" placeholder="请输入合并ID" />
+      `;
+      form.insertBefore(field, form.firstElementChild || null);
+    }
+    const input = field.querySelector("input");
+    if (input && input.dataset.prototypeMergeFilterBound !== "true") {
+      input.dataset.prototypeMergeFilterBound = "true";
+      input.addEventListener("input", applyAfterSaleMergeIdFilter);
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          applyAfterSaleMergeIdFilter();
+        }
+      });
+    }
+    const searchButton = Array.from(form.querySelectorAll("button")).find((button) => textOf(button).includes("搜索"));
+    if (searchButton && searchButton.dataset.prototypeMergeIdSearchBound !== "true") {
+      searchButton.dataset.prototypeMergeIdSearchBound = "true";
+      searchButton.addEventListener("click", () => window.setTimeout(applyAfterSaleMergeIdFilter, 80));
+    }
+    const resetButton = Array.from(form.querySelectorAll("button")).find((button) => textOf(button).includes("重置"));
+    if (resetButton && resetButton.dataset.prototypeMergeIdResetBound !== "true") {
+      resetButton.dataset.prototypeMergeIdResetBound = "true";
+      resetButton.addEventListener("click", () => {
+        window.setTimeout(() => {
+          const current = document.querySelector(".prototype-after-sale-merge-id-filter-input");
+          if (current) current.value = "";
+          applyAfterSaleMergeIdFilter();
+        }, 80);
+      });
+    }
+    applyAfterSaleMergeIdFilter();
   }
 
   function patchAfterSaleMergeId() {
@@ -652,6 +743,7 @@
       invoiceTitle: invoice.invoiceTitle,
       taxpayerNo: invoice.taxpayerNo,
       userPayAmount: normalizeAmount(textOf(cells[amountIndex])),
+      mergeId: afterSaleMergeIdFromRow(row),
     };
   }
 
@@ -689,7 +781,11 @@
 
   function validateMergeRecords(records) {
     if (!records.length) return "请选择要合并上传发票的工单";
+    if (records.length < 2) return "至少勾选两个相同的合并ID";
     const first = records[0];
+    if (!first.mergeId || first.mergeId === "-" || records.some((item) => item.mergeId !== first.mergeId)) {
+      return "合并ID不同，请重新选择";
+    }
     const differentInvoice = records.some((item) =>
       item.invoiceTitle !== first.invoiceTitle || item.taxpayerNo !== first.taxpayerNo
     );
@@ -793,6 +889,7 @@
             existingCheck.dataset.taxpayerNo = record.taxpayerNo;
             existingCheck.dataset.titleType = record.titleType;
             existingCheck.dataset.userPayAmount = String(record.userPayAmount);
+            existingCheck.dataset.mergeId = record.mergeId;
             if (existingCheck.dataset.prototypeSelectBound !== "true") {
               existingCheck.dataset.prototypeSelectBound = "true";
               existingCheck.addEventListener("change", syncMergeSelectAllState);
@@ -816,6 +913,7 @@
           check.dataset.taxpayerNo = record.taxpayerNo;
           check.dataset.titleType = record.titleType;
           check.dataset.userPayAmount = String(record.userPayAmount);
+          check.dataset.mergeId = record.mergeId;
           check.dataset.prototypeSelectBound = "true";
           check.addEventListener("change", syncMergeSelectAllState);
         });
@@ -836,6 +934,7 @@
           taxpayerNo: item.dataset.taxpayerNo || "",
           titleType: item.dataset.titleType || "",
           userPayAmount: normalizeAmount(item.dataset.userPayAmount),
+          mergeId: item.dataset.mergeId || "",
         }));
       const message = validateMergeRecords(records);
       if (message) {
