@@ -359,7 +359,7 @@
       }
       .prototype-supplier-table {
         width: 100%;
-        min-width: 1180px;
+        min-width: 2050px;
         border-collapse: collapse;
         table-layout: fixed;
         color: #344054;
@@ -476,7 +476,7 @@
       title: "本页改动说明：供应商列表",
       items: [
         ["合作状态 Tab", "停止合作页面：在未关闭接开票单开关时，操作停止合作要同步关闭接开票单开关；恢复合作后，接开票单开关保持关闭。"],
-        ["是否接开票单", "鼠标悬停展示开启接开票单时勾选的商品品牌；开启时展示品牌清单，未开启时展示未开启提示。"],
+        ["是否接开票单", "鼠标悬停展示开启接开票单时勾选的商品品牌；开启时展示品牌清单，未开启时不展示。"],
       ],
       notes: [
         ["是否接开票单", "显示逻辑：悬停开关时展示供应商已勾选的开票商品品牌；数据源：供应商开票配置中的品牌授权结果。"],
@@ -487,9 +487,11 @@
       items: [
         ["抬头类型", "新增红字字段；显示在发票抬头/税号左侧；数据源：客服本地生活工作台接口传入。"],
         ["合并ID", "在已上传、已驳回、待处理、处理中四个页面的“出餐单号”前新增红字字段“合并ID”。系统按“真实出餐供应商一致 + 订单来源店铺一致 + 发票抬头一致”判断是否可生成合并ID；同组【符合条件的订单】订单数量大于等于 2 时自动生成不以 0 开头的随机 4 位数字作为合并ID并保持一致；不符合条件时显示“-”。若订单原本无合并ID，后续新进入一笔满足同组条件的订单，则新进入订单与原订单同步填充同一个合并ID。"],
+        ["订单来源", "在已上传、已驳回、待处理、处理中四个 Tab 的“状态”字段后新增字段“订单来源”；数据源取该开票单对应的淘宝、抖音等订单来源店铺名称。"],
       ],
       notes: [
         ["合并ID", "系统按“真实出餐供应商一致 + 订单来源店铺一致 + 发票抬头一致”判断是否可生成合并ID；同组【符合条件的订单】订单数量大于等于 2 时自动生成不以 0 开头的随机 4 位数字作为合并ID并保持一致；不符合条件时显示“-”。若订单原本无合并ID，后续新进入一笔满足同组条件的订单，则新进入订单与原订单同步填充同一个合并ID。"],
+        ["订单来源", "显示逻辑：四个 Tab 均在“状态”字段后展示；数据源：该开票单对应的淘宝/抖音等店铺名称。"],
         ["抬头类型", "显示逻辑：四个 Tab 均展示；数据源：客服本地生活工作台接口的发票抬头类型。"],
         ["发票抬头/税号", "字段值需与抬头类型、供应商编号按列匹配；不同 Tab 不共用错位字段。"],
         ["供应商编号", "修复逻辑：供应商编号不再与抬头类型串位，按当前 Tab 独立字段配置展示。"],
@@ -727,29 +729,50 @@
     {
       supplierNo: "SUP20260914001",
       supplierName: "厦门惠生活供应链有限公司",
-      contactName: "陈经理",
+      tenantId: "TENANT-10001",
+      h5Platform: "生活服务H5",
+      cooperativeBrands: ["瑞幸咖啡", "肯德基", "麦当劳"],
       phone: "13800138000",
       cooperationStatus: "合作中",
+      cooperationMode: "直营合作",
       invoiceEnabled: true,
       brands: ["瑞幸咖啡", "肯德基", "麦当劳"],
+      registerTime: "2026-09-14 09:12:00",
+      registerMethod: "后台创建",
+      recommender: "张主管",
+      updateTime: "2026-10-08 09:30:00",
     },
     {
       supplierNo: "SUP20260914002",
       supplierName: "北京星河到家供应链有限公司",
-      contactName: "李经理",
+      tenantId: "TENANT-10002",
+      h5Platform: "到家商城H5",
+      cooperativeBrands: ["瑞幸咖啡"],
       phone: "13900139000",
       cooperationStatus: "合作中",
+      cooperationMode: "联营合作",
       invoiceEnabled: false,
       brands: [],
+      registerTime: "2026-09-14 10:28:00",
+      registerMethod: "供应商入驻",
+      recommender: "李主管",
+      updateTime: "2026-10-08 09:18:00",
     },
     {
       supplierNo: "SUP20260914003",
       supplierName: "上海云朵互动科技有限公司",
-      contactName: "王经理",
+      tenantId: "TENANT-10003",
+      h5Platform: "云朵生活H5",
+      cooperativeBrands: ["瑞幸咖啡"],
       phone: "13700137000",
       cooperationStatus: "停止合作",
+      cooperationMode: "平台招商",
       invoiceEnabled: false,
       brands: ["瑞幸咖啡"],
+      registerTime: "2026-09-14 11:35:00",
+      registerMethod: "平台招商",
+      recommender: "王主管",
+      updateTime: "2026-10-08 08:55:00",
     },
   ];
 
@@ -782,11 +805,11 @@
     return row.invoiceEnabled && row.brands.length ? `已勾选开票商品品牌：${row.brands.join("、")}` : "未开启接开票单";
   }
 
-  function renderSupplierBrandTags(row) {
-    if (!row.invoiceEnabled) return `<span class="prototype-brand-empty">未开启接开票单</span>`;
+  function renderSupplierBrandTags(brands) {
+    if (!brands?.length) return `<span class="prototype-brand-empty">--</span>`;
     return `
-      <span class="prototype-brand-tags" title="${escapeHtml(supplierBrandTitle(row))}">
-        ${row.brands.map((brand) => `<span class="prototype-brand-tag">${escapeHtml(brand)}</span>`).join("")}
+      <span class="prototype-brand-tags">
+        ${brands.map((brand) => `<span class="prototype-brand-tag">${escapeHtml(brand)}</span>`).join("")}
       </span>
     `;
   }
@@ -797,14 +820,20 @@
       <tr data-prototype-supplier-index="${index}">
         <td>${escapeHtml(row.supplierNo)}</td>
         <td>${escapeHtml(row.supplierName)}</td>
-        <td>${escapeHtml(row.contactName)}</td>
+        <td>${escapeHtml(row.tenantId)}</td>
+        <td>${escapeHtml(row.h5Platform)}</td>
+        <td>${renderSupplierBrandTags(row.cooperativeBrands)}</td>
         <td>${escapeHtml(row.phone)}</td>
         <td><span class="prototype-supplier-status${stopped ? " stopped" : ""}">${escapeHtml(row.cooperationStatus)}</span></td>
+        <td>${escapeHtml(row.cooperationMode)}</td>
         <td>
           <span class="prototype-invoice-switch-demo${row.invoiceEnabled ? " on" : ""}" title="${escapeHtml(supplierBrandTitle(row))}"></span>
           <span class="prototype-invoice-switch-text">${row.invoiceEnabled ? "已开启" : "未开启"}</span>
         </td>
-        <td>${renderSupplierBrandTags(row)}</td>
+        <td>${escapeHtml(row.registerTime)}</td>
+        <td>${escapeHtml(row.registerMethod)}</td>
+        <td>${escapeHtml(row.recommender)}</td>
+        <td>${escapeHtml(row.updateTime)}</td>
         <td>
           <button type="button" class="prototype-supplier-action${stopped ? "" : " stop"}">${stopped ? "恢复合作" : "停止合作"}</button>
         </td>
@@ -840,6 +869,7 @@
     }
     const host = document.querySelector(".app-main .app-container");
     if (!host) return;
+    const sourceTable = Array.from(host.querySelectorAll(".el-table")).find((node) => !node.closest(".prototype-supplier-table-shell") && !node.closest(".prototype-invoice-table-shell"));
     hideSupplierSourceTables();
     let wrap = host.querySelector(".prototype-supplier-table-shell");
     document.querySelectorAll(".prototype-supplier-table-shell").forEach((node) => {
@@ -849,11 +879,8 @@
       wrap = document.createElement("div");
       wrap.className = "prototype-supplier-table-shell";
     }
-    const searchForm = host.querySelector(".el-form, .search-form, .filter-form");
-    const guide = host.querySelector(".prototype-change-guide");
-    const anchor = searchForm || guide;
-    if (anchor && wrap.previousElementSibling !== anchor) {
-      anchor.after(wrap);
+    if (sourceTable && wrap.nextElementSibling !== sourceTable) {
+      sourceTable.before(wrap);
     } else if (!wrap.parentElement) {
       host.appendChild(wrap);
     }
@@ -865,22 +892,34 @@
         <colgroup>
           <col style="width:150px" />
           <col style="width:260px" />
-          <col style="width:110px" />
+          <col style="width:130px" />
+          <col style="width:140px" />
+          <col style="width:180px" />
           <col style="width:140px" />
           <col style="width:110px" />
+          <col style="width:120px" />
           <col style="width:150px" />
-          <col style="width:260px" />
+          <col style="width:170px" />
+          <col style="width:120px" />
+          <col style="width:120px" />
+          <col style="width:170px" />
           <col style="width:120px" />
         </colgroup>
         <thead>
           <tr>
             <th>供应商编号</th>
             <th>供应商名称</th>
-            <th>联系人</th>
+            <th>tenantId</th>
+            <th>H5链接平台</th>
+            <th>合作品牌</th>
             <th>联系电话</th>
             <th>合作状态</th>
+            <th>合作方式</th>
             <th class="prototype-review-red">是否接开票单</th>
-            <th class="prototype-review-red">已勾选商品品牌</th>
+            <th>注册时间</th>
+            <th>注册方式</th>
+            <th>推荐人</th>
+            <th>更新时间</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -888,7 +927,7 @@
           ${supplierDemoRows.map(renderSupplierRow).join("")}
         </tbody>
       </table>
-      <div class="prototype-supplier-tip">演示逻辑：点击“停止合作”会同步关闭接开票单开关；点击“恢复合作”后，接开票单开关保持关闭。鼠标悬停开关或品牌标签可查看已勾选品牌。</div>
+      <div class="prototype-supplier-tip">演示逻辑：点击“停止合作”会同步关闭接开票单开关；点击“恢复合作”后，接开票单开关保持关闭。鼠标悬停开启状态的开关可查看已勾选品牌，未开启时不展示品牌清单。</div>
     `;
     bindSupplierDemoActions(wrap);
     hideSupplierSourceTables();
@@ -901,7 +940,7 @@
   const invoiceTabs = {
     "已驳回": {
       statusClass: "rejected",
-      columns: ["合并ID", "出餐单号", "开票单号", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "抬头类型", "发票抬头/税号", "驳回原因", "上传时间", "操作"],
+      columns: ["合并ID", "出餐单号", "开票单号", "添加时间", "状态", "订单来源", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "抬头类型", "发票抬头/税号", "驳回原因", "上传时间", "操作"],
       rows: [
         {
           mergeId: "7286",
@@ -909,6 +948,7 @@
           requirementNo: "KP202609110005",
           createTime: "2026-09-11 18:12:00",
           status: "已驳回",
+          orderSource: "抖音店铺：肯德基团购旗舰店",
           productName: "肯德基 50元代金券",
           brandName: "肯德基",
           userPayAmount: "46.90",
@@ -924,6 +964,7 @@
           requirementNo: "KP202609110004",
           createTime: "2026-09-11 16:30:00",
           status: "已驳回",
+          orderSource: "淘宝店铺：瑞幸咖啡官方旗舰店",
           productName: "瑞幸咖啡 29元饮品券",
           brandName: "瑞幸咖啡",
           userPayAmount: "22.80",
@@ -937,7 +978,7 @@
     },
     "已上传": {
       statusClass: "uploaded",
-      columns: ["合并ID", "出餐单号", "开票单号", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "抬头类型", "发票抬头/税号", "上传时间", "操作"],
+      columns: ["合并ID", "出餐单号", "开票单号", "添加时间", "状态", "订单来源", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "抬头类型", "发票抬头/税号", "上传时间", "操作"],
       rows: [
         {
           mergeId: "-",
@@ -945,6 +986,7 @@
           requirementNo: "KP202609120004",
           createTime: "2026-09-12 14:35:00",
           status: "已上传",
+          orderSource: "抖音店铺：肯德基生活服务旗舰店",
           productName: "肯德基 50元代金券",
           brandName: "肯德基",
           userPayAmount: "46.90",
@@ -959,6 +1001,7 @@
           requirementNo: "KP202609120003",
           createTime: "2026-09-12 11:06:00",
           status: "已上传",
+          orderSource: "淘宝店铺：瑞幸咖啡官方旗舰店",
           productName: "瑞幸咖啡 29元饮品券",
           brandName: "瑞幸咖啡",
           userPayAmount: "22.80",
@@ -971,7 +1014,7 @@
     },
     "待处理（供）": {
       statusClass: "pending",
-      columns: ["合并ID", "出餐单号", "开票单号", "已创建时长", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "抬头类型", "发票抬头/税号"],
+      columns: ["合并ID", "出餐单号", "开票单号", "已创建时长", "添加时间", "状态", "订单来源", "商品名称", "商品品牌", "用户实际支付", "抬头类型", "发票抬头/税号"],
       rows: [
         {
           mergeId: "-",
@@ -980,6 +1023,7 @@
           createdDuration: "1天2小时",
           createTime: "2026-09-14 09:12:00",
           status: "待处理",
+          orderSource: "淘宝店铺：瑞幸咖啡官方旗舰店",
           productName: "瑞幸咖啡 29元饮品券",
           brandName: "瑞幸咖啡",
           userPayAmount: "22.80",
@@ -993,6 +1037,7 @@
           createdDuration: "1天1小时",
           createTime: "2026-09-14 10:28:00",
           status: "待处理",
+          orderSource: "抖音店铺：肯德基团购旗舰店",
           productName: "肯德基 50元代金券",
           brandName: "肯德基",
           userPayAmount: "46.90",
@@ -1003,7 +1048,7 @@
     },
     "处理中（供）": {
       statusClass: "processing",
-      columns: ["合并ID", "出餐单号", "开票单号", "处理倒计时", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "抬头类型", "发票抬头/税号"],
+      columns: ["合并ID", "出餐单号", "开票单号", "处理倒计时", "添加时间", "状态", "订单来源", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "抬头类型", "发票抬头/税号"],
       rows: [
         {
           mergeId: "-",
@@ -1012,6 +1057,7 @@
           deadline: "0天4小时",
           createTime: "2026-09-13 15:40:00",
           status: "处理中",
+          orderSource: "淘宝店铺：瑞幸咖啡官方旗舰店",
           productName: "瑞幸咖啡 29元饮品券",
           brandName: "瑞幸咖啡",
           userPayAmount: "22.80",
@@ -1026,6 +1072,7 @@
           deadline: "0天5小时",
           createTime: "2026-09-13 17:18:00",
           status: "处理中",
+          orderSource: "抖音店铺：肯德基生活服务旗舰店",
           productName: "肯德基 50元代金券",
           brandName: "肯德基",
           userPayAmount: "46.90",
@@ -1045,6 +1092,7 @@
     "处理倒计时": "deadline",
     "添加时间": "createTime",
     "状态": "status",
+    "订单来源": "orderSource",
     "商品名称": "productName",
     "商品品牌": "brandName",
     "用户实际支付": "userPayAmount",
@@ -1064,6 +1112,7 @@
     "处理倒计时": 140,
     "添加时间": 180,
     "状态": 120,
+    "订单来源": 220,
     "商品名称": 210,
     "商品品牌": 140,
     "用户实际支付": 140,
