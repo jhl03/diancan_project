@@ -25,15 +25,15 @@
   }
 
   const subsidyRows = [
-    { id: 9201, claimNo: "CLM202609140101", subsidyNo: "SUB202609140101", itemOrderNo: "FO202609140101", brandCode: "LK", brandName: "瑞幸咖啡", storeCity: "北京", productName: "生椰拿铁 1 杯", userPayAmount: 18.5, subsidyAmount: 2.6, invoiceTitle: "瑞幸咖啡（中国）有限公司", taxpayerNo: "91110108MA01DEMO01", deadlineAt: demoDeadline(1, 18, 0), orderTime: "2026-09-14 09:05:00", createTime: "2026-09-14 09:05:00", latestUploadedAt: "", rejectReason: "", rejectReasonMessage: "", invoiceFileCount: 0, currentUploadBatchNo: null, subsidyStatus: 0, tab: "PROCESSING" },
-    { id: 9202, claimNo: "CLM202609140102", subsidyNo: "SUB202609140102", itemOrderNo: "FO202609140102", brandCode: "KFC", brandName: "肯德基", storeCity: "厦门", productName: "肯德基 50元代金券", userPayAmount: 42.9, subsidyAmount: 4.8, invoiceTitle: "厦门肯德基有限公司", taxpayerNo: "91350200MA01DEMO02", deadlineAt: demoDeadline(2, 12, 0), orderTime: "2026-09-14 08:35:00", createTime: "2026-09-14 08:35:00", latestUploadedAt: "", rejectReason: "", rejectReasonMessage: "", invoiceFileCount: 0, currentUploadBatchNo: null, subsidyStatus: 0, tab: "PROCESSING" },
-    { id: 9207, claimNo: "CLM202609150103", subsidyNo: "SUB202609150103", itemOrderNo: "FO202609150103", brandCode: "LK", brandName: "瑞幸咖啡", storeCity: "上海", productName: "瑞幸咖啡 厚乳拿铁 2 杯", userPayAmount: 35.8, subsidyAmount: 4.2, invoiceTitle: "瑞幸咖啡（中国）有限公司", taxpayerNo: "91110108MA01DEMO01", deadlineAt: demoDeadline(1, 18, 30), orderTime: "2026-09-15 09:15:00", createTime: "2026-09-15 09:15:00", latestUploadedAt: "", rejectReason: "", rejectReasonMessage: "", invoiceFileCount: 0, currentUploadBatchNo: null, subsidyStatus: 0, tab: "PROCESSING" },
-    { id: 9208, claimNo: "CLM202609150104", subsidyNo: "SUB202609150104", itemOrderNo: "FO202609150104", brandCode: "MCD", brandName: "麦当劳", storeCity: "上海", productName: "麦当劳 早餐双人券", userPayAmount: 29.9, subsidyAmount: 3.5, invoiceTitle: "金拱门（中国）有限公司", taxpayerNo: "91110000MA01DEMO03", deadlineAt: demoDeadline(2, 10, 0), orderTime: "2026-09-15 10:20:00", createTime: "2026-09-15 10:20:00", latestUploadedAt: "", rejectReason: "", rejectReasonMessage: "", invoiceFileCount: 0, currentUploadBatchNo: null, subsidyStatus: 0, tab: "PROCESSING" },
-    { id: 9209, claimNo: "CLM202609150105", subsidyNo: "SUB202609150105", itemOrderNo: "FO202609150105", brandCode: "KFC", brandName: "肯德基", storeCity: "北京", productName: "肯德基 38元套餐券", userPayAmount: 31.9, subsidyAmount: 3.9, invoiceTitle: "厦门肯德基有限公司", taxpayerNo: "91350200MA01DEMO02", deadlineAt: demoDeadline(2, 15, 20), orderTime: "2026-09-15 11:05:00", createTime: "2026-09-15 11:05:00", latestUploadedAt: "", rejectReason: "", rejectReasonMessage: "", invoiceFileCount: 0, currentUploadBatchNo: null, subsidyStatus: 0, tab: "PROCESSING" },
-    { id: 9203, claimNo: "CLM202609130201", subsidyNo: "SUB202609130201", itemOrderNo: "FO202609130201", brandCode: "MCD", brandName: "麦当劳", storeCity: "上海", productName: "麦当劳 38元套餐券", userPayAmount: 34.8, subsidyAmount: 4.1, invoiceTitle: "金拱门（中国）有限公司", taxpayerNo: "91110000MA01DEMO03", deadlineAt: "", orderTime: "2026-09-13 17:20:00", createTime: "2026-09-13 17:20:00", latestUploadedAt: "2026-09-14 10:15:00", rejectReason: "金额不一致", rejectReasonMessage: "发票金额与申请开票金额不一致，请重新上传。", invoiceFileCount: 1, currentUploadBatchNo: null, subsidyStatus: 0, tab: "REJECTED" },
-    { id: 9204, claimNo: "CLM202609130202", subsidyNo: "SUB202609130202", itemOrderNo: "FO202609130202", brandCode: "LK", brandName: "瑞幸咖啡", storeCity: "厦门", productName: "厚乳拿铁 2 杯", userPayAmount: 36, subsidyAmount: 3.8, invoiceTitle: "瑞幸咖啡（中国）有限公司", taxpayerNo: "91110108MA01DEMO01", deadlineAt: "", orderTime: "2026-09-13 15:42:00", createTime: "2026-09-13 15:42:00", latestUploadedAt: "2026-09-14 09:32:00", rejectReason: "抬头不规范", rejectReasonMessage: "请使用品牌官方开票主体重新上传。", invoiceFileCount: 1, currentUploadBatchNo: "UP202609140204", subsidyStatus: 0, tab: "REJECTED" },
-    { id: 9205, claimNo: "CLM202609120301", subsidyNo: "SUB202609120301", itemOrderNo: "FO202609120301", brandCode: "KFC", brandName: "肯德基", storeCity: "北京", productName: "肯德基早餐套餐", userPayAmount: 25.9, subsidyAmount: 2.9, invoiceTitle: "厦门肯德基有限公司", taxpayerNo: "91350200MA01DEMO02", deadlineAt: "", orderTime: "2026-09-12 09:12:00", createTime: "2026-09-12 09:12:00", latestUploadedAt: "2026-09-12 11:08:00", rejectReason: "", rejectReasonMessage: "", invoiceFileCount: 1, currentUploadBatchNo: null, subsidyStatus: 2, tab: "UPLOADED" },
-    { id: 9206, claimNo: "CLM202609120302", subsidyNo: "SUB202609120302", itemOrderNo: "FO202609120302", brandCode: "MCD", brandName: "麦当劳", storeCity: "上海", productName: "麦当劳 双人套餐", userPayAmount: 49.9, subsidyAmount: 5.2, invoiceTitle: "金拱门（中国）有限公司", taxpayerNo: "91110000MA01DEMO03", deadlineAt: "", orderTime: "2026-09-12 12:26:00", createTime: "2026-09-12 12:26:00", latestUploadedAt: "2026-09-12 13:40:00", rejectReason: "", rejectReasonMessage: "", invoiceFileCount: 2, currentUploadBatchNo: null, subsidyStatus: 1, tab: "UPLOADED" },
+    { id: 9201, claimNo: "CLM202609140101", subsidyNo: "SUB202609140101", itemOrderNo: "FO202609140101", brandCode: "LK", brandName: "瑞幸咖啡", storeCity: "北京", sourceStoreName: "北京国贸店", realMealSupplierName: "惠生活北京出餐供应商", productName: "生椰拿铁 1 杯", userPayAmount: 18.5, subsidyAmount: 2.6, invoiceTitle: "瑞幸咖啡（中国）有限公司", taxpayerNo: "91110108MA01DEMO01", deadlineAt: demoDeadline(1, 18, 0), orderTime: "2026-09-14 09:05:00", createTime: "2026-09-14 09:05:00", latestUploadedAt: "", rejectReason: "", rejectReasonMessage: "", invoiceFileCount: 0, currentUploadBatchNo: null, subsidyStatus: 0, tab: "PROCESSING" },
+    { id: 9202, claimNo: "CLM202609140102", subsidyNo: "SUB202609140102", itemOrderNo: "FO202609140102", brandCode: "KFC", brandName: "肯德基", storeCity: "厦门", sourceStoreName: "厦门湖滨店", realMealSupplierName: "惠生活厦门出餐供应商", productName: "肯德基 50元代金券", userPayAmount: 42.9, subsidyAmount: 4.8, invoiceTitle: "厦门肯德基有限公司", taxpayerNo: "91350200MA01DEMO02", deadlineAt: demoDeadline(2, 12, 0), orderTime: "2026-09-14 08:35:00", createTime: "2026-09-14 08:35:00", latestUploadedAt: "", rejectReason: "", rejectReasonMessage: "", invoiceFileCount: 0, currentUploadBatchNo: null, subsidyStatus: 0, tab: "PROCESSING" },
+    { id: 9207, claimNo: "CLM202609150103", subsidyNo: "SUB202609150103", itemOrderNo: "FO202609150103", brandCode: "LK", brandName: "瑞幸咖啡", storeCity: "北京", sourceStoreName: "北京国贸店", realMealSupplierName: "惠生活北京出餐供应商", productName: "瑞幸咖啡 厚乳拿铁 2 杯", userPayAmount: 35.8, subsidyAmount: 4.2, invoiceTitle: "瑞幸咖啡（中国）有限公司", taxpayerNo: "91110108MA01DEMO01", deadlineAt: demoDeadline(1, 18, 30), orderTime: "2026-09-15 09:15:00", createTime: "2026-09-15 09:15:00", latestUploadedAt: "", rejectReason: "", rejectReasonMessage: "", invoiceFileCount: 0, currentUploadBatchNo: null, subsidyStatus: 0, tab: "PROCESSING" },
+    { id: 9208, claimNo: "CLM202609150104", subsidyNo: "SUB202609150104", itemOrderNo: "FO202609150104", brandCode: "MCD", brandName: "麦当劳", storeCity: "上海", sourceStoreName: "上海人民广场店", realMealSupplierName: "惠生活上海出餐供应商", productName: "麦当劳 早餐双人券", userPayAmount: 29.9, subsidyAmount: 3.5, invoiceTitle: "金拱门（中国）有限公司", taxpayerNo: "91110000MA01DEMO03", deadlineAt: demoDeadline(2, 10, 0), orderTime: "2026-09-15 10:20:00", createTime: "2026-09-15 10:20:00", latestUploadedAt: "", rejectReason: "", rejectReasonMessage: "", invoiceFileCount: 0, currentUploadBatchNo: null, subsidyStatus: 0, tab: "PROCESSING" },
+    { id: 9209, claimNo: "CLM202609150105", subsidyNo: "SUB202609150105", itemOrderNo: "FO202609150105", brandCode: "KFC", brandName: "肯德基", storeCity: "厦门", sourceStoreName: "厦门湖滨店", realMealSupplierName: "惠生活厦门出餐供应商", productName: "肯德基 38元套餐券", userPayAmount: 31.9, subsidyAmount: 3.9, invoiceTitle: "厦门肯德基有限公司", taxpayerNo: "91350200MA01DEMO02", deadlineAt: demoDeadline(2, 15, 20), orderTime: "2026-09-15 11:05:00", createTime: "2026-09-15 11:05:00", latestUploadedAt: "", rejectReason: "", rejectReasonMessage: "", invoiceFileCount: 0, currentUploadBatchNo: null, subsidyStatus: 0, tab: "PROCESSING" },
+    { id: 9203, claimNo: "CLM202609130201", subsidyNo: "SUB202609130201", itemOrderNo: "FO202609130201", brandCode: "MCD", brandName: "麦当劳", storeCity: "上海", sourceStoreName: "上海人民广场店", realMealSupplierName: "惠生活上海出餐供应商", productName: "麦当劳 38元套餐券", userPayAmount: 34.8, subsidyAmount: 4.1, invoiceTitle: "金拱门（中国）有限公司", taxpayerNo: "91110000MA01DEMO03", deadlineAt: "", orderTime: "2026-09-13 17:20:00", createTime: "2026-09-13 17:20:00", latestUploadedAt: "2026-09-14 10:15:00", rejectReason: "金额不一致", rejectReasonMessage: "发票金额与申请开票金额不一致，请重新上传。", invoiceFileCount: 1, currentUploadBatchNo: null, subsidyStatus: 0, tab: "REJECTED" },
+    { id: 9204, claimNo: "CLM202609130202", subsidyNo: "SUB202609130202", itemOrderNo: "FO202609130202", brandCode: "LK", brandName: "瑞幸咖啡", storeCity: "厦门", sourceStoreName: "厦门软件园店", realMealSupplierName: "惠生活厦门出餐供应商", productName: "厚乳拿铁 2 杯", userPayAmount: 36, subsidyAmount: 3.8, invoiceTitle: "瑞幸咖啡（中国）有限公司", taxpayerNo: "91110108MA01DEMO01", deadlineAt: "", orderTime: "2026-09-13 15:42:00", createTime: "2026-09-13 15:42:00", latestUploadedAt: "2026-09-14 09:32:00", rejectReason: "抬头不规范", rejectReasonMessage: "请使用品牌官方开票主体重新上传。", invoiceFileCount: 1, currentUploadBatchNo: "UP202609140204", subsidyStatus: 0, tab: "REJECTED" },
+    { id: 9205, claimNo: "CLM202609120301", subsidyNo: "SUB202609120301", itemOrderNo: "FO202609120301", brandCode: "KFC", brandName: "肯德基", storeCity: "北京", sourceStoreName: "北京朝阳店", realMealSupplierName: "惠生活北京出餐供应商", productName: "肯德基早餐套餐", userPayAmount: 25.9, subsidyAmount: 2.9, invoiceTitle: "厦门肯德基有限公司", taxpayerNo: "91350200MA01DEMO02", deadlineAt: "", orderTime: "2026-09-12 09:12:00", createTime: "2026-09-12 09:12:00", latestUploadedAt: "2026-09-12 11:08:00", rejectReason: "", rejectReasonMessage: "", invoiceFileCount: 1, currentUploadBatchNo: null, subsidyStatus: 2, tab: "UPLOADED" },
+    { id: 9206, claimNo: "CLM202609120302", subsidyNo: "SUB202609120302", itemOrderNo: "FO202609120302", brandCode: "MCD", brandName: "麦当劳", storeCity: "上海", sourceStoreName: "上海人民广场店", realMealSupplierName: "惠生活上海出餐供应商", productName: "麦当劳 双人套餐", userPayAmount: 49.9, subsidyAmount: 5.2, invoiceTitle: "金拱门（中国）有限公司", taxpayerNo: "91110000MA01DEMO03", deadlineAt: "", orderTime: "2026-09-12 12:26:00", createTime: "2026-09-12 12:26:00", latestUploadedAt: "2026-09-12 13:40:00", rejectReason: "", rejectReasonMessage: "", invoiceFileCount: 2, currentUploadBatchNo: null, subsidyStatus: 1, tab: "UPLOADED" },
   ];
 
   const compensationRows = [
@@ -60,6 +60,44 @@
     }
   }
 
+  function mergeKey(item) {
+    return [
+      item.realMealSupplierName || "",
+      item.sourceStoreName || item.storeCity || "",
+      item.invoiceTitle || "",
+      item.taxpayerNo || "",
+    ].join("|");
+  }
+
+  function mergeIdFromKey(key) {
+    let hash = 0;
+    for (let index = 0; index < key.length; index += 1) {
+      hash = (hash * 31 + key.charCodeAt(index)) >>> 0;
+    }
+    return String(1000 + (hash % 9000));
+  }
+
+  function syncSubsidyMergeIds() {
+    const groups = new Map();
+    subsidyRows.forEach((item) => {
+      const key = mergeKey(item);
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(item);
+    });
+    subsidyRows.forEach((item) => {
+      const group = groups.get(mergeKey(item)) || [];
+      item.mergeId = group.length >= 2 ? mergeIdFromKey(mergeKey(item)) : "-";
+    });
+    window.__supplierPrototypeSubsidyMergeMeta = subsidyRows.reduce((result, item) => {
+      result[item.claimNo] = {
+        mergeId: item.mergeId,
+        sourceStoreName: item.sourceStoreName || "",
+        realMealSupplierName: item.realMealSupplierName || "",
+      };
+      return result;
+    }, {});
+  }
+
   function withInvoiceMeta(item) {
     const invoiceTitle = item.invoiceTitle || "--";
     const isPersonal = invoiceTitle === "个人";
@@ -73,6 +111,8 @@
       titleType: isPersonal ? "个人" : "企业",
     };
   }
+
+  syncSubsidyMergeIds();
 
   function filterRows(records, query) {
     return records.filter((item) => {

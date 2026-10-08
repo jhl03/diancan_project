@@ -317,6 +317,7 @@
         ["抬头类型", "新增红字字段，显示在发票抬头/税号左侧；数据源为客服本地生活工作台接口。"],
         ["发票上传/重传", "上传发票与重新上传发票弹窗同步展示抬头类型，用于校验发票主体。"],
         ["合并上传", "处理中列表支持勾选多张未结束工单后点击“合并上传”；已驳回列表每条工单前展示可勾选方块，支持勾选工单后点击“重新合并上传”。处理中已结束工单不可选，已驳回工单均可选。未勾选时提示“请选择要合并上传发票的工单”；先校验发票抬头/税号，不一致提示“选择的发票抬头/税号不一样”；再校验发票类型，不一致提示“所选发票类型不一样”；校验通过后弹出与上传弹窗内容一致的合并上传发票弹窗，开票金额=所选工单用户支付价合计。"],
+        ["合并ID 字段", "三个 Tab 的列表均在“抢单编号”前新增红字字段“合并ID”。系统按“真实出餐供应商一致 + 订单来源店铺一致 + 发票抬头一致 + 税号一致”判断是否可合并；同组订单数量大于等于 2 时，自动生成不以 0 开头的随机 4 位数字并在同组合并ID中保持一致；不存在合并情况时显示“-”。若订单原本无合并ID，后续又抢到一笔满足同组条件的订单，则新抢到的订单与原订单同步填充同一个合并ID。"],
       ],
       notes: [],
     },
@@ -436,6 +437,7 @@
   function columnWidth(key) {
     if (key === "compensation-user-name") return 170;
     if (key === "invoice-title-type") return 120;
+    if (key === "after-sale-merge-id") return 110;
     return 140;
   }
 
@@ -554,11 +556,46 @@
   }
 
   function patchAfterSaleSubsidy() {
+    patchAfterSaleMergeId();
     patchColumnByHeader("发票抬头/税号", "抬头类型", "invoice-title-type", "before", (_row, titleCell) =>
       guessTitleType(textOf(titleCell)),
     );
     patchInvoiceUploadDialogs();
     patchAfterSaleMergeUpload();
+  }
+
+  function claimNoFromRow(row) {
+    return textOf(row).match(/CLM\d{12,}/)?.[0] || "";
+  }
+
+  function mergeMetaByClaimNo(claimNo) {
+    return (window.__supplierPrototypeSubsidyMergeMeta || {})[claimNo] || null;
+  }
+
+  function afterSaleMergeIdFromRow(row) {
+    const claimNo = claimNoFromRow(row);
+    const meta = mergeMetaByClaimNo(claimNo);
+    return meta?.mergeId || "-";
+  }
+
+  function syncAfterSaleMergeIdCells() {
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const mergeCell = row.querySelector(`td[${MARK}="after-sale-merge-id"]`);
+      if (!mergeCell) return;
+      const claimCell = Array.from(row.children).find((cell) =>
+        cell !== mergeCell && /^CLM\d{12,}/.test(textOf(cell))
+      );
+      if (claimCell && claimCell.previousElementSibling !== mergeCell) claimCell.before(mergeCell);
+      const content = mergeCell.querySelector(".cell") || mergeCell;
+      content.textContent = afterSaleMergeIdFromRow(row);
+    });
+  }
+
+  function patchAfterSaleMergeId() {
+    patchColumnByHeader("抢单编号", "合并ID", "after-sale-merge-id", "before", (row) =>
+      afterSaleMergeIdFromRow(row),
+    );
+    syncAfterSaleMergeIdCells();
   }
 
   function isProcessingTabActive() {
