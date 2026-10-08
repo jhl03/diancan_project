@@ -453,6 +453,10 @@
         font-size: 14px;
         animation: prototypeToastIn 0.18s ease-out;
       }
+      .prototype-claim-toast.prototype-after-sale-top-toast {
+        top: 72px;
+        bottom: auto;
+      }
       .prototype-claim-toast-title {
         font-size: 15px;
         font-weight: 800;
@@ -669,7 +673,7 @@
         ["合并上传", "处理中列表支持勾选多张未结束工单后点击底部“合并上传”；已驳回列表每张卡片前展示可勾选方块，支持勾选工单后点击底部“重新合并上传”。处理中已结束工单不可选，已驳回工单均可选。未勾选时提示“请选择要合并上传发票的工单”；先校验发票抬头/税号，不一致提示“选择的发票抬头/税号不一样”；再校验发票类型，不一致提示“所选发票类型不一样”；校验通过后弹出与上传弹窗内容一致的合并上传发票弹窗，开票金额=所选工单用户支付价合计。"],
         ["合并ID", "每个卡片在商品品牌上方新增“合并ID”字段；点击筛选图标后，在商品品牌筛选项下新增“合并ID”输入框，默认提示词为“请输入合并ID”，按输入值精准筛选。"],
         ["开票标识", "处理中、已驳回卡片展示“待开票/开票中”状态，并在操作区新增“标记开票中”按钮；点击后状态变为“开票中”，按钮变为“取消标记”，再次点击恢复“待开票”。已上传页面不展示该状态和按钮。"],
-        ["批量标记", "底部按钮区在“合并上传/重新合并上传”右侧新增“批量标记”“批量取消标记”。未选择订单时提示“至少选择一个订单”；批量标记时，存在未标记订单则标记为“开票中”并提示“标记成功”，若已全部标记则提示“已全部标记，请选择未标记的订单”；批量取消标记时，存在已标记订单则恢复“待开票”并提示“标记成功”，若均未标记则提示“没有未标记的订单，请重新选择”。"],
+        ["批量标记", "底部按钮区在“合并上传/重新合并上传”右侧新增“批量标记”“批量取消标记”。未选择订单时提示“至少选择一个订单”；批量标记时，存在未标记订单则标记为“开票中”并在页面上方提示“标记成功”，若已全部标记则提示“已全部标记，请选择未标记的订单”；批量取消标记时，存在已标记订单则恢复“待开票”并在页面上方提示“取消标记成功”，若均未标记则提示“没有未标记的订单，请重新选择”。"],
       ],
       notes: [],
     },
@@ -1090,11 +1094,12 @@
     document.body.appendChild(mask);
   }
 
-  function showMiniToast(message) {
+  function showMiniToast(message, options = {}) {
     const old = document.querySelector(".prototype-claim-toast");
     if (old) old.remove();
     const toast = document.createElement("uni-view");
-    toast.className = "prototype-claim-toast prototype-claim-empty-toast";
+    const top = options.top === true || window.location.pathname.includes("/subpkg-invoice/after-sale-subsidy");
+    toast.className = `prototype-claim-toast prototype-claim-empty-toast${top ? " prototype-after-sale-top-toast" : ""}`;
     toast.textContent = message;
     document.body.appendChild(toast);
     clearTimeout(showMiniToast.timer);
@@ -1164,6 +1169,7 @@
         event.stopPropagation();
         const next = getAfterSaleInvoiceMarkStatus(card) === "开票中" ? "待开票" : "开票中";
         setAfterSaleInvoiceMarkStatus(card, next);
+        showMiniToast(next === "开票中" ? "标记成功" : "取消标记成功", { top: true });
       }, true);
       actionRow.appendChild(button);
     }
@@ -1177,17 +1183,17 @@
   function batchSetAfterSaleInvoiceMark(marked) {
     const cards = getSelectedAfterSaleCardElements();
     if (!cards.length) {
-      showMiniToast("至少选择一个订单");
+      showMiniToast("至少选择一个订单", { top: true });
       return;
     }
     const targetStatus = marked ? "开票中" : "待开票";
     const targets = cards.filter((card) => getAfterSaleInvoiceMarkStatus(card) !== targetStatus);
     if (!targets.length) {
-      showMiniToast(marked ? "已全部标记，请选择未标记的订单" : "没有未标记的订单，请重新选择");
+      showMiniToast(marked ? "已全部标记，请选择未标记的订单" : "没有未标记的订单，请重新选择", { top: true });
       return;
     }
     targets.forEach((card) => setAfterSaleInvoiceMarkStatus(card, targetStatus));
-    showMiniToast("标记成功");
+    showMiniToast(marked ? "标记成功" : "取消标记成功", { top: true });
   }
 
   function hideAfterSaleMergeUploadButton() {
