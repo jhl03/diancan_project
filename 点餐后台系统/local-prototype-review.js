@@ -360,8 +360,10 @@
       title: "本页改动说明：开票订单",
       items: [
         ["抬头类型", "新增红字字段；显示在发票抬头/税号左侧；数据源：客服本地生活工作台接口传入。"],
+        ["合并ID", "在已上传、已驳回、待处理、处理中四个页面的“出餐单号”前新增红字字段“合并ID”。系统按“真实出餐供应商一致 + 订单来源店铺一致 + 发票抬头一致”判断是否可生成合并ID；同组【符合条件的订单】订单数量大于等于 2 时自动生成不以 0 开头的随机 4 位数字作为合并ID并保持一致；不符合条件时显示“-”。若订单原本无合并ID，后续新进入一笔满足同组条件的订单，则新进入订单与原订单同步填充同一个合并ID。"],
       ],
       notes: [
+        ["合并ID", "系统按“真实出餐供应商一致 + 订单来源店铺一致 + 发票抬头一致”判断是否可生成合并ID；同组【符合条件的订单】订单数量大于等于 2 时自动生成不以 0 开头的随机 4 位数字作为合并ID并保持一致；不符合条件时显示“-”。若订单原本无合并ID，后续新进入一笔满足同组条件的订单，则新进入订单与原订单同步填充同一个合并ID。"],
         ["抬头类型", "显示逻辑：四个 Tab 均展示；数据源：客服本地生活工作台接口的发票抬头类型。"],
         ["发票抬头/税号", "字段值需与抬头类型、供应商编号按列匹配；不同 Tab 不共用错位字段。"],
         ["供应商编号", "修复逻辑：供应商编号不再与抬头类型串位，按当前 Tab 独立字段配置展示。"],
@@ -598,9 +600,10 @@
   const invoiceTabs = {
     "已驳回": {
       statusClass: "rejected",
-      columns: ["出餐单号", "开票单号", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "抬头类型", "发票抬头/税号", "驳回原因", "上传时间", "操作"],
+      columns: ["合并ID", "出餐单号", "开票单号", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "抬头类型", "发票抬头/税号", "驳回原因", "上传时间", "操作"],
       rows: [
         {
+          mergeId: "7286",
           itemOrderNo: "FO202609110005",
           requirementNo: "KP202609110005",
           createTime: "2026-09-11 18:12:00",
@@ -615,6 +618,7 @@
           uploadTime: "2026-09-12 13:50:00",
         },
         {
+          mergeId: "7286",
           itemOrderNo: "FO202609110004",
           requirementNo: "KP202609110004",
           createTime: "2026-09-11 16:30:00",
@@ -632,9 +636,10 @@
     },
     "已上传": {
       statusClass: "uploaded",
-      columns: ["出餐单号", "开票单号", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "抬头类型", "发票抬头/税号", "上传时间", "操作"],
+      columns: ["合并ID", "出餐单号", "开票单号", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "抬头类型", "发票抬头/税号", "上传时间", "操作"],
       rows: [
         {
+          mergeId: "-",
           itemOrderNo: "FO202609120004",
           requirementNo: "KP202609120004",
           createTime: "2026-09-12 14:35:00",
@@ -648,6 +653,7 @@
           uploadTime: "2026-09-13 12:10:00",
         },
         {
+          mergeId: "7286",
           itemOrderNo: "FO202609120003",
           requirementNo: "KP202609120003",
           createTime: "2026-09-12 11:06:00",
@@ -657,16 +663,17 @@
           userPayAmount: "22.80",
           supplierId: "SUP-10001",
           titleType: "企业",
-          invoiceTitle: "厦门海岸线文化传媒有限公司 税号：91350203MA9DEMO004",
+          invoiceTitle: "南京青禾网络科技有限公司 税号：91320104MA9DEMO006",
           uploadTime: "2026-09-13 09:22:00",
         },
       ],
     },
     "待处理（供）": {
       statusClass: "pending",
-      columns: ["出餐单号", "开票单号", "已创建时长", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "抬头类型", "发票抬头/税号"],
+      columns: ["合并ID", "出餐单号", "开票单号", "已创建时长", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "抬头类型", "发票抬头/税号"],
       rows: [
         {
+          mergeId: "6138",
           itemOrderNo: "FO202609140001",
           requirementNo: "KP202609140001",
           createdDuration: "1天2小时",
@@ -679,6 +686,7 @@
           invoiceTitle: "厦门晨星信息科技有限公司 税号：91350200MA9DEMO001",
         },
         {
+          mergeId: "-",
           itemOrderNo: "FO202609140002",
           requirementNo: "KP202609140002",
           createdDuration: "1天1小时",
@@ -694,9 +702,10 @@
     },
     "处理中（供）": {
       statusClass: "processing",
-      columns: ["出餐单号", "开票单号", "处理倒计时", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "抬头类型", "发票抬头/税号"],
+      columns: ["合并ID", "出餐单号", "开票单号", "处理倒计时", "添加时间", "状态", "商品名称", "商品品牌", "用户实际支付", "供应商编号", "抬头类型", "发票抬头/税号"],
       rows: [
         {
+          mergeId: "6138",
           itemOrderNo: "FO202609130006",
           requirementNo: "KP202609130006",
           deadline: "0天4小时",
@@ -707,9 +716,10 @@
           userPayAmount: "22.80",
           supplierId: "SUP-10001",
           titleType: "企业",
-          invoiceTitle: "上海云朵互动科技有限公司 税号：91310100MA9DEMO002",
+          invoiceTitle: "厦门晨星信息科技有限公司 税号：91350200MA9DEMO001",
         },
         {
+          mergeId: "-",
           itemOrderNo: "FO202609130007",
           requirementNo: "KP202609130007",
           deadline: "0天5小时",
@@ -727,6 +737,7 @@
   };
 
   const invoiceColumnKey = {
+    "合并ID": "mergeId",
     "出餐单号": "itemOrderNo",
     "开票单号": "requirementNo",
     "已创建时长": "createdDuration",
@@ -745,6 +756,7 @@
   };
 
   const invoiceColumnWidths = {
+    "合并ID": 110,
     "出餐单号": 160,
     "开票单号": 160,
     "已创建时长": 140,
@@ -771,6 +783,9 @@
     if (column === "状态") {
       return `<span class="prototype-invoice-status ${statusClass}">${escapeHtml(row.status)}</span>`;
     }
+    if (column === "合并ID") {
+      return `<span class="prototype-review-red">${escapeHtml(row.mergeId || "-")}</span>`;
+    }
     if (column === "抬头类型") {
       return `<span class="prototype-review-red">${escapeHtml(row.titleType || "--")}</span>`;
     }
@@ -782,19 +797,23 @@
   }
 
   function renderPrototypeInvoiceTable() {
-    const table = document.querySelector(".el-table");
+    const tables = Array.from(document.querySelectorAll(".el-table")).filter((item) => !item.closest(".prototype-invoice-table-shell"));
+    const table = tables[tables.length - 1];
     if (!table) return;
     const tabName = getActiveInvoiceTabName();
     const config = invoiceTabs[tabName] || invoiceTabs["已上传"];
 
-    table.classList.add("prototype-hide-invoice-source");
-    const pagination = table.parentElement?.querySelector(".pagination-container, .el-pagination");
-    if (pagination) pagination.classList.add("prototype-hide-invoice-source");
+    tables.forEach((sourceTable) => sourceTable.classList.add("prototype-hide-invoice-source"));
+    document.querySelectorAll(".pagination-container, .el-pagination").forEach((pagination) => {
+      pagination.classList.add("prototype-hide-invoice-source");
+    });
 
     let wrap = document.querySelector(".prototype-invoice-table-shell");
     if (!wrap) {
       wrap = document.createElement("div");
       wrap.className = "prototype-invoice-table-shell";
+      table.after(wrap);
+    } else if (wrap.previousElementSibling !== table) {
       table.after(wrap);
     }
     if (wrap.dataset.prototypeInvoiceTab === tabName) return;

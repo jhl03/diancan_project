@@ -397,7 +397,7 @@
       title: "本页改动说明：补偿单列表",
       items: [
         ["合并ID筛选", "筛选区新增红字“合并ID”输入框，默认提示词为“请输入合并ID”；输入后按当前列表合并ID精准搜索，点击搜索或按回车执行，点击重置清空筛选。"],
-        ["合并ID 字段", "列表在“门店所在城市”左侧新增红字字段“合并ID”。系统按“真实出餐供应商一致 + 订单来源店铺一致 + 发票抬头一致”判断是否可合并；同组订单数量大于等于 2 时自动生成不以 0 开头的随机 4 位数字并保持一致；不符合条件时显示“-”。若订单原本无合并ID，后续新进入一笔满足同组条件的订单，则新进入订单与原订单同步填充同一个合并ID。"],
+        ["合并ID 字段", "列表在“门店所在城市”左侧新增红字字段“合并ID”。"],
       ],
       notes: [],
     },
@@ -688,6 +688,7 @@
   function patchAfterSaleMergeIdFilter() {
     const form = document.querySelector(".app-main .app-container .el-form") || document.querySelector(".el-form");
     if (!form) return;
+    document.querySelectorAll(".prototype-compensation-merge-id-filter").forEach((field) => field.remove());
     let field = form.querySelector(".prototype-after-sale-merge-id-filter");
     if (!field) {
       field = document.createElement("div");
@@ -1257,7 +1258,12 @@
   function patchCompensationMergeIdFilter() {
     const form = document.querySelector(".search-form") || document.querySelector(".el-form");
     if (!form) return;
-    let field = form.querySelector(".prototype-compensation-merge-id-filter");
+    document.querySelectorAll(".prototype-after-sale-merge-id-filter").forEach((field) => field.remove());
+    const fields = Array.from(document.querySelectorAll(".prototype-compensation-merge-id-filter"));
+    fields.forEach((item, index) => {
+      if (!form.contains(item) || index > 0) item.remove();
+    });
+    let field = fields[0] && form.contains(fields[0]) ? fields[0] : null;
     if (!field) {
       field = document.createElement("div");
       field.className = "prototype-compensation-merge-id-filter";
