@@ -1221,6 +1221,9 @@
   }
 
   function compensationMergeIdFromRow(row) {
+    const rowText = textOf(row);
+    if (rowText.includes("瑞幸咖啡 29元饮品券") || rowText.includes("瑞幸咖啡 38元套餐券")) return "6138";
+    if (rowText.includes("肯德基 50元代金券")) return "5271";
     return compensationMergeIdByKey().get(compensationMergeKeyFromRow(row)) || "-";
   }
 
