@@ -817,12 +817,26 @@
     return claimNoFromRow(row) || getRowKey(row, index);
   }
 
+  function invoiceMarkRowIndex(row) {
+    return Array.from(document.querySelectorAll("table.el-table__body tbody tr")).indexOf(row);
+  }
+
   function invoiceMarkStatus(row, index = 0) {
     return invoiceMarkStore()[invoiceMarkKeyFromRow(row, index)] || "待开票";
   }
 
   function setInvoiceMarkStatus(row, status, index = 0) {
     invoiceMarkStore()[invoiceMarkKeyFromRow(row, index)] = status;
+  }
+
+  function invoiceMarkStatusForRow(row) {
+    const index = invoiceMarkRowIndex(row);
+    return invoiceMarkStatus(row, index >= 0 ? index : 0);
+  }
+
+  function setInvoiceMarkStatusForRow(row, status) {
+    const index = invoiceMarkRowIndex(row);
+    setInvoiceMarkStatus(row, status, index >= 0 ? index : 0);
   }
 
   function syncInvoiceMarkCellsAndButtons() {
@@ -854,7 +868,7 @@
       return;
     }
     patchColumnByHeader("状态", "开票标识", "invoice-mark-status", "after", (row, _cell, _cells) =>
-      invoiceMarkStatus(row),
+      invoiceMarkStatusForRow(row),
     );
     document.querySelectorAll("table.el-table__body tbody tr").forEach((row, index) => {
       const operationCell = Array.from(row.children).reverse().find((cell) =>
@@ -866,8 +880,8 @@
       button.className = "prototype-invoice-mark-toggle-btn";
       button.textContent = invoiceMarkStatus(row, index) === "开票中" ? "取消标记" : "标记开票中";
       button.addEventListener("click", () => {
-        const current = invoiceMarkStatus(row, index);
-        setInvoiceMarkStatus(row, current === "开票中" ? "待开票" : "开票中", index);
+        const current = invoiceMarkStatusForRow(row);
+        setInvoiceMarkStatusForRow(row, current === "开票中" ? "待开票" : "开票中");
         syncInvoiceMarkCellsAndButtons();
         showToast(current === "开票中" ? "取消标记成功" : "标记成功");
       });
@@ -970,22 +984,22 @@
       return;
     }
     if (marked) {
-      const targets = rows.filter((row, index) => invoiceMarkStatus(row, index) !== "开票中");
+      const targets = rows.filter((row) => invoiceMarkStatusForRow(row) !== "开票中");
       if (!targets.length) {
         showToast("已全部标记，请选择未标记的订单");
         return;
       }
-      targets.forEach((row, index) => setInvoiceMarkStatus(row, "开票中", index));
+      targets.forEach((row) => setInvoiceMarkStatusForRow(row, "开票中"));
       syncInvoiceMarkCellsAndButtons();
       showToast("标记成功");
       return;
     }
-    const targets = rows.filter((row, index) => invoiceMarkStatus(row, index) === "开票中");
+    const targets = rows.filter((row) => invoiceMarkStatusForRow(row) === "开票中");
     if (!targets.length) {
       showToast("没有未标记的订单，请重新选择");
       return;
     }
-    targets.forEach((row, index) => setInvoiceMarkStatus(row, "待开票", index));
+    targets.forEach((row) => setInvoiceMarkStatusForRow(row, "待开票"));
     syncInvoiceMarkCellsAndButtons();
     showToast("取消标记成功");
   }
