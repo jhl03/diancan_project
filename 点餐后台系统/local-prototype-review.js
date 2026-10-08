@@ -756,6 +756,7 @@
   function hideSupplierSourceTables() {
     document.querySelectorAll(".el-table, .el-pagination, .pagination-container").forEach((node) => {
       if (node.closest(".prototype-supplier-table-shell") || node.closest(".prototype-invoice-table-shell")) return;
+      node.dataset.prototypeSupplierHidden = "true";
       node.classList.add("prototype-hide-invoice-source");
       node.style.setProperty("display", "none", "important");
       node.style.setProperty("visibility", "hidden", "important");
@@ -763,6 +764,17 @@
       node.style.setProperty("min-height", "0", "important");
       node.style.setProperty("max-height", "0", "important");
       node.style.setProperty("overflow", "hidden", "important");
+    });
+  }
+
+  function removePrototypeSupplierList() {
+    document.querySelectorAll(".prototype-supplier-table-shell").forEach((node) => node.remove());
+    document.querySelectorAll('[data-prototype-supplier-hidden="true"]').forEach((node) => {
+      node.classList.remove("prototype-hide-invoice-source");
+      ["display", "visibility", "height", "min-height", "max-height", "overflow"].forEach((prop) => {
+        node.style.removeProperty(prop);
+      });
+      delete node.dataset.prototypeSupplierHidden;
     });
   }
 
@@ -822,16 +834,28 @@
   }
 
   function renderPrototypeSupplierList(force = false) {
-    const host = document.querySelector(".app-main .app-container") || document.querySelector(".app-main") || document.body;
+    if (!window.location.pathname.includes("/supplier/list")) {
+      removePrototypeSupplierList();
+      return;
+    }
+    const host = document.querySelector(".app-main .app-container");
     if (!host) return;
     hideSupplierSourceTables();
-    let wrap = document.querySelector(".prototype-supplier-table-shell");
+    let wrap = host.querySelector(".prototype-supplier-table-shell");
+    document.querySelectorAll(".prototype-supplier-table-shell").forEach((node) => {
+      if (node !== wrap) node.remove();
+    });
     if (!wrap) {
       wrap = document.createElement("div");
       wrap.className = "prototype-supplier-table-shell";
-      const guide = host.querySelector(".prototype-change-guide");
-      if (guide) guide.after(wrap);
-      else host.appendChild(wrap);
+    }
+    const searchForm = host.querySelector(".el-form, .search-form, .filter-form");
+    const guide = host.querySelector(".prototype-change-guide");
+    const anchor = searchForm || guide;
+    if (anchor && wrap.previousElementSibling !== anchor) {
+      anchor.after(wrap);
+    } else if (!wrap.parentElement) {
+      host.appendChild(wrap);
     }
     const signature = JSON.stringify(supplierDemoRows);
     if (!force && wrap.dataset.prototypeSupplierSignature === signature) return;
@@ -1788,6 +1812,8 @@
     if (path.includes("/supplier/list")) {
       patchSupplierCooperationSwitch();
       patchSupplierList();
+    } else {
+      removePrototypeSupplierList();
     }
     if (path.includes("/order/invoice-list")) patchInvoiceList();
     if (path.includes("/order/after-sales-list")) patchAfterSalesList();
