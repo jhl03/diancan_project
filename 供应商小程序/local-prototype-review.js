@@ -215,22 +215,29 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        margin-top: 0.35rem;
+        margin-top: 0.25rem;
         padding: 0.18rem 0.5rem;
         border-radius: 999px;
-        background: #fff7e8;
-        color: #f59a23;
+        background: #fff1f0;
+        color: ${RED} !important;
         font-size: 0.75rem;
         font-weight: 700;
       }
       .prototype-after-sale-invoice-mark.marked {
-        background: #e8f8ed;
-        color: #2da44e;
+        background: #fff1f0;
+        color: ${RED} !important;
       }
       .prototype-after-sale-mark-btn {
-        margin-left: 0.5rem;
-        color: #2f73ff !important;
-        font-weight: 700;
+        margin-left: 0.35rem !important;
+        padding: 0 0.25rem !important;
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        color: ${RED} !important;
+        font-size: 0.75rem !important;
+        font-weight: 500 !important;
+        line-height: 1.4 !important;
+        opacity: 0.76;
       }
       .prototype-after-sale-merge-mask {
         position: fixed;
@@ -967,17 +974,17 @@
 
   function patchAfterSaleFilter() {
     const sticky = document.querySelector(".sticky-top-wrap");
-    if (!sticky || sticky.querySelector(".prototype-after-sale-filter-entry")) return;
-    const entry = document.createElement("uni-view");
-    entry.className = "prototype-filter-entry prototype-after-sale-filter-entry";
-    entry.setAttribute("aria-label", "筛选");
-    entry.setAttribute("title", "筛选");
-    entry.addEventListener("click", (event) => {
+    if (!sticky) return;
+    sticky.querySelectorAll(".prototype-after-sale-filter-entry").forEach((entry) => entry.remove());
+    const trigger = sticky.querySelector(".filter-trigger");
+    if (!trigger || trigger.dataset.prototypeAfterSaleFilterBound === "true") return;
+    trigger.dataset.prototypeAfterSaleFilterBound = "true";
+    trigger.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
+      event.stopImmediatePropagation();
       showAfterSaleFilterDialog();
-    });
-    sticky.appendChild(entry);
+    }, true);
   }
 
   function showAfterSaleFilterDialog() {
@@ -1124,19 +1131,27 @@
     if (button) button.textContent = status === "开票中" ? "取消标记" : "标记开票中";
   }
 
+  function findAfterSaleStatusNode(card) {
+    return Array.from(card.querySelectorAll(".status-tag, .status")).find((node) =>
+      ["处理中", "已驳回"].includes(textOf(node))
+    );
+  }
+
   function patchAfterSaleInvoiceMark(card) {
     if (!isAfterSaleSelectionTab()) {
       card.querySelector(".prototype-after-sale-invoice-mark")?.remove();
       card.querySelector(".prototype-after-sale-mark-btn")?.remove();
       return;
     }
-    if (!card.querySelector(".prototype-after-sale-invoice-mark")) {
-      const mark = document.createElement("uni-view");
-      mark.className = "prototype-after-sale-invoice-mark";
-      const statusNode = card.querySelector(".status-tag, .status, .countdown");
-      if (statusNode) statusNode.after(mark);
-      else card.prepend(mark);
+    let mark = card.querySelector(".prototype-after-sale-invoice-mark");
+    if (!mark) {
+      mark = document.createElement("uni-view");
+      mark.className = "prototype-after-sale-invoice-mark prototype-review-red";
     }
+    const statusNode = findAfterSaleStatusNode(card);
+    const anchor = statusNode ? statusNode.closest(".subsidy-no-row") || statusNode : null;
+    if (anchor && mark.previousElementSibling !== anchor) anchor.after(mark);
+    else if (!anchor && mark.parentElement !== card) card.prepend(mark);
     const actionRow = card.querySelector(".action-row");
     if (actionRow && !actionRow.querySelector(".prototype-after-sale-mark-btn")) {
       const button = document.createElement("button");
