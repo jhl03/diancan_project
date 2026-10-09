@@ -27,6 +27,9 @@
 
   /* ================= 登录页 ================= */
   #pageLogin{background:linear-gradient(175deg,var(--bg1) 0%,var(--bg2) 40%,#FFFFFF 75%);}
+  #pagePwd{background:linear-gradient(175deg,var(--bg1) 0%,var(--bg2) 40%,#FFFFFF 75%);}
+  .pfields{margin:56px 30px 0;display:flex;flex-direction:column;gap:14px;}
+  .pfields .lbtn{margin-top:6px;}
   .nav{display:flex;align-items:center;height:44px;margin-top:44px;padding:0 16px;position:relative;}
   .nav .bk{font-size:20px;color:#3A3F47;cursor:pointer;padding:4px 8px;}
   .nav .ttl{position:absolute;left:50%;transform:translateX(-50%);font-size:16.5px;font-weight:600;}
@@ -259,12 +262,39 @@
     </div>
   </div>
 
+  <!-- ============ 账号密码登录页（独立页面，非弹层） ============ -->
+  <div class="page" id="pagePwd">
+    <div class="statusbar"><span>09:19</span><span>5G⁺ 57</span></div>
+    <div class="nav"><span class="bk" data-act="pwdBack">‹</span><span class="ttl">登录</span></div>
+    <div class="brand">
+      <div class="logo">喜乐</div>
+      <div class="bn">喜乐点餐商家</div>
+    </div>
+    <div class="pfields">
+      <div class="field"><input id="accInput" type="text" maxlength="11" placeholder="请输入账号"></div>
+      <div class="field">
+        <input id="pwdInput" type="password" placeholder="请输入密码">
+        <span class="pick" data-act="togglePwd" id="pwdPick">显示</span>
+      </div>
+      <button class="lbtn grad" data-act="pwdSubmit">登录</button>
+    </div>
+    <div class="reglink" data-act="reg">没账号去注册</div>
+    <div class="agree">
+      <span class="cbox" id="cboxPwd" data-act="agree"></span>
+      <span>勾选即代表同意<a data-act="privacy">《隐私政策》</a></span>
+    </div>
+    <div class="lfoot">
+      喜乐点餐商家端小程序为喜乐点餐供应商内部工具，仅限我司合作供应商进行登录。
+      <div class="ver">v2.2.42.2</div>
+    </div>
+  </div>
+
   <!-- ============ 我的页 ============ -->
   <div class="page" id="pageMine" data-page-node-id="jkkAoeXq33PRFb3dlGFpX6">
     <div class="statusbar" data-page-node-id="cwnxo7YGp9we7HGpppGFXW"><span data-page-node-id="7rxbYfw1DMhzrXCOcx1Zaj">09:19</span><span data-page-node-id="8nhmZvDEKwFeVw4vvu3NvO">5G⁺ 57</span></div>
 
     <div class="guidebar" id="guidebar" data-page-node-id="gDSsWntx29NwQWMaQR73SH">
-      <span data-page-node-id="nQDcwg2JHpwAJBCLoOrGwE">完善微信昵称，在售后时可以根据昵称@到你​​</span>
+      <span data-page-node-id="nQDcwg2JHpwAJBCLoOrGwE">为了方便处理售后，请完善微信昵称​​</span>
       <span class="go" data-act="openNick" data-page-node-id="aIHcVzzD17RMiapFyYoyFs">去设置</span>
       <span class="x" data-act="closeGuide" data-page-node-id="EipKYOozAOHG831VHR2ugY">×</span>
     </div>
@@ -313,21 +343,6 @@
   <div class="homebar" data-page-node-id="pfEW4KlvYsppnD1gJmwQuY"></div>
 
   <div class="mask" id="mask" data-page-node-id="3QBa9pzOVrwxVQZvLAVMhp"></div>
-
-  <!-- L1 账号密码登录层 -->
-  <div class="sheet" id="shPwd" data-page-node-id="PdzElqxbsCuNUcsyHpnNjp">
-    <div class="sh" data-page-node-id="2RJP3c2lbZhMgHgDY8QtD1"><b data-page-node-id="4cD1F5PQoirbeGxL7EMgxw">账号密码登录</b><span class="x" data-act="closeSheet" data-page-node-id="nsELDyBIXT8O6DA8FHgbHv">×</span></div>
-    <div class="sb" data-page-node-id="KtNASyvC9GSvrDsv5B0PsQ">
-      <div class="field" data-page-node-id="EDRksv8LhnueqnaGGogxzz"><input id="accInput" type="text" maxlength="11" placeholder="请输入手机号" data-page-node-id="lGmDTZbomSkj1HmvdCf7A8"></div>
-      <div class="field" style="margin-top:10px;" data-page-node-id="a8HwrNvf81UimbQGyjcmib">
-        <input id="pwdInput" type="password" placeholder="请输入密码" data-page-node-id="gLru1Ft1bvrjoCvuvdsBqk">
-        <span class="pick" data-act="togglePwd" id="pwdPick" data-page-node-id="h7cfUDkJkK6YESJLKwn3bi">显示</span>
-      </div>
-      <button class="btn green" data-act="pwdSubmit" style="margin-top:18px;" data-page-node-id="3vuRHLtEpjqvFGEWy8QKEm">登录</button>
-      <p class="forgot" data-act="forgot" data-page-node-id="ON8vTW0kPavnjOB1ZjyMb1">忘记密码</p>
-      <p style="font-size:11.5px;color:#B4BAC4;text-align:center;margin-top:10px;line-height:1.7;" data-page-node-id="qFSrTaISB7l6VagvfENFsU">演示：任意账号密码可登录 · 此路径不调起微信授权，昵称为空需手动完善</p>
-    </div>
-  </div>
 
   <!-- L1 微信昵称填写层 -->
   <div class="sheet" id="shNick" data-page-node-id="xpelQiq9y8xGIlcq2u8p90">
@@ -460,9 +475,9 @@
     <div class="pcard" data-page-node-id="pQnP4AXCVLQV4WoU4ky9f0">
       <div class="pch" data-page-node-id="DHjbnoUpxoFdFz4hlJRRmH"><b data-page-node-id="0dfJPlffvNJdPXLYhfrusa">四、账号密码登录怎么玩</b><span class="src" data-page-node-id="G6N5seLOGjv82WrA9fBCTk">登录 PRD 功能块四</span></div>
       <div class="fb" data-page-node-id="SxMZWQ6GDZkRqFMKdUmUkf"><div class="fk" data-page-node-id="UfS4Z2Ig3xQ2Rs31cfMWPF">新增</div><div class="fv" data-page-node-id="gqvCu4ZABD38RvfFsv00eA">给不方便用手机号快捷登录的供应商，留一条账号密码登录的路。</div></div>
-      <div class="fb" data-page-node-id="C4Ri8Cjo1EZf0TVX0cxRXd"><div class="fk" data-page-node-id="Z0iDwobH1RNaLKsS5TVPcT">显示逻辑</div><div class="fv" data-page-node-id="V9Eg56JITTEeyDCmxfO9hN">页面上有：账号输入框（提示"请输入手机号"）、密码框（打码 + 能切换明文）、【登录】按钮、【忘记密码】。<span class="tg ok" data-page-node-id="hjRHNwkenUMCSJlmJD7B9E">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="C4Ri8Cjo1EZf0TVX0cxRXd"><div class="fk" data-page-node-id="Z0iDwobH1RNaLKsS5TVPcT">显示逻辑</div><div class="fv" data-page-node-id="V9Eg56JITTEeyDCmxfO9hN">点登录页的【账号密码登录】→ <b data-page-node-id="A1">整页跳转</b>到独立的账号密码登录页，<b data-page-node-id="A2">不弹半屏层、不弹任何弹窗</b>。页面从上到下：‹ 返回 + 居中标题【登录】→ 喜乐 logo + 【喜乐点餐商家】→ 账号输入框（提示【请输入账号】）→ 密码框（打码 + 可切换明文）→【登录】按钮 →【没账号去注册】→ 协议勾选行 → 底部说明 + 版本号。<span class="tg ok" data-page-node-id="hjRHNwkenUMCSJlmJD7B9E">原型已还原</span></div></div>
       <div class="fb" data-page-node-id="QdKLenHpSwpe8kzr3wDuCw"><div class="fk" data-page-node-id="fqUCs9MeElzZEn925n9neL">校验规则</div><div class="fv" data-page-node-id="f9TIZe3whD3ZpaKo0iQHVQ">① 账号或密码没填 → <b data-page-node-id="14s3JK1R09a8k4BKv9ZY1k">按钮置灰点不了</b>（原型为了好演示，改成能点 + 提示拦截）<span class="tg no" data-page-node-id="DBB8NCVl4BXyzIYb1Y2b2K">原型有差异</span><br data-page-node-id="yfvGzAhgxyv3huMTQebzmV">② 账号或密码错 → 红字【账号或密码错误】，<b data-page-node-id="WQCCAeyTSVD4xoaxozufIo">不说具体哪个错</b>（防人瞎猜密码）<br data-page-node-id="5ZGAYqar8swFOwHNCaM1ZC">③ 连错 5 次 → 锁 15 分钟，红字【错误次数过多，请 15 分钟后重试】，按钮置灰显示倒计时</div></div>
-      <div class="fb" data-page-node-id="L0JFCjIT2PB1DoelzIBMTj"><div class="fk" data-page-node-id="SHY4s42Wi9uIU2gws4LXDP">交互逻辑</div><div class="fv" data-page-node-id="yEs20z3Wu4GW63GvJNL2ew">【忘记密码】→ 走手机验证码重置；重置好之后登录，后面的流程跟手机号登录一模一样（包括多个账号让用户挑）。</div></div>
+      <div class="fb" data-page-node-id="L0JFCjIT2PB1DoelzIBMTj"><div class="fk" data-page-node-id="SHY4s42Wi9uIU2gws4LXDP">交互逻辑</div><div class="fv" data-page-node-id="yEs20z3Wu4GW63GvJNL2ew">左上角 ‹ → 返回登录首页。这一版页面没有【忘记密码】入口（按 2026-10-09 真机截图定稿，后续如需再加）；登录成功后的流转跟手机号登录一模一样（包括多个账号让用户挑）。</div></div>
       <div class="fb warnbg" data-page-node-id="HcIfHZxPchalVFbNWGIMrP"><div class="fk" data-page-node-id="7Br4D7AQlAnU7E20pFn9CQ">未覆盖</div><div class="fv" data-page-node-id="xBHZa1Fpqyz71JueK4mPq1">按钮置灰、错误锁定、忘记密码流程——原型里随便输什么都能登录。</div></div>
     </div>
 
@@ -494,7 +509,7 @@
       <div class="pch" data-page-node-id="pKBVLxnjkCDJ0DAkrlTLPq"><b data-page-node-id="uWniBPaxqJMH7B9fTTvfe0">✎ 编辑弹窗 · 怎么开、长什么样、怎么关</b><span class="src" data-page-node-id="NUBOq5QqCLuPm4qFCFXf9w">身份绑定 PRD 5.5</span></div>
       <div class="fb" data-page-node-id="woOrqKr01kgbhs6B02xKEB"><div class="fk" data-page-node-id="VxQCTAqLfwg89lrOwJg27c">新增</div><div class="fv" data-page-node-id="t7XO6MsFdNFLZP3rQRJczi">专门讲"点 ✎ 之后弹出的那个编辑弹窗"——它是整个资料完善的唯一入口，之前缺一张专门说明的卡。</div></div>
       <div class="fb" data-page-node-id="AFDax2BcY6nKboPXG6Ic2K"><div class="fk" data-page-node-id="B9hIZu9onkoKpcURalE2QA">交互逻辑</div><div class="fv" data-page-node-id="YYpeAHqRWwxCpzsNhgwUvg"><b data-page-node-id="pYIXjTIxbDKq1JcsrG9JQZ">怎么打开</b>：一共三个口——① 昵称行右边的 ✎ 图标；② 昵称为空时第二行的橙色引导行（整行可点）；③ 顶部引导条的【去设置】。账号名称点了没反应（防手滑）。<span class="tg ok" data-page-node-id="6VviIHrQWuoW5jrxtgRvuG">原型已还原</span></div></div>
-      <div class="fb" data-page-node-id="cNVMmck90oOvW0FTspvPRU"><div class="fk" data-page-node-id="rGvKrgPyknfzWy0yllFL0P">显示逻辑</div><div class="fv" data-page-node-id="x3keoPMPBsCNBEDjJngRtx"><b data-page-node-id="COlcDFYmeEVoaosxAXHMXP">弹窗长什么样</b>：从屏幕下方升起的<b data-page-node-id="FyRghEOlzIIuOP4SlFQmJi">半屏弹层</b>，背后页面变暗。内容从上到下：标题（没填过叫【完善微信昵称】，填过叫【更新微信昵称】）→ 一句说明 → 昵称输入框（右侧「使用微信昵称」）→ 字数计数 → 用途提示框 → 【保存】。<span class="tg ok" data-page-node-id="Sw4C3YCIzeCYFnHviH4fem">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="cNVMmck90oOvW0FTspvPRU"><div class="fk" data-page-node-id="rGvKrgPyknfzWy0yllFL0P">显示逻辑</div><div class="fv" data-page-node-id="x3keoPMPBsCNBEDjJngRtx"><b data-page-node-id="COlcDFYmeEVoaosxAXHMXP">弹窗长什么样</b>：从屏幕下方升起的<b data-page-node-id="FyRghEOlzIIuOP4SlFQmJi">半屏弹层</b>，背后页面变暗。内容从上到下：标题（没填过叫【完善微信昵称】，填过叫【更新微信昵称】）→ 一句说明 → 昵称输入框（右侧「使用微信昵称」）→ 字数计数 → 【保存】。<span class="tg ok" data-page-node-id="Sw4C3YCIzeCYFnHviH4fem">原型已还原</span></div></div>
       <div class="fb" data-page-node-id="Dk9cmdzq9jBsJkZio6qg9I"><div class="fk" data-page-node-id="6hUihGu1dsSeb5JsAsDoif">交互逻辑</div><div class="fv" data-page-node-id="TuEAwcDGJ4aF4bFhRFsMSy"><b data-page-node-id="yxAUubF8mSwC3CALG9HB8c">怎么关、关了会怎样</b>：点【取消】或点旁边变暗的区域 → 弹窗关掉，<b data-page-node-id="P57lIJ5EFVDx5watIYSjjm">填了一半的先留着不丢</b>，下次打开还在；只有点【保存】才真正写进去。<span class="tg ok" data-page-node-id="LqKph4UDu6ND6d2tsMZPiz">原型已还原</span></div></div>
       <div class="fb" data-page-node-id="AhJFPPvfCtgF0t595wVZWK"><div class="fk" data-page-node-id="6989ZckK5LkXzmPdNlr4KM">能力边界</div><div class="fv" data-page-node-id="BLELMrmkDX7spx4giblbN2">这个弹窗<b data-page-node-id="mlKvdFUiDST53Hvn63v9qG">不是</b>微信授权弹窗——样子完全由我们自己定、自己画；全流程唯一的微信授权弹窗只有手机号那一次。</div></div>
     </div>
@@ -512,7 +527,7 @@
       <div class="fb" data-page-node-id="Me8899EGe66ET4Rjm3RYop"><div class="fk" data-page-node-id="9NTSQ92R1kTBjTdimEXYTN">新增</div><div class="fv" data-page-node-id="Vc7Qhq0ERAznW2JVMXtrUv">登录进来发现昵称是空的，页面顶部出一条<b data-page-node-id="4zEYoyotHnRHsf9AOPN8ma">不挡操作的引导条</b>，提醒去填；以及它跟身份确认弹层的先后顺序。</div></div>
       <div class="fb" data-page-node-id="pBzlYPsX4k0f5HY5AEiRzJ"><div class="fk" data-page-node-id="oSxwR40E4BL2Z1y29ZKHhN">数据源</div><div class="fv" data-page-node-id="yJ9xIJXDaO0usXKopK5MFP">当前账号的微信昵称是不是空的。</div></div>
       <div class="fb" data-page-node-id="aTXycTO4fFlkx2wrkcEzBm"><div class="fk" data-page-node-id="faqBeDD53Ri28N6ADdpX67">显示逻辑</div><div class="fv" data-page-node-id="GvJ1xf855hc5C0HJqNuApf">空 → 顶部出引导条，可以关掉；填过 → 不出。引导条等页面加载完再出，<b data-page-node-id="BEPL4MqNSx2JzNEoCoRhBh">不挡下面的操作</b>。<span class="tg ok" data-page-node-id="XvjMFVZO5lOLw6bHFpGC28">原型已还原</span></div></div>
-      <div class="fb" data-page-node-id="LnduomTPY6cI060R7Xsq48"><div class="fk" data-page-node-id="OdAVCELZ2VHPHAMm7Usfp0">显示逻辑</div><div class="fv" data-page-node-id="ovjRDRIrLBmWJJgrJ6fs11">文案定稿：<span class="k" data-page-node-id="qRk3reFv8uRxCVlqGjiGkL">【完善微信昵称，在售后时可以根据昵称@到你】</span>，右侧【去设置】、最右【×】可关闭<span class="tg ok" data-page-node-id="2xeluhQkFuqER0QKt6R4DA">原型已还原</span></div></div>
+      <div class="fb" data-page-node-id="LnduomTPY6cI060R7Xsq48"><div class="fk" data-page-node-id="OdAVCELZ2VHPHAMm7Usfp0">显示逻辑</div><div class="fv" data-page-node-id="ovjRDRIrLBmWJJgrJ6fs11">文案定稿：<span class="k" data-page-node-id="qRk3reFv8uRxCVlqGjiGkL">【为了方便处理售后，请完善微信昵称】</span>，右侧【去设置】、最右【×】可关闭<span class="tg ok" data-page-node-id="2xeluhQkFuqER0QKt6R4DA">原型已还原</span></div></div>
       <div class="fb" data-page-node-id="7fAGh4CqConlCJhmOFJw5G"><div class="fk" data-page-node-id="BRobSv5bbHsaBnTDJWAaPz">交互逻辑</div><div class="fv" data-page-node-id="lTQhnfNDnhjDCPEmapotoy">点【去设置】→ 打开 ✎ 编辑弹窗；点关闭 → 本次不再弹，想填随时点昵称行的 ✎。<span class="tg ok" data-page-node-id="YojLL3hCmnkNeDzgloqMPG">原型已还原</span></div></div>
       <div class="fb" data-page-node-id="k7YhtwC7CEMOgmjmDNjAbr"><div class="fk" data-page-node-id="uEEDWvbbDrWGxc0zv0scCT">异常与边界</div><div class="fv" data-page-node-id="mtSjB7S3gole4kkfXLgXMf">如果"要确认身份"和"要填昵称"撞到一起，只能弹一个：<b data-page-node-id="YiLIO1DFC0ULsb6knJ5Mz7">先弹身份确认</b>，引导条等它关了再说（v1.2 定稿）。</div></div>
       
@@ -596,10 +611,8 @@
 
   /* 右侧关键 PRD 跟随原型状态切换 */
   function syncPrd(){
-    /* 判定顺序：半屏层优先于所在页 —— 账号密码半屏层是叠在登录页上的，
-       若先判 page==='login'，打开半屏层时右侧永远切不过去 */
-    var key = $('shPwd').classList.contains('show') ? 'pwd'
-            : $('shNick').classList.contains('show') ? 'nick'
+    var key = $('shNick').classList.contains('show') ? 'nick'
+            : state.page === 'pwd' ? 'pwd'
             : state.page === 'login' ? 'login'
             : 'mine';
     ['login','pwd','mine','nick'].forEach(function(k){
@@ -617,21 +630,17 @@
   function goPage(p){
     state.page = p;
     $('pageLogin').classList.toggle('on', p === 'login');
+    $('pagePwd').classList.toggle('on', p === 'pwd');
     $('pageMine').classList.toggle('on', p === 'mine');
     document.querySelectorAll('.step').forEach(function(s){
-      s.classList.toggle('cur', s.getAttribute('data-page') === p);
+      s.classList.toggle('cur', s.getAttribute('data-page') === (p === 'pwd' ? 'login' : p));
     });
     syncPrd();
   }
   function openSheet(){ $('mask').classList.add('show'); $('shNick').classList.add('show'); syncPrd(); }
-  function openPwd(){
-    $('mask').classList.add('show'); $('shPwd').classList.add('show'); syncPrd();
-    setTimeout(function(){ $('accInput').focus(); }, 300);
-  }
   function closeSheet(){
     $('mask').classList.remove('show');
     $('shNick').classList.remove('show');
-    $('shPwd').classList.remove('show');
     $('dlg').classList.remove('show');
     syncPrd();
   }
@@ -688,10 +697,12 @@
     if(act === 'navBack'){ toast('返回上一页（无上一页时退出小程序）'); return; }
     if(act === 'agree'){
       state.agree = !state.agree;
-      $('cbox').classList.toggle('on', state.agree); return;
+      document.querySelectorAll('.cbox').forEach(function(c){ c.classList.toggle('on', state.agree); });
+      return;
     }
     if(act === 'privacy'){ toast('打开《隐私政策》（H5 页面），不影响登录页勾选状态'); return; }
-    if(act === 'pwdLogin'){ openPwd(); return; }
+    if(act === 'pwdLogin'){ goPage('pwd'); return; }
+    if(act === 'pwdBack'){ goPage('login'); return; }
     if(act === 'togglePwd'){
       var pw = $('pwdInput');
       var show = pw.type === 'password';
@@ -699,7 +710,6 @@
       $('pwdPick').textContent = show ? '隐藏' : '显示';
       return;
     }
-    if(act === 'forgot'){ toast('忘记密码：进入手机号验证码重置流程'); return; }
     if(act === 'pwdSubmit'){
       var acc = $('accInput').value.trim();
       var pwd = $('pwdInput').value.trim();
@@ -812,7 +822,7 @@
     state.page = 'login'; state.agree = false;
     state.wxNick = '井惠琳'; state.scene = 'set'; state.guideClosed = false;
     state.draft = null;
-    $('cbox').classList.remove('on');
+    document.querySelectorAll('.cbox').forEach(function(c){ c.classList.remove('on'); });
     document.querySelectorAll('.chip').forEach(function(c){
       c.classList.toggle('on', c.getAttribute('data-scene') === 'set');
     });
