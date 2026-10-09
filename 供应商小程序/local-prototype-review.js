@@ -1333,7 +1333,6 @@
         showAfterSaleMergeUploadDialog(records, isAfterSaleRejectedTab());
       }, true);
     }
-    if (button.parentElement !== bar) bar.appendChild(button);
     button.textContent = rejected ? "重新合并上传" : "合并上传";
     button.style.display = "";
 
@@ -1349,7 +1348,7 @@
         batchSetAfterSaleInvoiceMark(true);
       }, true);
     }
-    if (batchMarkButton.parentElement !== bar) bar.appendChild(batchMarkButton);
+    batchMarkButton.style.display = "";
 
     let batchUnmarkButton = document.querySelector(".prototype-after-sale-batch-unmark-btn");
     if (!batchUnmarkButton) {
@@ -1363,7 +1362,13 @@
         batchSetAfterSaleInvoiceMark(false);
       }, true);
     }
-    if (batchUnmarkButton.parentElement !== bar) bar.appendChild(batchUnmarkButton);
+    batchUnmarkButton.style.display = "";
+
+    [batchMarkButton, batchUnmarkButton, button].forEach((actionButton) => {
+      if (actionButton.parentElement !== bar || bar.lastElementChild !== actionButton) {
+        bar.appendChild(actionButton);
+      }
+    });
 
     bar.style.display = selectionTab ? "" : "none";
     patchAfterSaleSelectAllControl(selectionTab);
