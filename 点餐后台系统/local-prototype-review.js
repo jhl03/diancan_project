@@ -448,16 +448,6 @@
       .prototype-brand-empty {
         color: #909399;
       }
-      .prototype-supplier-action {
-        border: none;
-        background: transparent;
-        color: #409eff;
-        font-weight: 700;
-        cursor: pointer;
-      }
-      .prototype-supplier-action.stop {
-        color: #f56c6c;
-      }
       .prototype-supplier-tip {
         margin: 10px 0 0;
         color: #7b8798;
@@ -475,12 +465,9 @@
     "/supplier/list": {
       title: "本页改动说明：供应商列表",
       items: [
-        ["合作状态 Tab", "停止合作页面：在未关闭接开票单开关时，操作停止合作要同步关闭接开票单开关；恢复合作后，接开票单开关保持关闭。"],
-        ["是否接开票单", "鼠标悬停展示开启接开票单时勾选的商品品牌；开启时展示品牌清单，未开启时不展示。"],
+        ["是否接开票单", "仅合作中的供应商展示开关；开启后可通过悬停查看已授权的开票商品品牌，未开启或非合作中供应商不展示品牌清单。"],
       ],
-      notes: [
-        ["是否接开票单", "显示逻辑：悬停开关时展示供应商已勾选的开票商品品牌；数据源：供应商开票配置中的品牌授权结果。"],
-      ],
+      notes: [],
     },
     "/order/invoice-list": {
       title: "本页改动说明：开票订单",
@@ -817,7 +804,6 @@
   }
 
   function renderSupplierRow(row, index) {
-    const stopped = row.cooperationStatus === "停止合作";
     return `
       <tr data-prototype-supplier-index="${index}">
         <td>${escapeHtml(row.supplierNo)}</td>
@@ -826,7 +812,6 @@
         <td>${escapeHtml(row.h5Platform)}</td>
         <td>${renderSupplierBrandTags(row.cooperativeBrands)}</td>
         <td>${escapeHtml(row.phone)}</td>
-        <td><span class="prototype-supplier-status${stopped ? " stopped" : ""}">${escapeHtml(row.cooperationStatus)}</span></td>
         <td>${escapeHtml(row.cooperationMode)}</td>
         <td>
           <span class="prototype-invoice-switch-demo${row.invoiceEnabled ? " on" : ""}" title="${escapeHtml(supplierBrandTitle(row))}"></span>
@@ -836,31 +821,24 @@
         <td>${escapeHtml(row.registerMethod)}</td>
         <td>${escapeHtml(row.recommender)}</td>
         <td>${escapeHtml(row.updateTime)}</td>
-        <td>
-          <button type="button" class="prototype-supplier-action${stopped ? "" : " stop"}">${stopped ? "恢复合作" : "停止合作"}</button>
-        </td>
       </tr>
     `;
   }
 
-  function bindSupplierDemoActions(wrap) {
-    wrap.querySelectorAll(".prototype-supplier-action").forEach((button) => {
-      if (button.dataset.prototypeBound === "true") return;
-      button.dataset.prototypeBound = "true";
-      button.addEventListener("click", () => {
-        const row = button.closest("tr");
-        const index = Number(row?.dataset.prototypeSupplierIndex || 0);
-        const record = supplierDemoRows[index];
-        if (!record) return;
-        if (record.cooperationStatus === "停止合作") {
-          record.cooperationStatus = "合作中";
-          record.invoiceEnabled = false;
-        } else {
-          record.cooperationStatus = "停止合作";
-          record.invoiceEnabled = false;
-        }
-        renderPrototypeSupplierList(true);
-      });
+  function hideSupplierCooperationStatusUI() {
+    const host = document.querySelector(".app-main .app-container");
+    if (!host) return;
+    host.querySelectorAll(".el-tabs").forEach((tabs) => {
+      if (/待审核|合作中|停止合作/.test(textOf(tabs))) {
+        tabs.style.display = "none";
+        tabs.dataset.prototypeSupplierStatusHidden = "true";
+      }
+    });
+    host.querySelectorAll(".el-form-item").forEach((item) => {
+      if (textOf(item).includes("合作状态")) {
+        item.style.display = "none";
+        item.dataset.prototypeSupplierStatusHidden = "true";
+      }
     });
   }
 
@@ -898,14 +876,12 @@
           <col style="width:140px" />
           <col style="width:180px" />
           <col style="width:140px" />
-          <col style="width:110px" />
           <col style="width:120px" />
           <col style="width:150px" />
           <col style="width:170px" />
           <col style="width:120px" />
           <col style="width:120px" />
           <col style="width:170px" />
-          <col style="width:120px" />
         </colgroup>
         <thead>
           <tr>
@@ -915,23 +891,20 @@
             <th>H5链接平台</th>
             <th>合作品牌</th>
             <th>联系电话</th>
-            <th>合作状态</th>
             <th>合作方式</th>
             <th class="prototype-review-red">是否接开票单</th>
             <th>注册时间</th>
             <th>注册方式</th>
             <th>推荐人</th>
             <th>更新时间</th>
-            <th>操作</th>
           </tr>
         </thead>
         <tbody>
           ${supplierDemoRows.map(renderSupplierRow).join("")}
         </tbody>
       </table>
-      <div class="prototype-supplier-tip">演示逻辑：点击“停止合作”会同步关闭接开票单开关；点击“恢复合作”后，接开票单开关保持关闭。鼠标悬停开启状态的开关可查看已勾选品牌，未开启时不展示品牌清单。</div>
     `;
-    bindSupplierDemoActions(wrap);
+    hideSupplierCooperationStatusUI();
     hideSupplierSourceTables();
   }
 
