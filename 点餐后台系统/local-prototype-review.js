@@ -791,7 +791,7 @@
   }
 
   function supplierBrandTitle(row) {
-    return row.invoiceEnabled && row.brands.length ? `已勾选开票商品品牌：${row.brands.join("、")}` : "未开启接开票单";
+    return row.invoiceEnabled && row.brands.length ? `接单品牌：${row.brands.join("、")}` : "未开启接开票单";
   }
 
   function renderSupplierBrandTags(brands) {
