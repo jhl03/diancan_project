@@ -791,7 +791,7 @@
   }
 
   function supplierBrandTitle(row) {
-    return row.invoiceEnabled && row.brands.length ? `接单品牌：${row.brands.join("、")}` : "未开启接开票单";
+    return row.invoiceEnabled && row.brands.length ? `接单品牌：${row.brands.join("、")}` : "";
   }
 
   function renderSupplierBrandTags(brands) {
@@ -814,7 +814,7 @@
         <td>${escapeHtml(row.phone)}</td>
         <td>${escapeHtml(row.cooperationMode)}</td>
         <td>
-          <span class="prototype-invoice-switch-demo${row.invoiceEnabled ? " on" : ""}" title="${escapeHtml(supplierBrandTitle(row))}"></span>
+          <span class="prototype-invoice-switch-demo${row.invoiceEnabled ? " on" : ""}"${row.invoiceEnabled && row.brands.length ? ` title="${escapeHtml(supplierBrandTitle(row))}"` : ""}></span>
           <span class="prototype-invoice-switch-text">${row.invoiceEnabled ? "已开启" : "未开启"}</span>
         </td>
         <td>${escapeHtml(row.registerTime)}</td>
