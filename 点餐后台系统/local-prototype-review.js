@@ -1772,7 +1772,7 @@
     mask.innerHTML = `
       <div class="prototype-review-dialog" role="dialog" aria-modal="true">
         <div class="prototype-review-dialog-title">退回客服工作台</div>
-        <div class="prototype-review-dialog-body">确定把该工单退回客服工作台吗？\n退回后，该工单将不会出现在点餐后台和供应商端</div>
+        <div class="prototype-review-dialog-body">确定把该工单退回客服工作台吗？<br><span style="color: #f56c6c;">退回后，该工单将不会出现在点餐后台和供应商端</span></div>
         <div class="prototype-review-dialog-footer">
           <button type="button" class="cancel">取消</button>
           <button type="button" class="confirm">确定退回</button>
