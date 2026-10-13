@@ -224,6 +224,18 @@
         font-weight: 600;
       }
     </style>
+    <script>
+      window.addEventListener("load", () => {
+        if (location.hostname !== "jhl03.github.io") return;
+        window.setTimeout(() => {
+          const app = document.querySelector("#app");
+          const loader = document.querySelector("#loader-wrapper");
+          if (app && loader && app.children.length > 1) {
+            document.body.classList.add("loaded");
+          }
+        }, 3000);
+      });
+    </script>
   </head>
 
   <body>
