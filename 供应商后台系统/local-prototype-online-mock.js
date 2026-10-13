@@ -191,4 +191,171 @@
 
   installFetch();
   installXhr();
+
+  function baseHref() {
+    return document.querySelector("base")?.href || `${location.origin}/`;
+  }
+
+  function linkTo(route) {
+    return `${baseHref().replace(/\/$/, "")}${route}?v=f1ce2f4`;
+  }
+
+  function description(items) {
+    return `<section class="prototype-desc">${items.map((item) => `<div>${item}</div>`).join("")}</section>`;
+  }
+
+  function table(headers, rows, redColumns) {
+    return `
+      <table class="prototype-table">
+        <thead><tr>${headers.map((header) => `<th>${header}</th>`).join("")}</tr></thead>
+        <tbody>
+          ${rows.map((row) => `<tr>${row.map((cell, index) => `<td class="${redColumns.includes(index) ? "red" : ""}">${cell}</td>`).join("")}</tr>`).join("")}
+        </tbody>
+      </table>
+    `;
+  }
+
+  function afterSalePage() {
+    const rows = invoiceRows({ tab: "PROCESSING" }).map((item) => [
+      item.claimNo,
+      item.subsidyNo,
+      item.itemOrderNo,
+      item.invoiceTitle,
+      item.userPayAmount,
+      item.productName,
+      item.storeCity,
+      item.brandName,
+      item.supplierName,
+      item.subsidyAmount,
+      "上传  延长上传时间  放弃",
+    ]);
+    return `
+      ${description([
+        "本页改动说明：售后补贴单",
+        "三个 Tab 的筛选区新增“供应商名称”；列表在商品品牌后新增“供应商名称”，数据源取真实接补贴单的供应商名称。",
+        "新增部分用红色表示。",
+      ])}
+      <div class="tabs"><span class="active">处理中</span><span>已驳回</span><span>已上传</span></div>
+      <div class="filters">
+        <input placeholder="请输入补贴单号"><input placeholder="请输入订单号"><input placeholder="请输入发票抬头">
+        <input class="red-border" placeholder="请输入供应商名称"><button>搜索</button><button class="secondary">重置</button>
+      </div>
+      <div class="actions"><button>合并上传</button><button class="secondary">批量标记</button><button class="secondary">批量取消标记</button></div>
+      ${table(["抢单编号", "补贴单号", "订单号", "发票抬头/税号", "用户支付", "商品名称", "门店所在城市", "商品品牌", "供应商名称", "补贴金额", "操作"], rows, [8])}
+      <div class="pager">共 ${rows.length} 条　1</div>
+    `;
+  }
+
+  function settlementPage() {
+    return `
+      ${description([
+        "本页改动说明：二级供应商结算",
+        "新增交易类型“售后补贴单”；关联单号取补贴单号；变动金额=实际补贴金额-一级供应商设置的补贴抽成金额。",
+        "新增部分用红色表示。",
+      ])}
+      <div class="filters"><input placeholder="请输入结算流水单号"><input placeholder="请输入关联单据号"><button>搜索</button><button class="secondary">重置</button></div>
+      <div class="actions"><button class="orange">导出</button></div>
+      ${table(["结算流水单号", "交易时间", "交易类型", "变动金额", "关联单据号", "所属供应商"], secondSettlement.map((item) => [item.settleFlowNo, item.tradeTime, item.tradeType, `+${item.changeAmount}`, item.relationBillNo, item.supplierName]), [2, 3, 4])}
+      <div class="pager">共 ${secondSettlement.length} 条　1</div>
+    `;
+  }
+
+  function settingPage() {
+    return `
+      ${description([
+        "本页改动说明：二级供应商配置",
+        "新增配置项“二级供应商补贴单抽成”，卡片样式与“二级供应商加价比例”一致。",
+        "说明文字为“二级供应商补贴金额为实际补贴金额- 配置的抽成金额”。新增部分用红色表示。",
+      ])}
+      <h2>供应商设置</h2>
+      <div class="cards">
+        <section class="config-card"><h3>二级供应商加价比例</h3><div class="value">2 %</div><p>二级供应商报价金额，会按比例加价至你的商品报价内</p><button>编辑</button></section>
+        <section class="config-card new"><h3>二级供应商补贴单抽成</h3><div class="value">0.50 元</div><p>二级供应商补贴金额为实际补贴金额- 配置的抽成金额</p><button>编辑</button></section>
+      </div>
+    `;
+  }
+
+  function homePage() {
+    return `
+      ${description(["线上静态预览已启用：用于 GitHub Pages 环境下查看供应商后台原型。"])}
+      <div class="quick-links">
+        <a href="${linkTo("/order/after-sale-subsidy")}">售后补贴单</a>
+        <a class="yellow" href="${linkTo("/supplier/settlement-record")}">二级供应商结算</a>
+        <a class="yellow" href="${linkTo("/supplier/setting")}">二级供应商配置</a>
+      </div>
+    `;
+  }
+
+  function contentForPath(path) {
+    if (path.includes("/order/after-sale-subsidy")) return { title: "售后补贴单", section: "订单管理", html: afterSalePage() };
+    if (path.includes("/supplier/settlement-record")) return { title: "二级供应商结算", section: "二级供应商管理", html: settlementPage() };
+    if (path.includes("/supplier/setting")) return { title: "二级供应商配置", section: "二级供应商管理", html: settingPage() };
+    return { title: "首页", section: "首页", html: homePage() };
+  }
+
+  function installStaticFallback() {
+    setTimeout(() => {
+      const app = document.querySelector("#app");
+      if (!app || app.innerText.trim() || app.querySelector(".app-wrapper")) return;
+      const page = contentForPath(decodeURIComponent(location.pathname));
+      document.body.innerHTML = `
+        <style>
+          body { margin: 0; font-family: Arial, "Microsoft YaHei", sans-serif; color: #24364b; background: #fff; }
+          .shell { display: grid; grid-template-columns: 200px 1fr; min-height: 100vh; }
+          .side { background: #24384f; color: #d8e4f2; padding: 18px 0; }
+          .brand { color: #fff; font-weight: 700; padding: 0 18px 24px; }
+          .menu a { display: block; color: #d8e4f2; text-decoration: none; padding: 14px 22px; font-size: 14px; }
+          .menu a:hover, .menu a.active { background: #304762; color: #fff; }
+          .menu a.yellow { color: #f0b429; font-weight: 700; }
+          .top { height: 62px; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; border-bottom: 1px solid #e8edf3; }
+          .crumb { color: #7f8fa6; }
+          .crumb strong { color: #24364b; margin-right: 10px; }
+          .user { color: #1f2d3d; }
+          .content { padding: 22px; }
+          .prototype-desc { border: 1px solid #ffd6d6; background: #fff7f7; color: #f56c6c; padding: 12px 14px; margin-bottom: 22px; line-height: 1.8; font-size: 14px; }
+          .tabs { display: flex; gap: 46px; border-bottom: 1px solid #dcdfe6; margin-bottom: 24px; }
+          .tabs span { padding: 0 0 14px; font-size: 16px; }
+          .tabs .active { color: #409eff; border-bottom: 2px solid #409eff; }
+          .filters { display: flex; gap: 32px; flex-wrap: wrap; align-items: center; margin-bottom: 22px; }
+          input { width: 190px; height: 34px; border: 1px solid #dcdfe6; border-radius: 4px; padding: 0 12px; font-size: 14px; }
+          .red-border { border-color: #f56c6c; color: #f56c6c; }
+          button { height: 34px; border: 0; border-radius: 4px; background: #409eff; color: #fff; padding: 0 18px; font-weight: 600; }
+          button.secondary { color: #606266; background: #fff; border: 1px solid #dcdfe6; }
+          button.orange { background: #e6a23c; }
+          .actions { display: flex; gap: 12px; margin: 8px 0 12px; }
+          .prototype-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 14px; }
+          .prototype-table th, .prototype-table td { border: 1px solid #ebeef5; padding: 12px 10px; text-align: left; vertical-align: top; word-break: break-all; }
+          .prototype-table th { background: #f5f7fa; color: #24364b; font-weight: 700; }
+          .red, .new h3, .new .value, .new p { color: #f56c6c; font-weight: 700; }
+          .pager { text-align: right; margin-top: 18px; color: #606266; }
+          .cards { display: grid; grid-template-columns: repeat(2, minmax(260px, 420px)); gap: 20px; }
+          .config-card { border: 1px solid #e5e7eb; border-radius: 6px; padding: 22px; }
+          .config-card.new { border-color: #ffccc7; background: #fffafa; }
+          .config-card h3 { margin: 0 0 16px; }
+          .config-card .value { font-size: 28px; margin-bottom: 10px; }
+          .config-card p { color: #909399; min-height: 40px; }
+          .quick-links { display: flex; gap: 16px; }
+          .quick-links a { border: 1px solid #dcdfe6; color: #409eff; padding: 14px 18px; text-decoration: none; border-radius: 4px; }
+          .quick-links .yellow { color: #f0b429; border-color: #f0b429; }
+        </style>
+        <div class="shell">
+          <aside class="side">
+            <div class="brand">点餐供应商管理系统</div>
+            <nav class="menu">
+              <a href="${linkTo("/index")}">首页</a>
+              <a href="${linkTo("/order/after-sale-subsidy")}" class="${page.title === "售后补贴单" ? "active" : ""}">售后补贴单</a>
+              <a class="yellow ${page.title === "二级供应商结算" ? "active" : ""}" href="${linkTo("/supplier/settlement-record")}">二级供应商结算</a>
+              <a class="yellow ${page.title === "二级供应商配置" ? "active" : ""}" href="${linkTo("/supplier/setting")}">二级供应商配置</a>
+            </nav>
+          </aside>
+          <main>
+            <header class="top"><div class="crumb"><strong>首页</strong> / ${page.section} / ${page.title}</div><div class="user">supplier_admin</div></header>
+            <section class="content">${page.html}</section>
+          </main>
+        </div>
+      `;
+    }, 3500);
+  }
+
+  installStaticFallback();
 })();
