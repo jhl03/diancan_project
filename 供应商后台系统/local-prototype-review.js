@@ -175,6 +175,35 @@
         font-size: 14px;
         box-shadow: 0 10px 28px rgba(15, 23, 42, 0.22);
       }
+      .prototype-new-filter-item {
+        position: relative;
+      }
+      .prototype-new-filter-item .el-input__inner {
+        border-color: ${RED} !important;
+      }
+      .prototype-new-filter-item .el-input__inner::placeholder {
+        color: ${RED} !important;
+        opacity: 0.78;
+      }
+      .prototype-new-config-card {
+        border: 1px solid #ffccc7 !important;
+        box-shadow: 0 2px 8px rgba(245, 108, 108, 0.08);
+      }
+      .prototype-new-config-card h3,
+      .prototype-new-config-card .description,
+      .prototype-new-config-card .prototype-config-label {
+        color: ${RED} !important;
+      }
+      .prototype-new-config-card .el-input__inner {
+        border-color: ${RED} !important;
+      }
+      .prototype-new-config-card .prototype-config-unit {
+        color: ${RED} !important;
+      }
+      .prototype-settlement-derived {
+        color: ${RED} !important;
+        font-weight: 700 !important;
+      }
       .prototype-merge-dialog-mask {
         position: fixed;
         inset: 0;
@@ -282,6 +311,7 @@
       title: "本页改动说明：售后补贴单",
       items: [
         ["抬头类型", "新增红字字段，显示在发票抬头/税号左侧；数据源为客服本地生活工作台接口。"],
+        ["供应商名称", "三个 Tab 的筛选区新增“供应商名称”；列表在商品品牌后新增“供应商名称”，数据源取真实接补贴单的供应商名称。"],
         ["发票上传/重传", "上传发票与重新上传发票弹窗同步展示抬头类型，用于校验发票主体。"],
         ["合并上传", "处理中列表支持勾选多张未结束工单后点击“合并上传”；已驳回列表每条工单前展示可勾选方块，支持勾选工单后点击“重新合并上传”。处理中已结束工单不可选，已驳回工单均可选。未勾选时提示“请选择要合并上传发票的工单”；先校验发票抬头/税号，不一致提示“选择的发票抬头/税号不一样”；再校验发票类型，不一致提示“所选发票类型不一样”；校验通过后弹出与上传弹窗内容一致的合并上传发票弹窗，开票金额=所选工单用户支付价合计。"],
       ],
@@ -291,6 +321,20 @@
       title: "本页改动说明：补偿单列表",
       items: [
         ["用户名称", "新增红字字段，显示在商品名称右侧；数据源取该工单的发票抬头。"],
+      ],
+      notes: [],
+    },
+    "/supplier/settlement-record": {
+      title: "本页改动说明：二级供应商结算",
+      items: [
+        ["售后补贴单", "新增交易类型“售后补贴单”；关联单号取补贴单号；变动金额=实际补贴金额-一级供应商设置的补贴抽成金额。"],
+      ],
+      notes: [],
+    },
+    "/supplier/setting": {
+      title: "本页改动说明：二级供应商配置",
+      items: [
+        ["二级供应商补贴单抽成", "新增配置卡片，卡片样式与“二级供应商加价比例”一致；说明文字为“二级供应商补贴金额为实际补贴金额- 配置的抽成金额”。"],
       ],
       notes: [],
     },
@@ -304,6 +348,8 @@
   const changedRoutes = [
     { path: "/order/after-sale-subsidy", text: "售后补贴单" },
     { path: "/order/compensation", text: "补偿单列表" },
+    { path: "/supplier/setting", text: "二级供应商配置" },
+    { path: "/supplier/settlement-record", text: "二级供应商结算" },
   ];
 
   function clearDuplicateBadges() {
@@ -403,6 +449,7 @@
 
   function columnWidth(key) {
     if (key === "compensation-user-name") return 170;
+    if (key === "after-sale-supplier-name") return 210;
     if (key === "invoice-title-type") return 120;
     return 140;
   }
@@ -525,8 +572,70 @@
     patchColumnByHeader("发票抬头/税号", "抬头类型", "invoice-title-type", "before", (_row, titleCell) =>
       guessTitleType(textOf(titleCell)),
     );
+    patchColumnByHeader("商品品牌", "供应商名称", "after-sale-supplier-name", "after", (row) => {
+      const subsidyNo = textOf(row).match(/SUB\d+/)?.[0] || "";
+      return supplierNameBySubsidyNo[subsidyNo] || "待补充供应商";
+    });
+    patchSupplierNameFilter();
     patchInvoiceUploadDialogs();
     patchAfterSaleMergeUpload();
+  }
+
+  const supplierNameBySubsidyNo = {
+    SUB202609140001: "厦门晨星信息科技有限公司",
+    SUB202609140002: "厦门肯德基有限公司",
+    SUB202609140003: "金拱门（中国）有限公司",
+    SUB202609140004: "上海云朵互动科技有限公司",
+    SUB202609140101: "厦门惠生活供应链有限公司",
+    SUB202609140102: "厦门肯德基有限公司",
+    SUB202609150103: "北京优选数字科技有限公司",
+    SUB202609150104: "金拱门（中国）有限公司",
+    SUB202609150105: "厦门肯德基有限公司",
+    SUB202609130201: "金拱门（中国）有限公司",
+    SUB202609130202: "厦门晨星信息科技有限公司",
+    SUB202609120301: "厦门肯德基有限公司",
+    SUB202609120302: "金拱门（中国）有限公司",
+  };
+
+  function applySupplierNameFilter() {
+    const filter = String(window.__prototypeSupplierNameFilter || "").trim();
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const supplierCell = row.querySelector(`td[${MARK}="after-sale-supplier-name"]`);
+      if (!supplierCell) return;
+      row.style.display = !filter || textOf(supplierCell).includes(filter) ? "" : "none";
+    });
+  }
+
+  function patchSupplierNameFilter() {
+    if (!window.location.pathname.includes("/order/after-sale-subsidy")) return;
+    const form = document.querySelector(".app-main .app-container .el-form") || document.querySelector(".el-form");
+    if (!form) return;
+    let item = form.querySelector(`div[${MARK}="after-sale-supplier-filter"]`);
+    if (!item) {
+      item = document.createElement("div");
+      item.className = "el-form-item prototype-new-filter-item";
+      item.setAttribute(MARK, "after-sale-supplier-filter");
+      item.innerHTML = `
+        <div class="el-form-item__content">
+          <div class="el-input">
+            <input class="el-input__inner" type="text" placeholder="请输入供应商名称" aria-label="供应商名称" />
+          </div>
+        </div>
+      `;
+      form.appendChild(item);
+    }
+    const input = item.querySelector("input");
+    if (!input) return;
+    input.value = window.__prototypeSupplierNameFilter || "";
+    if (input.dataset.prototypeSupplierFilterBound !== "true") {
+      input.dataset.prototypeSupplierFilterBound = "true";
+      input.addEventListener("input", () => {
+        window.__prototypeSupplierNameFilter = input.value;
+        applySupplierNameFilter();
+      });
+      input.addEventListener("change", applySupplierNameFilter);
+    }
+    applySupplierNameFilter();
   }
 
   function isProcessingTabActive() {
@@ -805,6 +914,105 @@
     );
   }
 
+  const secondSettlementDisplayRows = [
+    ["JS2-202609110001", "2026-09-11 03:00:00", "订单结算", "+16.50", "DD202609110001", "厦门惠生活供应链有限公司"],
+    ["JS2-202609100002", "2026-09-10 03:00:00", "订单结算", "+42.90", "DD202609100002", "北京优选数字科技有限公司"],
+    ["JS2-202609140003", "2026-09-14 10:05:29", "售后补贴单", "+2.10", "SUB202609140101", "厦门惠生活供应链有限公司"],
+    ["JS2-202609140004", "2026-09-14 10:02:17", "售后补贴单", "+4.10", "SUB202609140102", "北京优选数字科技有限公司"],
+  ];
+
+  function setCellText(cell, value) {
+    if (!cell) return;
+    const content = cell.querySelector(".cell") || cell;
+    content.textContent = value;
+  }
+
+  function patchSecondSupplierSettlement() {
+    document.querySelectorAll("table.el-table__header").forEach((headerTable) => {
+      const headerRow = headerTable.querySelector("thead tr");
+      if (!headerRow) return;
+      const typeIndex = Array.from(headerRow.children).findIndex((cell) => textOf(cell).includes("交易类型"));
+      const amountIndex = Array.from(headerRow.children).findIndex((cell) => textOf(cell).includes("变动金额"));
+      const relationIndex = Array.from(headerRow.children).findIndex((cell) => textOf(cell).includes("关联单据号"));
+      if (typeIndex < 0) return;
+      const { bodyTables } = getTableContext(headerTable);
+      bodyTables.forEach((bodyTable) => {
+        bodyTable.querySelectorAll("tbody tr").forEach((row, rowIndex) => {
+          if (window.location.pathname.includes("/supplier/settlement-record")) {
+            const displayRow = secondSettlementDisplayRows[rowIndex];
+            if (displayRow && textOf(row).replace(/\+/g, "").trim() === "") {
+              displayRow.forEach((value, cellIndex) => setCellText(row.children[cellIndex], value));
+            }
+          }
+          if (!textOf(row).includes("售后补贴单")) return;
+          [typeIndex, amountIndex, relationIndex].forEach((index) => {
+            if (index >= 0 && row.children[index]) row.children[index].classList.add("prototype-settlement-derived");
+          });
+        });
+      });
+    });
+  }
+
+  function patchSecondSupplierSetting() {
+    if (!window.location.pathname.includes("/supplier/setting")) return;
+    const original = document.querySelector(".supplier-markup-setting");
+    const host = original?.parentElement;
+    if (!original || !host || host.querySelector(".prototype-new-config-card")) return;
+
+    const card = original.cloneNode(true);
+    card.classList.add("prototype-new-config-card");
+    card.setAttribute(MARK, "second-supplier-subsidy-commission");
+    const title = card.querySelector("h3");
+    if (title) title.textContent = "二级供应商补贴单抽成";
+    const valueDisplay = card.querySelector(".value-display");
+    if (valueDisplay) {
+      valueDisplay.textContent = "0.50 元";
+      valueDisplay.classList.add("prototype-config-unit");
+    }
+    const description = card.querySelector(".description");
+    if (description) {
+      description.textContent = "二级供应商补贴金额为实际补贴金额- 配置的抽成金额";
+      description.classList.add("prototype-config-label");
+    }
+    let currentValue = "0.50";
+    const renderView = () => {
+      if (valueDisplay) valueDisplay.textContent = `${currentValue} 元`;
+      if (actions) actions.innerHTML = '<button type="button" class="el-button el-button--primary"><span>编辑</span></button>';
+      actions?.querySelector("button")?.addEventListener("click", renderEdit);
+    };
+    const renderEdit = () => {
+      if (valueDisplay) {
+        valueDisplay.innerHTML = `
+          <div class="el-input" style="max-width: 180px;">
+            <input class="el-input__inner" type="number" min="0" step="0.01" value="${escapeHtml(currentValue)}" aria-label="二级供应商补贴单抽成" />
+          </div>
+          <span class="prototype-config-unit" style="margin-left: 8px;">元</span>
+        `;
+      }
+      if (actions) {
+        actions.innerHTML = `
+          <button type="button" class="el-button el-button--primary"><span>保存</span></button>
+          <button type="button" class="el-button"><span>取消</span></button>
+        `;
+        actions.children[0].addEventListener("click", () => {
+          const input = valueDisplay?.querySelector("input");
+          const value = Number(input?.value);
+          if (!Number.isFinite(value) || value < 0) {
+            showToast("请输入有效的补贴单抽成金额");
+            return;
+          }
+          currentValue = value.toFixed(2);
+          renderView();
+          showToast("保存成功");
+        });
+        actions.children[1].addEventListener("click", renderView);
+      }
+    };
+    const actions = card.querySelector(".action-buttons");
+    renderView();
+    host.appendChild(card);
+  }
+
   let timer = 0;
   function run() {
     ensureStyle();
@@ -814,6 +1022,8 @@
     const path = window.location.pathname;
     if (path.includes("/order/after-sale-subsidy")) patchAfterSaleSubsidy();
     if (path.includes("/order/compensation")) patchCompensation();
+    if (path.includes("/supplier/settlement-record")) patchSecondSupplierSettlement();
+    if (path.includes("/supplier/setting")) patchSecondSupplierSetting();
     syncHeaderScroll();
   }
 

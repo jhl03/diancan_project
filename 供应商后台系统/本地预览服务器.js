@@ -415,6 +415,28 @@ const rows = {
       relationBillNo: "DD202609100002",
       supplierName: "北京优选数字科技有限公司",
     },
+    {
+      id: 2903,
+      settleFlowNo: "JS2-202609140003",
+      tradeTime: "2026-09-14 10:05:29",
+      tradeType: "售后补贴单",
+      changeAmount: "2.10",
+      relationBillNo: "SUB202609140101",
+      supplierName: "厦门惠生活供应链有限公司",
+      actualSubsidyAmount: "2.60",
+      firstSupplierSubsidyCommission: "0.50",
+    },
+    {
+      id: 2904,
+      settleFlowNo: "JS2-202609140004",
+      tradeTime: "2026-09-14 10:02:17",
+      tradeType: "售后补贴单",
+      changeAmount: "4.10",
+      relationBillNo: "SUB202609140102",
+      supplierName: "北京优选数字科技有限公司",
+      actualSubsidyAmount: "4.80",
+      firstSupplierSubsidyCommission: "0.70",
+    },
   ],
   secondSupplierConfigs: [
     {
@@ -736,11 +758,27 @@ function filterInvoiceRows(records, query = {}) {
     9103: "金拱门（中国）有限公司",
     9104: "上海云朵互动科技有限公司",
   };
+  const supplierNames = {
+    SUB202609140001: "厦门晨星信息科技有限公司",
+    SUB202609140002: "厦门肯德基有限公司",
+    SUB202609140003: "金拱门（中国）有限公司",
+    SUB202609140004: "上海云朵互动科技有限公司",
+    SUB202609140101: "厦门惠生活供应链有限公司",
+    SUB202609140102: "厦门肯德基有限公司",
+    SUB202609150103: "北京优选数字科技有限公司",
+    SUB202609150104: "金拱门（中国）有限公司",
+    SUB202609150105: "厦门肯德基有限公司",
+    SUB202609130201: "金拱门（中国）有限公司",
+    SUB202609130202: "厦门晨星信息科技有限公司",
+    SUB202609120301: "厦门肯德基有限公司",
+    SUB202609120302: "金拱门（中国）有限公司",
+  };
   return records.filter((item) => {
     if (query.brandCode && item.brandCode !== query.brandCode) return false;
     if (query.subsidyNo && !String(item.subsidyNo).includes(String(query.subsidyNo))) return false;
     if (query.itemOrderNo && !String(item.itemOrderNo || "").includes(String(query.itemOrderNo))) return false;
     if (query.invoiceTitle && !String(item.invoiceTitle || "").includes(String(query.invoiceTitle))) return false;
+    if (query.supplierName && !String(supplierNames[item.subsidyNo] || "").includes(String(query.supplierName))) return false;
     if (query.tab && item.tab !== query.tab) return false;
 
     const userPayAmount = Number(item.userPayAmount);
@@ -758,6 +796,7 @@ function filterInvoiceRows(records, query = {}) {
       invoiceType: item.invoiceType ?? (invoiceTitle === "个人" ? 0 : 1),
       invoiceTitleTypeName: invoiceTitle === "个人" ? "个人" : "企业",
       userName: invoiceTitle,
+      supplierName: supplierNames[item.subsidyNo] || "待补充供应商",
     };
   });
 }
@@ -925,6 +964,12 @@ function handleApi(req, res, pathname, body = {}) {
     return sendJson(res, ok({ defaultMarkupRatio: 0.02, markupRatio: 0.02 }));
   }
   if (pathname.includes("/supplierMarkupConfig/save/config")) {
+    return sendJson(res, successMessage());
+  }
+  if (pathname.includes("/supplierSubsidyConfig/query")) {
+    return sendJson(res, ok({ subsidyCommissionAmount: 0.5 }));
+  }
+  if (pathname.includes("/supplierSubsidyConfig/save/config")) {
     return sendJson(res, successMessage());
   }
   if (pathname.includes("/supplierSettleInfo/second/settleInfo/page")) {
