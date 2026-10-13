@@ -197,7 +197,14 @@
   }
 
   function linkTo(route) {
-    return `${baseHref().replace(/\/$/, "")}${route}?v=f1ce2f4`;
+    const routeMap = {
+      "/index": "index",
+      "/order/after-sale-subsidy": "afterSaleSubsidy",
+      "/supplier/settlement-record": "secondSupplierSettlement",
+      "/supplier/setting": "secondSupplierSetting",
+    };
+    const key = routeMap[route] || "index";
+    return `${baseHref().replace(/\/$/, "")}/index.html?prototypeRoute=${key}&v=1272357`;
   }
 
   function description(items) {
@@ -287,6 +294,10 @@
   }
 
   function contentForPath(path) {
+    const route = new URLSearchParams(location.search).get("prototypeRoute") || "";
+    if (route === "afterSaleSubsidy") return { title: "售后补贴单", section: "订单管理", html: afterSalePage() };
+    if (route === "secondSupplierSettlement") return { title: "二级供应商结算", section: "二级供应商管理", html: settlementPage() };
+    if (route === "secondSupplierSetting") return { title: "二级供应商配置", section: "二级供应商管理", html: settingPage() };
     if (path.includes("/order/after-sale-subsidy")) return { title: "售后补贴单", section: "订单管理", html: afterSalePage() };
     if (path.includes("/supplier/settlement-record")) return { title: "二级供应商结算", section: "二级供应商管理", html: settlementPage() };
     if (path.includes("/supplier/setting")) return { title: "二级供应商配置", section: "二级供应商管理", html: settingPage() };
