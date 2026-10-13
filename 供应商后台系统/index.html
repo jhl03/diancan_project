@@ -1,25 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script>
-      (function () {
-        if (/\/index\.html$/i.test(window.location.pathname)) {
-          window.location.replace(window.location.pathname.replace(/index\.html$/i, "") + window.location.search + window.location.hash);
-          return;
-        }
-        var basePath = window.location.pathname.endsWith("/")
-          ? window.location.pathname
-          : window.location.pathname.replace(/\/[^/]*$/, "/");
-        var routeMap = {
-          afterSaleSubsidy: "order/after-sale-subsidy"
-        };
-        var prototypeRoute = new URLSearchParams(window.location.search).get("prototypeRoute");
-        if (prototypeRoute && routeMap[prototypeRoute]) {
-          window.history.replaceState(null, "", basePath + routeMap[prototypeRoute] + window.location.search + window.location.hash);
-        }
-        document.write('<base href="' + basePath + '">');
-      })();
-    </script>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="renderer" content="webkit" />
@@ -28,11 +9,11 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
-    <link rel="icon" href="./favicon.ico" />
+    <link rel="icon" href="/favicon.ico" />
     <title>点餐供应商管理系统</title>
     <!--[if lt IE 11
       ]><script>
-        window.location.href = "./html/ie.html";
+        window.location.href = "/html/ie.html";
       </script><!
     [endif]-->
     <style>
@@ -221,10 +202,21 @@
         opacity: 0.5;
       }
     </style>
-    <script src="./local-prototype-auth.js"></script>
-    <script src="./local-prototype-review.js?v=20261008-after-sale-invoice-mark-filter-v9"></script>
-    <script type="module" crossorigin src="./assets/index-jU970pnj.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-Cqnef8Xn.css">
+    <script src="/local-prototype-auth.js"></script>
+    <script src="/local-prototype-review.js?v=20260916-pc-select-all-column-fix-v2"></script>
+    <script src="/local-prototype-highlight.js"></script>
+    <script type="module" crossorigin src="/assets/index-jU970pnj.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Cqnef8Xn.css">
+    <style>
+      .second-supplier-menu-highlight,
+      .second-supplier-group-highlight {
+        color: #f0b429 !important;
+      }
+
+      .second-supplier-group-highlight {
+        font-weight: 600;
+      }
+    </style>
   </head>
 
   <body>
@@ -238,6 +230,4 @@
     </div>
   </body>
 </html>
-
-
 

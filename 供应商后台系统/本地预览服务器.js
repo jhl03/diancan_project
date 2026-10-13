@@ -148,7 +148,7 @@ const rows = {
       company: "惠生活本地演示供应商",
       foodCode: "A108",
       qrCode: "LK202609110001",
-      qrCodeList: ["./assets/404-cloud-CPeIbRAe.png"],
+      qrCodeList: ["/assets/404-cloud-CPeIbRAe.png"],
       subCompanyName: "",
     },
     {
@@ -325,6 +325,115 @@ const rows = {
       effectEndTime: "2026-12-31",
       outTradeNo: "DD202609110001",
       supplierOrderId: "900001",
+    },
+  ],
+  secondSuppliers: [
+    {
+      id: 2001,
+      supplierNo: "SUP202609080001",
+      company: "厦门惠生活供应链有限公司",
+      supplierName: "厦门惠生活供应链有限公司",
+      supplierBrandRelaStr: "瑞幸咖啡、肯德基",
+      mobile: "139****6208",
+      status: 1,
+      createTime: "2026-09-08 10:20:00",
+      updateTime: "2026-09-11 09:30:00",
+    },
+    {
+      id: 2002,
+      supplierNo: "SUP202609070002",
+      company: "北京优选数字科技有限公司",
+      supplierName: "北京优选数字科技有限公司",
+      supplierBrandRelaStr: "瑞幸咖啡",
+      mobile: "136****5118",
+      status: 1,
+      createTime: "2026-09-07 15:40:00",
+      updateTime: "2026-09-10 14:18:00",
+    },
+    {
+      id: 2003,
+      supplierNo: "SUP202609050003",
+      company: "上海快取服务中心",
+      supplierName: "上海快取服务中心",
+      supplierBrandRelaStr: "麦当劳",
+      mobile: "137****7821",
+      status: 0,
+      createTime: "2026-09-05 11:15:00",
+      updateTime: "2026-09-09 16:05:00",
+    },
+  ],
+  secondWithdrawRecords: [
+    {
+      id: 2801,
+      withdrawNo: "TX2-202609110001",
+      status: 1,
+      failRemark: "",
+      requestTime: "2026-09-11 09:20:00",
+      completeTime: "2026-09-11 09:25:00",
+      withdrawAmount: "1200.00",
+      serviceFee: "2.00",
+      actualAmount: "1198.00",
+      accountType: 1,
+      bankName: "招商银行厦门分行",
+      recipientName: "厦门惠生活供应链有限公司",
+      recipientAccount: "622588******6208",
+      accountName: "厦门惠生活供应链有限公司",
+    },
+    {
+      id: 2802,
+      withdrawNo: "TX2-202609100002",
+      status: 0,
+      failRemark: "",
+      requestTime: "2026-09-10 16:40:00",
+      completeTime: "",
+      withdrawAmount: "860.00",
+      serviceFee: "0.00",
+      actualAmount: "860.00",
+      accountType: 1,
+      bankName: "中国工商银行上海分行",
+      recipientName: "上海快取服务中心",
+      recipientAccount: "621226******7821",
+      accountName: "上海快取服务中心",
+    },
+  ],
+  secondSettlementRecords: [
+    {
+      id: 2901,
+      settleFlowNo: "JS2-202609110001",
+      tradeTime: "2026-09-11 03:00:00",
+      tradeType: "订单结算",
+      changeAmount: "16.50",
+      relationBillNo: "DD202609110001",
+      supplierName: "厦门惠生活供应链有限公司",
+    },
+    {
+      id: 2902,
+      settleFlowNo: "JS2-202609100002",
+      tradeTime: "2026-09-10 03:00:00",
+      tradeType: "订单结算",
+      changeAmount: "42.90",
+      relationBillNo: "DD202609100002",
+      supplierName: "北京优选数字科技有限公司",
+    },
+  ],
+  secondSupplierConfigs: [
+    {
+      id: 3101,
+      company: "厦门惠生活供应链有限公司",
+      supplierName: "厦门惠生活供应链有限公司",
+      brandName: "瑞幸咖啡",
+      timeoutMinutes: 30,
+      supplierApiType: "SOTO自动出餐",
+      apiAction: "接单、出餐、核销",
+    },
+    {
+      id: 3102,
+      company: "北京优选数字科技有限公司",
+      supplierName: "北京优选数字科技有限公司",
+      brandName: "肯德基",
+      timeoutMinutes: 45,
+      supplierApiType: "H5链接出餐",
+      apiAction: "接单、发券",
     },
   ],
   invoice: {
@@ -674,8 +783,8 @@ function handleApi(req, res, pathname, body = {}) {
         nickName: "供应商管理员",
         avatar: "",
         detail: {
-          supplierName: "惠生活本地演示供应商",
-          cooperationMode: 0,
+          supplierName: "惠生活一级供应商平台",
+          cooperationMode: 1,
         },
       },
       roles: ["admin"],
@@ -684,7 +793,7 @@ function handleApi(req, res, pathname, body = {}) {
   }
 
   if (pathname === "/dine-supplier-admin/supplierUser/cooperationMode") {
-    return sendJson(res, ok({ cooperationMode: 0, domain: "local.prototype" }));
+    return sendJson(res, ok({ cooperationMode: 1, domain: "local.prototype" }));
   }
 
   if (pathname === "/dine-supplier-admin/bizConfig/getSysConfig") {
@@ -788,11 +897,42 @@ function handleApi(req, res, pathname, body = {}) {
   if (pathname.includes("/supplierBankCardInfo/page")) return sendJson(res, page(rows.withdrawAccounts));
   if (pathname.includes("/supplierBankCardInfo/getList")) return sendJson(res, ok(rows.withdrawAccounts));
   if (pathname.includes("/supplierBankCardInfo/")) return sendJson(res, successMessage());
+  if (pathname.includes("/supplierWithdrawRecord/second/page")) {
+    return sendJson(res, page(rows.secondWithdrawRecords));
+  }
+  if (pathname.includes("/supplierWithdrawRecord/second/")) {
+    return sendJson(res, successMessage());
+  }
   if (pathname.includes("/supplierWithdrawRecord/page")) return sendJson(res, page(rows.withdrawRecords));
   if (pathname.includes("/supplierWithdrawRecord/getAccount")) return sendJson(res, ok({ availableAmount: "2680.50", frozenAmount: "0.00" }));
   if (pathname.includes("/supplierWithdrawRecord/")) return sendJson(res, successMessage());
   if (pathname.includes("/supplierSettleInfo/settleInfo/page")) return sendJson(res, page(rows.settlementRecords));
   if (pathname.includes("/supplierFinanceTradeRecord/finance/tradeRecord/page")) return sendJson(res, page(rows.settlementRecords));
+
+  if (pathname.includes("/supplierUser/second/count")) {
+    return sendJson(res, ok({ wait: 1, doing: 2, stop: 1, total: rows.secondSuppliers.length }));
+  }
+  if (pathname.includes("/supplierUser/second/page")) {
+    return sendJson(res, page(rows.secondSuppliers));
+  }
+  if (pathname.includes("/supplierUser/second/detail")) {
+    return sendJson(res, ok(rows.secondSuppliers[0]));
+  }
+  if (pathname.includes("/supplierUser/second/")) {
+    return sendJson(res, successMessage());
+  }
+  if (pathname.includes("/supplierMarkupConfig/query")) {
+    return sendJson(res, ok({ defaultMarkupRatio: 0.02, markupRatio: 0.02 }));
+  }
+  if (pathname.includes("/supplierMarkupConfig/save/config")) {
+    return sendJson(res, successMessage());
+  }
+  if (pathname.includes("/supplierSettleInfo/second/settleInfo/page")) {
+    return sendJson(res, page(rows.secondSettlementRecords));
+  }
+  if (pathname.includes("/supplierSettleInfo/second/settleInfo/")) {
+    return sendJson(res, successMessage());
+  }
 
   if (pathname.includes("/supplierUser/listBrandBySupplier") || pathname.includes("/supplierUser/listBrand") || pathname.includes("listBrand")) {
     return sendJson(res, ok(brandOptions));
@@ -804,9 +944,7 @@ function handleApi(req, res, pathname, body = {}) {
     ]));
   }
   if (pathname.includes("/supplier/config/list")) {
-    return sendJson(res, page([
-      { id: 1, supplierName: "惠生活本地演示供应商", apiName: "SOTO自动出餐", timeout: 30, status: 1 },
-    ]));
+    return sendJson(res, ok(rows.secondSupplierConfigs));
   }
   if (pathname.includes("/supplier/config/") || pathname.includes("/supplierUser/modifyPassword")) {
     return sendJson(res, successMessage());
@@ -845,4 +983,3 @@ http.createServer(async (req, res) => {
 }).listen(port, "127.0.0.1", () => {
   console.log(`点餐供应商管理系统本地原型：http://127.0.0.1:${port}/`);
 });
-
