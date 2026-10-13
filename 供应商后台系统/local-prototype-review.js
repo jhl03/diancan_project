@@ -1,4 +1,16 @@
 (function () {
+  function routeCompensationDemo() {
+    const route = new URLSearchParams(window.location.search).get("prototypeRoute");
+    const marker = "/供应商后台系统/";
+    const pathname = decodeURIComponent(window.location.pathname);
+    if (route !== "compensation" || !pathname.includes(marker) || pathname.includes("/order/compensation")) return;
+    const base = new URL(".", window.location.href).pathname;
+    const target = `${base}order/compensation`;
+    window.history.replaceState(window.history.state, "", target);
+  }
+
+  routeCompensationDemo();
+
   const RED = "#f56c6c";
   const MARK = "data-prototype-review-key";
 
@@ -121,8 +133,13 @@
       }
       .prototype-merge-upload-bar {
         margin: 8px 0 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
       }
-      .prototype-merge-upload-btn {
+      .prototype-merge-upload-btn,
+      .prototype-invoice-mark-batch-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -135,6 +152,20 @@
         font-size: 14px;
         font-weight: 600;
         cursor: pointer;
+      }
+      .prototype-invoice-mark-batch-btn {
+        border: 1px solid #409eff;
+        background: #ecf5ff;
+        color: #409eff;
+      }
+      .prototype-invoice-mark-toggle-btn {
+        margin-left: 10px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: #409eff;
+        cursor: pointer;
+        font-size: 14px;
       }
       .prototype-merge-upload-check {
         width: 16px;
@@ -174,35 +205,6 @@
         color: #fff;
         font-size: 14px;
         box-shadow: 0 10px 28px rgba(15, 23, 42, 0.22);
-      }
-      .prototype-new-filter-item {
-        position: relative;
-      }
-      .prototype-new-filter-item .el-input__inner {
-        border-color: ${RED} !important;
-      }
-      .prototype-new-filter-item .el-input__inner::placeholder {
-        color: ${RED} !important;
-        opacity: 0.78;
-      }
-      .prototype-new-config-card {
-        border: 1px solid #ffccc7 !important;
-        box-shadow: 0 2px 8px rgba(245, 108, 108, 0.08);
-      }
-      .prototype-new-config-card h3,
-      .prototype-new-config-card .description,
-      .prototype-new-config-card .prototype-config-label {
-        color: ${RED} !important;
-      }
-      .prototype-new-config-card .el-input__inner {
-        border-color: ${RED} !important;
-      }
-      .prototype-new-config-card .prototype-config-unit {
-        color: ${RED} !important;
-      }
-      .prototype-settlement-derived {
-        color: ${RED} !important;
-        font-weight: 700 !important;
       }
       .prototype-merge-dialog-mask {
         position: fixed;
@@ -298,6 +300,177 @@
         background: #409eff;
         color: #fff;
       }
+      .prototype-compensation-user-filter,
+      .prototype-compensation-merge-id-filter {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-right: 12px;
+        color: #606266;
+        vertical-align: middle;
+      }
+      .prototype-compensation-user-filter-label,
+      .prototype-compensation-merge-id-filter-label {
+        white-space: nowrap;
+      }
+      .prototype-compensation-user-filter-select {
+        min-width: 250px;
+        height: 32px;
+        padding: 0 10px;
+        border: 1px solid #dcdfe6;
+        border-radius: 4px;
+        background: #fff;
+        color: #606266;
+        outline: none;
+      }
+      .prototype-compensation-merge-id-filter-label {
+        color: ${RED};
+        font-weight: 700;
+      }
+      .prototype-compensation-merge-id-filter-input {
+        width: 200px;
+        height: 32px;
+        padding: 0 10px;
+        border: 1px solid #ffb4b4;
+        border-radius: 4px;
+        background: #fff;
+        color: ${RED};
+        outline: none;
+        box-sizing: border-box;
+      }
+      .prototype-compensation-merge-id-filter-input::placeholder {
+        color: ${RED};
+        opacity: 0.78;
+      }
+      .prototype-after-sale-merge-id-filter {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-right: 12px;
+        vertical-align: middle;
+      }
+      .prototype-after-sale-supplier-filter {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-right: 12px;
+        vertical-align: middle;
+      }
+      .prototype-after-sale-supplier-filter-label {
+        color: ${RED};
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .prototype-after-sale-supplier-filter-input {
+        width: 220px;
+        height: 32px;
+        padding: 0 10px;
+        border: 1px solid #ffb4b4;
+        border-radius: 4px;
+        background: #fff;
+        color: ${RED};
+        outline: none;
+        box-sizing: border-box;
+      }
+      .prototype-after-sale-supplier-filter-input::placeholder {
+        color: ${RED};
+        opacity: 0.78;
+      }
+      .prototype-after-sale-merge-id-filter-label {
+        color: ${RED};
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .prototype-after-sale-invoice-mark-filter {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-right: 12px;
+        vertical-align: middle;
+      }
+      .prototype-after-sale-invoice-mark-filter-label {
+        color: ${RED};
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .prototype-after-sale-invoice-mark-filter-select {
+        min-width: 160px;
+        height: 32px;
+        padding: 0 10px;
+        border: 1px solid #ffb4b4;
+        border-radius: 4px;
+        background: #fff;
+        color: ${RED};
+        outline: none;
+        box-sizing: border-box;
+      }
+      .prototype-after-sale-merge-id-filter-input {
+        width: 200px;
+        height: 32px;
+        padding: 0 10px;
+        border: 1px solid #ffb4b4;
+        border-radius: 4px;
+        background: #fff;
+        color: ${RED};
+        outline: none;
+        box-sizing: border-box;
+      }
+      .prototype-after-sale-merge-id-filter-input::placeholder {
+        color: ${RED};
+        opacity: 0.78;
+      }      .prototype-supplier-commission-card {
+        width: 400px;
+        min-height: 200px;
+        margin-top: 16px;
+        padding: 20px;
+        border: 1px solid #ebeef5;
+        border-radius: 6px;
+        background: #fff;
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
+        box-sizing: border-box;
+      }
+      .prototype-supplier-commission-card h3 {
+        margin: 0 0 18px;
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .prototype-supplier-commission-card .setting-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .prototype-supplier-commission-card .value-display {
+        display: flex;
+        align-items: center;
+      }
+      .prototype-supplier-commission-card .commission-input {
+        width: 120px;
+        height: 32px;
+        border: 1px solid #dcdfe6;
+        border-radius: 4px;
+        padding: 0 11px;
+        color: ${RED};
+        box-sizing: border-box;
+      }
+      .prototype-supplier-commission-card .commission-input:disabled {
+        background: #f5f7fa;
+        color: ${RED};
+        cursor: not-allowed;
+      }
+      .prototype-supplier-commission-card .action-buttons {
+        display: flex;
+        gap: 10px;
+      }
+      .prototype-supplier-commission-card h3,
+      .prototype-supplier-commission-card .value-display {
+        color: ${RED} !important;
+      }
+      .prototype-supplier-commission-card .description {
+        color: #909399 !important;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
     `;
     document.head.appendChild(style);
   }
@@ -311,30 +484,41 @@
       title: "本页改动说明：售后补贴单",
       items: [
         ["抬头类型", "新增红字字段，显示在发票抬头/税号左侧；数据源为客服本地生活工作台接口。"],
-        ["供应商名称", "三个 Tab 的筛选区新增“供应商名称”；列表在商品品牌后新增“供应商名称”，数据源取真实接补贴单的供应商名称。"],
         ["发票上传/重传", "上传发票与重新上传发票弹窗同步展示抬头类型，用于校验发票主体。"],
         ["合并上传", "处理中列表支持勾选多张未结束工单后点击“合并上传”；已驳回列表每条工单前展示可勾选方块，支持勾选工单后点击“重新合并上传”。处理中已结束工单不可选，已驳回工单均可选。未勾选时提示“请选择要合并上传发票的工单”；先校验发票抬头/税号，不一致提示“选择的发票抬头/税号不一样”；再校验发票类型，不一致提示“所选发票类型不一样”；校验通过后弹出与上传弹窗内容一致的合并上传发票弹窗，开票金额=所选工单用户支付价合计。"],
+        ["合并ID 字段", "若订单原本无合并ID，后续又抢到一笔满足同组条件的订单，则新抢到的订单与原订单同步填充同一个合并ID。"],
+        ["合并ID筛选", "筛选区新增红字“合并ID”输入框，默认提示词为“请输入合并ID”；输入后按当前列表合并ID精准搜索，点击搜索或按回车执行，点击重置清空筛选。"],
+        ["供应商名称筛选", "三个 tab 页新增红字筛选项“供应商名称”；数据源取真实接补贴单的供应商名称。"],
+        ["供应商名称字段", "三个 tab 页列表在“商品品牌”后新增红字字段“供应商名称”；数据源取真实接补贴单的供应商名称。"],
+        ["开票标记筛选", "处理中、已驳回页面新增筛选项“开票标记”，枚举值为“全部、开票中、待开票”，默认选择“全部”，用于按当前列表开票标识筛选。"],
+        ["合并上传校验", "点击“合并上传”或“重新合并上传”时，需至少勾选两个工单且所选工单合并ID完全一致；若所选工单合并ID为空或显示为“-”，提示“合并ID为空的不能进行合并上传”；仅勾选一个有效合并ID工单时提示“至少勾选两个相同的合并ID”，合并ID不同提示“合并ID不同，请重新选择”。"],
+        ["开票标识", "处理中、已驳回列表在“状态”字段后新增红字字段“开票标识”，默认显示“待开票”；每条数据操作列新增“标记开票中”按钮，点击后该行开票标识变为“开票中”，按钮同步变为“取消标记”；再次点击取消后恢复“待开票”。已上传列表不展示该字段和操作。"],
+        ["批量标记", "“合并上传/重新合并上传”按钮后新增“批量标记”“批量取消标记”。未选择订单时提示“至少选择一个订单”；批量标记时，所选订单中存在未标记数据则标记为“开票中”并提示“标记成功”，若所选订单已全部标记则提示“已全部标记，请选择未标记的订单”；批量取消标记时，所选订单中存在已标记数据则恢复为“待开票”并提示“取消标记成功”，若所选订单均未标记则提示“没有未标记的订单，请重新选择”。"],
+        ["注意", "1. 已上传和已驳回页面已有的合并ID，就不能在使用了。2. 合并上传是多个订单的发票文件是相同的，上传到点餐后台/客服工作台。"],
       ],
       notes: [],
     },
     "/order/compensation": {
       title: "本页改动说明：补偿单列表",
       items: [
-        ["用户名称", "新增红字字段，显示在商品名称右侧；数据源取该工单的发票抬头。"],
+        ["合并ID筛选", "筛选区新增红字“合并ID”输入框，默认提示词为“请输入合并ID”；输入后按当前列表合并ID精准搜索，点击搜索或按回车执行，点击重置清空筛选。"],
+        ["合并ID 字段", "列表在“门店所在城市”左侧新增红字字段“合并ID”。"],
       ],
       notes: [],
     },
     "/supplier/settlement-record": {
       title: "本页改动说明：二级供应商结算",
       items: [
-        ["售后补贴单", "新增交易类型“售后补贴单”；关联单号取补贴单号；变动金额=实际补贴金额-一级供应商设置的补贴抽成金额。"],
+        ["售后补贴单交易类型", "新增交易类型“售后补贴单”；关联单号取补贴单号，变动金额按“实际补贴金额 - 一级供应商设置的补贴抽成”展示。"],
       ],
       notes: [],
     },
     "/supplier/setting": {
       title: "本页改动说明：二级供应商配置",
       items: [
-        ["二级供应商补贴单抽成", "新增配置卡片，卡片样式与“二级供应商加价比例”一致；说明文字为“二级供应商补贴金额为实际补贴金额- 配置的抽成金额”。"],
+        ["二级供应商补贴单抽成", "新增配置项“二级供应商补贴单抽成”，卡片样式与“二级供应商加价比例”一致。"],
+        ["默认值与校验", "抽成默认值为 0；输入范围 0-200，不能为空。"],
+        ["说明文案", "灰色说明文案调整为“二级供应商补贴金额为实际补贴金额- 配置的抽成金额；输入范围0-200，不能为空”。"],
       ],
       notes: [],
     },
@@ -348,8 +532,8 @@
   const changedRoutes = [
     { path: "/order/after-sale-subsidy", text: "售后补贴单" },
     { path: "/order/compensation", text: "补偿单列表" },
-    { path: "/supplier/setting", text: "二级供应商配置" },
     { path: "/supplier/settlement-record", text: "二级供应商结算" },
+    { path: "/supplier/setting", text: "二级供应商配置" },
   ];
 
   function clearDuplicateBadges() {
@@ -442,15 +626,25 @@
     const value = text || "";
     if (value.includes("肯德基")) return "厦门肯德基有限公司";
     if (value.includes("麦当劳")) return "金拱门（中国）有限公司";
-    if (value.includes("38元") || value.includes("厦门")) return "上海云朵互动科技有限公司";
-    if (value.includes("瑞幸")) return "厦门晨星信息科技有限公司";
+    if (value.includes("瑞幸")) return "瑞幸咖啡（中国）有限公司";
     return "该工单发票抬头";
+  }
+
+  function guessSupplierName(text) {
+    const value = text || "";
+    if (value.includes("KFC") || value.includes("肯德基") || value.includes("厦门")) return "惠生活厦门出餐供应商";
+    if (value.includes("MCD") || value.includes("麦当劳") || value.includes("上海")) return "惠生活上海出餐供应商";
+    if (value.includes("LK") || value.includes("瑞幸") || value.includes("北京")) return "惠生活北京出餐供应商";
+    return "惠生活北京出餐供应商";
   }
 
   function columnWidth(key) {
     if (key === "compensation-user-name") return 170;
-    if (key === "after-sale-supplier-name") return 210;
+    if (key === "compensation-merge-id") return 110;
     if (key === "invoice-title-type") return 120;
+    if (key === "after-sale-merge-id") return 110;
+    if (key === "after-sale-supplier-name") return 190;
+    if (key === "invoice-mark-status") return 120;
     return 140;
   }
 
@@ -569,89 +763,287 @@
   }
 
   function patchAfterSaleSubsidy() {
+    patchAfterSaleMergeId();
+    patchAfterSaleMergeIdFilter();
+    patchAfterSaleSupplierName();
     patchColumnByHeader("发票抬头/税号", "抬头类型", "invoice-title-type", "before", (_row, titleCell) =>
       guessTitleType(textOf(titleCell)),
     );
-    patchColumnByHeader("商品品牌", "供应商名称", "after-sale-supplier-name", "after", (row) => {
-      const subsidyNo = textOf(row).match(/SUB\d+/)?.[0] || "";
-      return supplierNameBySubsidyNo[subsidyNo] || "待补充供应商";
-    });
-    patchSupplierNameFilter();
     patchInvoiceUploadDialogs();
+    patchInvoiceMarkColumnAndActions();
     patchAfterSaleMergeUpload();
   }
 
-  const supplierNameBySubsidyNo = {
-    SUB202609140001: "厦门晨星信息科技有限公司",
-    SUB202609140002: "厦门肯德基有限公司",
-    SUB202609140003: "金拱门（中国）有限公司",
-    SUB202609140004: "上海云朵互动科技有限公司",
-    SUB202609140101: "厦门惠生活供应链有限公司",
-    SUB202609140102: "厦门肯德基有限公司",
-    SUB202609150103: "北京优选数字科技有限公司",
-    SUB202609150104: "金拱门（中国）有限公司",
-    SUB202609150105: "厦门肯德基有限公司",
-    SUB202609130201: "金拱门（中国）有限公司",
-    SUB202609130202: "厦门晨星信息科技有限公司",
-    SUB202609120301: "厦门肯德基有限公司",
-    SUB202609120302: "金拱门（中国）有限公司",
-  };
-
-  function applySupplierNameFilter() {
-    const filter = String(window.__prototypeSupplierNameFilter || "").trim();
+  function patchSecondSettlement() {
     document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
-      const supplierCell = row.querySelector(`td[${MARK}="after-sale-supplier-name"]`);
-      if (!supplierCell) return;
-      row.style.display = !filter || textOf(supplierCell).includes(filter) ? "" : "none";
+      const rowText = textOf(row);
+      if (!rowText.includes("售后补贴单") && !rowText.includes("SUB")) return;
+      Array.from(row.children).forEach((cell) => {
+        const cellText = textOf(cell);
+        if (
+          cellText.includes("售后补贴单") ||
+          cellText.includes("SUB") ||
+          /^\+?\d+(?:\.\d+)?$/.test(cellText)
+        ) {
+          cell.classList.add("prototype-review-red");
+        }
+      });
     });
   }
 
-  function patchSupplierNameFilter() {
-    if (!window.location.pathname.includes("/order/after-sale-subsidy")) return;
-    const form = document.querySelector(".app-main .app-container .el-form") || document.querySelector(".el-form");
-    if (!form) return;
-    let item = form.querySelector(`div[${MARK}="after-sale-supplier-filter"]`);
-    if (!item) {
-      item = document.createElement("div");
-      item.className = "el-form-item prototype-new-filter-item";
-      item.setAttribute(MARK, "after-sale-supplier-filter");
-      item.innerHTML = `
-        <div class="el-form-item__content">
-          <div class="el-input">
-            <input class="el-input__inner" type="text" placeholder="请输入供应商名称" aria-label="供应商名称" />
+  function patchSupplierSetting() {
+    const container = document.querySelector(".supplier-setting .setting-item") || document.querySelector(".supplier-setting") || document.querySelector(".app-container");
+    if (!container) return;
+    let card = container.querySelector(".prototype-supplier-commission-card");
+    if (!card) {
+      card = document.createElement("div");
+      card.className = "supplier-markup-setting prototype-supplier-commission-card";
+      card.dataset.savedValue = "0";
+      card.innerHTML = `
+        <h3>二级供应商补贴单抽成</h3>
+        <div class="setting-content">
+          <div class="value-display">
+            <input class="commission-input" value="0" min="0" max="200" disabled />
+            <div style="margin-left:10px">元</div>
           </div>
+          <div class="description">二级供应商补贴金额为实际补贴金额- 配置的抽成金额；输入范围0-200，不能为空</div>
+          <div class="action-buttons"></div>
         </div>
       `;
-      form.appendChild(item);
+      container.appendChild(card);
     }
-    const input = item.querySelector("input");
-    if (!input) return;
-    input.value = window.__prototypeSupplierNameFilter || "";
-    if (input.dataset.prototypeSupplierFilterBound !== "true") {
-      input.dataset.prototypeSupplierFilterBound = "true";
-      input.addEventListener("input", () => {
-        window.__prototypeSupplierNameFilter = input.value;
-        applySupplierNameFilter();
+    bindSupplierCommissionCard(card);
+  }
+
+  function bindSupplierCommissionCard(card) {
+    const input = card.querySelector(".commission-input");
+    const actions = card.querySelector(".action-buttons");
+    if (!input || !actions) return;
+    if (!card.dataset.savedValue) card.dataset.savedValue = input.value || "0";
+    if (card.dataset.savedValue === "0.60") card.dataset.savedValue = "0";
+
+    const renderRead = () => {
+      input.disabled = true;
+      input.value = card.dataset.savedValue;
+      actions.innerHTML = '<button type="button" class="el-button el-button--primary prototype-commission-edit"><span>编辑</span></button>';
+      actions.querySelector(".prototype-commission-edit").addEventListener("click", renderEdit);
+    };
+    const renderEdit = () => {
+      input.disabled = false;
+      input.focus();
+      actions.innerHTML = `
+        <button type="button" class="el-button el-button--primary prototype-commission-save"><span>保存</span></button>
+        <button type="button" class="el-button prototype-commission-cancel"><span>取消</span></button>
+      `;
+      actions.querySelector(".prototype-commission-save").addEventListener("click", () => {
+        const value = String(input.value || "").trim();
+        const numericValue = Number(value);
+        if (!value || numericValue < 0 || numericValue > 200 || Number.isNaN(numericValue)) {
+          showToast("请输入0-200之间的抽成金额，不能为空");
+          return;
+        }
+        card.dataset.savedValue = String(numericValue);
+        showToast("保存成功");
+        renderRead();
       });
-      input.addEventListener("change", applySupplierNameFilter);
+      actions.querySelector(".prototype-commission-cancel").addEventListener("click", renderRead);
+    };
+
+    if (card.dataset.prototypeCommissionBound !== "true") {
+      card.dataset.prototypeCommissionBound = "true";
+      input.addEventListener("input", () => {
+        input.value = input.value.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
+      });
+      renderRead();
     }
-    applySupplierNameFilter();
+  }
+
+  function claimNoFromRow(row) {
+    return textOf(row).match(/CLM\d{12,}/)?.[0] || "";
+  }
+
+  function mergeMetaByClaimNo(claimNo) {
+    return (window.__supplierPrototypeSubsidyMergeMeta || {})[claimNo] || null;
+  }
+
+  function supplierNameFromAfterSaleRow(row) {
+    const claimNo = claimNoFromRow(row);
+    const meta = mergeMetaByClaimNo(claimNo);
+    return meta?.realMealSupplierName || guessSupplierName(textOf(row));
+  }
+
+  function afterSaleMergeIdFromRow(row) {
+    const claimNo = claimNoFromRow(row);
+    const meta = mergeMetaByClaimNo(claimNo);
+    const mergeId = meta?.mergeId || "-";
+    const rowText = textOf(row);
+    if ((isProcessingTabActive() || rowText.includes("处理中") || isRejectedTabActive() || rowText.includes("已驳回")) && mergeId === "9629") {
+      return "-";
+    }
+    if ((rowText.includes("已上传") || activeTabText().includes("已上传")) && mergeId === "-") {
+      return "9629";
+    }
+    return mergeId;
+  }
+
+  function syncAfterSaleMergeIdCells() {
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const mergeCell = row.querySelector(`td[${MARK}="after-sale-merge-id"]`);
+      if (!mergeCell) return;
+      const claimCell = Array.from(row.children).find((cell) =>
+        cell !== mergeCell && /^CLM\d{12,}/.test(textOf(cell))
+      );
+      if (claimCell && claimCell.previousElementSibling !== mergeCell) claimCell.before(mergeCell);
+      const content = mergeCell.querySelector(".cell") || mergeCell;
+      content.textContent = afterSaleMergeIdFromRow(row);
+    });
+  }
+
+  function applyAfterSaleMergeIdFilter() {
+    const input = document.querySelector(".prototype-after-sale-merge-id-filter-input");
+    const value = String(input?.value || "").trim();
+    const supplierInput = document.querySelector(".prototype-after-sale-supplier-filter-input");
+    const supplierValue = String(supplierInput?.value || "").trim();
+    const markSelect = document.querySelector(".prototype-after-sale-invoice-mark-filter-select");
+    const markValue = String(markSelect?.value || "全部");
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const mergeId = afterSaleMergeIdFromRow(row);
+      const mergeMatch = !value || mergeId === value;
+      const supplierMatch = !supplierValue || supplierNameFromAfterSaleRow(row).includes(supplierValue);
+      const markMatch = !isAfterSaleSelectionTabActive() || markValue === "全部" || invoiceMarkStatusForRow(row) === markValue;
+      row.style.display = mergeMatch && supplierMatch && markMatch ? "" : "none";
+    });
+  }
+
+  function patchAfterSaleMergeIdFilter() {
+    const form = document.querySelector(".app-main .app-container .el-form") || document.querySelector(".el-form");
+    if (!form) return;
+    document.querySelectorAll(".prototype-compensation-merge-id-filter").forEach((field) => field.remove());
+    if (!isAfterSaleSelectionTabActive()) {
+      form.querySelector(".prototype-after-sale-invoice-mark-filter")?.remove();
+    }
+    let field = form.querySelector(".prototype-after-sale-merge-id-filter");
+    if (!field) {
+      field = document.createElement("div");
+      field.className = "prototype-after-sale-merge-id-filter";
+      field.innerHTML = `
+        <span class="prototype-after-sale-merge-id-filter-label">合并ID</span>
+        <input class="prototype-after-sale-merge-id-filter-input" type="text" placeholder="请输入合并ID" />
+      `;
+      form.insertBefore(field, form.firstElementChild || null);
+    }
+    let supplierField = form.querySelector(".prototype-after-sale-supplier-filter");
+    if (!supplierField) {
+      supplierField = document.createElement("div");
+      supplierField.className = "prototype-after-sale-supplier-filter";
+      supplierField.innerHTML = `
+        <span class="prototype-after-sale-supplier-filter-label">供应商名称</span>
+        <input class="prototype-after-sale-supplier-filter-input" type="text" placeholder="请输入供应商名称" />
+      `;
+      field.after(supplierField);
+    }
+    let markField = form.querySelector(".prototype-after-sale-invoice-mark-filter");
+    if (isAfterSaleSelectionTabActive() && !markField) {
+      markField = document.createElement("div");
+      markField.className = "prototype-after-sale-invoice-mark-filter";
+      markField.innerHTML = `
+        <span class="prototype-after-sale-invoice-mark-filter-label">开票标记</span>
+        <select class="prototype-after-sale-invoice-mark-filter-select" aria-label="开票标记">
+          <option value="全部" selected>全部</option>
+          <option value="开票中">开票中</option>
+          <option value="待开票">待开票</option>
+        </select>
+      `;
+      supplierField.after(markField);
+    }
+    const input = field.querySelector("input");
+    if (input && input.dataset.prototypeMergeFilterBound !== "true") {
+      input.dataset.prototypeMergeFilterBound = "true";
+      input.addEventListener("input", applyAfterSaleMergeIdFilter);
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          applyAfterSaleMergeIdFilter();
+        }
+      });
+    }
+    const markSelect = form.querySelector(".prototype-after-sale-invoice-mark-filter-select");
+    if (markSelect && markSelect.dataset.prototypeInvoiceMarkFilterBound !== "true") {
+      markSelect.dataset.prototypeInvoiceMarkFilterBound = "true";
+      markSelect.addEventListener("change", applyAfterSaleMergeIdFilter);
+    }
+    const supplierInput = supplierField.querySelector("input");
+    if (supplierInput && supplierInput.dataset.prototypeSupplierFilterBound !== "true") {
+      supplierInput.dataset.prototypeSupplierFilterBound = "true";
+      supplierInput.addEventListener("input", applyAfterSaleMergeIdFilter);
+      supplierInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          applyAfterSaleMergeIdFilter();
+        }
+      });
+    }
+    const searchButton = Array.from(form.querySelectorAll("button")).find((button) => textOf(button).includes("搜索"));
+    if (searchButton && searchButton.dataset.prototypeMergeIdSearchBound !== "true") {
+      searchButton.dataset.prototypeMergeIdSearchBound = "true";
+      searchButton.addEventListener("click", () => window.setTimeout(applyAfterSaleMergeIdFilter, 80));
+    }
+    const resetButton = Array.from(form.querySelectorAll("button")).find((button) => textOf(button).includes("重置"));
+    if (resetButton && resetButton.dataset.prototypeMergeIdResetBound !== "true") {
+      resetButton.dataset.prototypeMergeIdResetBound = "true";
+      resetButton.addEventListener("click", () => {
+        window.setTimeout(() => {
+          const current = document.querySelector(".prototype-after-sale-merge-id-filter-input");
+          if (current) current.value = "";
+          const supplier = document.querySelector(".prototype-after-sale-supplier-filter-input");
+          if (supplier) supplier.value = "";
+          const mark = document.querySelector(".prototype-after-sale-invoice-mark-filter-select");
+          if (mark) mark.value = "全部";
+          applyAfterSaleMergeIdFilter();
+        }, 80);
+      });
+    }
+    applyAfterSaleMergeIdFilter();
+  }
+
+  function patchAfterSaleMergeId() {
+    patchColumnByHeader("抢单编号", "合并ID", "after-sale-merge-id", "before", (row) =>
+      afterSaleMergeIdFromRow(row),
+    );
+    syncAfterSaleMergeIdCells();
+  }
+
+  function patchAfterSaleSupplierName() {
+    patchColumnByHeader("商品品牌", "供应商名称", "after-sale-supplier-name", "after", (row) =>
+      supplierNameFromAfterSaleRow(row),
+    );
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const supplierCell = row.querySelector(`td[${MARK}="after-sale-supplier-name"]`);
+      if (!supplierCell) return;
+      const brandCell = Array.from(row.children).find((cell) =>
+        cell !== supplierCell && /^(瑞幸咖啡|肯德基|麦当劳)$/.test(textOf(cell))
+      );
+      if (brandCell && brandCell.nextElementSibling !== supplierCell) brandCell.after(supplierCell);
+      const content = supplierCell.querySelector(".cell") || supplierCell;
+      content.textContent = supplierNameFromAfterSaleRow(row);
+    });
+  }
+
+  function activeTabText() {
+    return textOf(document.querySelector(".el-tabs__item.is-active") || document.querySelector(".el-tabs__item[aria-selected='true']"));
   }
 
   function isProcessingTabActive() {
-    const active = document.querySelector(".el-tabs__item.is-active, .el-tabs__item[aria-selected='true']");
-    return textOf(active).includes("处理中");
+    return activeTabText().includes("处理中");
   }
 
   function isAfterSaleSelectionTabActive() {
-    const active = document.querySelector(".el-tabs__item.is-active, .el-tabs__item[aria-selected='true']");
-    const text = textOf(active);
+    const text = activeTabText();
     return text.includes("处理中") || text.includes("已驳回");
   }
 
   function isRejectedTabActive() {
-    const active = document.querySelector(".el-tabs__item.is-active, .el-tabs__item[aria-selected='true']");
-    return textOf(active).includes("已驳回");
+    return activeTabText().includes("已驳回");
   }
 
   function getRowKey(row, index) {
@@ -659,7 +1051,7 @@
   }
 
   function isExpiredAfterSaleRow(row) {
-    return textOf(row).includes("已结束");
+    return !isProcessingTabActive() && textOf(row).includes("已结束");
   }
 
   function normalizeAmount(value) {
@@ -692,6 +1084,7 @@
       invoiceTitle: invoice.invoiceTitle,
       taxpayerNo: invoice.taxpayerNo,
       userPayAmount: normalizeAmount(textOf(cells[amountIndex])),
+      mergeId: afterSaleMergeIdFromRow(row),
     };
   }
 
@@ -706,6 +1099,90 @@
       const typeContent = markedCell.querySelector(".cell") || markedCell;
       typeContent.textContent = guessTitleType(textOf(invoiceCell));
     });
+  }
+
+  function invoiceMarkStore() {
+    if (!window.__supplierPrototypeInvoiceMarkStore) window.__supplierPrototypeInvoiceMarkStore = {};
+    return window.__supplierPrototypeInvoiceMarkStore;
+  }
+
+  function invoiceMarkKeyFromRow(row, index = 0) {
+    return claimNoFromRow(row) || getRowKey(row, index);
+  }
+
+  function invoiceMarkRowIndex(row) {
+    return Array.from(document.querySelectorAll("table.el-table__body tbody tr")).indexOf(row);
+  }
+
+  function invoiceMarkStatus(row, index = 0) {
+    return invoiceMarkStore()[invoiceMarkKeyFromRow(row, index)] || "待开票";
+  }
+
+  function setInvoiceMarkStatus(row, status, index = 0) {
+    invoiceMarkStore()[invoiceMarkKeyFromRow(row, index)] = status;
+  }
+
+  function invoiceMarkStatusForRow(row) {
+    const index = invoiceMarkRowIndex(row);
+    return invoiceMarkStatus(row, index >= 0 ? index : 0);
+  }
+
+  function setInvoiceMarkStatusForRow(row, status) {
+    const index = invoiceMarkRowIndex(row);
+    setInvoiceMarkStatus(row, status, index >= 0 ? index : 0);
+  }
+
+  function syncInvoiceMarkCellsAndButtons() {
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row, index) => {
+      const status = invoiceMarkStatus(row, index);
+      const markCell = row.querySelector(`td[${MARK}="invoice-mark-status"]`);
+      if (markCell) {
+        const statusCell = Array.from(row.children).find((cell) =>
+          cell !== markCell && /处理中|已驳回/.test(textOf(cell))
+        );
+        if (statusCell && statusCell.nextElementSibling !== markCell) statusCell.after(markCell);
+        const content = markCell.querySelector(".cell") || markCell;
+        content.textContent = status;
+      }
+      const button = row.querySelector(".prototype-invoice-mark-toggle-btn");
+      if (button) button.textContent = status === "开票中" ? "取消标记" : "标记开票中";
+    });
+  }
+
+  function removeInvoiceMarkColumnAndButtons() {
+    document.querySelectorAll(`th[${MARK}="invoice-mark-status"], td[${MARK}="invoice-mark-status"], col[${MARK}="invoice-mark-status"]`)
+      .forEach((node) => node.remove());
+    document.querySelectorAll(".prototype-invoice-mark-toggle-btn").forEach((button) => button.remove());
+  }
+
+  function patchInvoiceMarkColumnAndActions() {
+    if (!isAfterSaleSelectionTabActive()) {
+      removeInvoiceMarkColumnAndButtons();
+      return;
+    }
+    patchColumnByHeader("状态", "开票标识", "invoice-mark-status", "after", (row, _cell, _cells) =>
+      invoiceMarkStatusForRow(row),
+    );
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row, index) => {
+      const operationCell = Array.from(row.children).reverse().find((cell) =>
+        textOf(cell).includes("上传") || textOf(cell).includes("查看发票文件") || textOf(cell).includes("放弃")
+      ) || row.lastElementChild;
+      if (!operationCell || operationCell.querySelector(".prototype-invoice-mark-toggle-btn")) return;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "prototype-invoice-mark-toggle-btn";
+      button.textContent = invoiceMarkStatus(row, index) === "开票中" ? "取消标记" : "标记开票中";
+      button.addEventListener("click", () => {
+        const current = invoiceMarkStatusForRow(row);
+        setInvoiceMarkStatusForRow(row, current === "开票中" ? "待开票" : "开票中");
+        syncInvoiceMarkCellsAndButtons();
+        applyAfterSaleMergeIdFilter();
+        showToast(current === "开票中" ? "取消标记成功" : "标记成功");
+      });
+      const content = operationCell.querySelector(".cell") || operationCell;
+      content.appendChild(button);
+    });
+    syncInvoiceMarkCellsAndButtons();
   }
 
   function removeMergeSelectionColumn() {
@@ -730,6 +1207,13 @@
   function validateMergeRecords(records) {
     if (!records.length) return "请选择要合并上传发票的工单";
     const first = records[0];
+    if (records.some((item) => !item.mergeId || item.mergeId === "-")) {
+      return "合并ID为空的不能进行合并上传";
+    }
+    if (records.length < 2) return "至少勾选两个相同的合并ID";
+    if (records.some((item) => item.mergeId !== first.mergeId)) {
+      return "合并ID不同，请重新选择";
+    }
     const differentInvoice = records.some((item) =>
       item.invoiceTitle !== first.invoiceTitle || item.taxpayerNo !== first.taxpayerNo
     );
@@ -780,14 +1264,99 @@
     document.body.appendChild(mask);
   }
 
+  function selectedMergeRows() {
+    return Array.from(document.querySelectorAll(".prototype-merge-upload-check"))
+      .filter((item) => item.checked && !item.disabled)
+      .map((item) => item.closest("tr"))
+      .filter(Boolean);
+  }
+
+  function batchSetInvoiceMark(marked) {
+    const rows = selectedMergeRows();
+    if (!rows.length) {
+      showToast("至少选择一个订单");
+      return;
+    }
+    if (marked) {
+      const targets = rows.filter((row) => invoiceMarkStatusForRow(row) !== "开票中");
+      if (!targets.length) {
+        showToast("已全部标记，请选择未标记的订单");
+        return;
+      }
+      targets.forEach((row) => setInvoiceMarkStatusForRow(row, "开票中"));
+      syncInvoiceMarkCellsAndButtons();
+      applyAfterSaleMergeIdFilter();
+      showToast("标记成功");
+      return;
+    }
+    const targets = rows.filter((row) => invoiceMarkStatusForRow(row) === "开票中");
+    if (!targets.length) {
+      showToast("没有未标记的订单，请重新选择");
+      return;
+    }
+    targets.forEach((row) => setInvoiceMarkStatusForRow(row, "待开票"));
+    syncInvoiceMarkCellsAndButtons();
+    applyAfterSaleMergeIdFilter();
+    showToast("取消标记成功");
+  }
+
+  function ensureMergeUploadBarButtons(bar, activeRejected) {
+    if (!bar) return;
+    if (!bar.querySelector(".prototype-merge-upload-btn")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "prototype-merge-upload-btn";
+      bar.appendChild(button);
+    }
+    const uploadButton = bar.querySelector(".prototype-merge-upload-btn");
+    uploadButton.textContent = activeRejected ? "重新合并上传" : "合并上传";
+    if (uploadButton.dataset.prototypeMergeUploadBound !== "true") {
+      uploadButton.dataset.prototypeMergeUploadBound = "true";
+      uploadButton.addEventListener("click", () => {
+        const records = Array.from(document.querySelectorAll(".prototype-merge-upload-check"))
+          .filter((item) => item.checked && !item.disabled)
+          .map((item) => ({
+            invoiceTitle: item.dataset.invoiceTitle || "",
+            taxpayerNo: item.dataset.taxpayerNo || "",
+            titleType: item.dataset.titleType || "",
+            userPayAmount: normalizeAmount(item.dataset.userPayAmount),
+            mergeId: item.dataset.mergeId || "",
+          }));
+        const message = validateMergeRecords(records);
+        if (message) {
+          showToast(message);
+          return;
+        }
+        showMergeUploadDialog(records, isRejectedTabActive());
+      });
+    }
+    const buttons = [
+      ["prototype-batch-mark-btn", "批量标记", () => batchSetInvoiceMark(true)],
+      ["prototype-batch-unmark-btn", "批量取消标记", () => batchSetInvoiceMark(false)],
+    ];
+    buttons.forEach(([className, text, handler]) => {
+      let button = bar.querySelector(`.${className}`);
+      if (!button) {
+        button = document.createElement("button");
+        button.type = "button";
+        button.className = `prototype-invoice-mark-batch-btn ${className}`;
+        button.textContent = text;
+        bar.appendChild(button);
+      }
+      if (button.dataset.prototypeBatchMarkBound !== "true") {
+        button.dataset.prototypeBatchMarkBound = "true";
+        button.addEventListener("click", handler);
+      }
+    });
+  }
+
   function patchAfterSaleMergeUpload() {
     const activeSelectionTab = isAfterSaleSelectionTabActive();
     const activeRejected = isRejectedTabActive();
     syncInvoiceTitleTypeCells();
     document.querySelectorAll(".prototype-merge-upload-bar").forEach((bar) => {
       bar.style.display = activeSelectionTab ? "" : "none";
-      const button = bar.querySelector(".prototype-merge-upload-btn");
-      if (button) button.textContent = activeRejected ? "重新合并上传" : "合并上传";
+      ensureMergeUploadBarButtons(bar, activeRejected);
     });
     if (!activeSelectionTab) {
       removeMergeSelectionColumn();
@@ -833,6 +1402,7 @@
             existingCheck.dataset.taxpayerNo = record.taxpayerNo;
             existingCheck.dataset.titleType = record.titleType;
             existingCheck.dataset.userPayAmount = String(record.userPayAmount);
+            existingCheck.dataset.mergeId = record.mergeId;
             if (existingCheck.dataset.prototypeSelectBound !== "true") {
               existingCheck.dataset.prototypeSelectBound = "true";
               existingCheck.addEventListener("change", syncMergeSelectAllState);
@@ -856,6 +1426,7 @@
           check.dataset.taxpayerNo = record.taxpayerNo;
           check.dataset.titleType = record.titleType;
           check.dataset.userPayAmount = String(record.userPayAmount);
+          check.dataset.mergeId = record.mergeId;
           check.dataset.prototypeSelectBound = "true";
           check.addEventListener("change", syncMergeSelectAllState);
         });
@@ -864,27 +1435,14 @@
     syncMergeSelectAllState();
 
     const form = document.querySelector(".app-main .app-container .el-form") || document.querySelector(".el-form");
-    if (!form || document.querySelector(".prototype-merge-upload-bar")) return;
-    const bar = document.createElement("div");
-    bar.className = "prototype-merge-upload-bar";
-    bar.innerHTML = '<button type="button" class="prototype-merge-upload-btn">合并上传</button>';
-    bar.querySelector("button").addEventListener("click", () => {
-      const records = Array.from(document.querySelectorAll(".prototype-merge-upload-check"))
-        .filter((item) => item.checked && !item.disabled)
-        .map((item) => ({
-          invoiceTitle: item.dataset.invoiceTitle || "",
-          taxpayerNo: item.dataset.taxpayerNo || "",
-          titleType: item.dataset.titleType || "",
-          userPayAmount: normalizeAmount(item.dataset.userPayAmount),
-        }));
-      const message = validateMergeRecords(records);
-      if (message) {
-        showToast(message);
-        return;
-      }
-      showMergeUploadDialog(records, isRejectedTabActive());
-    });
-    form.after(bar);
+    if (!form) return;
+    let bar = document.querySelector(".prototype-merge-upload-bar");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.className = "prototype-merge-upload-bar";
+      form.after(bar);
+    }
+    ensureMergeUploadBarButtons(bar, activeRejected);
   }
 
   function patchInvoiceUploadDialogs() {
@@ -909,121 +1467,226 @@
   }
 
   function patchCompensation() {
+    removeCompensationUserNameFilter();
     patchColumnByHeader("商品名称", "用户名称", "compensation-user-name", "after", (_row, productCell) =>
       guessUserName(textOf(productCell)),
     );
+    syncCompensationUserNameCells();
+    patchCompensationMergeId();
+    patchCompensationMergeIdFilter();
+  }
+  function removeCompensationUserNameFilter() {
+    document.querySelectorAll(".prototype-compensation-user-filter").forEach((field) => field.remove());
   }
 
-  const secondSettlementDisplayRows = [
-    ["JS2-202609110001", "2026-09-11 03:00:00", "订单结算", "+16.50", "DD202609110001", "厦门惠生活供应链有限公司"],
-    ["JS2-202609100002", "2026-09-10 03:00:00", "订单结算", "+42.90", "DD202609100002", "北京优选数字科技有限公司"],
-    ["JS2-202609140003", "2026-09-14 10:05:29", "售后补贴单", "+2.10", "SUB202609140101", "厦门惠生活供应链有限公司"],
-    ["JS2-202609140004", "2026-09-14 10:02:17", "售后补贴单", "+4.10", "SUB202609140102", "北京优选数字科技有限公司"],
-  ];
-
-  function setCellText(cell, value) {
-    if (!cell) return;
-    const content = cell.querySelector(".cell") || cell;
-    content.textContent = value;
+  function compensationUserNameFromRow(row) {
+    const cell = row.querySelector(`td[${MARK}="compensation-user-name"]`);
+    return textOf(cell) || guessUserName(textOf(row));
   }
 
-  function patchSecondSupplierSettlement() {
-    document.querySelectorAll("table.el-table__header").forEach((headerTable) => {
-      const headerRow = headerTable.querySelector("thead tr");
-      if (!headerRow) return;
-      const typeIndex = Array.from(headerRow.children).findIndex((cell) => textOf(cell).includes("交易类型"));
-      const amountIndex = Array.from(headerRow.children).findIndex((cell) => textOf(cell).includes("变动金额"));
-      const relationIndex = Array.from(headerRow.children).findIndex((cell) => textOf(cell).includes("关联单据号"));
-      if (typeIndex < 0) return;
-      const { bodyTables } = getTableContext(headerTable);
-      bodyTables.forEach((bodyTable) => {
-        bodyTable.querySelectorAll("tbody tr").forEach((row, rowIndex) => {
-          if (window.location.pathname.includes("/supplier/settlement-record")) {
-            const displayRow = secondSettlementDisplayRows[rowIndex];
-            if (displayRow && textOf(row).replace(/\+/g, "").trim() === "") {
-              displayRow.forEach((value, cellIndex) => setCellText(row.children[cellIndex], value));
-            }
-          }
-          if (!textOf(row).includes("售后补贴单")) return;
-          [typeIndex, amountIndex, relationIndex].forEach((index) => {
-            if (index >= 0 && row.children[index]) row.children[index].classList.add("prototype-settlement-derived");
-          });
-        });
-      });
+  function syncCompensationUserNameCells() {
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const userCell = row.querySelector(`td[${MARK}="compensation-user-name"]`);
+      if (!userCell) return;
+      const productCell = Array.from(row.children).find((cell) =>
+        cell !== userCell && /(券|杯|套餐|拿铁|饮品|早餐)/.test(textOf(cell))
+      );
+      if (productCell && productCell.nextElementSibling !== userCell) productCell.after(userCell);
+      const content = userCell.querySelector(".cell") || userCell;
+      content.textContent = guessUserName(textOf(productCell || row));
     });
   }
 
-  function patchSecondSupplierSetting() {
-    if (!window.location.pathname.includes("/supplier/setting")) return;
-    const original = document.querySelector(".supplier-markup-setting");
-    const host = original?.parentElement;
-    if (!original || !host || host.querySelector(".prototype-new-config-card")) return;
+  function stableFourDigitId(value) {
+    let hash = 0;
+    String(value || "").split("").forEach((char) => {
+      hash = (hash * 31 + char.charCodeAt(0)) % 9000;
+    });
+    return String(1000 + hash).slice(0, 4);
+  }
 
-    const card = original.cloneNode(true);
-    card.classList.add("prototype-new-config-card");
-    card.setAttribute(MARK, "second-supplier-subsidy-commission");
-    const title = card.querySelector("h3");
-    if (title) title.textContent = "二级供应商补贴单抽成";
-    const valueDisplay = card.querySelector(".value-display");
-    if (valueDisplay) {
-      valueDisplay.textContent = "0.50 元";
-      valueDisplay.classList.add("prototype-config-unit");
+  function compensationStoreFromRow(row) {
+    const cells = Array.from(row.children);
+    const storeCell = cells.find((cell) => /.+-.+/.test(textOf(cell)) && !textOf(cell).includes("CLM"));
+    return textOf(storeCell);
+  }
+
+  function compensationMergeKeyFromRow(row) {
+    const userName = compensationUserNameFromRow(row);
+    const store = compensationStoreFromRow(row);
+    if (!userName || !store) return "";
+    return `${userName}|${store}|${userName}`;
+  }
+
+  function compensationMergeIdByKey() {
+    const counts = new Map();
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const key = compensationMergeKeyFromRow(row);
+      if (key) counts.set(key, (counts.get(key) || 0) + 1);
+    });
+    const result = new Map();
+    counts.forEach((count, key) => {
+      if (count >= 2) result.set(key, stableFourDigitId(key));
+    });
+    return result;
+  }
+
+  function compensationMergeIdFromRow(row) {
+    const rowText = textOf(row);
+    if (rowText.includes("瑞幸咖啡 29元饮品券") || rowText.includes("瑞幸咖啡 38元套餐券")) return "6138";
+    return compensationMergeIdByKey().get(compensationMergeKeyFromRow(row)) || "-";
+  }
+
+  function syncCompensationMergeIdCells() {
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const mergeCell = row.querySelector(`td[${MARK}="compensation-merge-id"]`);
+      if (!mergeCell) return;
+      const cityCell = Array.from(row.children).find((cell) =>
+        cell !== mergeCell && /.+-.+/.test(textOf(cell)) && !textOf(cell).includes("CLM")
+      );
+      if (cityCell && cityCell.previousElementSibling !== mergeCell) cityCell.before(mergeCell);
+      const content = mergeCell.querySelector(".cell") || mergeCell;
+      content.textContent = compensationMergeIdFromRow(row);
+    });
+  }
+
+  function patchCompensationMergeId() {
+    patchColumnByHeader("门店所在城市", "合并ID", "compensation-merge-id", "before", (row) =>
+      compensationMergeIdFromRow(row),
+    );
+    syncCompensationMergeIdCells();
+  }
+
+  function applyCompensationMergeIdFilter() {
+    const value = String(document.querySelector(".prototype-compensation-merge-id-filter-input")?.value || "").trim();
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      row.style.display = !value || compensationMergeIdFromRow(row) === value ? "" : "none";
+    });
+  }
+
+  function patchCompensationMergeIdFilter() {
+    const form = document.querySelector(".search-form") || document.querySelector(".el-form");
+    if (!form) return;
+    document.querySelectorAll(".prototype-after-sale-merge-id-filter").forEach((field) => field.remove());
+    const fields = Array.from(document.querySelectorAll(".prototype-compensation-merge-id-filter"));
+    fields.forEach((item, index) => {
+      if (!form.contains(item) || index > 0) item.remove();
+    });
+    let field = fields[0] && form.contains(fields[0]) ? fields[0] : null;
+    if (!field) {
+      field = document.createElement("div");
+      field.className = "prototype-compensation-merge-id-filter";
+      field.innerHTML = `
+        <span class="prototype-compensation-merge-id-filter-label">合并ID</span>
+        <input class="prototype-compensation-merge-id-filter-input" type="text" placeholder="请输入合并ID" />
+      `;
+      form.insertBefore(field, form.firstElementChild || null);
     }
-    const description = card.querySelector(".description");
-    if (description) {
-      description.textContent = "二级供应商补贴金额为实际补贴金额- 配置的抽成金额";
-      description.classList.add("prototype-config-label");
+    const input = field.querySelector("input");
+    if (input && input.dataset.prototypeCompensationMergeFilterBound !== "true") {
+      input.dataset.prototypeCompensationMergeFilterBound = "true";
+      input.addEventListener("input", applyCompensationMergeIdFilter);
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          applyCompensationMergeIdFilter();
+        }
+      });
     }
-    let currentValue = "0.50";
-    const renderView = () => {
-      if (valueDisplay) valueDisplay.textContent = `${currentValue} 元`;
-      if (actions) actions.innerHTML = '<button type="button" class="el-button el-button--primary"><span>编辑</span></button>';
-      actions?.querySelector("button")?.addEventListener("click", renderEdit);
-    };
-    const renderEdit = () => {
-      if (valueDisplay) {
-        valueDisplay.innerHTML = `
-          <div class="el-input" style="max-width: 180px;">
-            <input class="el-input__inner" type="number" min="0" step="0.01" value="${escapeHtml(currentValue)}" aria-label="二级供应商补贴单抽成" />
-          </div>
-          <span class="prototype-config-unit" style="margin-left: 8px;">元</span>
-        `;
-      }
-      if (actions) {
-        actions.innerHTML = `
-          <button type="button" class="el-button el-button--primary"><span>保存</span></button>
-          <button type="button" class="el-button"><span>取消</span></button>
-        `;
-        actions.children[0].addEventListener("click", () => {
-          const input = valueDisplay?.querySelector("input");
-          const value = Number(input?.value);
-          if (!Number.isFinite(value) || value < 0) {
-            showToast("请输入有效的补贴单抽成金额");
-            return;
-          }
-          currentValue = value.toFixed(2);
-          renderView();
-          showToast("保存成功");
-        });
-        actions.children[1].addEventListener("click", renderView);
-      }
-    };
-    const actions = card.querySelector(".action-buttons");
-    renderView();
-    host.appendChild(card);
+    const searchButton = Array.from(form.querySelectorAll("button")).find((button) => textOf(button).includes("搜索"));
+    if (searchButton && searchButton.dataset.prototypeCompensationMergeSearchBound !== "true") {
+      searchButton.dataset.prototypeCompensationMergeSearchBound = "true";
+      searchButton.addEventListener("click", () => window.setTimeout(applyCompensationMergeIdFilter, 80));
+    }
+    const resetButton = Array.from(form.querySelectorAll("button")).find((button) => textOf(button).includes("重置"));
+    if (resetButton && resetButton.dataset.prototypeCompensationMergeResetBound !== "true") {
+      resetButton.dataset.prototypeCompensationMergeResetBound = "true";
+      resetButton.addEventListener("click", () => {
+        window.setTimeout(() => {
+          const current = document.querySelector(".prototype-compensation-merge-id-filter-input");
+          if (current) current.value = "";
+          applyCompensationMergeIdFilter();
+        }, 80);
+      });
+    }
+    applyCompensationMergeIdFilter();
+  }
+
+  function applyCompensationUserNameFilter(value) {
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const matched = !value || compensationUserNameFromRow(row) === value;
+      row.style.display = matched ? "" : "none";
+    });
+  }
+
+  function patchCompensationUserNameFilter() {
+    const form = document.querySelector(".search-form") || document.querySelector(".el-form");
+    if (!form) return;
+
+    let field = form.querySelector(".prototype-compensation-user-filter");
+    if (!field) {
+      field = document.createElement("div");
+      field.className = "prototype-compensation-user-filter";
+      field.innerHTML = `
+        <span class="prototype-compensation-user-filter-label prototype-review-red">用户名称</span>
+        <select class="prototype-compensation-user-filter-select" aria-label="用户名称"></select>
+      `;
+      form.insertBefore(field, form.firstElementChild || null);
+    }
+    const label = field.querySelector(".prototype-compensation-user-filter-label");
+    if (label) label.classList.add("prototype-review-red");
+
+    const counts = new Map();
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const name = compensationUserNameFromRow(row);
+      if (name) counts.set(name, (counts.get(name) || 0) + 1);
+    });
+    const options = Array.from(counts.entries()).sort(([leftName, leftCount], [rightName, rightCount]) =>
+      rightCount - leftCount || leftName.localeCompare(rightName, "zh-CN"),
+    );
+    const signature = JSON.stringify(options);
+    const select = field.querySelector("select");
+    const currentValue = select.value;
+    if (field.dataset.prototypeOptions !== signature) {
+      field.dataset.prototypeOptions = signature;
+      select.innerHTML = [
+        '<option value="">全部用户名称</option>',
+        ...options.map(([name, count]) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}（${count}）</option>`),
+      ].join("");
+    }
+    if (options.some(([name]) => name === currentValue)) select.value = currentValue;
+    else select.value = "";
+    if (select.dataset.prototypeBound !== "true") {
+      select.dataset.prototypeBound = "true";
+      select.addEventListener("change", () => applyCompensationUserNameFilter(select.value));
+    }
+    const resetButton = Array.from(form.querySelectorAll("button")).find((button) => textOf(button).includes("重置"));
+    if (resetButton && resetButton.dataset.prototypeUserFilterResetBound !== "true") {
+      resetButton.dataset.prototypeUserFilterResetBound = "true";
+      resetButton.addEventListener("click", () => {
+        window.setTimeout(() => {
+          select.value = "";
+          applyCompensationUserNameFilter("");
+        }, 0);
+      });
+    }
+    applyCompensationUserNameFilter(select.value);
   }
 
   let timer = 0;
   function run() {
-    ensureStyle();
+    ensureStyle();
     markChangedMenus();
     ensureReviewGuide();
     ensureInlineNotes();
     const path = window.location.pathname;
+    if (!path.includes("/supplier/setting")) {
+      document.querySelectorAll(".prototype-supplier-commission-card").forEach((card) => card.remove());
+    }
     if (path.includes("/order/after-sale-subsidy")) patchAfterSaleSubsidy();
     if (path.includes("/order/compensation")) patchCompensation();
-    if (path.includes("/supplier/settlement-record")) patchSecondSupplierSettlement();
-    if (path.includes("/supplier/setting")) patchSecondSupplierSetting();
+    if (path.includes("/supplier/settlement-record")) patchSecondSettlement();
+    if (path.includes("/supplier/setting")) patchSupplierSetting();
     syncHeaderScroll();
   }
 
@@ -1040,3 +1703,5 @@
   new MutationObserver(schedule).observe(document.documentElement, { childList: true, subtree: true });
   setInterval(run, 1200);
 })();
+
+
