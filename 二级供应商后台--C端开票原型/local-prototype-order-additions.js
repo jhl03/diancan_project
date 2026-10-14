@@ -179,8 +179,16 @@
     if (!window.__SECOND_ORDER_STATIC_ENTRY__) return path;
     const url = new URL(staticIndexHref());
     url.searchParams.set("secondOrderTarget", path);
-    url.searchParams.set("v", "route-native-4");
+    url.searchParams.set("v", "route-native-5");
     return url.href;
+  }
+
+  function normalizeStaticUrl() {
+    if (!window.__SECOND_ORDER_STATIC_ENTRY__) return;
+    const target = currentTargetPath();
+    if (!target.includes("/order/compensation") && !target.includes("/order/after-sale-subsidy")) return;
+    const nextHref = routeHref(target);
+    if (location.href !== nextHref) history.replaceState({ secondOrderTarget: target }, "", nextHref);
   }
 
   function buildFallbackShell() {
@@ -752,6 +760,7 @@
     ensureMenu();
     const route = currentRoute();
     if (!route) return;
+    normalizeStaticUrl();
     let main = getMain();
     if (!main && (window.__SECOND_ORDER_STATIC_ENTRY__ || Date.now() - startTime > 2500)) {
       buildFallbackShell();
