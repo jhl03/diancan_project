@@ -2,12 +2,13 @@
   const BLUE = "#409eff";
   const RED = "#f56c6c";
   const ORANGE = "#e6a23c";
+  const startTime = Date.now();
   const initialTargetPath =
     location.pathname.includes("/order/compensation") || location.pathname.includes("/order/after-sale-subsidy")
       ? location.pathname
       : "";
 
-  if (initialTargetPath) {
+  if (initialTargetPath && !window.__SECOND_ORDER_STATIC_ENTRY__) {
     history.replaceState({ secondOrderTarget: initialTargetPath }, "", `/index?secondOrderTarget=${encodeURIComponent(initialTargetPath)}`);
   }
 
@@ -79,11 +80,15 @@
       .second-order-menu-link { color: #ffd04b !important; font-weight: 600; text-decoration: none !important; display: block; height: 44px; line-height: 44px; padding-left: 42px; font-size: 14px; box-sizing: border-box; background: transparent !important; }
       .second-order-menu-link.active, .second-order-menu-link:hover { color: #fff7cc !important; background: #263445 !important; border-left: 3px solid #ffd04b; padding-left: 39px; }
       .second-order-fallback-shell { min-height: 100vh; display: flex; background: #f0f2f5; color: #303133; font-family: Arial, "Microsoft YaHei", sans-serif; }
-      .second-order-fallback-sidebar { width: 200px; flex: 0 0 200px; background: #304156; color: #bfcbd9; min-height: 100vh; }
-      .second-order-fallback-logo { height: 54px; display: flex; align-items: center; padding-left: 18px; color: #fff; font-weight: 700; font-size: 15px; background: #263445; }
-      .second-order-fallback-menu-title { height: 44px; line-height: 44px; padding-left: 20px; color: #fff; background: #263445; font-size: 14px; }
+      .second-order-fallback-sidebar { width: 248px; flex: 0 0 248px; background: #304156; color: #bfcbd9; min-height: 100vh; box-shadow: 2px 0 6px rgba(0, 21, 41, 0.16); }
+      .second-order-fallback-logo { height: 56px; display: flex; align-items: center; padding-left: 20px; color: #fff; font-weight: 700; font-size: 15px; background: #263445; box-sizing: border-box; }
+      .second-order-fallback-menu-title { height: 50px; line-height: 50px; padding-left: 20px; color: #bfcbd9; background: transparent; font-size: 15px; box-sizing: border-box; }
+      .second-order-fallback-menu-title.active { color: #fff; background: #263445; }
       .second-order-fallback-layout { flex: 1; min-width: 0; }
-      .second-order-fallback-topbar { height: 54px; display: flex; align-items: center; padding: 0 20px; background: #fff; border-bottom: 1px solid #dcdfe6; color: #303133; box-sizing: border-box; }
+      .second-order-fallback-topbar { height: 50px; display: flex; align-items: center; padding: 0 20px; background: #fff; border-bottom: 1px solid #dcdfe6; color: #303133; box-sizing: border-box; font-size: 14px; }
+      .second-order-fallback-tags { height: 34px; display: flex; align-items: center; gap: 6px; padding: 0 16px; background: #fff; border-bottom: 1px solid #d8dce5; box-sizing: border-box; }
+      .second-order-fallback-tag { height: 24px; line-height: 24px; padding: 0 10px; border: 1px solid #d8dce5; color: #495060; font-size: 12px; }
+      .second-order-fallback-tag.active { color: #fff; border-color: ${BLUE}; background: ${BLUE}; }
       .second-order-page { padding: 24px 20px 36px; background: #fff; min-height: calc(100vh - 110px); color: #303133; box-sizing: border-box; }
       .second-order-guide { margin: 8px 0 22px; padding: 14px 16px; border: 1px solid #ffccc7; border-left: 4px solid ${RED}; border-radius: 4px; background: #fff7f6; font-size: 13px; line-height: 1.7; }
       .second-order-guide-title { color: ${RED}; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
@@ -153,19 +158,28 @@
       document.querySelector("#app .main-container section");
   }
 
+  function staticIndexHref() {
+    if (!window.__SECOND_ORDER_STATIC_ENTRY__) return "/index";
+    const url = new URL(window.__SECOND_ORDER_STATIC_ENTRY__);
+    url.search = "";
+    url.hash = "";
+    return url.href;
+  }
+
   function buildFallbackShell() {
     const app = document.getElementById("app");
     if (!app || app.dataset.secondOrderFallback === "1") return;
     app.dataset.secondOrderFallback = "1";
+    const indexHref = staticIndexHref();
     app.innerHTML = `
       <div class="second-order-fallback-shell">
         <aside class="second-order-fallback-sidebar">
           <div class="second-order-fallback-logo">点餐代理供应商系统</div>
-          <a class="second-order-menu-link" href="/index">首页</a>
-          <div class="second-order-fallback-menu-title">订单管理</div>
-          <a class="second-order-menu-link" href="/order/bidding">新订单</a>
-          <a class="second-order-menu-link" href="/order/list">订单列表</a>
-          <a class="second-order-menu-link" href="/order/bidding-record">竞价记录</a>
+          <a class="second-order-menu-link" href="${indexHref}">首页</a>
+          <div class="second-order-fallback-menu-title active">订单管理</div>
+          <a class="second-order-menu-link" href="${indexHref}">新订单</a>
+          <a class="second-order-menu-link" href="${indexHref}">订单列表</a>
+          <a class="second-order-menu-link" href="${indexHref}">竞价记录</a>
           <a class="second-order-menu-link" href="/order/compensation">补偿单列表</a>
           <a class="second-order-menu-link" href="/order/after-sale-subsidy">售后补贴单</a>
           <div class="second-order-fallback-menu-title">出价管理</div>
@@ -173,7 +187,8 @@
           <div class="second-order-fallback-menu-title">导出中心</div>
         </aside>
         <div class="second-order-fallback-layout">
-          <div class="second-order-fallback-topbar" id="breadcrumb-container">首页 / 订单管理</div>
+          <div class="second-order-fallback-topbar" id="breadcrumb-container">☰　首页 / 订单管理</div>
+          <div class="second-order-fallback-tags"><span class="second-order-fallback-tag">首页</span><span class="second-order-fallback-tag active">售后补贴单 ×</span></div>
           <section class="app-main"></section>
         </div>
       </div>
@@ -720,7 +735,7 @@
     const route = currentRoute();
     if (!route) return;
     let main = getMain();
-    if (!main) {
+    if (!main && Date.now() - startTime > 2500) {
       buildFallbackShell();
       main = getMain();
     }

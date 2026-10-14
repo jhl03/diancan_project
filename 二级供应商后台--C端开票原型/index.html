@@ -8,6 +8,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
+    <base href="/diancan_project/二级供应商后台--C端开票原型/" />
     <link rel="icon" href="./favicon.ico" />
     <title>点餐代理供应商系统</title>
     <!--[if lt IE 11
@@ -203,6 +204,15 @@
     </style>
     <script type="module" crossorigin src="./assets/index-BaijDBgb.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-C-hhxckx.css">
+    <script>
+      (function () {
+        var target = new URLSearchParams(location.search).get("secondOrderTarget");
+        if (/^\/order\/(compensation|after-sale-subsidy)$/.test(target || "")) {
+          window.__SECOND_ORDER_STATIC_ENTRY__ = location.href;
+          history.replaceState({ secondOrderTarget: target }, "", target);
+        }
+      })();
+    </script>
   </head>
 
   <body>
@@ -214,8 +224,8 @@
         <div class="load_title">正在加载系统资源，请耐心等待</div>
       </div>
     </div>
-    <script src="./local-prototype-auth.js?v=0aa913c"></script>
-    <script src="./local-prototype-order-additions.js?v=0aa913c"></script>
+    <script src="./local-prototype-auth.js?v=route-native-2"></script>
+    <script src="./local-prototype-order-additions.js?v=route-native-2"></script>
 
   </body>
 </html>
