@@ -39,6 +39,13 @@
     { id: "CLM202610120302", tab: "已上传", subsidyNo: "SUB202610120302", orderNo: "FO202610120302", brand: "麦当劳", supplierName: "惠生活上海出餐供应商", mergeId: "-", titleType: "个人", invoiceTitle: "李四", taxNo: "-", userPay: "16.80", productName: "麦当劳 15元早餐券", userName: "麦当劳-上海", city: "上海-黄浦区", amount: "1.80", status: "已上传", mark: "已上传" },
   ];
 
+  const settlementRows = [
+    { settleNo: "2109646546204188674", settleTime: "2026-10-13 10:05:29", settleType: "订单完成结算", amount: "+14.40", relateNo: "2109646328339034112", supplier: "莆田市谦合聚汇信息技术有限公司", isSubsidy: false },
+    { settleNo: "2109646524452528129", settleTime: "2026-10-13 10:05:27", settleType: "订单完成结算", amount: "+14.40", relateNo: "2109646036995874816", supplier: "莆田市谦合聚汇信息技术有限公司", isSubsidy: false },
+    { settleNo: "2109646555010012098", settleTime: "2026-10-13 10:08:12", settleType: "售后补贴单", amount: "+3.60", relateNo: "SUB202609140101", supplier: "惠生活北京出餐供应商", isSubsidy: true },
+    { settleNo: "2109646555010012099", settleTime: "2026-10-13 10:09:46", settleType: "售后补贴单", amount: "+4.20", relateNo: "SUB202609140102", supplier: "惠生活厦门出餐供应商", isSubsidy: true },
+  ];
+
   function textOf(el) {
     return (el && el.textContent ? el.textContent : "").replace(/\s+/g, " ").trim();
   }
@@ -53,8 +60,9 @@
 
   function currentRoute() {
     const target = new URLSearchParams(location.search).get("secondOrderTarget") || location.pathname;
-    if (target.includes("/order/compensation")) return "compensation";
-    if (target.includes("/order/after-sale-subsidy")) return "afterSale";
+    if (isAddedRoutePath(target, "/order/compensation")) return "compensation";
+    if (isAddedRoutePath(target, "/order/after-sale-subsidy")) return "afterSale";
+    if (isAddedRoutePath(target, "/finance/settlement-record")) return "settlement";
     return "";
   }
 
@@ -69,6 +77,23 @@
     } catch (error) {
       return href;
     }
+  }
+
+  function isAddedRoutePath(path, route) {
+    return path === route || path.endsWith(route);
+  }
+
+  function isAddedRoute(path) {
+    return isAddedRoutePath(path, "/order/compensation") || isAddedRoutePath(path, "/order/after-sale-subsidy");
+  }
+
+  function isNativeOrderRoute(path) {
+    return [
+      "/order/bidding",
+      "/order/list",
+      "/order/bidding-record",
+      "/finance/settlement-record",
+    ].some((route) => path === route || path.endsWith(route));
   }
 
   function isStaticEntry() {
@@ -86,8 +111,10 @@
     style.id = "second-order-additions-style";
     style.textContent = `
       .second-order-menu-wrap { display: block; margin: 0; padding: 0; background: transparent !important; }
-      .second-order-menu-link { color: #ffd04b !important; font-weight: 600; text-decoration: none !important; display: block; height: 44px; line-height: 44px; padding-left: 42px; font-size: 14px; box-sizing: border-box; background: transparent !important; }
+      .second-order-menu-link { color: #ffd04b !important; font-weight: 700; text-decoration: none !important; display: block; height: 44px; line-height: 44px; padding-left: 42px; font-size: 14px; box-sizing: border-box; background: rgba(255, 208, 75, 0.08) !important; }
       .second-order-menu-link.active, .second-order-menu-link:hover { color: #fff7cc !important; background: #263445 !important; border-left: 3px solid #ffd04b; padding-left: 39px; }
+      .second-order-menu-highlight { color: #ffd04b !important; font-weight: 800 !important; text-shadow: 0 0 8px rgba(255, 208, 75, 0.36); }
+      .second-order-menu-highlight-bg { background: rgba(255, 208, 75, 0.12) !important; }
       .second-order-fallback-shell { min-height: 100vh; display: flex; background: #f0f2f5; color: #303133; font-family: Arial, "Microsoft YaHei", sans-serif; }
       .second-order-fallback-sidebar { width: 248px; flex: 0 0 248px; background: #304156; color: #bfcbd9; min-height: 100vh; box-shadow: 2px 0 6px rgba(0, 21, 41, 0.16); }
       .second-order-fallback-logo { height: 56px; display: flex; align-items: center; padding-left: 20px; color: #fff; font-weight: 700; font-size: 15px; background: #263445; box-sizing: border-box; }
@@ -179,14 +206,18 @@
     if (!window.__SECOND_ORDER_STATIC_ENTRY__) return path;
     const url = new URL(staticIndexHref());
     url.searchParams.set("secondOrderTarget", path);
-    url.searchParams.set("v", "route-native-5");
+    url.searchParams.set("v", "route-native-7");
     return url.href;
+  }
+
+  function nativeRouteHref(path) {
+    return path;
   }
 
   function normalizeStaticUrl() {
     if (!window.__SECOND_ORDER_STATIC_ENTRY__) return;
     const target = currentTargetPath();
-    if (!target.includes("/order/compensation") && !target.includes("/order/after-sale-subsidy")) return;
+    if (!isAddedRoute(target)) return;
     const nextHref = routeHref(target);
     if (location.href !== nextHref) history.replaceState({ secondOrderTarget: target }, "", nextHref);
   }
@@ -202,9 +233,9 @@
           <div class="second-order-fallback-logo">点餐代理供应商系统</div>
           <a class="second-order-menu-link" href="${indexHref}">首页</a>
           <div class="second-order-fallback-menu-title active">订单管理</div>
-          <a class="second-order-menu-link" href="${indexHref}">新订单</a>
-          <a class="second-order-menu-link" href="${indexHref}">订单列表</a>
-          <a class="second-order-menu-link" href="${indexHref}">竞价记录</a>
+          <a class="second-order-menu-link" href="${nativeRouteHref("/order/bidding")}">新订单</a>
+          <a class="second-order-menu-link" href="${nativeRouteHref("/order/list")}">订单列表</a>
+          <a class="second-order-menu-link" href="${nativeRouteHref("/order/bidding-record")}">竞价记录</a>
           <a class="second-order-menu-link" href="${routeHref("/order/compensation")}">补偿单列表</a>
           <a class="second-order-menu-link" href="${routeHref("/order/after-sale-subsidy")}">售后补贴单</a>
           <div class="second-order-fallback-menu-title">出价管理</div>
@@ -226,6 +257,29 @@
     render(true);
   }
 
+  function nativeRouteFromText(target) {
+    const map = {
+      "新订单": "/order/bidding",
+      "订单列表": "/order/list",
+      "竞价记录": "/order/bidding-record",
+      "结算记录": "/finance/settlement-record",
+    };
+    let node = target;
+    for (let i = 0; node && i < 6; i += 1) {
+      const text = textOf(node);
+      if (map[text]) return map[text];
+      node = node.parentElement;
+    }
+    return "";
+  }
+
+  function leaveToNativeRoute(path) {
+    if (!path) return;
+    document.body.classList.remove("loaded");
+    state.route = "";
+    window.location.href = path;
+  }
+
   function cleanupDuplicateMenus() {
     document.querySelectorAll("[data-second-order-menu='1']").forEach((wrap, index) => {
       if (index > 0) wrap.remove();
@@ -235,6 +289,19 @@
       const name = textOf(link);
       if (seen.has(name)) link.remove();
       else seen.add(name);
+    });
+  }
+
+  function emphasizeAddedMenuItems() {
+    const targetNames = new Set(["补偿单列表", "售后补贴单", "结算记录"]);
+    document.querySelectorAll("a, li, span, div").forEach((node) => {
+      const name = textOf(node);
+      if (!targetNames.has(name)) return;
+      node.classList.add("second-order-menu-highlight");
+      const item = node.closest("li") || node.closest("a") || node;
+      item.classList.add("second-order-menu-highlight-bg");
+      node.style.setProperty("color", "#ffd04b", "important");
+      node.style.setProperty("font-weight", "800", "important");
     });
   }
 
@@ -265,9 +332,9 @@
     const insertParent = subMenu || (orderItem && orderItem.parentElement ? orderItem.parentElement : menu);
     const existingNames = new Set(Array.from(insertParent.querySelectorAll("a, li, span, div")).map(textOf));
     const items = [
-      { text: "新订单", href: routeHref("/order/bidding") },
-      { text: "订单列表", href: routeHref("/order/list") },
-      { text: "竞价记录", href: routeHref("/order/bidding-record") },
+      { text: "新订单", href: nativeRouteHref("/order/bidding") },
+      { text: "订单列表", href: nativeRouteHref("/order/list") },
+      { text: "竞价记录", href: nativeRouteHref("/order/bidding-record") },
       { text: "补偿单列表", href: routeHref("/order/compensation") },
       { text: "售后补贴单", href: routeHref("/order/after-sale-subsidy") },
     ].filter((item) => !existingNames.has(item.text));
@@ -287,12 +354,14 @@
       link.dataset.secondOrderBound = "1";
       link.addEventListener("click", (event) => {
         const href = link.getAttribute("href");
-        if (href !== "/order/compensation" && href !== "/order/after-sale-subsidy") return;
+        const path = hrefTargetPath(href);
+        if (!isAddedRoute(path)) return;
         event.preventDefault();
-        navigate(href);
+        navigate(path);
       });
     });
     cleanupDuplicateMenus();
+    emphasizeAddedMenuItems();
   }
 
   function field(name, key, type) {
@@ -456,6 +525,69 @@
     main.querySelectorAll("[data-action='claim-row']").forEach((button) => {
       button.addEventListener("click", () => toast(`${button.dataset.id} 抢单成功`));
     });
+  }
+
+  function filteredSettlementRows() {
+    const f = state.filters;
+    return settlementRows.filter((row) =>
+      matchText(row.settleNo, f.settleNo) &&
+      matchText(row.relateNo, f.relateNo) &&
+      matchText(row.settleType, f.settleType) &&
+      matchText(row.supplier, f.supplier)
+    );
+  }
+
+  function renderSettlement(main) {
+    const rows = filteredSettlementRows();
+    updateTopTitle("结算记录");
+    main.innerHTML = `
+      <div class="second-order-page" data-second-route="settlement">
+        <div class="second-order-guide">
+          <div class="second-order-guide-title">本页改动说明：结算记录</div>
+          <div class="second-order-guide-row"><strong>交易类型</strong>新增交易类型“售后补贴单”，新增的类型用红字表示。</div>
+          <div class="second-order-guide-row"><strong>关联单据号</strong>交易类型为“售后补贴单”时，关联单据号取补贴单号。</div>
+          <div class="second-order-guide-row"><strong>变动金额</strong>售后补贴单的变动金额=实际补贴金额 - 对应的一级供应商设置的补贴抽成。</div>
+          <div class="second-order-guide-row"><strong>所属供应商</strong>售后补贴单记录的所属供应商展示对应的一级供应商。</div>
+        </div>
+        <div class="second-order-filter-grid">
+          ${field("结算流水单号", "settleNo")}
+          ${field("关联单据号", "relateNo")}
+          ${field("交易类型", "settleType")}
+          ${field("所属供应商", "supplier")}
+        </div>
+        <div class="second-order-toolbar">
+          <button class="second-order-btn primary" data-action="search">搜索</button>
+          <button class="second-order-btn" data-action="reset">重置</button>
+        </div>
+        <div class="second-order-actions">
+          <button class="second-order-btn warning">导出</button>
+        </div>
+        <div class="second-order-table-tools"><button class="second-order-round">⌕</button><button class="second-order-round">↻</button></div>
+        <div class="second-order-table-wrap">
+          <table class="second-order-table" style="min-width:1120px;">
+            <thead>
+              <tr>
+                <th>结算流水单号</th><th>交易时间</th><th>交易类型</th><th>变动金额</th><th>关联单据号</th><th>所属供应商</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map((row) => `
+                <tr>
+                  <td class="${row.isSubsidy ? "second-order-red" : ""}">${escapeHtml(row.settleNo)}</td>
+                  <td>${escapeHtml(row.settleTime)}</td>
+                  <td class="${row.isSubsidy ? "second-order-red" : ""}">${escapeHtml(row.settleType)}</td>
+                  <td class="second-order-red">${escapeHtml(row.amount)}</td>
+                  <td class="${row.isSubsidy ? "second-order-red" : ""}">${escapeHtml(row.relateNo)}</td>
+                  <td>${escapeHtml(row.supplier)}</td>
+                </tr>
+              `).join("") || `<tr><td colspan="6" style="text-align:center;color:#909399;">暂无数据</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+        <div class="second-order-pagination"><span>共 ${rows.length} 条</span><span>20条/页</span><span class="second-order-pagebox">1</span></div>
+      </div>
+    `;
+    bindFilterEvents(main);
   }
 
   function rowMark(row) {
@@ -777,19 +909,25 @@
     restoreTargetUrl();
     if (route === "compensation") renderCompensation(main);
     if (route === "afterSale") renderSubsidy(main);
+    if (route === "settlement") renderSettlement(main);
     ensureMenu();
   }
 
   document.addEventListener("click", (event) => {
     const anchor = event.target.closest && event.target.closest("a");
-    if (!anchor) return;
-    const href = anchor.getAttribute("href");
-    if (href === "/order/compensation" || href === "/order/after-sale-subsidy") {
+    const href = anchor ? anchor.getAttribute("href") : "";
+    const path = href ? hrefTargetPath(href) : nativeRouteFromText(event.target);
+    if (isAddedRoute(path)) {
       event.preventDefault();
-      navigate(href);
+      event.stopImmediatePropagation();
+      navigate(path);
       return;
     }
-    // 原有订单页面交给系统自身的 Vue 路由处理，避免整页刷新。
+    if (isNativeOrderRoute(path) && (currentRoute() || document.querySelector(".second-order-page"))) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      leaveToNativeRoute(path);
+    }
   }, true);
 
   window.addEventListener("popstate", () => render(true));
