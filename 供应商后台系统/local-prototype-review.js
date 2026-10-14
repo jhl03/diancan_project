@@ -1827,6 +1827,7 @@
 
   let timer = 0;
   function run() {
+    if (!document.body) return;
     ensureStyle();
     markChangedMenus();
     ensureReviewGuide();
