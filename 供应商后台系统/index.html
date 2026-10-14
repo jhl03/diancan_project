@@ -18,7 +18,7 @@
       if (location.hostname === "jhl03.github.io") {
         const routePath = decodeURIComponent(location.pathname).replace(/\/+$/, "");
         if (routePath.endsWith("/供应商后台系统") || routePath.endsWith("/供应商后台系统/index.html")) {
-          history.replaceState(null, "", `${prototypeBase}index.html${location.search || ""}${location.hash || ""}`);
+          history.replaceState(null, "", `${prototypeBase}index${location.search || ""}${location.hash || ""}`);
         }
       }
     </script>
