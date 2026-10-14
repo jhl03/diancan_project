@@ -4,6 +4,8 @@
     const routeMap = {
       compensation: "/order/compensation",
       afterSaleSubsidy: "/order/after-sale-subsidy",
+      secondSupplierSettlement: "/supplier/settlement-record",
+      secondSupplierSetting: "/supplier/setting",
     };
     const marker = "/供应商后台系统/";
     const pathname = decodeURIComponent(window.location.pathname);
@@ -114,6 +116,9 @@
         margin-top: 4px;
         color: #1890ff;
         font-weight: 800;
+      }
+      .prototype-change-guide-bold-desc {
+        font-weight: 700;
       }
       .prototype-after-sale-brand-black,
       .prototype-after-sale-brand-black .cell {
@@ -533,6 +538,7 @@
       title: "本页改动说明：二级供应商结算",
       items: [
         ["售后补贴单交易类型", "新增交易类型“售后补贴单”；关联单号取补贴单号，变动金额按“实际补贴金额 - 一级供应商设置的补贴抽成”展示。"],
+        ["结算触发逻辑", "给一级结算之后，就给二级结算【沿用二级供应商出餐结算时间的逻辑】", "bold"],
       ],
       notes: [],
     },
@@ -606,7 +612,7 @@
     guide.innerHTML = `
       <div class="prototype-change-guide-title">${escapeHtml(config.title)}</div>
       <div class="prototype-change-guide-list">
-        ${config.items.map(([title, desc, extra]) => `<div class="prototype-change-guide-item"><strong>${escapeHtml(title)}</strong><span class="prototype-change-guide-desc">${escapeHtml(desc)}</span>${extra ? `<span class="prototype-change-guide-blue-strong">${escapeHtml(extra)}</span>` : ""}</div>`).join("")}
+        ${config.items.map(([title, desc, extra]) => `<div class="prototype-change-guide-item"><strong>${escapeHtml(title)}</strong><span class="prototype-change-guide-desc${extra === "bold" ? " prototype-change-guide-bold-desc" : ""}">${escapeHtml(desc)}</span>${extra && extra !== "bold" ? `<span class="prototype-change-guide-blue-strong">${escapeHtml(extra)}</span>` : ""}</div>`).join("")}
       </div>
     `;
     host.prepend(guide);
