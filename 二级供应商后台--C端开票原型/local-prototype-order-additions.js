@@ -68,8 +68,8 @@
     style.id = "second-order-additions-style";
     style.textContent = `
       .second-order-menu-wrap { display: block; margin: 0; padding: 0; background: transparent !important; }
-      .second-order-menu-link { color: #bfcbd9 !important; text-decoration: none !important; display: block; height: 44px; line-height: 44px; padding-left: 42px; font-size: 14px; box-sizing: border-box; background: transparent !important; }
-      .second-order-menu-link.active, .second-order-menu-link:hover { color: #409eff !important; background: #263445 !important; }
+      .second-order-menu-link { color: #ffd04b !important; font-weight: 600; text-decoration: none !important; display: block; height: 44px; line-height: 44px; padding-left: 42px; font-size: 14px; box-sizing: border-box; background: transparent !important; }
+      .second-order-menu-link.active, .second-order-menu-link:hover { color: #fff7cc !important; background: #263445 !important; border-left: 3px solid #ffd04b; padding-left: 39px; }
       .second-order-page { padding: 24px 20px 36px; background: #fff; min-height: calc(100vh - 110px); color: #303133; box-sizing: border-box; }
       .second-order-guide { margin: 8px 0 22px; padding: 14px 16px; border: 1px solid #ffccc7; border-left: 4px solid ${RED}; border-radius: 4px; background: #fff7f6; font-size: 13px; line-height: 1.7; }
       .second-order-guide-title { color: ${RED}; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
