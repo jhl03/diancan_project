@@ -41,6 +41,13 @@
         white-space: nowrap !important;
         overflow: visible !important;
       }
+      .prototype-after-sale-page .el-table th.el-table-fixed-column--right,
+      .prototype-after-sale-page .el-table td.el-table-fixed-column--right {
+        position: static !important;
+        right: auto !important;
+        left: auto !important;
+        z-index: auto !important;
+      }
       .prototype-change-badge {
         display: inline-flex;
         align-items: center;
@@ -96,6 +103,17 @@
       .prototype-change-guide-desc {
         display: block;
         color: #344054;
+      }
+      .prototype-change-guide-blue-strong {
+        display: block;
+        margin-top: 4px;
+        color: #1890ff;
+        font-weight: 800;
+      }
+      .prototype-after-sale-brand-black,
+      .prototype-after-sale-brand-black .cell {
+        color: #303133 !important;
+        font-weight: 400 !important;
       }
       .prototype-review-note {
         position: relative;
@@ -494,7 +512,7 @@
         ["合并上传校验", "点击“合并上传”或“重新合并上传”时，需至少勾选两个工单且所选工单合并ID完全一致；若所选工单合并ID为空或显示为“-”，提示“合并ID为空的不能进行合并上传”；仅勾选一个有效合并ID工单时提示“至少勾选两个相同的合并ID”，合并ID不同提示“合并ID不同，请重新选择”。"],
         ["开票标识", "处理中、已驳回列表在“状态”字段后新增红字字段“开票标识”，默认显示“待开票”；每条数据操作列新增“标记开票中”按钮，点击后该行开票标识变为“开票中”，按钮同步变为“取消标记”；再次点击取消后恢复“待开票”。已上传列表不展示该字段和操作。"],
         ["批量标记", "“合并上传/重新合并上传”按钮后新增“批量标记”“批量取消标记”。未选择订单时提示“至少选择一个订单”；批量标记时，所选订单中存在未标记数据则标记为“开票中”并提示“标记成功”，若所选订单已全部标记则提示“已全部标记，请选择未标记的订单”；批量取消标记时，所选订单中存在已标记数据则恢复为“待开票”并提示“取消标记成功”，若所选订单均未标记则提示“没有未标记的订单，请重新选择”。"],
-        ["注意", "1. 已上传和已驳回页面已有的合并ID，就不能在使用了。2. 合并上传是多个订单的发票文件是相同的，上传到点餐后台/客服工作台。"],
+        ["注意", "1. 已上传和已驳回页面已有的合并ID，就不能在使用了。2. 合并上传是多个订单的发票文件是相同的，上传到点餐后台/客服工作台。", "3.挂有二级的一级供应商后台的售后补贴单的三个tab页面也有二级供应商的数据，但是处理中页面的二级供应商数据对应的操作列为空；已驳回页面的二级供应商数据对应的操作列 只显示查看发票文件  按钮"],
       ],
       notes: [],
     },
@@ -583,7 +601,7 @@
     guide.innerHTML = `
       <div class="prototype-change-guide-title">${escapeHtml(config.title)}</div>
       <div class="prototype-change-guide-list">
-        ${config.items.map(([title, desc]) => `<div class="prototype-change-guide-item"><strong>${escapeHtml(title)}</strong><span class="prototype-change-guide-desc">${escapeHtml(desc)}</span></div>`).join("")}
+        ${config.items.map(([title, desc, extra]) => `<div class="prototype-change-guide-item"><strong>${escapeHtml(title)}</strong><span class="prototype-change-guide-desc">${escapeHtml(desc)}</span>${extra ? `<span class="prototype-change-guide-blue-strong">${escapeHtml(extra)}</span>` : ""}</div>`).join("")}
       </div>
     `;
     host.prepend(guide);
@@ -640,6 +658,7 @@
 
   function columnWidth(key) {
     if (key === "compensation-user-name") return 170;
+    if (key === "after-sale-user-name") return 170;
     if (key === "compensation-merge-id") return 110;
     if (key === "invoice-title-type") return 120;
     if (key === "after-sale-merge-id") return 110;
@@ -766,6 +785,9 @@
     patchAfterSaleMergeId();
     patchAfterSaleMergeIdFilter();
     patchAfterSaleSupplierName();
+    patchAfterSaleUserName();
+    syncAfterSaleAddedColumnOrder();
+    patchAfterSaleBrandColor();
     patchColumnByHeader("发票抬头/税号", "抬头类型", "invoice-title-type", "before", (_row, titleCell) =>
       guessTitleType(textOf(titleCell)),
     );
@@ -890,12 +912,64 @@
     document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
       const mergeCell = row.querySelector(`td[${MARK}="after-sale-merge-id"]`);
       if (!mergeCell) return;
-      const claimCell = Array.from(row.children).find((cell) =>
-        cell !== mergeCell && /^CLM\d{12,}/.test(textOf(cell))
-      );
-      if (claimCell && claimCell.previousElementSibling !== mergeCell) claimCell.before(mergeCell);
       const content = mergeCell.querySelector(".cell") || mergeCell;
       content.textContent = afterSaleMergeIdFromRow(row);
+    });
+  }
+
+  function movePatchedColumnByHeader(key, targetText, placement) {
+    document.querySelectorAll("table.el-table__header").forEach((headerTable) => {
+      const headerRow = headerTable.querySelector("thead tr");
+      if (!headerRow) return;
+      const { bodyTables } = getTableContext(headerTable);
+      let headers = Array.from(headerRow.children);
+      const currentIndex = headers.findIndex((cell) => cell.getAttribute(MARK) === key);
+      const targetIndex = headers.findIndex((cell) => textOf(cell).includes(targetText));
+      if (currentIndex < 0 || targetIndex < 0) return;
+      const headerCell = headers[currentIndex];
+      const targetCell = headers[targetIndex];
+      if (placement === "before") targetCell.before(headerCell);
+      else targetCell.after(headerCell);
+
+      headers = Array.from(headerRow.children);
+      const newIndex = headers.findIndex((cell) => cell.getAttribute(MARK) === key);
+      const oldIndex = currentIndex;
+      bodyTables.forEach((bodyTable) => {
+        bodyTable.querySelectorAll("tbody tr").forEach((row) => {
+          const cells = Array.from(row.children);
+          const bodyCell = cells.find((cell) => cell.getAttribute(MARK) === key) || cells[oldIndex];
+          const targetBodyCell = Array.from(row.children).find((cell, index) => index === newIndex && cell !== bodyCell);
+          if (!bodyCell || !targetBodyCell || bodyCell === targetBodyCell) return;
+          if (placement === "before") targetBodyCell.before(bodyCell);
+          else targetBodyCell.after(bodyCell);
+        });
+      });
+    });
+  }
+
+  function patchAfterSaleListColumnLayout() {
+    const hiddenHeaders = ["抢单编号", "补贴单号", "订单号", "处理倒计时", "状态", "开票标识"];
+    document.querySelectorAll("table.el-table__header").forEach((headerTable) => {
+      const headerRow = headerTable.querySelector("thead tr");
+      if (!headerRow) return;
+      const { bodyTables } = getTableContext(headerTable);
+      const headers = Array.from(headerRow.children);
+      headers.forEach((headerCell, index) => {
+        const headerText = textOf(headerCell);
+        const shouldHide = hiddenHeaders.some((label) => headerText === label || headerText.includes(label));
+        if (!shouldHide) return;
+        headerCell.style.display = "none";
+        const headerCols = headerTable.querySelectorAll("colgroup col");
+        if (headerCols[index]) headerCols[index].style.display = "none";
+        bodyTables.forEach((bodyTable) => {
+          const bodyCols = bodyTable.querySelectorAll("colgroup col");
+          if (bodyCols[index]) bodyCols[index].style.display = "none";
+          bodyTable.querySelectorAll("tbody tr").forEach((row) => {
+            const cell = row.children[index];
+            if (cell) cell.style.display = "none";
+          });
+        });
+      });
     });
   }
 
@@ -1010,6 +1084,7 @@
     patchColumnByHeader("抢单编号", "合并ID", "after-sale-merge-id", "before", (row) =>
       afterSaleMergeIdFromRow(row),
     );
+    movePatchedColumnByHeader("after-sale-merge-id", "抢单编号", "before");
     syncAfterSaleMergeIdCells();
   }
 
@@ -1026,6 +1101,83 @@
       if (brandCell && brandCell.nextElementSibling !== supplierCell) brandCell.after(supplierCell);
       const content = supplierCell.querySelector(".cell") || supplierCell;
       content.textContent = supplierNameFromAfterSaleRow(row);
+    });
+  }
+
+  function patchAfterSaleUserName() {
+    patchColumnByHeader("商品名称", "用户名称", "after-sale-user-name", "after", (row) =>
+      guessUserName(textOf(row)),
+    );
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const userCell = row.querySelector(`td[${MARK}="after-sale-user-name"]`);
+      if (!userCell) return;
+      const content = userCell.querySelector(".cell") || userCell;
+      content.textContent = guessUserName(textOf(row));
+    });
+  }
+
+  function originalAfterSaleBrandFromRow(row) {
+    const rowText = textOf(row);
+    if (rowText.includes("肯德基")) return "肯德基";
+    if (rowText.includes("麦当劳")) return "麦当劳";
+    if (rowText.includes("瑞幸")) return "瑞幸咖啡";
+    if (rowText.includes("塔斯汀")) return "塔斯汀";
+    if (rowText.includes("霸王茶姬")) return "霸王茶姬";
+    if (rowText.includes("星巴克")) return "星巴克";
+    return "";
+  }
+
+  function syncAfterSaleAddedColumnOrder() {
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row) => {
+      const userCell = row.querySelector(`td[${MARK}="after-sale-user-name"]`);
+      const supplierCell = row.querySelector(`td[${MARK}="after-sale-supplier-name"]`);
+      if (!userCell || !supplierCell) return;
+
+      const cityCell = Array.from(row.children).find((cell) =>
+        cell !== userCell &&
+        cell !== supplierCell &&
+        /^[\u4e00-\u9fa5]+-[\u4e00-\u9fa5]+$/.test(textOf(cell)) &&
+        !textOf(cell).includes("CLM") &&
+        !textOf(cell).includes("SUB") &&
+        !textOf(cell).includes("FO")
+      );
+      const brandCell = Array.from(row.children).find((cell) =>
+        cell !== userCell &&
+        cell !== supplierCell &&
+        /^(瑞幸咖啡|肯德基|麦当劳|塔斯汀|霸王茶姬|星巴克)$/.test(textOf(cell))
+      );
+
+      if (cityCell && cityCell !== userCell && cityCell.previousElementSibling !== userCell) {
+        cityCell.before(userCell);
+      }
+      if (brandCell && brandCell.nextElementSibling !== supplierCell) {
+        brandCell.after(supplierCell);
+      }
+
+      const userContent = userCell.querySelector(".cell") || userCell;
+      userContent.textContent = guessUserName(textOf(row));
+      const supplierContent = supplierCell.querySelector(".cell") || supplierCell;
+      supplierContent.textContent = supplierNameFromAfterSaleRow(row);
+    });
+  }
+
+  function patchAfterSaleBrandColor() {
+    const active = activeTabText();
+    const shouldUseBlack = active.includes("已驳回") || active.includes("已上传");
+    document.querySelectorAll(".prototype-after-sale-brand-black").forEach((cell) => {
+      cell.classList.remove("prototype-after-sale-brand-black");
+    });
+    if (!shouldUseBlack) return;
+
+    const brands = ["塔斯汀", "霸王茶姬", "星巴克", "肯德基"];
+    document.querySelectorAll("table.el-table__body tbody tr").forEach((row, index) => {
+      const supplierCell = row.querySelector(`td[${MARK}="after-sale-supplier-name"]`);
+      const brandCell = supplierCell?.previousElementSibling;
+      if (!brandCell) return;
+      brandCell.classList.add("prototype-after-sale-brand-black");
+      const content = brandCell.querySelector(".cell") || brandCell;
+      content.classList.add("prototype-after-sale-brand-black");
+      content.textContent = brands[index % brands.length];
     });
   }
 
@@ -1680,6 +1832,7 @@
     ensureReviewGuide();
     ensureInlineNotes();
     const path = window.location.pathname;
+    document.body.classList.toggle("prototype-after-sale-page", path.includes("/order/after-sale-subsidy"));
     if (!path.includes("/supplier/setting")) {
       document.querySelectorAll(".prototype-supplier-commission-card").forEach((card) => card.remove());
     }
