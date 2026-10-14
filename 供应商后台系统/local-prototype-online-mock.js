@@ -368,5 +368,6 @@
     }, 3500);
   }
 
-  installStaticFallback();
+  // Keep GitHub Pages on the real packaged prototype. The fallback page is
+  // intentionally disabled so it cannot overwrite the latest reviewed UI.
 })();
