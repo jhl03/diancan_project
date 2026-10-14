@@ -205,9 +205,14 @@
     <link rel="stylesheet" crossorigin href="./assets/index-C-hhxckx.css">
     <script>
       (function () {
-        var target = new URLSearchParams(location.search).get("secondOrderTarget");
-        if (/^(\/order\/(compensation|after-sale-subsidy)|\/finance\/settlement-record)$/.test(target || "")) {
-          window.__SECOND_ORDER_STATIC_ENTRY__ = location.href;
+        var currentUrl = location.href;
+        var target = new URLSearchParams(location.search).get("secondOrderTarget") || "";
+        var isStaticEntry = location.pathname.endsWith("/index.html") || location.pathname.includes("/diancan_project/");
+        if (isStaticEntry) {
+          window.__SECOND_ORDER_STATIC_ENTRY__ = currentUrl;
+        }
+        if (isStaticEntry && /^\/(order\/(bidding|list|bidding-record)|finance\/settlement-record)$/.test(target)) {
+          history.replaceState({ secondOrderTarget: target }, "", target);
         }
       })();
     </script>
@@ -222,8 +227,8 @@
         <div class="load_title">正在加载系统资源，请耐心等待</div>
       </div>
     </div>
-    <script src="./local-prototype-auth.js?v=route-native-7"></script>
-    <script src="./local-prototype-order-additions.js?v=route-native-7"></script>
+    <script src="./local-prototype-auth.js?v=route-native-8"></script>
+    <script src="./local-prototype-order-additions.js?v=route-native-8"></script>
 
   </body>
 </html>

@@ -206,12 +206,12 @@
     if (!window.__SECOND_ORDER_STATIC_ENTRY__) return path;
     const url = new URL(staticIndexHref());
     url.searchParams.set("secondOrderTarget", path);
-    url.searchParams.set("v", "route-native-7");
+    url.searchParams.set("v", "route-native-8");
     return url.href;
   }
 
   function nativeRouteHref(path) {
-    return path;
+    return window.__SECOND_ORDER_STATIC_ENTRY__ ? routeHref(path) : path;
   }
 
   function normalizeStaticUrl() {
@@ -277,7 +277,7 @@
     if (!path) return;
     document.body.classList.remove("loaded");
     state.route = "";
-    window.location.href = path;
+    window.location.href = nativeRouteHref(path);
   }
 
   function cleanupDuplicateMenus() {
