@@ -61,8 +61,7 @@
   XMLHttpRequest.prototype.open = function (method, url) {
     this.__localPrototypeUrl = url;
     this.__localPrototypeMock = shouldMock(url);
-    if (!this.__localPrototypeMock) return originalOpen.apply(this, arguments);
-    this.readyState = 1;
+    return originalOpen.apply(this, arguments);
   };
   XMLHttpRequest.prototype.send = function () {
     if (!this.__localPrototypeMock) return originalSend.apply(this, arguments);
