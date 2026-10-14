@@ -62,6 +62,15 @@
     return new URLSearchParams(location.search).get("secondOrderTarget") || location.pathname;
   }
 
+  function hrefTargetPath(href) {
+    try {
+      const url = new URL(href, location.href);
+      return url.searchParams.get("secondOrderTarget") || url.pathname;
+    } catch (error) {
+      return href;
+    }
+  }
+
   function isStaticEntry() {
     return location.pathname.includes("/diancan_project/") || location.pathname.endsWith("/index.html");
   }
@@ -166,6 +175,14 @@
     return url.href;
   }
 
+  function routeHref(path) {
+    if (!window.__SECOND_ORDER_STATIC_ENTRY__) return path;
+    const url = new URL(staticIndexHref());
+    url.searchParams.set("secondOrderTarget", path);
+    url.searchParams.set("v", "route-native-4");
+    return url.href;
+  }
+
   function buildFallbackShell() {
     const app = document.getElementById("app");
     if (!app || app.dataset.secondOrderFallback === "1") return;
@@ -180,8 +197,8 @@
           <a class="second-order-menu-link" href="${indexHref}">新订单</a>
           <a class="second-order-menu-link" href="${indexHref}">订单列表</a>
           <a class="second-order-menu-link" href="${indexHref}">竞价记录</a>
-          <a class="second-order-menu-link" href="/order/compensation">补偿单列表</a>
-          <a class="second-order-menu-link" href="/order/after-sale-subsidy">售后补贴单</a>
+          <a class="second-order-menu-link" href="${routeHref("/order/compensation")}">补偿单列表</a>
+          <a class="second-order-menu-link" href="${routeHref("/order/after-sale-subsidy")}">售后补贴单</a>
           <div class="second-order-fallback-menu-title">出价管理</div>
           <div class="second-order-fallback-menu-title">账户管理</div>
           <div class="second-order-fallback-menu-title">导出中心</div>
@@ -196,7 +213,8 @@
   }
 
   function navigate(path) {
-    if (location.pathname !== path) history.pushState(null, "", path);
+    const nextHref = routeHref(path);
+    if (location.href !== nextHref) history.pushState({ secondOrderTarget: path }, "", nextHref);
     render(true);
   }
 
@@ -239,11 +257,11 @@
     const insertParent = subMenu || (orderItem && orderItem.parentElement ? orderItem.parentElement : menu);
     const existingNames = new Set(Array.from(insertParent.querySelectorAll("a, li, span, div")).map(textOf));
     const items = [
-      { text: "新订单", href: "/order/bidding" },
-      { text: "订单列表", href: "/order/list" },
-      { text: "竞价记录", href: "/order/bidding-record" },
-      { text: "补偿单列表", href: "/order/compensation" },
-      { text: "售后补贴单", href: "/order/after-sale-subsidy" },
+      { text: "新订单", href: routeHref("/order/bidding") },
+      { text: "订单列表", href: routeHref("/order/list") },
+      { text: "竞价记录", href: routeHref("/order/bidding-record") },
+      { text: "补偿单列表", href: routeHref("/order/compensation") },
+      { text: "售后补贴单", href: routeHref("/order/after-sale-subsidy") },
     ].filter((item) => !existingNames.has(item.text));
     if (items.length) {
       const wrap = document.createElement("div");
@@ -256,7 +274,7 @@
       else insertParent.appendChild(wrap);
     }
     document.querySelectorAll(".second-order-menu-link").forEach((link) => {
-      link.classList.toggle("active", link.getAttribute("href") === currentTargetPath());
+      link.classList.toggle("active", hrefTargetPath(link.getAttribute("href")) === currentTargetPath());
       if (link.dataset.secondOrderBound === "1") return;
       link.dataset.secondOrderBound = "1";
       link.addEventListener("click", (event) => {
@@ -735,7 +753,7 @@
     const route = currentRoute();
     if (!route) return;
     let main = getMain();
-    if (!main && Date.now() - startTime > 2500) {
+    if (!main && (window.__SECOND_ORDER_STATIC_ENTRY__ || Date.now() - startTime > 2500)) {
       buildFallbackShell();
       main = getMain();
     }

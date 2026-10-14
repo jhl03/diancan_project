@@ -209,7 +209,6 @@
         var target = new URLSearchParams(location.search).get("secondOrderTarget");
         if (/^\/order\/(compensation|after-sale-subsidy)$/.test(target || "")) {
           window.__SECOND_ORDER_STATIC_ENTRY__ = location.href;
-          history.replaceState({ secondOrderTarget: target }, "", target);
         }
       })();
     </script>
@@ -224,8 +223,8 @@
         <div class="load_title">正在加载系统资源，请耐心等待</div>
       </div>
     </div>
-    <script src="./local-prototype-auth.js?v=route-native-2"></script>
-    <script src="./local-prototype-order-additions.js?v=route-native-2"></script>
+    <script src="./local-prototype-auth.js?v=route-native-4"></script>
+    <script src="./local-prototype-order-additions.js?v=route-native-4"></script>
 
   </body>
 </html>
