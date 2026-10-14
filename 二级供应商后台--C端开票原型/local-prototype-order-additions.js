@@ -57,9 +57,17 @@
     return "";
   }
 
+  function currentTargetPath() {
+    return new URLSearchParams(location.search).get("secondOrderTarget") || location.pathname;
+  }
+
+  function isStaticEntry() {
+    return location.pathname.includes("/diancan_project/") || location.pathname.endsWith("/index.html");
+  }
+
   function restoreTargetUrl() {
     const target = new URLSearchParams(location.search).get("secondOrderTarget");
-    if (target) history.replaceState(null, "", target);
+    if (target && !isStaticEntry()) history.replaceState(null, "", target);
   }
 
   function ensureStyle() {
@@ -70,6 +78,12 @@
       .second-order-menu-wrap { display: block; margin: 0; padding: 0; background: transparent !important; }
       .second-order-menu-link { color: #ffd04b !important; font-weight: 600; text-decoration: none !important; display: block; height: 44px; line-height: 44px; padding-left: 42px; font-size: 14px; box-sizing: border-box; background: transparent !important; }
       .second-order-menu-link.active, .second-order-menu-link:hover { color: #fff7cc !important; background: #263445 !important; border-left: 3px solid #ffd04b; padding-left: 39px; }
+      .second-order-fallback-shell { min-height: 100vh; display: flex; background: #f0f2f5; color: #303133; font-family: Arial, "Microsoft YaHei", sans-serif; }
+      .second-order-fallback-sidebar { width: 200px; flex: 0 0 200px; background: #304156; color: #bfcbd9; min-height: 100vh; }
+      .second-order-fallback-logo { height: 54px; display: flex; align-items: center; padding-left: 18px; color: #fff; font-weight: 700; font-size: 15px; background: #263445; }
+      .second-order-fallback-menu-title { height: 44px; line-height: 44px; padding-left: 20px; color: #fff; background: #263445; font-size: 14px; }
+      .second-order-fallback-layout { flex: 1; min-width: 0; }
+      .second-order-fallback-topbar { height: 54px; display: flex; align-items: center; padding: 0 20px; background: #fff; border-bottom: 1px solid #dcdfe6; color: #303133; box-sizing: border-box; }
       .second-order-page { padding: 24px 20px 36px; background: #fff; min-height: calc(100vh - 110px); color: #303133; box-sizing: border-box; }
       .second-order-guide { margin: 8px 0 22px; padding: 14px 16px; border: 1px solid #ffccc7; border-left: 4px solid ${RED}; border-radius: 4px; background: #fff7f6; font-size: 13px; line-height: 1.7; }
       .second-order-guide-title { color: ${RED}; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
@@ -139,6 +153,33 @@
       document.querySelector("#app .main-container section");
   }
 
+  function buildFallbackShell() {
+    const app = document.getElementById("app");
+    if (!app || app.dataset.secondOrderFallback === "1") return;
+    app.dataset.secondOrderFallback = "1";
+    app.innerHTML = `
+      <div class="second-order-fallback-shell">
+        <aside class="second-order-fallback-sidebar">
+          <div class="second-order-fallback-logo">点餐代理供应商系统</div>
+          <a class="second-order-menu-link" href="/index">首页</a>
+          <div class="second-order-fallback-menu-title">订单管理</div>
+          <a class="second-order-menu-link" href="/order/bidding">新订单</a>
+          <a class="second-order-menu-link" href="/order/list">订单列表</a>
+          <a class="second-order-menu-link" href="/order/bidding-record">竞价记录</a>
+          <a class="second-order-menu-link" href="/order/compensation">补偿单列表</a>
+          <a class="second-order-menu-link" href="/order/after-sale-subsidy">售后补贴单</a>
+          <div class="second-order-fallback-menu-title">出价管理</div>
+          <div class="second-order-fallback-menu-title">账户管理</div>
+          <div class="second-order-fallback-menu-title">导出中心</div>
+        </aside>
+        <div class="second-order-fallback-layout">
+          <div class="second-order-fallback-topbar" id="breadcrumb-container">首页 / 订单管理</div>
+          <section class="app-main"></section>
+        </div>
+      </div>
+    `;
+  }
+
   function navigate(path) {
     if (location.pathname !== path) history.pushState(null, "", path);
     render(true);
@@ -200,7 +241,7 @@
       else insertParent.appendChild(wrap);
     }
     document.querySelectorAll(".second-order-menu-link").forEach((link) => {
-      link.classList.toggle("active", link.getAttribute("href") === location.pathname);
+      link.classList.toggle("active", link.getAttribute("href") === currentTargetPath());
       if (link.dataset.secondOrderBound === "1") return;
       link.dataset.secondOrderBound = "1";
       link.addEventListener("click", (event) => {
@@ -678,7 +719,11 @@
     ensureMenu();
     const route = currentRoute();
     if (!route) return;
-    const main = getMain();
+    let main = getMain();
+    if (!main) {
+      buildFallbackShell();
+      main = getMain();
+    }
     if (!main) return;
     if (!force && state.route === route && main.querySelector(`[data-second-route="${route}"]`)) return;
     if (state.route !== route) {
