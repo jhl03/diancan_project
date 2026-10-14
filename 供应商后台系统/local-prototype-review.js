@@ -1,15 +1,20 @@
 (function () {
-  function routeCompensationDemo() {
+  function routePrototypeDemo() {
     const route = new URLSearchParams(window.location.search).get("prototypeRoute");
+    const routeMap = {
+      compensation: "/order/compensation",
+      afterSaleSubsidy: "/order/after-sale-subsidy",
+    };
     const marker = "/供应商后台系统/";
     const pathname = decodeURIComponent(window.location.pathname);
-    if (route !== "compensation" || !pathname.includes(marker) || pathname.includes("/order/compensation")) return;
+    const targetRoute = routeMap[route];
+    if (!targetRoute || !pathname.includes(marker) || pathname.includes(targetRoute)) return;
     const base = new URL(".", window.location.href).pathname;
-    const target = `${base}order/compensation`;
+    const target = `${base}${targetRoute.replace(/^\//, "")}`;
     window.history.replaceState(window.history.state, "", target);
   }
 
-  routeCompensationDemo();
+  routePrototypeDemo();
 
   const RED = "#f56c6c";
   const MARK = "data-prototype-review-key";
