@@ -116,6 +116,8 @@
     style.textContent = `
       .second-order-menu-wrap { display: block; margin: 0; padding: 0; background: transparent !important; }
       .second-order-menu-link { color: #ffd04b !important; font-weight: 700; text-decoration: none !important; display: block; height: 44px; line-height: 44px; padding-left: 42px; font-size: 14px; box-sizing: border-box; background: rgba(255, 208, 75, 0.08) !important; }
+      .second-order-menu-link.plain { color: #fff !important; font-weight: 400 !important; background: transparent !important; text-shadow: none !important; }
+      .second-order-menu-link.plain.active, .second-order-menu-link.plain:hover { color: #fff !important; background: #263445 !important; }
       .second-order-menu-link.active, .second-order-menu-link:hover { color: #fff7cc !important; background: #263445 !important; border-left: 3px solid #ffd04b; padding-left: 39px; }
       .second-order-menu-highlight { color: #ffd04b !important; font-weight: 800 !important; text-shadow: 0 0 8px rgba(255, 208, 75, 0.36); }
       .second-order-menu-highlight-bg { background: rgba(255, 208, 75, 0.12) !important; }
@@ -233,9 +235,9 @@
           <div class="second-order-fallback-logo">点餐代理供应商系统</div>
           <a class="second-order-menu-link" href="${indexHref}">首页</a>
           <div class="second-order-fallback-menu-title active">订单管理</div>
-          <a class="second-order-menu-link" href="${nativeRouteHref("/order/bidding")}">新订单</a>
-          <a class="second-order-menu-link" href="${nativeRouteHref("/order/list")}">订单列表</a>
-          <a class="second-order-menu-link" href="${nativeRouteHref("/order/bidding-record")}">竞价记录</a>
+          <a class="second-order-menu-link plain" href="${nativeRouteHref("/order/bidding")}">新订单</a>
+          <a class="second-order-menu-link plain" href="${nativeRouteHref("/order/list")}">订单列表</a>
+          <a class="second-order-menu-link plain" href="${nativeRouteHref("/order/bidding-record")}">竞价记录</a>
           <a class="second-order-menu-link" href="${routeHref("/order/compensation")}">补偿单列表</a>
           <a class="second-order-menu-link" href="${routeHref("/order/after-sale-subsidy")}">售后补贴单</a>
           <div class="second-order-fallback-menu-title">出价管理</div>
@@ -343,7 +345,7 @@
       const wrap = document.createElement("div");
       wrap.dataset.secondOrderMenu = "1";
       wrap.className = "second-order-menu-wrap";
-      wrap.innerHTML = items.map((item) => `<a class="second-order-menu-link" href="${item.href}">${item.text}</a>`).join("");
+      wrap.innerHTML = items.map((item) => `<a class="second-order-menu-link${["新订单", "订单列表", "竞价记录"].includes(item.text) ? " plain" : ""}" href="${item.href}">${item.text}</a>`).join("");
       const biddingNode = Array.from(insertParent.querySelectorAll("*")).reverse().find((node) => textOf(node) === "竞价记录");
       const biddingItem = biddingNode ? (biddingNode.closest("li") || biddingNode.closest("a") || biddingNode.parentElement) : null;
       if (biddingItem && biddingItem.parentElement === insertParent) insertParent.insertBefore(wrap, biddingItem.nextSibling);
