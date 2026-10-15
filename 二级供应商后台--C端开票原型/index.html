@@ -200,8 +200,74 @@
         color: #fff;
         opacity: 0.5;
       }
+
+      html.file-mode,
+      html.file-mode body,
+      html.file-mode #app {
+        min-height: 100%;
+        height: auto;
+        background: #fff;
+      }
+
+      html.file-mode #loader-wrapper {
+        position: relative;
+        min-height: 220px;
+        height: auto;
+        padding: 48px 24px;
+        box-sizing: border-box;
+        background: #fff8f6;
+        border: 1px solid #ffccc7;
+        border-radius: 6px;
+      }
+
+      html.file-mode #loader,
+      html.file-mode #loader-wrapper .loader-section {
+        display: none;
+      }
+
+      html.file-mode #loader-wrapper .load_title {
+        position: static;
+        width: auto;
+        color: #d4380d;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 32px;
+      }
+
+      html.file-mode #loader-wrapper .load_title span {
+        display: block;
+        margin-top: 8px;
+        color: #595959;
+        font-size: 14px;
+        font-style: normal;
+        opacity: 1;
+      }
+
+      html.file-mode #loader-wrapper .preview-link {
+        display: inline-block;
+        margin-top: 18px;
+        padding: 8px 18px;
+        border-radius: 4px;
+        background: #1677ff;
+        color: #fff;
+        font-size: 14px;
+        text-decoration: none;
+      }
     </style>
-    <script type="module" crossorigin src="./assets/index-BaijDBgb.js"></script>
+    <script>
+      (function () {
+        if (location.protocol === "file:") {
+          document.documentElement.classList.add("file-mode");
+          return;
+        }
+
+        var appScript = document.createElement("script");
+        appScript.type = "module";
+        appScript.crossOrigin = "anonymous";
+        appScript.src = "./assets/index-BaijDBgb.js";
+        document.head.appendChild(appScript);
+      })();
+    </script>
     <link rel="stylesheet" crossorigin href="./assets/index-C-hhxckx.css">
     <script>
       (function () {
@@ -224,11 +290,22 @@
         <div id="loader"></div>
         <div class="loader-section section-left"></div>
         <div class="loader-section section-right"></div>
-        <div class="load_title">正在加载系统资源，请耐心等待</div>
+        <div class="load_title">请使用启动脚本打开原型
+          <span>直接打开 index.html 或 404.html 时，浏览器处于 file:/// 本地文件模式，无法启动完整路由和演示接口。请先双击同文件夹内的“打开二级供应商后台原型.cmd”。</span>
+          <a class="preview-link" href="http://127.0.0.1:8775/index">打开已启动的本地预览</a>
+        </div>
       </div>
     </div>
-    <script src="./local-prototype-auth.js?v=route-native-8"></script>
-    <script src="./local-prototype-order-additions.js?v=route-native-8"></script>
+    <script>
+      if (location.protocol !== "file:") {
+        var authScript = document.createElement("script");
+        authScript.src = "./local-prototype-auth.js?v=route-native-8";
+        document.body.appendChild(authScript);
+        var additionsScript = document.createElement("script");
+        additionsScript.src = "./local-prototype-order-additions.js?v=route-native-8";
+        document.body.appendChild(additionsScript);
+      }
+    </script>
 
   </body>
 </html>
