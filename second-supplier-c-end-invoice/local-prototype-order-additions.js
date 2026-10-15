@@ -215,11 +215,7 @@
   }
 
   function normalizeStaticUrl() {
-    if (!window.__SECOND_ORDER_STATIC_ENTRY__) return;
-    const target = currentTargetPath();
-    if (!isAddedRoute(target)) return;
-    const nextHref = routeHref(target);
-    if (location.href !== nextHref) history.replaceState({ secondOrderTarget: target }, "", nextHref);
+    return;
   }
 
   function buildFallbackShell() {

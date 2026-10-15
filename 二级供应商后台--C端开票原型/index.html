@@ -284,9 +284,6 @@
           window.__SECOND_ORDER_STATIC_ENTRY__ = currentUrl;
           window.__SECOND_ORDER_BOOT_TARGET__ = target;
         }
-        if (isStaticEntry && /^\/(order\/(bidding|list|bidding-record|compensation|after-sale-subsidy)|finance\/settlement-record)$/.test(target)) {
-          history.replaceState({ secondOrderTarget: target }, "", target);
-        }
       })();
     </script>
   </head>
