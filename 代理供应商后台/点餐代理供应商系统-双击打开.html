@@ -28,11 +28,14 @@
         (function () {
           var proto = window.History && window.History.prototype;
           if (!proto) return;
+          /* 一律不修改地址栏（直接空操作）：
+             - file:// 下 pushState 本来就抛 SecurityError；
+             - HTTP 静态预览（如 WorkBuddy 预览面板）下若放行 pushState，地址会变成
+               “…/xxx.html/index” 这类「文件名下挂子路径」，注入脚本随后触发的整页重载
+               会被静态服务器拒绝（Forbidden）。地址不变则重载永远落在原始可访问 URL。 */
           ["pushState", "replaceState"].forEach(function (name) {
-            var orig = proto[name];
-            if (typeof orig !== "function") return;
             proto[name] = function () {
-              try { return orig.apply(this, arguments); } catch (e) { return undefined; }
+              return undefined;
             };
           });
         })();
@@ -83,12 +86,116 @@
           nav.path = p;
           try { sessionStorage.setItem(ROUTE_KEY, p); } catch (e) {}
         };
-        window.__SF_RELOAD__ = function () {
-          try { location.reload(); } catch (e) { location.href = window.__SF_FILE_URL__; }
+
+        /* ---- 改动页宿主容器 ----
+           绝不修改 Vue 管理的 .app-main：改它的 innerHTML 会让 Vue 的虚拟 DOM 失配，
+           只能用整页重载兜底。这里改成「原 .app-main 隐藏 + 兄弟节点承载改动页」，
+           Vue 的 DOM 始终自洽，所以切页可以完全瞬时完成（不再重载网站）。 */
+        var hostEl = null;
+
+        (function () {
+          var s = document.createElement("style");
+          s.id = "sf-single-file-runtime-style";
+          s.textContent =
+            ".sf-main-hidden{display:none !important;}" +
+            ".sf-injected-main{display:block;}";
+          (document.head || document.documentElement).appendChild(s);
+        })();
+
+        function layoutContainer() {
+          return (
+            document.querySelector("#app .main-container") ||
+            document.querySelector(".main-container")
+          );
+        }
+
+        window.__SF_MAIN__ = function () {
+          var mc = layoutContainer();
+          if (!mc) return null;
+          var real = mc.querySelector(".app-main");
+          if (!real) return null;
+          if (!hostEl || !mc.contains(hostEl)) {
+            hostEl = document.createElement("section");
+            hostEl.className = real.className; /* 复用 .app-main 的样式，外观完全一致 */
+            hostEl.classList.add("sf-injected-main");
+            mc.appendChild(hostEl);
+          }
+          return hostEl;
         };
 
-        /* 在注入页上拦截原生链接点击：先整页重载，避免 vue-router 去 patch
-           被注入脚本改写过 innerHTML 的 .app-main（会与 Vue 的虚拟 DOM 不同步）。 */
+        /* ---- 面包屑 ----
+           绝不改写 Vue 管理的面包屑容器（改写它的 innerHTML 会让 Vue 的 DOM 补丁失配，
+           之后一切路由切换都会抛 insertBefore / 组件实例为 null 的错）。
+           同样用「隐藏原生 + 同 class 兄弟节点」的方式呈现文案。 */
+        var bcHost = null;
+
+        function nativeBreadcrumb() {
+          return (
+            document.querySelector("#breadcrumb-container") ||
+            document.querySelector(".breadcrumb-container")
+          );
+        }
+
+        window.__SF_SET_TITLE__ = function (title) {
+          var bc = nativeBreadcrumb();
+          if (!bc || !bc.parentNode) return;
+          if (!bcHost || !bc.parentNode.contains(bcHost)) {
+            bcHost = document.createElement("div");
+            bcHost.className = (bc.className || "breadcrumb-container") + " sf-injected-breadcrumb";
+            bc.parentNode.insertBefore(bcHost, bc.nextSibling);
+          }
+          var safe = String(title == null ? "" : title).replace(/[&<>"]/g, function (c) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+          });
+          bcHost.innerHTML =
+            "<span>首页</span>" +
+            '<span style="margin:0 8px;color:#909399;">/</span>' +
+            "<span>订单管理</span>" +
+            '<span style="margin:0 8px;color:#909399;">/</span>' +
+            '<span style="color:#97a8be;">' + safe + "</span>";
+          bc.classList.add("sf-main-hidden");
+          bcHost.classList.remove("sf-main-hidden");
+        };
+
+        window.__SF_ENTER_INJECTED__ = function () {
+          var mc = layoutContainer();
+          if (!mc) return false;
+          var real = mc.querySelector(".app-main");
+          if (!real) return false;
+          var host = window.__SF_MAIN__();
+          if (!host) return false;
+          real.classList.add("sf-main-hidden");
+          host.classList.remove("sf-main-hidden");
+          return true;
+        };
+
+        /* 等 vue-router 把目标原生页渲染完成后再显形，避免闪一下上一个原生页 */
+        window.__SF_EXIT_INJECTED__ = function () {
+          var mc = layoutContainer();
+          if (!mc) return;
+          var real = mc.querySelector(".app-main");
+          if (real) real.classList.remove("sf-main-hidden");
+          if (hostEl) hostEl.classList.add("sf-main-hidden");
+          var bc = nativeBreadcrumb();
+          if (bc) bc.classList.remove("sf-main-hidden");
+          if (bcHost) bcHost.classList.add("sf-main-hidden");
+        };
+
+        /* 从改动页切到原生页：不重载，交给 vue-router 原地渲染 */
+        window.__SF_GO_NATIVE__ = function (p) {
+          window.__SF_SET_ROUTE__(p);
+          var done = function () { window.__SF_EXIT_INJECTED__(); };
+          try {
+            var pr = window.__SF_ROUTER__ ? window.__SF_ROUTER__.push(p) : null;
+            if (pr && pr.then) pr.then(done, done);
+            else setTimeout(done, 0);
+          } catch (e) {
+            done();
+          }
+        };
+
+        /* 在改动页上拦截原生链接点击：这些链接不能让浏览器直接跳（会跳到不可访问的地址），
+           统一改由 vue-router 原地渲染。 */
         document.addEventListener(
           "click",
           function (event) {
@@ -98,11 +205,10 @@
             if (!anchor) return;
             var p = window.__SF_PATH_FROM_HREF__(anchor.getAttribute("href"));
             if (!p) return;
-            if (ADDED_RE.test(p)) return; /* 交给注入脚本做同页切换 */
+            if (ADDED_RE.test(p)) return; /* 改动页之间：交给注入脚本瞬时切换 */
             event.preventDefault();
             event.stopImmediatePropagation();
-            window.__SF_SET_ROUTE__(p);
-            window.__SF_RELOAD__();
+            window.__SF_GO_NATIVE__(p);
           },
           true
         );
@@ -954,6 +1060,11 @@
   }
 
   function getMain() {
+    /* 单文件版：改动页画进宿主容器（.app-main 的兄弟节点），不碰 Vue 管的 DOM */
+    if (window.__SF_MAIN__) {
+      const host = window.__SF_MAIN__();
+      if (host) return host;
+    }
     return document.querySelector(".app-main") ||
       document.querySelector("#app .main-container .app-main") ||
       document.querySelector("#app .main-container section");
@@ -1014,16 +1125,10 @@
   }
 
   function navigate(path) {
-    if (currentRoute()) {
-      /* 注入页之间切换：先同步内存路由再重绘，不碰地址栏
-         （改 hash 会触发 popstate，让 vue-router 重画 .app-main） */
-      window.__SF_SET_ROUTE__(path);
-      render(true);
-      return;
-    }
-    /* 从原生页进入注入页：记录目标后整页重载，交给首屏适配层恢复 */
+    /* 单文件版：切进改动页 —— 仅隐藏原生 .app-main、把内容画进宿主容器，瞬时完成 */
     window.__SF_SET_ROUTE__(path);
-    window.__SF_RELOAD__();
+    window.__SF_ENTER_INJECTED__();
+    render(true);
   }
 
   function nativeRouteFromText(target) {
@@ -1046,9 +1151,8 @@
     if (!path) return;
     document.body.classList.remove("loaded");
     state.route = "";
-    /* file:// 下无真实路径可跳转：记录目标 hash 后整页重载，由首屏适配层推给 vue-router */
-    window.__SF_SET_ROUTE__(path);
-    window.__SF_RELOAD__();
+    /* 单文件版：切回原生页 —— 不重载，由 vue-router 原地渲染 */
+    window.__SF_GO_NATIVE__(path);
   }
 
   function cleanupDuplicateMenus() {
@@ -1077,7 +1181,11 @@
   }
 
   function updateTopTitle(title) {
-    const breadcrumb = document.querySelector("#breadcrumb-container") || document.querySelector(".breadcrumb-container");
+    /* 单文件版：面包屑是 Vue 渲染的，直接改它的 innerHTML 会让 Vue 的 DOM 失配，
+       之后每次路由切换都抛 insertBefore / 组件实例为 null 的错。交给宿主适配层用
+       「隐藏原生 + 兄弟节点」呈现。 */
+    if (window.__SF_SET_TITLE__) window.__SF_SET_TITLE__(title);
+    const breadcrumb = null;
     if (breadcrumb) {
       breadcrumb.innerHTML = `<span>首页</span><span style="margin:0 8px;color:#909399;">/</span><span>订单管理</span><span style="margin:0 8px;color:#909399;">/</span><span style="color:#97a8be;">${escapeHtml(title)}</span>`;
     }
@@ -1663,6 +1771,7 @@
     ensureMenu();
     const route = currentRoute();
     if (!route) return;
+    window.__SF_ENTER_INJECTED__(); /* 单文件版：隐藏原生 .app-main，显示宿主容器 */
     normalizeStaticUrl();
     let main = getMain();
     /* 单文件版：必须给 Vue 挂载留时间，否则兜底壳会抢在挂载前覆盖 #app，
