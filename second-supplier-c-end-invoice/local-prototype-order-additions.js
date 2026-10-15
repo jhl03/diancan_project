@@ -240,6 +240,7 @@
           <a class="second-order-menu-link" href="${routeHref("/order/after-sale-subsidy")}">售后补贴单</a>
           <div class="second-order-fallback-menu-title">出价管理</div>
           <div class="second-order-fallback-menu-title">账户管理</div>
+          <a class="second-order-menu-link" href="${routeHref("/finance/settlement-record")}">结算记录</a>
           <div class="second-order-fallback-menu-title">导出中心</div>
         </aside>
         <div class="second-order-fallback-layout">
