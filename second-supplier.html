@@ -261,11 +261,7 @@
           return;
         }
 
-        var appScript = document.createElement("script");
-        appScript.type = "module";
-        appScript.crossOrigin = "anonymous";
-        appScript.src = "./second-supplier-assets/index-BaijDBgb.js";
-        document.head.appendChild(appScript);
+        window.__SECOND_ORDER_FORCE_FALLBACK__ = true;
       })();
     </script>
     <link rel="stylesheet" crossorigin href="./second-supplier-assets/index-C-hhxckx.css">
@@ -303,9 +299,6 @@
     </div>
     <script>
       if (location.protocol !== "file:") {
-        var authScript = document.createElement("script");
-        authScript.src = "./second-supplier-auth.js?v=route-native-8";
-        document.body.appendChild(authScript);
         var additionsScript = document.createElement("script");
         additionsScript.src = "./second-supplier-order-additions.js?v=route-native-8";
         document.body.appendChild(additionsScript);

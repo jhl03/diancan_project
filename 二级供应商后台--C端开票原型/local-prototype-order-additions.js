@@ -894,7 +894,7 @@
     if (!route) return;
     normalizeStaticUrl();
     let main = getMain();
-    if (!main && (window.__SECOND_ORDER_STATIC_ENTRY__ || Date.now() - startTime > 2500)) {
+    if (!main && (window.__SECOND_ORDER_FORCE_FALLBACK__ || window.__SECOND_ORDER_STATIC_ENTRY__ || Date.now() - startTime > 2500)) {
       buildFallbackShell();
       main = getMain();
     }
