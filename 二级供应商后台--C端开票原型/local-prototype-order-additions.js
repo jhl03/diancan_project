@@ -59,7 +59,7 @@
   }
 
   function currentRoute() {
-    const target = new URLSearchParams(location.search).get("secondOrderTarget") || location.pathname;
+    const target = new URLSearchParams(location.search).get("secondOrderTarget") || window.__SECOND_ORDER_BOOT_TARGET__ || location.pathname;
     if (isAddedRoutePath(target, "/order/compensation")) return "compensation";
     if (isAddedRoutePath(target, "/order/after-sale-subsidy")) return "afterSale";
     if (isAddedRoutePath(target, "/finance/settlement-record")) return "settlement";
@@ -67,7 +67,7 @@
   }
 
   function currentTargetPath() {
-    return new URLSearchParams(location.search).get("secondOrderTarget") || location.pathname;
+    return new URLSearchParams(location.search).get("secondOrderTarget") || window.__SECOND_ORDER_BOOT_TARGET__ || location.pathname;
   }
 
   function hrefTargetPath(href) {

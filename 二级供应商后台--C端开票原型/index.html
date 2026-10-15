@@ -272,12 +272,19 @@
     <script>
       (function () {
         var currentUrl = location.href;
-        var target = new URLSearchParams(location.search).get("secondOrderTarget") || "";
+        var params = new URLSearchParams(location.search);
+        var target = params.get("secondOrderTarget") || "";
+        if (!target && params.get("prototypeRoute") === "afterSaleSubsidy") {
+          target = "/order/after-sale-subsidy";
+          params.set("secondOrderTarget", target);
+          history.replaceState({ secondOrderTarget: target }, "", location.pathname + "?" + params.toString());
+        }
         var isStaticEntry = location.pathname.endsWith("/index.html") || location.pathname.includes("/diancan_project/");
         if (isStaticEntry) {
           window.__SECOND_ORDER_STATIC_ENTRY__ = currentUrl;
+          window.__SECOND_ORDER_BOOT_TARGET__ = target;
         }
-        if (isStaticEntry && /^\/(order\/(bidding|list|bidding-record)|finance\/settlement-record)$/.test(target)) {
+        if (isStaticEntry && /^\/(order\/(bidding|list|bidding-record|compensation|after-sale-subsidy)|finance\/settlement-record)$/.test(target)) {
           history.replaceState({ secondOrderTarget: target }, "", target);
         }
       })();
