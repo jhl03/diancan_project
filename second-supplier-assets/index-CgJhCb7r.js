@@ -1,0 +1,1 @@
+import{_ as s,c as o,o as c,y as t,z as a,k as _}from"./index-BaijDBgb.js";const n="/assets/welcome-VFYC1WKN.png",d={},p=e=>(t("data-v-255f4f85"),e=e(),a(),e),r={class:"home page-wrap"},i=p(()=>_("img",{src:n,alt:"welcome",class:"home-bg"},null,-1)),l=[i];function f(e,m){return c(),o("div",r,l)}const u=s(d,[["render",f],["__scopeId","data-v-255f4f85"]]);export{u as default};
