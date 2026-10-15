@@ -8,6 +8,10 @@
       ? location.pathname
       : "";
 
+  function hashTarget() {
+    return new URLSearchParams(location.hash.replace(/^#/, "")).get("secondOrderTarget") || "";
+  }
+
   if (initialTargetPath && !window.__SECOND_ORDER_STATIC_ENTRY__) {
     history.replaceState({ secondOrderTarget: initialTargetPath }, "", `/index?secondOrderTarget=${encodeURIComponent(initialTargetPath)}`);
   }
@@ -59,7 +63,7 @@
   }
 
   function currentRoute() {
-    const target = new URLSearchParams(location.search).get("secondOrderTarget") || window.__SECOND_ORDER_BOOT_TARGET__ || location.pathname;
+    const target = new URLSearchParams(location.search).get("secondOrderTarget") || hashTarget() || window.__SECOND_ORDER_BOOT_TARGET__ || location.pathname;
     if (isAddedRoutePath(target, "/order/compensation")) return "compensation";
     if (isAddedRoutePath(target, "/order/after-sale-subsidy")) return "afterSale";
     if (isAddedRoutePath(target, "/finance/settlement-record")) return "settlement";
@@ -67,13 +71,13 @@
   }
 
   function currentTargetPath() {
-    return new URLSearchParams(location.search).get("secondOrderTarget") || window.__SECOND_ORDER_BOOT_TARGET__ || location.pathname;
+    return new URLSearchParams(location.search).get("secondOrderTarget") || hashTarget() || window.__SECOND_ORDER_BOOT_TARGET__ || location.pathname;
   }
 
   function hrefTargetPath(href) {
     try {
       const url = new URL(href, location.href);
-      return url.searchParams.get("secondOrderTarget") || url.pathname;
+      return url.searchParams.get("secondOrderTarget") || new URLSearchParams(url.hash.replace(/^#/, "")).get("secondOrderTarget") || url.pathname;
     } catch (error) {
       return href;
     }
@@ -206,8 +210,7 @@
   function routeHref(path) {
     if (!window.__SECOND_ORDER_STATIC_ENTRY__) return path;
     const url = new URL(staticIndexHref());
-    url.searchParams.set("secondOrderTarget", path);
-    url.searchParams.set("v", "route-native-8");
+    url.hash = `secondOrderTarget=${encodeURIComponent(path)}`;
     return url.href;
   }
 

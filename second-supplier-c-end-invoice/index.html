@@ -273,7 +273,8 @@
       (function () {
         var currentUrl = location.href;
         var params = new URLSearchParams(location.search);
-        var target = params.get("secondOrderTarget") || "";
+        var hashParams = new URLSearchParams(location.hash.replace(/^#/, ""));
+        var target = params.get("secondOrderTarget") || hashParams.get("secondOrderTarget") || "";
         if (!target && params.get("prototypeRoute") === "afterSaleSubsidy") {
           target = "/order/after-sale-subsidy";
           params.set("secondOrderTarget", target);
