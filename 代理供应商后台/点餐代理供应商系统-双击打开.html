@@ -59,6 +59,16 @@
 
         var nav = { path: "" };
         var bootRoute = readRoute();
+        /* 支持深链直达：?route=/order/compensation 或 ?secondOrderTarget=/finance/settlement-record
+           （用于分享/收藏某个页面；本版不再改地址栏，所以深链只能靠查询串传入） */
+        try {
+          var qs = new URLSearchParams(location.search);
+          var qRoute = qs.get("route") || qs.get("secondOrderTarget") || "";
+          if (qRoute) bootRoute = "/" + String(qRoute).replace(/^\/+/, "");
+        } catch (e) {}
+        if (bootRoute) {
+          try { sessionStorage.setItem(ROUTE_KEY, bootRoute); } catch (e) {}
+        }
         nav.path = bootRoute || "/";
         window.__SF_NAV__ = nav;
 
