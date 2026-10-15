@@ -197,6 +197,7 @@
   function staticIndexHref() {
     if (!window.__SECOND_ORDER_STATIC_ENTRY__) return "/index";
     const url = new URL(window.__SECOND_ORDER_STATIC_ENTRY__);
+    if (url.pathname.endsWith("/")) url.pathname += "index.html";
     url.search = "";
     url.hash = "";
     return url.href;
