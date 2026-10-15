@@ -27,14 +27,14 @@
 
   const compensationRows = [
     { claimNo: "CLM202610120001", subsidyNo: "SUB202610120001", orderNo: "FO202610120001", brand: "瑞幸咖啡", productName: "瑞幸咖啡 29元饮品券", userName: "张三", city: "杭州-西湖区", mergeId: "6138", userPay: "18.50", subsidyAmount: "4.50", status: "待抢单" },
-    { claimNo: "CLM202610120002", subsidyNo: "SUB202610120002", orderNo: "FO202610120002", brand: "肯德基", productName: "肯德基 50元代金券", userName: "李四", city: "杭州-滨江区", mergeId: "6138", userPay: "42.90", subsidyAmount: "6.00", status: "待抢单" },
+    { claimNo: "CLM202610120002", subsidyNo: "SUB202610120002", orderNo: "FO202610120002", brand: "肯德基", productName: "肯德基 50元代金券", userName: "李四", city: "杭州-滨江区", mergeId: "-", userPay: "42.90", subsidyAmount: "6.00", status: "待抢单" },
     { claimNo: "CLM202610120003", subsidyNo: "SUB202610120003", orderNo: "FO202610120003", brand: "麦当劳", productName: "麦当劳 38元套餐券", userName: "王五", city: "上海-黄浦区", mergeId: "-", userPay: "29.90", subsidyAmount: "3.80", status: "待抢单" },
     { claimNo: "CLM202610120004", subsidyNo: "SUB202610120004", orderNo: "FO202610120004", brand: "瑞幸咖啡", productName: "瑞幸咖啡 38元套餐券", userName: "张三", city: "杭州-西湖区", mergeId: "6138", userPay: "35.80", subsidyAmount: "5.20", status: "待抢单" },
   ];
 
   const subsidyRows = [
     { id: "CLM202610120101", tab: "处理中", subsidyNo: "SUB202610120101", orderNo: "FO202610120101", brand: "瑞幸咖啡", supplierName: "惠生活北京出餐供应商", mergeId: "6138", titleType: "企业", invoiceTitle: "瑞幸咖啡（中国）有限公司", taxNo: "91110108MA01DEMO01", userPay: "18.50", productName: "生椰拿铁 1杯", userName: "瑞幸咖啡-北京", city: "杭州-西湖区", amount: "2.60", status: "待上传", mark: "待开票" },
-    { id: "CLM202610120102", tab: "处理中", subsidyNo: "SUB202610120102", orderNo: "FO202610120102", brand: "肯德基", supplierName: "惠生活厦门出餐供应商", mergeId: "6138", titleType: "企业", invoiceTitle: "厦门肯德基有限公司", taxNo: "91350200MA01DEMO02", userPay: "42.90", productName: "肯德基 50元代金券", userName: "肯德基-厦门", city: "杭州-滨江区", amount: "4.80", status: "待上传", mark: "待开票" },
+    { id: "CLM202610120102", tab: "处理中", subsidyNo: "SUB202610120102", orderNo: "FO202610120102", brand: "肯德基", supplierName: "惠生活厦门出餐供应商", mergeId: "-", titleType: "企业", invoiceTitle: "厦门肯德基有限公司", taxNo: "91350200MA01DEMO02", userPay: "42.90", productName: "肯德基 50元代金券", userName: "肯德基-厦门", city: "杭州-滨江区", amount: "4.80", status: "待上传", mark: "待开票" },
     { id: "CLM202610120103", tab: "处理中", subsidyNo: "SUB202610120103", orderNo: "FO202610120103", brand: "瑞幸咖啡", supplierName: "惠生活北京出餐供应商", mergeId: "6138", titleType: "企业", invoiceTitle: "瑞幸咖啡（中国）有限公司", taxNo: "91110108MA01DEMO01", userPay: "35.80", productName: "瑞幸咖啡 厚乳拿铁 2杯", userName: "瑞幸咖啡-北京", city: "杭州-西湖区", amount: "4.20", status: "待上传", mark: "待开票" },
     { id: "CLM202610120104", tab: "处理中", subsidyNo: "SUB202610120104", orderNo: "FO202610120104", brand: "麦当劳", supplierName: "惠生活上海出餐供应商", mergeId: "-", titleType: "企业", invoiceTitle: "金拱门（中国）有限公司", taxNo: "91110000MA01DEMO03", userPay: "29.90", productName: "麦当劳 早餐双人券", userName: "麦当劳-上海", city: "上海-黄浦区", amount: "3.50", status: "待上传", mark: "待开票" },
     { id: "CLM202610120105", tab: "处理中", subsidyNo: "SUB202610120105", orderNo: "FO202610120105", brand: "肯德基", supplierName: "惠生活厦门出餐供应商", mergeId: "-", titleType: "企业", invoiceTitle: "厦门肯德基有限公司", taxNo: "91350200MA01DEMO02", userPay: "31.90", productName: "肯德基 38元套餐券", userName: "肯德基-厦门", city: "杭州-滨江区", amount: "3.90", status: "待上传", mark: "待开票" },
@@ -233,7 +233,7 @@
       <div class="second-order-fallback-shell">
         <aside class="second-order-fallback-sidebar">
           <div class="second-order-fallback-logo">点餐代理供应商系统</div>
-          <a class="second-order-menu-link" href="${indexHref}">首页</a>
+          <a class="second-order-menu-link plain" href="${indexHref}">首页</a>
           <div class="second-order-fallback-menu-title active">订单管理</div>
           <a class="second-order-menu-link plain" href="${nativeRouteHref("/order/bidding")}">新订单</a>
           <a class="second-order-menu-link plain" href="${nativeRouteHref("/order/list")}">订单列表</a>
